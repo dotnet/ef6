@@ -127,7 +127,7 @@ namespace System.Data.Entity.Core.Mapping
 
         // <summary>
         // a list of TypeMetadata that this mapping holds true for.
-        // Since Association types dont participate in Inheritance, This can only
+        // Since Association types don't participate in Inheritance, This can only
         // be one type.
         // </summary>
         internal override ReadOnlyCollection<EntityTypeBase> Types
@@ -138,7 +138,7 @@ namespace System.Data.Entity.Core.Mapping
         // <summary>
         // a list of TypeMetadatas for which the mapping holds true for
         // not only the type specified but the sub-types of that type as well.
-        // Since Association types dont participate in Inheritance, an Empty list
+        // Since Association types don't participate in Inheritance, an Empty list
         // is returned here.
         // </summary>
         internal override ReadOnlyCollection<EntityTypeBase> IsOfTypes

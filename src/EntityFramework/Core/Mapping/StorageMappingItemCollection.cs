@@ -269,7 +269,7 @@ namespace System.Data.Entity.Core.Mapping
                 EntitySetBase extent, MetadataWorkspace workspace, StorageMappingItemCollection storageMappingItemCollection)
             {
                 //First check if we have collected a view from user-defined query views
-                //Dont need to worry whether to generate Query view or update viw, because that is relative to the extent.
+                //Don't need to worry whether to generate Query view or update viw, because that is relative to the extent.
                 GeneratedView view;
 
                 if (_tryGetUserDefinedQueryView(extent, out view))

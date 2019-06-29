@@ -631,7 +631,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 var affectedTables = ViewLoader.GetAffectedTables(extent, MetadataWorkspace);
                 //Since these extents don't have Functions defined for update operations,
                 //the affected tables should be provided via MSL.
-                //If we dont find any throw an exception
+                //If we don't find any throw an exception
                 if (affectedTables.Count == 0)
                 {
                     throw EntityUtil.Update(Strings.Update_MappingNotFound(extent.Name), null /*stateEntries*/);

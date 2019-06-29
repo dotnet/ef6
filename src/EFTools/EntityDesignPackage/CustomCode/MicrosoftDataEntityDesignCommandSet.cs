@@ -3338,7 +3338,7 @@ namespace Microsoft.Data.Entity.Design.Package
                                     var cp = new CommandProcessor(cpc, cmd);
                                     cp.Invoke();
                                     // Ensure that newly created properties are selected.
-                                    // Since we dont support copy and past for navigation properties, we can safely assume pass the entity's PropertiesCompartment.
+                                    // Since we don't support copy and past for navigation properties, we can safely assume pass the entity's PropertiesCompartment.
                                     SelectProperties(cmd.Properties, entityShape.PropertiesCompartment);
                                 }
                             }

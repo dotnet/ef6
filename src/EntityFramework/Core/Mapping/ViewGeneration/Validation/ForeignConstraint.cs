@@ -251,7 +251,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             var primaryKeyFields = primaryKey.KeyFields;
             var foundCell = false;
 
-            var foundValidParentColumnsForForeignKey = false; //we need to find only one, dont error on any one check being false
+            var foundValidParentColumnsForForeignKey = false; //we need to find only one, don't error on any one check being false
             List<ErrorLog.Record> errorListForInvalidParentColumnsForForeignKey = null;
             foreach (var cell in cells)
             {

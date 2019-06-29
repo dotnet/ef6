@@ -985,7 +985,7 @@ namespace Microsoft.Data.Entity.Design.Base.Shell
 
         /// <summary>
         ///     If BatchDrawItem == true, store the index of the item to be drawn,
-        ///     but dont actually do the drawing until BatchDrawItem is set to false.
+        ///     but don't actually do the drawing until BatchDrawItem is set to false.
         /// </summary>
         protected override void OnDrawItem(DrawItemEventArgs e)
         {

@@ -2452,7 +2452,7 @@ namespace System.Data.Entity.Core.Mapping
             MappingFragment fragment = null;
             EntityType tableType = null;
 
-            //If there is a query view, Dont create a mapping fragment since there should n't be one
+            //If there is a query view, don't create a mapping fragment since there should n't be one
             if (setMapping.QueryView == null)
             {
                 //Get the table type that represents this table

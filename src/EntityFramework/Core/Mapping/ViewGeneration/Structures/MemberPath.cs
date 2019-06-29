@@ -255,7 +255,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
             var member = m_path.Last();
 
-            //Dont check last member, thats the property we are testing
+            //Don't check last member, thats the property we are testing
             for (var i = 0; i < m_path.Count - 1; i++)
             {
                 var current = m_path[i];
@@ -310,7 +310,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             // navigate depth-first
             foreach (var edge in edges.Where(type => !type.EdmEquals(avoidEdge)))
             {
-                //Dont traverse above the EntitySet's Element type
+                //Don't traverse above the EntitySet's Element type
                 if (entitySetType.BaseType != null
                     && entitySetType.BaseType.EdmEquals(edge))
                 {
