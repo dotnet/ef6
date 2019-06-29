@@ -2122,7 +2122,7 @@ Public Class DynamicTextTransformation
     End Sub
 
     ''' <summary>
-    ''' Gets the value of the wrapped TextTranformation instance's GenerationEnvironment property
+    ''' Gets the value of the wrapped TextTransformation instance's GenerationEnvironment property
     ''' </summary>
     Public ReadOnly Property GenerationEnvironment() As StringBuilder
         Get
@@ -2131,7 +2131,7 @@ Public Class DynamicTextTransformation
     End Property
 
     ''' <summary>
-    ''' Gets the value of the wrapped TextTranformation instance's Errors property
+    ''' Gets the value of the wrapped TextTransformation instance's Errors property
     ''' </summary>
     Public ReadOnly Property Errors() As System.CodeDom.Compiler.CompilerErrorCollection
         Get
@@ -2140,21 +2140,21 @@ Public Class DynamicTextTransformation
     End Property
 
     ''' <summary>
-    ''' Calls the wrapped TextTranformation instance's Write method.
+    ''' Calls the wrapped TextTransformation instance's Write method.
     ''' </summary>
     Public Sub Write(ByVal text As String)
         _write.Invoke(_instance, New Object() {text})
     End Sub
 
     ''' <summary>
-    ''' Calls the wrapped TextTranformation instance's WriteLine method.
+    ''' Calls the wrapped TextTransformation instance's WriteLine method.
     ''' </summary>
     Public Sub WriteLine(ByVal text As String)
         _writeLine.Invoke(_instance, New Object() {text})
     End Sub
 
     ''' <summary>
-    ''' Gets the value of the wrapped TextTranformation instance's Host property
+    ''' Gets the value of the wrapped TextTransformation instance's Host property
     ''' if available (shows up when hostspecific is set to true in the template directive) and returns
     ''' the appropriate implementation of IDynamicHost
     ''' </summary>

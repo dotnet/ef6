@@ -1813,7 +1813,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // PhysicalProjectOp
         // </summary>
         // <remarks>
-        // Tranformation:
+        // Transformation:
         // PhysicalProjectOp(MultiStreamNestOp(...)) => PhysicalProjectOp(SortOp(...))
         // Strategy:
         // (1) Convert MultiStreamNestOp(...) => SingleStreamNestOp(...)

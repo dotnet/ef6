@@ -2291,17 +2291,17 @@ public class DynamicTextTransformation
     }
 
     /// <summary>
-    /// Gets the value of the wrapped TextTranformation instance's GenerationEnvironment property
+    /// Gets the value of the wrapped TextTransformation instance's GenerationEnvironment property
     /// </summary>
     public StringBuilder GenerationEnvironment { get { return (StringBuilder)_generationEnvironment.GetValue(_instance, null); } }
 
     /// <summary>
-    /// Gets the value of the wrapped TextTranformation instance's Errors property
+    /// Gets the value of the wrapped TextTransformation instance's Errors property
     /// </summary>
     public System.CodeDom.Compiler.CompilerErrorCollection Errors { get { return (System.CodeDom.Compiler.CompilerErrorCollection)_errors.GetValue(_instance, null); } }
 
     /// <summary>
-    /// Calls the wrapped TextTranformation instance's Write method.
+    /// Calls the wrapped TextTransformation instance's Write method.
     /// </summary>
     public void Write(string text)
     {
@@ -2309,7 +2309,7 @@ public class DynamicTextTransformation
     }
 
     /// <summary>
-    /// Calls the wrapped TextTranformation instance's WriteLine method.
+    /// Calls the wrapped TextTransformation instance's WriteLine method.
     /// </summary>
     public void WriteLine(string text)
     {
@@ -2317,7 +2317,7 @@ public class DynamicTextTransformation
     }
 
     /// <summary>
-    /// Gets the value of the wrapped TextTranformation instance's Host property
+    /// Gets the value of the wrapped TextTransformation instance's Host property
     /// if available (shows up when hostspecific is set to true in the template directive) and returns
     /// the appropriate implementation of IDynamicHost
     /// </summary>
