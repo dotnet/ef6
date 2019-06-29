@@ -2053,7 +2053,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private Node RebuildPredicate(AugmentedJoinNode joinNode, out int minLocationId)
         {
             //
-            // It is safe to initilaze the output location id to the location id of the joinNode. The nodes at lower 
+            // It is safe to initialize the output location id to the location id of the joinNode. The nodes at lower 
             // location ids have already been processed, thus even if the least common ancestor of all participating 
             // vars is lower than the location id of the joinNode, the rebuilt predicate would not be propagated 
             // to nodes at lower location ids.
