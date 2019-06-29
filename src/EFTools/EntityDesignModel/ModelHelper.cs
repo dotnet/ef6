@@ -2274,7 +2274,7 @@ namespace Microsoft.Data.Entity.Design.Model
 
         /// <summary>
         ///     Return the list of entity-types that are related (through association or direct inheritance) to the passed in entity-type.
-        ///     TODO: there are common functionality between this method and EntiyTypeShape's CreateEntityTypeShapeAndConnectorsInDiagram,
+        ///     TODO: there are common functionality between this method and EntityTypeShape's CreateEntityTypeShapeAndConnectorsInDiagram,
         ///     We should be able to extract common functionality that can be shared between 2 methods.
         /// </summary>
         internal static IEnumerable<EntityType> GetRelatedEntityTypes(EntityType entityType)

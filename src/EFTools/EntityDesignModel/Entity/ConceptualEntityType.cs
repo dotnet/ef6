@@ -359,7 +359,7 @@ namespace Microsoft.Data.Entity.Design.Model.Entity
                         return null;
                     default:
                         var etbt = BaseType;
-                        Debug.Assert(etbt != null, "BaseType is not an EntiytTypeBaseType");
+                        Debug.Assert(etbt != null, "BaseType is not an EntityTypeBaseType");
                         ModelHelper.InvalidSchemaError(Resources.UnresolvedBaseType_1, etbt.RefName, NormalizedNameExternal);
                         return null;
                 }
