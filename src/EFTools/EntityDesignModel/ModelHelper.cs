@@ -1831,7 +1831,7 @@ namespace Microsoft.Data.Entity.Design.Model
             }
 
             // this will remove the 'Collection' around the return type. It will now either be 'None',
-            // the primitive type name, complec type name, or entity name.
+            // the primitive type name, complex type name, or entity name.
             var desanitizedReturnType = UnwrapCollectionAroundFunctionImportReturnType(returnTypeAsString, true);
 
             // if this is a complex type name, attempt to get the complex type object
