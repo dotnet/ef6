@@ -15,7 +15,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace Microsoft.VisualStudio.TestTools.HostAdapters.VsIde
 {
     /// <summary>
-    /// UI control for my host adapter configuartion. Hosted inside test run config editor.
+    /// UI control for my host adapter configuration. Hosted inside test run config editor.
     /// It contains a data grid view where you could define environment variables.
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Vs", Justification = "Public class, cannot rename")]
