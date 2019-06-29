@@ -1655,7 +1655,7 @@ Public Class CodeRegion
     End Property
 
     ''' <summary>
-    ''' Get a string of spaces equivelent to the number of indents
+    ''' Get a string of spaces equivalent to the number of indents
     ''' desired.
     ''' </summary>
     Public Shared Function GetIndent(ByVal indentLevel As Integer) As String

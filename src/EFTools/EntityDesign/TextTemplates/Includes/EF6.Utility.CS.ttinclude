@@ -1359,7 +1359,7 @@ public class CodeRegion
     public int CurrentIndentLevel { get { return _regionIndentLevel; } }
 
     /// <summary>
-    /// Get a string of spaces equivelent to the number of indents
+    /// Get a string of spaces equivalent to the number of indents
     /// desired.
     /// </summary>
     public static string GetIndent(int indentLevel)
