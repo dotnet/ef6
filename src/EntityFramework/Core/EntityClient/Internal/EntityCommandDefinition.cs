@@ -633,7 +633,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
                 foreach (DbParameter storeParameter in storeProviderCommand.Parameters)
                 {
                     // I could just use the string indexer, but then if I didn't find it the
-                    // consumer would get some ParameterNotFound exeception message and that
+                    // consumer would get some ParameterNotFound exception message and that
                     // wouldn't be very meaningful.  Instead, I use the IndexOf method and
                     // if I don't find it, it's not a big deal (The store provider must
                     // have added it).

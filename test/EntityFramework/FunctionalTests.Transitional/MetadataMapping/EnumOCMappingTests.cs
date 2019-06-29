@@ -400,10 +400,10 @@ namespace System.Data.Entity.MetadataMapping
         [Fact]
         public void Cannot_map_if_OSpace_enum_type_member_value_does_not_match_CSpace_enum_type_member_value_NonPOCO()
         {
-            var exeception = Assert.Throws<MappingException>(
+            var exception = Assert.Throws<MappingException>(
                 () => Cannot_map_if_OSpace_enum_type_member_value_does_not_match_CSpace_enum_type_member_value(false));
 
-            exeception.ValidateMessage(
+            exception.ValidateMessage(
                 "Mapping_Enum_OCMapping_MemberMismatch",
                 "MessageModel.MessageType",
                 "Ground",
