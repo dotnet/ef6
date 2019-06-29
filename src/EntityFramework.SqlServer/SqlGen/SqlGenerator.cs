@@ -274,7 +274,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             get { return _targets; }
         }
 
-        // Define lists of functions that take string arugments and return strings.
+        // Define lists of functions that take string arguments and return strings.
         private static readonly ISet<string> _canonicalAndStoreStringFunctionsOneArg =
             new HashSet<string>(StringComparer.Ordinal)
                 {
