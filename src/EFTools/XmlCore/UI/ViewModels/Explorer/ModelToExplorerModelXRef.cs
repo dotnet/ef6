@@ -13,7 +13,7 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.Explorer
     internal abstract class ModelToExplorerModelXRef : ContextItem
     {
         /// <summary>
-        ///     Maps ModelManager types to ModelToExlporerModelXRef types.  This way the base ModelToExplorerModelXRef class can
+        ///     Maps ModelManager types to ModelToExplorerModelXRef types.  This way the base ModelToExplorerModelXRef class can
         ///     get the correct ModelToExplorerModelXRef instance from the EditingContext.
         /// </summary>
         private static readonly Dictionary<Type, Type> _modelManagerType2XRefType = new Dictionary<Type, Type>();
