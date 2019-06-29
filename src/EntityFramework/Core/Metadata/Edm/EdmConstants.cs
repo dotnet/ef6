@@ -191,7 +191,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal const string ParameterTypeSemantics = "ParameterTypeSemantics";
         internal const string NiladicFunctionAttribute = "NiladicFunctionAttribute";
         internal const string IsComposableFunctionAttribute = "IsComposable";
-        internal const string CommandTextFunctionAttribyte = "CommandText";
+        internal const string CommandTextFunctionAttribute = "CommandText";
         internal const string StoreFunctionNameAttribute = "StoreFunctionNameAttribute";
 
         // <summary>
