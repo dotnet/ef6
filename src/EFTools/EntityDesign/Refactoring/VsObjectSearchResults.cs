@@ -15,11 +15,11 @@ namespace Microsoft.Data.Entity.Design.Refactoring
     {
         private const string DashWithSpaces = " - ";
 
-        internal VsObjectSearchResult(string fileName, string displayText, int lineNumer, int columnNumber)
+        internal VsObjectSearchResult(string fileName, string displayText, int lineNumber, int columnNumber)
         {
             FileName = fileName;
             DisplayText = displayText;
-            LineNumber = lineNumer;
+            LineNumber = lineNumber;
             ColumnNumber = columnNumber;
         }
 
