@@ -905,7 +905,7 @@ namespace System.Data.Entity.Core.Objects
             wrappedEntity.RelationshipManager.GetRelatedEnd(navProp, throwArgumentException: removedConvert).Load(mergeOption);
         }
 
-        // Wraps the given entity and checks that it has a non-null context (i.e. that is is not detached).
+        // Wraps the given entity and checks that it has a non-null context (i.e. that it is not detached).
         private IEntityWrapper WrapEntityAndCheckContext(object entity, string refType)
         {
             var wrappedEntity = EntityWrapperFactory.WrapEntityUsingContext(entity, this);
