@@ -56,7 +56,7 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Controls
         {
             var prefSize = base.GetPreferredSize(proposedSize);
 
-            // if the actual control size is greater than the constraining size, recalculate the size because there is a possiblility of wrapping. 
+            // if the actual control size is greater than the constraining size, recalculate the size because there is a possibility of wrapping. 
             if (!String.IsNullOrEmpty(Text)
                 && prefSize.Width > proposedSize.Width)
             {
