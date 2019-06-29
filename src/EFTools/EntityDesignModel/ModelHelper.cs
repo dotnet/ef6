@@ -1860,7 +1860,7 @@ namespace Microsoft.Data.Entity.Design.Model
         /// <summary>
         ///     Given the runtime format for the return type: "Collection([namespace-qualified return type])", return back either:
         ///     1. The namespace-(Un)qualified EntityType name.
-        ///     2. The namespace-(Un)qualified ComplexType namme.
+        ///     2. The namespace-(Un)qualified ComplexType name.
         ///     3. The primitive type name
         ///     4. "(None)" if the passed in string is null.
         /// </summary>
