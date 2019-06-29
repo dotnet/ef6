@@ -675,7 +675,7 @@ namespace UnitTests
         private void Validate(string config, bool allowAllTypesAtTopLevel = true)
         {
             // this will throw for warnings while validating without 
-            // handler will not throw for warings.
+            // handler will not throw for warnings.
             Validate(config, allowAllTypesAtTopLevel, (o, e) => { throw e.Exception; });
         }
 
