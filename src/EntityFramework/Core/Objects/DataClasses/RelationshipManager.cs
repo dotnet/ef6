@@ -1491,7 +1491,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
         }
 
-        // properties dictionary contains name of property, its value and coutner saying how many times this property was retrieved from principal entities
+        // properties dictionary contains name of property, its value and counter saying how many times this property was retrieved from principal entities
         private static bool CheckIfAllPropertiesWereRetrieved(
             Dictionary<string, KeyValuePair<object, IntBox>> properties, List<string> propertiesToRetrieve)
         {
@@ -1526,7 +1526,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 }
             }
 
-            // Check if all the coutners equal 0
+            // Check if all the counters equal 0
             if (isSuccess)
             {
                 foreach (var valueCounterPair in values)
