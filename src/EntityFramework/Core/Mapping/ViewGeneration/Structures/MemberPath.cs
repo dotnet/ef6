@@ -280,7 +280,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 return true;
             }
 
-            //well, we handle the first case because we don't knwo how to get to subtype (i.e. the edge to avoid)
+            //well, we handle the first case because we don't know how to get to subtype (i.e. the edge to avoid)
             var memberDeclaringType = m_path[0].DeclaringType as EntityType;
             var parentType = memberDeclaringType.BaseType as EntityType;
 
