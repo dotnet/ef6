@@ -113,7 +113,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
 
             // We can reload only after we added EF references to the project otherwise we would get a watermark
             // saying that the schema version does not match the referenced EF version which would not be true.
-            // If we reload becuase there was an extension that potentially modified the artifact then it does not matter.
+            // If we reload because there was an extension that potentially modified the artifact then it does not matter.
             if (shouldReloadArtifact)
             {
                 artifact.ReloadArtifact();

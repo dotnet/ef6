@@ -134,7 +134,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
             // Validate Number of ends is correct
             //    What we know:
-            //      No ends are missing, becuase we infered all missing ends
+            //      No ends are missing, because we infered all missing ends
             //      No extra ends are there because the names have been matched, and an extra name will have caused an error
             //
             //    looks like no count validation needs to be done
