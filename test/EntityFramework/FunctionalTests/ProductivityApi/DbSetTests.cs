@@ -560,7 +560,7 @@ namespace ProductivityApiTests
 
         #endregion
 
-        #region Conficts at root level for FK graph
+        #region Conflicts at root level for FK graph
 
         [Fact]
         public void Add_is_a_noop_if_FK_graph_is_already_Added_Principal_and_Dependent_Added()
