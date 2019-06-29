@@ -38,7 +38,7 @@ namespace Microsoft.VisualStudio.TestTools.HostAdapters.VsIde
         /// Initialize the editor to a default state based on given test run.
         /// </summary>
         /// <param name="serviceProvider"></param>
-        /// <param name="run">Obselete. Always null.</param>
+        /// <param name="run">Obsolete. Always null.</param>
         void IRunConfigurationEditor.Initialize(System.IServiceProvider serviceProvider, TestRun run)
         {
             // Initialize to something like: 7.0, 7.1, 8.0
