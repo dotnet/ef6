@@ -1883,7 +1883,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         }
 
         // <summary>
-        // determines if the function requires the return type be enforeced by use of a cast expression
+        // determines if the function requires the return type be enforced by use of a cast expression
         // </summary>
         internal static bool CastReturnTypeToInt64(DbFunctionExpression e)
         {
@@ -1891,7 +1891,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         }
 
         // <summary>
-        // determines if the function requires the return type be enforeced by use of a cast expression
+        // determines if the function requires the return type be enforced by use of a cast expression
         // </summary>
         internal static bool CastReturnTypeToInt32(SqlGenerator sqlgen, DbFunctionExpression e)
         {
@@ -1905,7 +1905,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         }
 
         // <summary>
-        // determines if the function requires the return type be enforeced by use of a cast expression
+        // determines if the function requires the return type be enforced by use of a cast expression
         // </summary>
         internal static bool CastReturnTypeToInt16(DbFunctionExpression e)
         {
@@ -1913,7 +1913,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         }
 
         // <summary>
-        // determines if the function requires the return type be enforeced by use of a cast expression
+        // determines if the function requires the return type be enforced by use of a cast expression
         // </summary>
         internal static bool CastReturnTypeToSingle(DbFunctionExpression e)
         {
