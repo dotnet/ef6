@@ -398,7 +398,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         // <summary>
         //     RunWorkerCompleted event handler: Populate Treeview here.
         //     This method is called by background worker component on the same thread as the UI thread.
-        //     ModelBuilderEngine gaves us table names to display so we add them to the TreeView
+        //     ModelBuilderEngine gives us table names to display so we add them to the TreeView
         // </summary>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         protected void bgWorkerPopulateTree_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs args)
