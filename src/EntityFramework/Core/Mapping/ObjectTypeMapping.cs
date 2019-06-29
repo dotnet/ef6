@@ -146,7 +146,7 @@ namespace System.Data.Entity.Core.Mapping
 
             if (!ignoreCase)
             {
-                //First get the index of the member map from the clr indexs
+                //First get the index of the member map from the clr indexes
                 m_memberMapping.TryGetValue(propertyName, out memberMapping);
             }
             else
