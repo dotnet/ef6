@@ -1619,7 +1619,7 @@ Public Class CodeRegion
 
     ''' <summary>
     ''' Ends a region, or totaly removes it if nothing
-    ''' was generted since the beginning of the region.
+    ''' was generated since the beginning of the region.
     ''' </summary>
     Public Sub [End]()
         [End](1)
@@ -1627,7 +1627,7 @@ Public Class CodeRegion
 
     ''' <summary>
     ''' Ends a region, or totaly removes it if nothing
-    ''' was generted since the beginning of the region, also outdents
+    ''' was generated since the beginning of the region, also outdents
     ''' the number of levels specified.
     ''' </summary>
     Public Sub [End](ByVal levelsToDecrease As Integer)

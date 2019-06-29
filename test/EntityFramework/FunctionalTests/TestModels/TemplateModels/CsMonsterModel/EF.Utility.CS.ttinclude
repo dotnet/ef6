@@ -1806,7 +1806,7 @@ public class CodeRegion
 
     /// <summary>
     /// Ends a region, or totaly removes it if nothing
-    /// was generted since the beginning of the region.
+    /// was generated since the beginning of the region.
     /// </summary>
     public void End()
     {
@@ -1815,7 +1815,7 @@ public class CodeRegion
 
     /// <summary>
     /// Ends a region, or totaly removes it if nothing
-    /// was generted since the beginning of the region, also outdents
+    /// was generated since the beginning of the region, also outdents
     /// the number of levels specified.
     /// </summary>
     public void End(int levelsToDecrease)
