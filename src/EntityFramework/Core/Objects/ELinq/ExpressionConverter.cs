@@ -832,7 +832,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
             }
 
-            // try to find the appropriate target target for the cast
+            // try to find the appropriate target for the cast
             var toType = GetCastTargetType(source.ResultType, toClrType, fromClrType, true);
             if (null == toType)
             {
