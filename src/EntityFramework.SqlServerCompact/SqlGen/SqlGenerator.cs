@@ -2850,7 +2850,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
 
         // <summary>
         // Default handling on function arguments.
-        // Appends the list of arguemnts to the given result
+        // Appends the list of arguments to the given result
         // If the function is niladic it does not append anything,
         // otherwise it appends (arg1, arg2, .., argn)
         // </summary>
@@ -2921,7 +2921,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         // <summary>
         // Handles functions that are translated into TSQL operators.
         // The given function should have one or two arguments.
-        // Functions with one arguemnt are translated into
+        // Functions with one argument are translated into
         // op arg
         // Functions with two arguments are translated into
         // arg0 op arg1

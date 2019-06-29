@@ -1064,7 +1064,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         // <summary>
         // Handles functions that are translated into TSQL operators.
         // The given function should have one or two arguments.
-        // Functions with one arguemnt are translated into
+        // Functions with one argument are translated into
         // op arg
         // Functions with two arguments are translated into
         // arg0 op arg1

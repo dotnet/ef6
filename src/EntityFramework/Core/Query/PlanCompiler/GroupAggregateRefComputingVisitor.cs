@@ -141,7 +141,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region ScalarOps Visitors
 
         // <summary>
-        // If the op is a collection aggregate function it checks whether its arguement can be translated over
+        // If the op is a collection aggregate function it checks whether its argument can be translated over
         // a single group aggregate var. If so, it is tracked as a candidate to be pushed into that
         // group by into node.
         // </summary>
