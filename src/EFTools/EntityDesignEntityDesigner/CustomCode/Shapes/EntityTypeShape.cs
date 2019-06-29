@@ -128,7 +128,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
         private void SetColorTheme()
         {
             ClassStyleSet.OverridePenColor(DiagramPens.EmphasisOutline, EmphasisShapeOutlineColor);
-            // We shouldn't need to do this again uless the user changes the theme.
+            // We shouldn't need to do this again unless the user changes the theme.
             IsColorThemeSet = true;
         }
 
