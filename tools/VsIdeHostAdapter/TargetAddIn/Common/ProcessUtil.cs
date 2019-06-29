@@ -24,7 +24,7 @@ namespace Microsoft.VisualStudio.TestTools.HostAdapters.VsIde
         [SuppressMessage("Microsoft.Interoperability", "CA1404:CallGetLastErrorImmediatelyAfterPInvoke")]
         public static int GetParentProcessId(int processId)
         {
-            // This may be inconsistent with snapshot but when the call returns it it not guaranteed to be consistent anyway.
+            // This may be inconsistent with snapshot, but when the call returns, it is not guaranteed to be consistent anyway.
             EnsureProcessExists(processId);
 
             IntPtr snapshot = IntPtr.Zero;
