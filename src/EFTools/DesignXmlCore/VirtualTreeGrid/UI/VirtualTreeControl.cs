@@ -7288,7 +7288,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
                 return false;
             }
 
-            var dismissEdit = GetStateFlag(VTCStateFlags.NoDismissEdit); // enusre we don't dismiss the edit while scrolling into position
+            var dismissEdit = GetStateFlag(VTCStateFlags.NoDismissEdit); // ensure we don't dismiss the edit while scrolling into position
             try
             {
                 SetStateFlag(VTCStateFlags.NoDismissEdit, true);
