@@ -796,7 +796,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.ViewModel
 
                 Debug.Assert(
                     changeContext.ViewModelChanges.Count == viewModelChanges.Count,
-                    "Not all changes from the view model were of type ViewModleChange");
+                    "Not all changes from the view model were of type ViewModelChange");
 
                 try
                 {
