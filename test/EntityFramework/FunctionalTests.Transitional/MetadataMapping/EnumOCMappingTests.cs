@@ -28,7 +28,7 @@ namespace System.Data.Entity.MetadataMapping
         }
 
         [Fact]
-        public void Complex_type_with_eumm_property_is_mapped_correctly_POCO()
+        public void Complex_type_with_enum_property_is_mapped_correctly_POCO()
         {
             Complex_type_with_enum_property_is_mapped_correctly(true);
         }
