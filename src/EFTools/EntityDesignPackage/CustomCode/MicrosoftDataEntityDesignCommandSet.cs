@@ -2849,7 +2849,7 @@ namespace Microsoft.Data.Entity.Design.Package
                             var name = (end == ConnectorEnd.Source)
                                            ? SelectedAssociationConnector.ModelElement.SourceEntityType.Name
                                            : SelectedAssociationConnector.ModelElement.TargetEntityType.Name;
-                            cmd.Text = String.Format(CultureInfo.CurrentCulture, Resources.SelectAssociationEndCommnadText, name);
+                            cmd.Text = String.Format(CultureInfo.CurrentCulture, Resources.SelectAssociationEndCommandText, name);
                         }
                         else
                         {
