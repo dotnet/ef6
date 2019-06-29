@@ -200,7 +200,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        /// API for creating the databse and schema objects given a StoreItemCollection.
+        /// API for creating the database and schema objects given a StoreItemCollection.
         /// This will do following things:
         /// 1. Create a new database using SqlCeEngine.CreateDatabase().
         /// 2. Generate scripts for creating schema objects.

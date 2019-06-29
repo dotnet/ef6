@@ -248,13 +248,13 @@ namespace System.Data.Entity.Infrastructure
             var mockContext = new Mock<InternalContextForMock<SimpleContext>>();
             mockContext.Setup(m => m.ConnectionStringOrigin).Returns(DbConnectionStringOrigin.UserCode);
             mockContext.Setup(m => m.ProviderName).Returns("My.Provider");
-            mockContext.Setup(m => m.OriginalConnectionString).Returns("Databse=Foo");
+            mockContext.Setup(m => m.OriginalConnectionString).Returns("Database=Foo");
             mockContext.Setup(m => m.ConnectionStringName).Returns("SomeName");
 
             var contextInfo = new DbContextInfo(mockContext.Object.Owner);
 
             Assert.Equal(DbConnectionStringOrigin.UserCode, contextInfo.ConnectionStringOrigin);
-            Assert.Equal("Databse=Foo", contextInfo.ConnectionString);
+            Assert.Equal("Database=Foo", contextInfo.ConnectionString);
             Assert.Equal("SomeName", contextInfo.ConnectionStringName);
             Assert.Equal("My.Provider", contextInfo.ConnectionProviderName);
         }
