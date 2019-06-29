@@ -1404,7 +1404,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 //    are taken from the corresponding variables of the new UnnestOp. 
                 //    The new ProjectOp also projects a null sentinenel if the flattened type has one.
                 //
-                // 4. Update m_varInfoMap with the new new entry that maps the old unnestTableColumnVar to the list of new flattened vars:
+                // 4. Update m_varInfoMap with the new entry that maps the old unnestTableColumnVar to the list of new flattened vars:
                 //    If processingTVF, the new flattended vars are the outputs of the ProjectOp, 
                 //    otherwise the new flattened vars are the columns on the new UnnestOp.Table.
                 //
