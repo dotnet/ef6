@@ -277,7 +277,7 @@ namespace Microsoft.Data.Entity.Design.Package
 		partial void SetValidationExtensionRegistrar(DslValidation::ValidationController validationController);
 
 		/// <summary>
-		/// When the doc data is closed, make sure we reset the valiation messages 
+		/// When the doc data is closed, make sure we reset the validation messages 
 		/// (if there's any) from the ErrorList window.
 		/// </summary>
 		/// <param name="disposing"></param>
