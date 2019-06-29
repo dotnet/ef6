@@ -3589,7 +3589,7 @@ namespace ProductivityApiTests
 
             // this only works for integrated security, or when password is persisted after connecting
             // otherwise we can't connect to database during context initialization (password is gone from connection string)
-            if (DatabaseTestHelpers.IsIntegratedSecutity(connectionString) ||
+            if (DatabaseTestHelpers.IsIntegratedSecurity(connectionString) ||
                 DatabaseTestHelpers.PersistsSecurityInfo(connectionString))
             {
 
@@ -3626,7 +3626,7 @@ namespace ProductivityApiTests
 
             // this only works for integrated security, or when password is persisted after connecting
             // otherwise we can't connect to database during context initialization (password is gone from connection string)
-            if (DatabaseTestHelpers.IsIntegratedSecutity(connectionString) ||
+            if (DatabaseTestHelpers.IsIntegratedSecurity(connectionString) ||
                 DatabaseTestHelpers.PersistsSecurityInfo(connectionString))
             {
                 using (var connection = new SqlConnection(connectionString))

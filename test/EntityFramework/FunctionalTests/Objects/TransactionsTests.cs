@@ -620,7 +620,7 @@ namespace System.Data.Entity.Objects
             {
                 // this test only works for integrated security, or when password is persisted after connecting
                 // otherwise we can't connect to database during context initialization (password is gone from connection string)
-                if (DatabaseTestHelpers.IsIntegratedSecutity(connection.ConnectionString) || 
+                if (DatabaseTestHelpers.IsIntegratedSecurity(connection.ConnectionString) || 
                     DatabaseTestHelpers.PersistsSecurityInfo(connection.ConnectionString))
                 {
                     connection.Open();
