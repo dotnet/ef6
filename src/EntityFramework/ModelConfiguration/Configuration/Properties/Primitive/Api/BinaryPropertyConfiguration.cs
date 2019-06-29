@@ -6,7 +6,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Data.Entity.Infrastructure;
 
     /// <summary>
-    /// Used to configure a <see cref="T:System.byte[]" /> property of an entity type or complex type.
+    /// Used to configure a <see cref="T:System.Byte[]" /> property of an entity type or complex type.
     /// This configuration functionality is available via the Code First Fluent API, see <see cref="DbModelBuilder" />.
     /// </summary>
     public class BinaryPropertyConfiguration : LengthPropertyConfiguration
@@ -53,7 +53,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         /// <summary>
         /// Configures the property to be variable length.
-        /// <see cref="T:System.byte[]" /> properties are variable length by default.
+        /// <see cref="T:System.Byte[]" /> properties are variable length by default.
         /// </summary>
         /// <returns> The same BinaryPropertyConfiguration instance so that multiple calls can be chained. </returns>
         public new BinaryPropertyConfiguration IsVariableLength()
@@ -66,7 +66,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary>
         /// Configures the property to be optional.
         /// The database column used to store this property will be nullable.
-        /// <see cref="T:System.byte[]" /> properties are optional by default.
+        /// <see cref="T:System.Byte[]" /> properties are optional by default.
         /// </summary>
         /// <returns> The same BinaryPropertyConfiguration instance so that multiple calls can be chained. </returns>
         public new BinaryPropertyConfiguration IsOptional()
