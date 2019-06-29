@@ -1521,7 +1521,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbEntityRefExpression" /> that retrieves the ref of the specifed entity in structural form.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbEntityRefExpression" /> that retrieves the ref of the specified entity in structural form.
         /// </summary>
         /// <returns>A new DbEntityRefExpression that retrieves a reference to the specified entity.</returns>
         /// <param name="argument">The expression that provides the entity. This expression must have an entity result type.</param>
@@ -1677,7 +1677,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRefKeyExpression" /> that retrieves the key values of the specifed reference in structural form.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRefKeyExpression" /> that retrieves the key values of the specified reference in structural form.
         /// </summary>
         /// <returns>A new DbRefKeyExpression that retrieves the key values of the specified reference.</returns>
         /// <param name="argument">The expression that provides the reference. This expression must have a reference Type with an Entity element type.</param>

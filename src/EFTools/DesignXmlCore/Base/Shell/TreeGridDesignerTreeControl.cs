@@ -272,7 +272,7 @@ namespace Microsoft.Data.Entity.Design.Base.Shell
         }
 
         /// <summary>
-        ///     Populates the tree via attributes specifed on th root object.  This object usually corresponds to
+        ///     Populates the tree via attributes specified on the root object.  This object usually corresponds to
         ///     the selection made in a designer.
         /// </summary>
         /// <returns>True if the tree was populated.  False if the object passed in doesn't specify any branches.</returns>
