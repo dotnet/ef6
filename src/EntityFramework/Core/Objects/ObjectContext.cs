@@ -643,9 +643,9 @@ namespace System.Data.Entity.Core.Objects
                 }
                 else
                 {
-                    var exptectedState = doAttach ? EntityState.Unchanged : EntityState.Added;
+                    var expectedState = doAttach ? EntityState.Unchanged : EntityState.Added;
 
-                    if (existingEntry.State != exptectedState)
+                    if (existingEntry.State != expectedState)
                     {
                         throw doAttach
                                   ? new InvalidOperationException(Strings.ObjectContext_EntityAlreadyExistsInObjectStateManager)
