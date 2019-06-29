@@ -901,7 +901,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             //
             // If this type corresponds to an entity type, and that entity type
-            // has no subtypes, and that that entity type has no complex properties
+            // has no subtypes, and that entity type has no complex properties
             // then simply use the name from that property
             //
             bool usePropertyNamesFromUnderlyingType;
