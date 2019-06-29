@@ -161,7 +161,7 @@ namespace System.Data.Entity.SqlServerCompact
 
             // Throw an exception if connection is open.
             // We should not close the connection because user could have result sets/data readers associated with this connection.
-            // Thus, it is users responsiblity to close the connection before calling delete database.
+            // Thus, it is users responsibility to close the connection before calling delete database.
             if (DbInterception.Dispatch.Connection.GetState(connection, new DbInterceptionContext())
                 == ConnectionState.Open)
             {
