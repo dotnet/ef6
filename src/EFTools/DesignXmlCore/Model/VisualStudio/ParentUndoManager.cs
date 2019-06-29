@@ -11,7 +11,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.Model.VisualStudio
         private ParentUndoUnit _parentUndoUnit;
 
         /// <summary>
-        ///     This class is a decoroator over an IOleUndoManager.  It allows a "scope" to be started, and then all subsequent Add()
+        ///     This class is a decorator over an IOleUndoManager.  It allows a "scope" to be started, and then all subsequent Add()
         ///     call will attach the undo unit to a single ParentUndoUnit.  When the "scope" is closed, the ParentUndoUnit is
         ///     added to the "wrapped" IOleUndoManager.  This lets multiple undo/redo units be undone in one action by the user.
         /// </summary>
