@@ -274,10 +274,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                     var childSlots = new SlotInfo[totalSlots + additionalChildSlots.Count];
                     childBlock.Slots.CopyTo(childSlots, 0);
                     var index = totalSlots;
-                    foreach (var addtionalChildSlotInfo in additionalChildSlots)
+                    foreach (var additionalChildSlotInfo in additionalChildSlots)
                     {
-                        var slotInfo = addtionalChildSlotInfo.Item2;
-                        if (addtionalChildSlotInfo.Item1.Equals(childBlock))
+                        var slotInfo = additionalChildSlotInfo.Item2;
+                        if (additionalChildSlotInfo.Item1.Equals(childBlock))
                         {
                             childSlots[index] = new SlotInfo(
                                 true /* is required */, true /* is projected */, slotInfo.SlotValue, slotInfo.OutputMember);

@@ -2685,7 +2685,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
     }
 
     /// <summary>
-    ///     Edit control displayed in the TypeEditorHost.  Just a TextBox with some addtional
+    ///     Edit control displayed in the TypeEditorHost.  Just a TextBox with some additional
     ///     key message processing for opening the drop down.
     /// </summary>
     [SuppressMessage("Whitehorse.CustomRules", "WH03:WinFormControlCatchUnhandledExceptions",
@@ -2695,7 +2695,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
         private readonly TypeEditorHost _dropDownParent;
 
         /// <summary>
-        ///     Edit control displayed in the TypeEditorHost.  Just a TextBox with some addtional
+        ///     Edit control displayed in the TypeEditorHost.  Just a TextBox with some additional
         ///     key message processing for opening the drop down.
         /// </summary>
         public TypeEditorHostTextBox(TypeEditorHost dropDownParent)
