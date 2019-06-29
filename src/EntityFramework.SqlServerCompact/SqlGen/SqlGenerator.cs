@@ -2149,7 +2149,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         // <summary>
         // Dump out an expression - optionally wrap it with parantheses if possible
         // </summary>
-        private void ParanthesizeExpressionIfNeeded(DbExpression e, SqlBuilder result)
+        private void ParenthesizeExpressionIfNeeded(DbExpression e, SqlBuilder result)
         {
             if (IsComplexExpression(e))
             {
@@ -2184,7 +2184,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
                 {
                     result.Append(op);
                 }
-                ParanthesizeExpressionIfNeeded(argument, result);
+                ParenthesizeExpressionIfNeeded(argument, result);
             }
             return result;
         }
@@ -2208,7 +2208,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             }
             else
             {
-                ParanthesizeExpressionIfNeeded(left, result);
+                ParenthesizeExpressionIfNeeded(left, result);
             }
 
             result.Append(op);
@@ -2220,7 +2220,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             }
             else
             {
-                ParanthesizeExpressionIfNeeded(right, result);
+                ParenthesizeExpressionIfNeeded(right, result);
             }
 
             return result;
