@@ -156,7 +156,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         }
 
         // <summary>
-        // It will return true if there there non-boolean facets types that
+        // It will return true if there are non-boolean facets types that
         // are nulled out.
         // This function needs to be removed till the
         // HasNulledOutFacetValues of TypeUsage class become public

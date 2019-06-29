@@ -686,7 +686,7 @@ namespace System.Data.Entity.Core.Objects
 
             if (existingEntry == null)
             {
-                // If the exact object being added is already in the context, there there is no way we need to
+                // If the exact object being added is already in the context, there is no way we need to
                 // load the type for it, and since this is expensive, we only do the load if we have to.
 
                 // SQLBUDT 480919: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
@@ -1195,7 +1195,7 @@ namespace System.Data.Entity.Core.Objects
 
             if (existingEntry == null)
             {
-                // If the exact object being added is already in the context, there there is no way we need to
+                // If the exact object being added is already in the context, there is no way we need to
                 // load the type for it, and since this is expensive, we only do the load if we have to.
 
                 // SQLBUDT 480919: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
