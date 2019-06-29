@@ -877,7 +877,7 @@ namespace Microsoft.Data.Entity.Design.Model
             {
                 foreach (var n in SchemaManager.GetEDMXNamespaceNames())
                 {
-                    // see if this element is the "Edmx" element.  We don't exepct a EFObject for this element
+                    // see if this element is the "Edmx" element.  We don't expect a EFObject for this element
                     if (xe.Name.NamespaceName.Equals(n, StringComparison.OrdinalIgnoreCase))
                     {
                         if (xe.Name.LocalName.Equals("Edmx", StringComparison.OrdinalIgnoreCase))
