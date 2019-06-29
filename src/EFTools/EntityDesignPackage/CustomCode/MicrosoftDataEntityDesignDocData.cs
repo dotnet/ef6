@@ -345,7 +345,7 @@ namespace Microsoft.Data.Entity.Design.Package
                 // call the extensions that can save EDMX files first (even if we aren't going to end up in an EDMX file, let them process)
                 VSArtifact.DispatchToSerializationExtensions(serializers, transformContext, loading: false);
 
-                // get the extension of the file being loaded (might not be EDMX); this API will include the preceeding "."
+                // get the extension of the file being loaded (might not be EDMX); this API will include the preceding "."
                 var fileInfo = new FileInfo(FileName);
                 var fileExtension = fileInfo.Extension;
 

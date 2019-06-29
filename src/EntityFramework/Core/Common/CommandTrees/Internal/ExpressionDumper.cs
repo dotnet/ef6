@@ -55,7 +55,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         }
 
         // <summary>
-        // Dumps a DbExpression with the specified block name preceeding and succeeding (decorating) it.
+        // Dumps a DbExpression with the specified block name preceding and succeeding (decorating) it.
         // </summary>
         // <param name="e"> The DbExpression to dump </param>
         // <param name="name"> The decorating block name </param>
