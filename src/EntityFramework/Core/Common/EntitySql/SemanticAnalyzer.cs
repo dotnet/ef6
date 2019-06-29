@@ -44,7 +44,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // </summary>
         // <param name="astExpr"> ast command tree </param>
         // <remarks>
-        // <exception cref="System.Data.Entity.Core.EntityException">Thrown when Syntatic or Semantic rules are violated and the query cannot be accepted</exception>
+        // <exception cref="System.Data.Entity.Core.EntityException">Thrown when Syntactic or Semantic rules are violated and the query cannot be accepted</exception>
         // <exception cref="System.Data.Entity.Core.MetadataException">Thrown when metadata related service requests fail</exception>
         // <exception cref="System.Data.Entity.Core.MappingException">Thrown when mapping related service requests fail</exception>
         // </remarks>
@@ -77,7 +77,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // </summary>
         // <param name="astExpr"> ast command tree </param>
         // <remarks>
-        // <exception cref="System.Data.Entity.Core.EntityException">Thrown when Syntatic or Semantic rules are violated and the query cannot be accepted</exception>
+        // <exception cref="System.Data.Entity.Core.EntityException">Thrown when Syntactic or Semantic rules are violated and the query cannot be accepted</exception>
         // <exception cref="System.Data.Entity.Core.MetadataException">Thrown when metadata related service requests fail</exception>
         // <exception cref="System.Data.Entity.Core.MappingException">Thrown when mapping related service requests fail</exception>
         // </remarks>
