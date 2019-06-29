@@ -708,7 +708,7 @@ namespace System.Data.Entity.Core.Mapping
                 foreach (var entitySetBase in additionalSetsInClosure)
                 {
                     var associationSet = entitySetBase as AssociationSet;
-                    //Foreign Key Associations do not add to the dependancies
+                    //Foreign Key Associations do not add to the dependencies
                     if (associationSet != null
                         && !associationSet.ElementType.IsForeignKey)
                     {
@@ -727,7 +727,7 @@ namespace System.Data.Entity.Core.Mapping
                 foreach (var entitySetBase in entityContainerMapping.EdmEntityContainer.BaseEntitySets)
                 {
                     var associationSet = entitySetBase as AssociationSet;
-                    //Foreign Key Associations do not add to the dependancies
+                    //Foreign Key Associations do not add to the dependencies
                     if (associationSet != null
                         && !associationSet.ElementType.IsForeignKey)
                     {
