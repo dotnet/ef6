@@ -483,7 +483,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
                     // If the schema attribute is presented on the assembly or any referenced assemblies, then it is a V1 scenario that we should
                     // strictly follow the Get all referenced assemblies rules.
-                    // If the attribute is not presented on the assembly, then we won't load the referenced asssembly 
+                    // If the attribute is not presented on the assembly, then we won't load the referenced assembly 
                     // for this callingAssembly
                     if (ObjectItemAttributeAssemblyLoader.IsSchemaAttributePresent(callingAssembly)
                         || (_foundAssemblyWithAttribute

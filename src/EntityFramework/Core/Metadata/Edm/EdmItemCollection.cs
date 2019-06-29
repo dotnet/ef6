@@ -195,7 +195,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         // <summary>
-        // conventional oc mapping cache, the locking mechanism is provided by AsssemblyCache
+        // conventional oc mapping cache, the locking mechanism is provided by AssemblyCache
         // </summary>
         internal OcAssemblyCache ConventionalOcCache
         {
