@@ -142,7 +142,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
         ///     the permutation is being reordered
         /// </summary>
         /// <param name="column">The new selection column</param>
-        /// <param name="oldPermutation">The old column permuation</param>
+        /// <param name="oldPermutation">The old column permutation</param>
         /// <param name="fireEvents">True if this routine should fire selection events</param>
         private void SetSelectionColumn(int column, ColumnPermutation oldPermutation, bool fireEvents)
         {
