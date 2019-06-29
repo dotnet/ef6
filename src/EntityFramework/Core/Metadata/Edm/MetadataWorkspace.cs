@@ -457,7 +457,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // loaded, but the callingAssembly and its referenced assemblies are loaded.
         // </summary>
         // <param name="type"> The type's assembly is loaded into the OSpace ItemCollection </param>
-        // <param name="callingAssembly"> The assembly and its referenced assemblies to load when type is insuffiecent </param>
+        // <param name="callingAssembly"> The assembly and its referenced assemblies to load when type is insufficient </param>
         internal virtual void ImplicitLoadAssemblyForType(Type type, Assembly callingAssembly)
         {
             // this exists separately from LoadFromAssembly so that we can handle generics, like IEnumerable<Product>
@@ -508,7 +508,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // the load metadata from the callingAssembly and its referenced assemblies.
         // </summary>
         // <param name="type"> The CSPace type to verify its OSpace counterpart is loaded </param>
-        // <param name="callingAssembly"> The assembly and its referenced assemblies to load when type is insuffiecent </param>
+        // <param name="callingAssembly"> The assembly and its referenced assemblies to load when type is insufficient </param>
         internal virtual void ImplicitLoadFromEntityType(EntityType type, Assembly callingAssembly)
         {
             // used by ObjectContext.*GetObjectByKey when the clr type is not available
