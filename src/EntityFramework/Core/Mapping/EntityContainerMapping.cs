@@ -60,8 +60,8 @@ namespace System.Data.Entity.Core.Mapping
         // passing in the C-space EntityContainer  and
         // the s-space Entity container metadata objects.
         // </summary>
-        // <param name="entityContainer"> Entity Continer type that is being mapped on the C-side </param>
-        // <param name="storageEntityContainer"> Entity Continer type that is being mapped on the S-side </param>
+        // <param name="entityContainer"> Entity Container type that is being mapped on the C-side </param>
+        // <param name="storageEntityContainer"> Entity Container type that is being mapped on the S-side </param>
         internal EntityContainerMapping(
             EntityContainer entityContainer, EntityContainer storageEntityContainer,
             StorageMappingItemCollection storageMappingItemCollection, bool validate, bool generateUpdateViews)
@@ -92,8 +92,8 @@ namespace System.Data.Entity.Core.Mapping
         private readonly string identity;
         private readonly bool m_validate;
         private readonly bool m_generateUpdateViews;
-        private readonly EntityContainer m_entityContainer; //Entity Continer type that is being mapped on the C-side
-        private readonly EntityContainer m_storageEntityContainer; //Entity Continer type that the C-space container is being mapped to
+        private readonly EntityContainer m_entityContainer; //Entity Container type that is being mapped on the C-side
+        private readonly EntityContainer m_storageEntityContainer; //Entity Container type that the C-space container is being mapped to
 
         private readonly Dictionary<string, EntitySetBaseMapping> m_entitySetMappings =
             new Dictionary<string, EntitySetBaseMapping>(StringComparer.Ordinal);

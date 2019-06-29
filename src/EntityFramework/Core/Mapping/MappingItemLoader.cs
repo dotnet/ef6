@@ -2635,7 +2635,7 @@ namespace System.Data.Entity.Core.Mapping
             //Get the property name from MSL
             var propertyName = GetAliasResolvedAttributeValue(nav.Clone(), MslConstructs.ComplexPropertyNameAttribute);
             //Get the member metadata from the contianer type passed in.
-            //But if the continer type is collection type, there would n't be any member to represent the member.
+            //But if the container type is collection type, there would n't be any member to represent the member.
             EdmProperty member = null;
             EdmType memberType = null;
             //If member specified the type name, it takes precedence
