@@ -9912,7 +9912,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
                         {
                             //Don't show a custom tiptext over label to reduce interference with clicking, etc
                             //However, make sure that moving from label to icons switches to special text.
-                            //Note that we only make this adjustment if label is aligned near, otherwise ClippedItemRectange
+                            //Note that we only make this adjustment if label is aligned near, otherwise ClippedItemRectangle
                             //will already be aligned away from the indent, glyph, etc.
                             extraInfo.ClippedItemRectangle.X += extraInfo.LabelOffset;
                             rectClipped = true;
