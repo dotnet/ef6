@@ -2102,7 +2102,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         // <summary>
         // Aggregates are not visited by the normal visitor walk.
         // </summary>
-        // <param name="aggregate"> The aggreate go be translated </param>
+        // <param name="aggregate"> The aggregate go be translated </param>
         // <param name="aggregateArgument"> The translated aggregate argument </param>
         private static SqlBuilder VisitAggregate(DbAggregate aggregate, object aggregateArgument)
         {

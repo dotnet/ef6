@@ -802,7 +802,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 }
 
                 //
-                // Add aggregate to aggreate list.
+                // Add aggregate to aggregate list.
                 //
                 aggregateInfo.AttachToAstNode(sr.GenerateInternalName("groupPartition"), definition);
                 aggregateInfo.EvaluatingScopeRegion.GroupAggregateInfos.Add(aggregateInfo);
@@ -1402,7 +1402,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             }
 
             //
-            // Add aggregate to aggreate list.
+            // Add aggregate to aggregate list.
             //
             aggregateInfo.AttachToAstNode(sr.GenerateInternalName("groupAgg" + functionType.Name), functionAggregate);
             aggregateInfo.EvaluatingScopeRegion.GroupAggregateInfos.Add(aggregateInfo);
