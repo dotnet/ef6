@@ -96,7 +96,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
 
         /// <summary>
         ///     Property indicating if the double click event was handled. Set this property to true
-        ///     from and event handler to stop the control from taking default action on the doudble click.
+        ///     from and event handler to stop the control from taking default action on the double click.
         /// </summary>
         public bool Handled { get; set; }
 
