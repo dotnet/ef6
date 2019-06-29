@@ -287,7 +287,7 @@ namespace Microsoft.Data.Entity.Design.Model.Entity
         }
 
         /// <summary>
-        ///     A bindable reference to the EntityType that is this type's base type (will be null if no inheritence)
+        ///     A bindable reference to the EntityType that is this type's base type (will be null if no inheritance)
         /// </summary>
         internal EntityTypeBaseType BaseType
         {
