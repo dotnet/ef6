@@ -144,7 +144,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        /// Configures a <see cref="T:System.decimal" /> property that is included in this mapping fragment.
+        /// Configures a <see cref="T:System.Decimal" /> property that is included in this mapping fragment.
         /// </summary>
         /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
         /// <returns> A configuration object that can be used to configure the property. </returns>
@@ -157,7 +157,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        /// Configures a <see cref="T:System.decimal" /> property that is included in this mapping fragment.
+        /// Configures a <see cref="T:System.Decimal" /> property that is included in this mapping fragment.
         /// </summary>
         /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
         /// <returns> A configuration object that can be used to configure the property. </returns>
