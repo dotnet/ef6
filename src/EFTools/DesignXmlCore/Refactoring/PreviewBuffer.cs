@@ -55,7 +55,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.Refactoring
         ///     If the temp file already exists, use that one.  Otherwise, create a new one.
         /// </summary>
         /// <param name="fileExtension">The file extension.</param>
-        /// <returns>The preview temp file with file path, invisible editor and text buffer inforamtion.</returns>
+        /// <returns>The preview temp file with file path, invisible editor and text buffer information.</returns>
         private PreviewTempFile GetPreviewTempFile(string fileExtension)
         {
             ArgumentValidation.CheckForNullReference(fileExtension, "fileExtension");
