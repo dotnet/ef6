@@ -3880,7 +3880,7 @@ namespace System.Data.Entity.Core.Objects
 
                         // since ObjectParameters do not allow users to specify 'facets', make 
                         // sure that the parameter typeusage is not populated with the provider
-                        // dafault facet values.
+                        // default facet values.
                         // Try getting the type from the workspace. This may fail however for one of the following reasons:
                         // - the type is not a model type
                         // - the types were not loaded into the workspace yet
