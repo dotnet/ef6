@@ -18,7 +18,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
     {
         public DbModel Model { get; private set; }
 
-        // virutal for testing
+        // virtual for testing
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public virtual void GenerateModel(ModelBuilderSettings settings, IVsUtils vsUtils = null, 
             ModelBuilderEngineHostContext hostContext = null)
