@@ -1017,7 +1017,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
 
         /// <summary>
         ///     Flag that indicates whether this Synchronization event has been processed.  If this is set to true by a handler
-        ///     of the ITree.SynchronizationBeginning event, subsequent calls to IBranch.SynchonizeState will not be made.  The
+        ///     of the ITree.SynchronizationBeginning event, subsequent calls to IBranch.SynchronizeState will not be made.  The
         ///     ITree.SynchronizationEnding event will still be raised, however.
         /// </summary>
         public bool Handled { get; set; }
