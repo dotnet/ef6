@@ -374,7 +374,7 @@ public class CodeGenerationTools
 
     /// <summary>
     /// If the value parameter is null or empty an empty string is returned,
-    /// otherwise it retuns value with a single space concatenated on the end.
+    /// otherwise it returns value with a single space concatenated on the end.
     /// </summary>
     public string SpaceAfter(string value)
     {
@@ -383,7 +383,7 @@ public class CodeGenerationTools
 
     /// <summary>
     /// If the value parameter is null or empty an empty string is returned,
-    /// otherwise it retuns value with a single space concatenated on the end.
+    /// otherwise it returns value with a single space concatenated on the end.
     /// </summary>
     public string SpaceBefore(string value)
     {
@@ -392,7 +392,7 @@ public class CodeGenerationTools
 
     /// <summary>
     /// If the value parameter is null or empty an empty string is returned,
-    /// otherwise it retuns value with append concatenated on the end.
+    /// otherwise it returns value with append concatenated on the end.
     /// </summary>
     public string StringAfter(string value, string append)
     {
@@ -406,7 +406,7 @@ public class CodeGenerationTools
 
     /// <summary>
     /// If the value parameter is null or empty an empty string is returned,
-    /// otherwise it retuns value with prepend concatenated on the front.
+    /// otherwise it returns value with prepend concatenated on the front.
     /// </summary>
     public string StringBefore(string prepend, string value)
     {
@@ -469,7 +469,7 @@ public class CodeGenerationTools
     }
 
     /// <summary>
-    /// Retuns as full of a name as possible, if a namespace is provided
+    /// Returns as full of a name as possible, if a namespace is provided
     /// the namespace and name are combined with a period, otherwise just
     /// the name is returned.
     /// </summary>
@@ -484,7 +484,7 @@ public class CodeGenerationTools
     }
 
     /// <summary>
-    /// Retuns a literal representing the supplied value.
+    /// Returns a literal representing the supplied value.
     /// </summary>
     public string CreateLiteral(object value)
     {
@@ -2076,7 +2076,7 @@ public class NullHost : IDynamicHost
 {
     /// <summary>
     /// An abstraction of the call to Microsoft.VisualStudio.TextTemplating.ITextTemplatingEngineHost ResolveParameterValue
-    /// that simply retuns null.
+    /// that simply returns null.
     /// </summary>
     public string ResolveParameterValue(string id, string name, string otherName)
     {
@@ -2085,7 +2085,7 @@ public class NullHost : IDynamicHost
 
     /// <summary>
     /// An abstraction of the call to Microsoft.VisualStudio.TextTemplating.ITextTemplatingEngineHost ResolvePath
-    /// that simply retuns the path passed in.
+    /// that simply returns the path passed in.
     /// </summary>
     public string ResolvePath(string path)
     {

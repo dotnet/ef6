@@ -345,7 +345,7 @@ Public Class CodeGenerationTools
 
     ''' <summary>
     ''' If the value parameter is null or empty an empty string is returned,
-    ''' otherwise it retuns value with a single space concatenated on the end.
+    ''' otherwise it returns value with a single space concatenated on the end.
     ''' </summary>
     Public Function SpaceAfter(ByVal value As String) As String
         Return StringAfter(value, " ")
@@ -353,7 +353,7 @@ Public Class CodeGenerationTools
 
     ''' <summary>
     ''' If the value parameter is null or empty an empty string is returned,
-    ''' otherwise it retuns value with a single space concatenated on the end.
+    ''' otherwise it returns value with a single space concatenated on the end.
     ''' </summary>
     Public Function SpaceBefore(ByVal value As String) As String
         Return StringBefore(" ", value)
@@ -361,7 +361,7 @@ Public Class CodeGenerationTools
 
     ''' <summary>
     ''' If the value parameter is null or empty an empty string is returned,
-    ''' otherwise it retuns value with append concatenated on the end.
+    ''' otherwise it returns value with append concatenated on the end.
     ''' </summary>
     Public Function StringAfter(ByVal value As String, ByVal append As String) As String
         If String.IsNullOrEmpty(value) Then
@@ -373,7 +373,7 @@ Public Class CodeGenerationTools
 
     ''' <summary>
     ''' If the value parameter is null or empty an empty string is returned,
-    ''' otherwise it retuns value with prepend concatenated on the front.
+    ''' otherwise it returns value with prepend concatenated on the front.
     ''' </summary>
     Public Function StringBefore(ByVal prepend As String, ByVal value As String) As String
         If String.IsNullOrEmpty(value) Then
@@ -472,7 +472,7 @@ Public Class CodeGenerationTools
     End Function
 
     ''' <summary>
-    ''' Retuns as full of a name as possible, if a namespace is provided
+    ''' Returns as full of a name as possible, if a namespace is provided
     ''' the namespace and name are combined with a period, otherwise just
     ''' the name is returned.
     ''' </summary>
@@ -485,7 +485,7 @@ Public Class CodeGenerationTools
     End Function
 
     ''' <summary>
-    ''' Retuns a literal representing the supplied value.
+    ''' Returns a literal representing the supplied value.
     ''' </summary>
     Public Function CreateLiteral(ByVal value As Object) As String
         If value Is Nothing Then
@@ -1936,7 +1936,7 @@ Public Class NullHost
     Implements IDynamicHost
     ''' <summary>
     ''' An abstraction of the call to Microsoft.VisualStudio.TextTemplating.ITextTemplatingEngineHost ResolveParameterValue
-    ''' that simply retuns null.
+    ''' that simply returns null.
     ''' </summary>
     Public Function ResolveParameterValue(ByVal id As String, ByVal name As String, ByVal otherName As String) As String Implements IDynamicHost.ResolveParameterValue
         Return Nothing
@@ -1944,7 +1944,7 @@ Public Class NullHost
 
     ''' <summary>
     ''' An abstraction of the call to Microsoft.VisualStudio.TextTemplating.ITextTemplatingEngineHost ResolvePath
-    ''' that simply retuns the path passed in.
+    ''' that simply returns the path passed in.
     ''' </summary>
     Public Function ResolvePath(ByVal path As String) As String Implements IDynamicHost.ResolvePath
         Return path
