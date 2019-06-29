@@ -124,7 +124,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 //unwrap System.Enum
                 if (linqType == typeof(Enum))
                 {
-                    Debug.Assert(linq.Value != null, "null enum constants should have alredy been taken care of");
+                    Debug.Assert(linq.Value != null, "null enum constants should have already been taken care of");
 
                     linqType = linq.Value.GetType();
                 }
