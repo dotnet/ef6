@@ -315,7 +315,7 @@ namespace System.Data.Entity.SqlServerCompact
 
         #region Private Helpers
 
-        // Private helper for validatingn the SqlCeConnection.
+        // Private helper for validating the SqlCeConnection.
         private void ValidateConnection(DbConnection connection)
         {
             // Check whether it is a valid SqlCeConnection.
