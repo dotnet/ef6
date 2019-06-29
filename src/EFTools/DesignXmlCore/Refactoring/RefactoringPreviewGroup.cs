@@ -55,7 +55,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.Refactoring
         public string WarningMessage { get; set; }
 
         /// <summary>
-        ///     If the selection for every single change inside thise preview group is changable or not.
+        ///     If the selection for every single change inside this preview group is changable or not.
         /// </summary>
         public bool EnableChangeUncheck
         {
