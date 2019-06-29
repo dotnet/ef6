@@ -23,7 +23,7 @@ namespace System.Data.Entity.Infrastructure.Interception
         /// <remarks>
         /// Handlers can only be added before EF starts to use the configuration and so handlers should
         /// generally be added as part of application initialization. Do not access the DbConfiguration
-        /// static methods inside the handler; instead use the the members of <see cref="DbConfigurationLoadedEventArgs" />
+        /// static methods inside the handler; instead use the members of <see cref="DbConfigurationLoadedEventArgs" />
         /// to get current services and/or add overrides.
         /// </remarks>
         /// <param name="loadedEventArgs">Arguments to the event that this interceptor mirrors.</param>

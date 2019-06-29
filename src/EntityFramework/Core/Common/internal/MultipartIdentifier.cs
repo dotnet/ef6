@@ -50,7 +50,7 @@ namespace System.Data.Entity.Core.Common.Internal
         // </summary>
         // <param name="name"> string to parse </param>
         // <param name="leftQuote"> set of characters which are valid quoteing characters to initiate a quote </param>
-        // <param name="rightQuote"> set of characters which are valid to stop a quote, array index's correspond to the the leftquote array. </param>
+        // <param name="rightQuote"> set of characters which are valid to stop a quote, array index's correspond to the leftquote array. </param>
         // <param name="separator"> separator to use </param>
         [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly")]
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]

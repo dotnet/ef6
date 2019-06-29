@@ -103,7 +103,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
         /// <summary>
         ///     Determine the display column and native column for the current selection
         ///     column and the specified caret. If extending anchor columns is enabled,
-        ///     the the returned displayColumn may not be the current selection column.
+        ///     the returned displayColumn may not be the current selection column.
         /// </summary>
         /// <param name="caret">The caret to test. Should not be -1.</param>
         /// <param name="displayColumn">Returns the display column</param>

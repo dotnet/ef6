@@ -267,7 +267,7 @@ function Initialize-EFConfiguration
     configuration file.
 
 .PARAMETER ConnectionString
-    Specifies the the connection string to use. If omitted, the context's
+    Specifies the connection string to use. If omitted, the context's
     default connection will be used.
 
 .PARAMETER ConnectionProviderName
@@ -392,7 +392,7 @@ function Enable-Migrations
     configuration file.
 
 .PARAMETER ConnectionString
-    Specifies the the connection string to use. If omitted, the context's
+    Specifies the connection string to use. If omitted, the context's
     default connection will be used.
 
 .PARAMETER ConnectionProviderName
@@ -517,7 +517,7 @@ function Add-Migration
     configuration file.
 
 .PARAMETER ConnectionString
-    Specifies the the connection string to use. If omitted, the context's
+    Specifies the connection string to use. If omitted, the context's
     default connection will be used.
 
 .PARAMETER ConnectionProviderName
@@ -638,7 +638,7 @@ function Update-Database
     configuration file.
 
 .PARAMETER ConnectionString
-    Specifies the the connection string to use. If omitted, the context's
+    Specifies the connection string to use. If omitted, the context's
     default connection will be used.
 
 .PARAMETER ConnectionProviderName

@@ -206,7 +206,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
         // <summary>
         // Sets nullability for association set mappings' foreign keys for 1:* and 1:0..1 associations
-        // when no base types share the the association set mapping's table
+        // when no base types share the association set mapping's table
         // </summary>
         private void ConfigureAssociationSetMappingForeignKeys(EntitySet entitySet)
         {

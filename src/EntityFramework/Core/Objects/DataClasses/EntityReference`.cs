@@ -884,7 +884,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 if (applyConstraints && null != _wrappedCachedValue.Entity)
                 {
                     // The idea here is that we want to throw for constraint violations in things that we are bringing in,
-                    // but not when replacing references of things already in the context.  Therefore, if the the thing that
+                    // but not when replacing references of things already in the context.  Therefore, if the thing that
                     // we're replacing is in ProcessedEntities it means we're bringing it in and we should throw.
                     if (tm == null
                         || tm.ProcessedEntities == null

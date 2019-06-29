@@ -2031,7 +2031,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             var newCaseOp = m_command.CreateCaseOp(integerType);
             var children = new List<Node>(3);
 
-            //The the 'when' from the case statement
+            //The 'when' from the case statement
             children.Add(n.Child0);
 
             var nullSentinelNullNode = m_command.CreateNode(m_command.CreateNullOp(integerType));

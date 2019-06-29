@@ -267,7 +267,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         // returns them. If allowMissingAttributes is true and attributes
         // are missing on the schema side, substitutes them with NULL
         // Modifies views to contain the generated views for different
-        // extents specified by cells and the the schemaContext
+        // extents specified by cells and the schemaContext
         private ErrorLog GenerateDirectionalViews(ViewTarget viewTarget, CqlIdentifiers identifiers, ViewSet views)
         {
             var isQueryView = viewTarget == ViewTarget.QueryView;

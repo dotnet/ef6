@@ -1106,7 +1106,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // introduce some prefix sortkeys, but there aren't any now.
             var nestOp = Command.CreateMultiStreamNestOp(new List<SortKey>(), outputVars, collectionInfoList);
 
-            // Insert the current node at the head of the the list of collections
+            // Insert the current node at the head of the list of collections
             collectionNodes.Insert(0, projectNode);
             var nestNode = Command.CreateNode(nestOp, collectionNodes);
 

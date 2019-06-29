@@ -31,7 +31,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         // <summary>
-        // Initialize a new attribute with complex type kind (corresponding the the CLR type)
+        // Initialize a new attribute with complex type kind (corresponding the CLR type)
         // </summary>
         // <param name="type"> CLR type setting Type property </param>
         // <param name="isCollection"> Sets IsCollectionType property </param>

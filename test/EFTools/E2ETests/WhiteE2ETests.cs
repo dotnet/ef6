@@ -216,7 +216,7 @@ namespace EFDesigner.E2ETests
                         var addButton = newItemWindow.Get<Button>(SearchCriteria.ByAutomationId("btn_OK"));
                         addButton.Click();
 
-                        // This method polls for the the wizard to show up
+                        // This method polls for the wizard to show up
                         _wizard = GetWizard("WizardFormDialog_Title");
 
                         // Walk thru the Wizard with existing DB option
@@ -330,7 +330,7 @@ namespace EFDesigner.E2ETests
                         var addButton = newItemWindow.Get<Button>(SearchCriteria.ByAutomationId("btn_OK"));
                         addButton.Click();
 
-                        // This method polls for the the wizard to show up
+                        // This method polls for the wizard to show up
                         _wizard = GetWizard("WizardFormDialog_Title");
 
                         // Walk thru the Wizard with existing DB option
@@ -374,7 +374,7 @@ namespace EFDesigner.E2ETests
                     {
                         Trace.WriteLine(DateTime.Now.ToLongTimeString() + ":In thread wizardDiscoveryThread");
 
-                        // This method polls for the the wizard to show up
+                        // This method polls for the wizard to show up
                         _wizard = GetWizard("WizardFormDialog_Title");
 
                         // Walk thru the Wizard with existing DB option
@@ -424,7 +424,7 @@ namespace EFDesigner.E2ETests
                     {
                         Trace.WriteLine(DateTime.Now.ToLongTimeString() + ":In thread wizardDiscoveryThread");
 
-                        // This method polls for the the wizard to show up
+                        // This method polls for the wizard to show up
                         _wizard = GetWizard("UpdateFromDatabaseWizard_Title");
 
                         // Walk thru the Wizard with existing DB option
@@ -515,7 +515,7 @@ namespace EFDesigner.E2ETests
                     {
                         Trace.WriteLine(DateTime.Now.ToLongTimeString() + ":In thread wizardDiscoveryThread");
 
-                        // This method polls for the the wizard to show up
+                        // This method polls for the wizard to show up
                         _wizard = GetWizard("WizardFormDialog_Title");
 
                         // Walk thru the Wizard with existing DB option, code first

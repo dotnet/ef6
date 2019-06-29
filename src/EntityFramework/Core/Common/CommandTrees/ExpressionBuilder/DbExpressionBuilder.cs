@@ -1839,7 +1839,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <summary>
         /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbUnionAllExpression" /> that computes the union of the left and right set arguments and does not remove duplicates.
         /// </summary>
-        /// <returns>A new DbUnionAllExpression that union, including duplicates, of the the left and right arguments.</returns>
+        /// <returns>A new DbUnionAllExpression that union, including duplicates, of the left and right arguments.</returns>
         /// <param name="left">An expression that defines the left set argument.</param>
         /// <param name="right">An expression that defines the right set argument.</param>
         /// <exception cref="T:System.ArgumentNullException">left or right is null.</exception>
@@ -3086,7 +3086,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <summary>
         /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that computes the union of the left and right set arguments with duplicates removed.
         /// </summary>
-        /// <returns>A new DbExpression that computes the union, without duplicates, of the the left and right arguments.</returns>
+        /// <returns>A new DbExpression that computes the union, without duplicates, of the left and right arguments.</returns>
         /// <param name="left">An expression that defines the left set argument.</param>
         /// <param name="right">An expression that defines the right set argument.</param>
         /// <exception cref="T:System.ArgumentNullException">left or right is null.</exception>

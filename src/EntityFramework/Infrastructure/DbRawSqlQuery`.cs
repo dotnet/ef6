@@ -566,7 +566,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        /// Asynchronously returns the first element of the query, or a default value if the the query result contains no elements.
+        /// Asynchronously returns the first element of the query, or a default value if the query result contains no elements.
         /// </summary>
         /// <remarks>
         /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
@@ -583,7 +583,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        /// Asynchronously returns the first element of the query, or a default value if the the query result contains no elements.
+        /// Asynchronously returns the first element of the query, or a default value if the query result contains no elements.
         /// </summary>
         /// <remarks>
         /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
