@@ -202,7 +202,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             get { return _designTimeProviderInvariantName; }
         }
 
-        internal TimeSpan LoadingDBMetatdataTime { get; set; }
+        internal TimeSpan LoadingDBMetadataTime { get; set; }
 
         internal EFArtifact Artifact
         {

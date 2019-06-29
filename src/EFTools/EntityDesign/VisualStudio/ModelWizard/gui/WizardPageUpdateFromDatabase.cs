@@ -261,7 +261,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         private void UpdateSettingsFromGui()
         {
             Wizard.ModelBuilderSettings.DatabaseObjectFilters = GetSelectedFilterEntriesFromTreeView();
-            Wizard.ModelBuilderSettings.LoadingDBMetatdataTime = _stopwatch.Elapsed;
+            Wizard.ModelBuilderSettings.LoadingDBMetadataTime = _stopwatch.Elapsed;
             Wizard.ModelBuilderSettings.UsePluralizationService = chkPluralize.Checked;
             Wizard.ModelBuilderSettings.IncludeForeignKeysInModel = chkIncludeForeignKeys.Checked;
         }

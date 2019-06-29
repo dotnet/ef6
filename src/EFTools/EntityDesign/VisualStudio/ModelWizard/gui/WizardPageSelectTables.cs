@@ -243,7 +243,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         {
             Wizard.ModelBuilderSettings.DatabaseObjectFilters = GetSelectedFilterEntriesFromTreeView();
             Wizard.ModelBuilderSettings.ModelNamespace = modelNamespaceTextBox.Text;
-            Wizard.ModelBuilderSettings.LoadingDBMetatdataTime = _stopwatch.Elapsed;
+            Wizard.ModelBuilderSettings.LoadingDBMetadataTime = _stopwatch.Elapsed;
             Wizard.ModelBuilderSettings.UsePluralizationService = chkPluralize.Checked;
             Wizard.ModelBuilderSettings.IncludeForeignKeysInModel = chkIncludeForeignKeys.Checked;
         }

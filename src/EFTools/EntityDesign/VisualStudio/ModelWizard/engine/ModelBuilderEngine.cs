@@ -71,7 +71,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             {
                 generatingModelWatch.Stop();
 
-                hostContext.LogMessage(FormatMessage(Resources.LoadingDBMetadataTimeMsg, settings.LoadingDBMetatdataTime));
+                hostContext.LogMessage(FormatMessage(Resources.LoadingDBMetadataTimeMsg, settings.LoadingDBMetadataTime));
                 hostContext.LogMessage(FormatMessage(Resources.GeneratingModelTimeMsg, generatingModelWatch.Elapsed));
             }
         }
