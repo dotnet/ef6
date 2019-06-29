@@ -672,7 +672,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // source and adds that namespace to the front of the relationship name.  If the namespace
         // can't be found, then the relationshipName is returned untouched and the expectation is that
         // other validations will fail later in the code paths that use this.
-        // This method should only be used at the imediate top-level public surface since all internal
+        // This method should only be used at the immediate top-level public surface since all internal
         // calls are expected to use fully qualified names already.
         // </summary>
         internal string PrependNamespaceToRelationshipName(string relationshipName)
