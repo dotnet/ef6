@@ -160,7 +160,7 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
             }
 
             // foreach table/view in entityTypesToBeUpdatedDatabaseObjects find
-            // the EntityTypes in the ExistingModel which need to be udpated
+            // the EntityTypes in the ExistingModel which need to be updated
             foreach (var dbObj in entityTypesToBeUpdatedDatabaseObjects)
             {
                 // find list of new S-side properties for this DatabaseObject
