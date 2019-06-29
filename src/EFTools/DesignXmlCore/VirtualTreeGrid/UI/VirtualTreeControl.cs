@@ -4470,7 +4470,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
             var invalidatePending = false;
             var subsequentSubItems = false;
 
-            // only perform the optimization if we arent horizontally scrolled. (bug 38565)
+            // only perform the optimization if we aren't horizontally scrolled. (bug 38565)
             if (change != 0
                 && myXPos == 0)
             {
