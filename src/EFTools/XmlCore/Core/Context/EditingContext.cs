@@ -96,7 +96,7 @@ namespace Microsoft.Data.Entity.Design.Core.Context
         ///     that supports delayed activation of design editor managers through the
         ///     declaration of a SubscribeService attribute on the design editor manager.
         /// </summary>
-        /// <returns>Returns an implemetation of the ServiceCollection class.</returns>
+        /// <returns>Returns an implementation of the ServiceCollection class.</returns>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         protected virtual ServiceCollection CreateServiceCollection()
         {
