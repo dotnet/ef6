@@ -308,7 +308,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         }
 
         // <summary>
-        // Initalizes the mapping from names of canonical function for date/time addition
+        // Initializes the mapping from names of canonical function for date/time addition
         // to corresponding dateparts
         // </summary>
         private static Dictionary<string, string> InitializeDateAddFunctionNameToDatepartDictionary()
@@ -325,7 +325,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         }
 
         // <summary>
-        // Initalizes the mapping from names of canonical function for date/time difference
+        // Initializes the mapping from names of canonical function for date/time difference
         // to corresponding dateparts
         // </summary>
         private static Dictionary<string, string> InitializeDateDiffFunctionNameToDatepartDictionary()
@@ -454,7 +454,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         }
 
         // <summary>
-        // Initalizes the mapping from functions to TSql operators
+        // Initializes the mapping from functions to TSql operators
         // for all functions that translate to TSql operators
         // </summary>
         private static Dictionary<string, string> InitializeFunctionNameToOperatorDictionary()

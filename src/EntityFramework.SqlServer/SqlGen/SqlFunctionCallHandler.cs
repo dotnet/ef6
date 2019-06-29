@@ -292,7 +292,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         }
 
         // <summary>
-        // Initalizes the mapping from functions to TSql operators
+        // Initializes the mapping from functions to TSql operators
         // for all functions that translate to TSql operators
         // </summary>
         private static Dictionary<string, string> InitializeFunctionNameToOperatorDictionary()
@@ -308,7 +308,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         }
 
         // <summary>
-        // Initalizes the mapping from names of canonical function for date/time addition
+        // Initializes the mapping from names of canonical function for date/time addition
         // to corresponding dateparts
         // </summary>
         private static Dictionary<string, string> InitializeDateAddFunctionNameToDatepartDictionary()
@@ -327,7 +327,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         }
 
         // <summary>
-        // Initalizes the mapping from names of canonical function for date/time difference
+        // Initializes the mapping from names of canonical function for date/time difference
         // to corresponding dateparts
         // </summary>
         private static Dictionary<string, string> InitializeDateDiffFunctionNameToDatepartDictionary()
@@ -346,7 +346,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         }
 
         // <summary>
-        // Initalizes the mapping from names of canonical function that represent static hierarchyid methods to their corresponding
+        // Initializes the mapping from names of canonical function that represent static hierarchyid methods to their corresponding
         // static method name, qualified with the 'hierarchyid::' prefix.
         // </summary>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
@@ -365,7 +365,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         }
 
         // <summary>
-        // Initalizes the mapping from names of canonical function that represent static geography methods to their corresponding
+        // Initializes the mapping from names of canonical function that represent static geography methods to their corresponding
         // static method name, qualified with the 'geography::' prefix.
         // </summary>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
@@ -428,7 +428,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         }
 
         // <summary>
-        // Initalizes the mapping from names of canonical function that represent geography instance properties to their corresponding
+        // Initializes the mapping from names of canonical function that represent geography instance properties to their corresponding
         // store property name.
         // </summary>
         private static Dictionary<string, string> InitializeGeographyInstancePropertyFunctionsDictionary()
@@ -445,7 +445,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         }
 
         // <summary>
-        // Initalizes the mapping of canonical function name to instance method name for geography instance functions that differ in name from the sql server equivalent.
+        // Initializes the mapping of canonical function name to instance method name for geography instance functions that differ in name from the sql server equivalent.
         // </summary>
         private static Dictionary<string, string> InitializeRenamedGeographyInstanceMethodFunctions()
         {
@@ -479,7 +479,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         }
 
         // <summary>
-        // Initalizes the mapping from names of canonical function that represent static geometry methods to their corresponding
+        // Initializes the mapping from names of canonical function that represent static geometry methods to their corresponding
         // static method name, qualified with the 'geometry::' prefix.
         // </summary>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
@@ -542,7 +542,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         }
 
         // <summary>
-        // Initalizes the mapping from names of canonical function that represent geometry instance properties to their corresponding
+        // Initializes the mapping from names of canonical function that represent geometry instance properties to their corresponding
         // store property name.
         // </summary>
         private static Dictionary<string, string> InitializeGeometryInstancePropertyFunctionsDictionary()
@@ -559,7 +559,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         }
 
         // <summary>
-        // Initalizes the mapping of canonical function name to instance method name for geometry instance functions that differ in name from the sql server equivalent.
+        // Initializes the mapping of canonical function name to instance method name for geometry instance functions that differ in name from the sql server equivalent.
         // </summary>
         private static Dictionary<string, string> InitializeRenamedGeometryInstanceMethodFunctions()
         {

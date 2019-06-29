@@ -16,7 +16,7 @@ namespace System.Data.Entity.Core.Mapping
         private readonly ModificationFunctionMapping _insertFunctionMapping;
 
         /// <summary>
-        /// Initalizes a new AssociationSetModificationFunctionMapping instance.
+        /// Initializes a new AssociationSetModificationFunctionMapping instance.
         /// </summary>
         /// <param name="associationSet">An association set.</param>
         /// <param name="deleteFunctionMapping">A delete function mapping.</param>
