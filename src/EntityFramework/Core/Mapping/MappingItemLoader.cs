@@ -199,7 +199,7 @@ namespace System.Data.Entity.Core.Mapping
                 }
 
                 // Create an XPathNavigator to navigate the document in a forward only manner.
-                // The XPathNavigator can also be used to run quries through the document while still maintaining
+                // The XPathNavigator can also be used to run queries through the document while still maintaining
                 // the current position. This will be helpful in running validation rules that are not part of Schema.
                 var nav = doc.CreateNavigator();
                 return LoadMappingItems(nav.Clone());
