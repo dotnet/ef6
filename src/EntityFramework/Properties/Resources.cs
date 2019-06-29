@@ -12433,9 +12433,9 @@ namespace System.Data.Entity.Resources
         // <summary>
         // A string like "Structural type mappings must not be null or empty for function imports returning non-scalar values."
         // </summary>
-        internal static string StructuralTypeMappingsMustNotBeNullForFunctionImportsReturingNonScalarValues
+        internal static string StructuralTypeMappingsMustNotBeNullForFunctionImportsReturningNonScalarValues
         {
-            get { return EntityRes.GetString(EntityRes.StructuralTypeMappingsMustNotBeNullForFunctionImportsReturingNonScalarValues); }
+            get { return EntityRes.GetString(EntityRes.StructuralTypeMappingsMustNotBeNullForFunctionImportsReturningNonScalarValues); }
         }
 
         // <summary>
@@ -17286,7 +17286,7 @@ namespace System.Data.Entity.Resources
         internal const string ComposableFunctionOrFunctionImportMustDeclareReturnType = "ComposableFunctionOrFunctionImportMustDeclareReturnType";
         internal const string NonComposableFunctionCannotBeMappedAsComposable = "NonComposableFunctionCannotBeMappedAsComposable";
         internal const string ComposableFunctionImportsReturningEntitiesNotSupported = "ComposableFunctionImportsReturningEntitiesNotSupported";
-        internal const string StructuralTypeMappingsMustNotBeNullForFunctionImportsReturingNonScalarValues = "StructuralTypeMappingsMustNotBeNullForFunctionImportsReturingNonScalarValues";
+        internal const string StructuralTypeMappingsMustNotBeNullForFunctionImportsReturningNonScalarValues = "StructuralTypeMappingsMustNotBeNullForFunctionImportsReturningNonScalarValues";
         internal const string InvalidReturnTypeForComposableFunction = "InvalidReturnTypeForComposableFunction";
         internal const string NonComposableFunctionMustNotDeclareReturnType = "NonComposableFunctionMustNotDeclareReturnType";
         internal const string CommandTextFunctionsNotComposable = "CommandTextFunctionsNotComposable";

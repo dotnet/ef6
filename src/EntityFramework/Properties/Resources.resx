@@ -4952,7 +4952,7 @@
   <data name="ComposableFunctionImportsReturningEntitiesNotSupported" xml:space="preserve">
     <value>Mapping function imports returning entities is not supported.</value>
   </data>
-  <data name="StructuralTypeMappingsMustNotBeNullForFunctionImportsReturingNonScalarValues" xml:space="preserve">
+  <data name="StructuralTypeMappingsMustNotBeNullForFunctionImportsReturningNonScalarValues" xml:space="preserve">
     <value>Structural type mappings must not be null or empty for function imports returning non-scalar values.</value>
   </data>
   <data name="InvalidReturnTypeForComposableFunction" xml:space="preserve">
