@@ -143,7 +143,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                     return visitor.VisitLeftAntiSemiJoin(this, param);
                 default:
                     Debug.Fail("Unexpected optype: " + OpType);
-                    // To satsfy the compiler
+                    // To satisfy the compiler
                     return visitor.VisitInnerJoin(this, param);
             }
         }
