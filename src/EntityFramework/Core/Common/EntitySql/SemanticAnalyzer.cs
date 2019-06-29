@@ -1024,7 +1024,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         private static ValueExpression ConvertTypeConstructorCall(MetadataType metadataType, MethodExpr methodExpr, SemanticResolver sr)
         {
             //
-            // Ensure edmType has a contructor.
+            // Ensure edmType has a constructor.
             //
             if (!TypeSemantics.IsComplexType(metadataType.TypeUsage)
                 &&

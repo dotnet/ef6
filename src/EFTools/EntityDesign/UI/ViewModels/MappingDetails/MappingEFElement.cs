@@ -367,7 +367,7 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails
         // </summary>
         protected virtual MappingEFElement CreateCreatorNodeCopy()
         {
-            // by default just create a new one passing typical contructor arguments
+            // by default just create a new one passing typical constructor arguments
             return Activator.CreateInstance(GetType(), Context, null, Parent) as MappingEFElement;
         }
 
