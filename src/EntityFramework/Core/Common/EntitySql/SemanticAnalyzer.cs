@@ -212,7 +212,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // <summary>
         // Dispatches/Converts statement expressions.
         // </summary>
-        // <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
+        // <param name="sr"> SemanticResolver instance relative to a specific typespace/system </param>
         private static ParseResult ConvertStatement(Statement astStatement, SemanticResolver sr)
         {
             DebugCheck.NotNull(astStatement);
@@ -240,7 +240,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // <summary>
         // Converts query statement AST to a <see cref="DbQueryCommandTree" />
         // </summary>
-        // <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
+        // <param name="sr"> SemanticResolver instance relative to a specific typespace/system </param>
         private static ParseResult ConvertQueryStatementToDbCommandTree(Statement astStatement, SemanticResolver sr)
         {
             DebugCheck.NotNull(astStatement);
@@ -2192,7 +2192,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // <summary>
         // Converts Arithmetic Expressions Args
         // </summary>
-        // <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
+        // <param name="sr"> SemanticResolver instance relative to a specific typespace/system </param>
         private static Pair<DbExpression, DbExpression> ConvertArithmeticArgs(BuiltInExpr astBuiltInExpr, SemanticResolver sr)
         {
             var operands = ConvertValueExpressionsWithUntypedNulls(
@@ -2233,7 +2233,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // <summary>
         // Converts Plus Args - specific case since string edmType is an allowed edmType for '+'
         // </summary>
-        // <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
+        // <param name="sr"> SemanticResolver instance relative to a specific typespace/system </param>
         private static Pair<DbExpression, DbExpression> ConvertPlusOperands(BuiltInExpr astBuiltInExpr, SemanticResolver sr)
         {
             var operands = ConvertValueExpressionsWithUntypedNulls(
@@ -2273,7 +2273,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // <summary>
         // Converts Logical Expression Args
         // </summary>
-        // <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
+        // <param name="sr"> SemanticResolver instance relative to a specific typespace/system </param>
         private static Pair<DbExpression, DbExpression> ConvertLogicalArgs(BuiltInExpr astBuiltInExpr, SemanticResolver sr)
         {
             var leftExpr = ConvertValueExpressionAllowUntypedNulls(astBuiltInExpr.Arg1, sr);
@@ -2319,7 +2319,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // <summary>
         // Converts Equal Comparison Expression Args
         // </summary>
-        // <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
+        // <param name="sr"> SemanticResolver instance relative to a specific typespace/system </param>
         private static Pair<DbExpression, DbExpression> ConvertEqualCompArgs(BuiltInExpr astBuiltInExpr, SemanticResolver sr)
         {
             //
@@ -2349,7 +2349,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // <summary>
         // Converts Order Comparison Expression Args
         // </summary>
-        // <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
+        // <param name="sr"> SemanticResolver instance relative to a specific typespace/system </param>
         private static Pair<DbExpression, DbExpression> ConvertOrderCompArgs(BuiltInExpr astBuiltInExpr, SemanticResolver sr)
         {
             var compArgs = ConvertValueExpressionsWithUntypedNulls(
@@ -2376,7 +2376,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // <summary>
         // Converts Set Expression Args
         // </summary>
-        // <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
+        // <param name="sr"> SemanticResolver instance relative to a specific typespace/system </param>
         private static Pair<DbExpression, DbExpression> ConvertSetArgs(BuiltInExpr astBuiltInExpr, SemanticResolver sr)
         {
             //
@@ -2507,7 +2507,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // <summary>
         // Converts Set 'IN' expression args
         // </summary>
-        // <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
+        // <param name="sr"> SemanticResolver instance relative to a specific typespace/system </param>
         private static Pair<DbExpression, DbExpression> ConvertInExprArgs(BuiltInExpr astBuiltInExpr, SemanticResolver sr)
         {
             var rightExpr = ConvertValueExpression(astBuiltInExpr.Arg2, sr);
