@@ -2105,7 +2105,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             // While we're at it, we'll build a new list of top-level output columns, which
             // should include only the Discriminator, the columns from the driving collection,
-            // and and one column for each of the nested collections.
+            // and one column for each of the nested collections.
 
             // Start building the flattenedOutputVarList that the top level PhysicalProjectOp
             // is to output.

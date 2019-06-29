@@ -201,7 +201,7 @@ namespace System.Data.Entity.Internal
         // <see cref="ObjectContext" /> and sets it as the context to use DisposeTempObjectContext is called.
         // This allows this internal context and its DbContext to be used for transient operations
         // such as initializing and seeding the database, after which it can be thrown away.
-        // This isolates the real <see cref="ObjectContext" /> from any changes made and and saves performed.
+        // This isolates the real <see cref="ObjectContext" /> from any changes made and saves performed.
         // </summary>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public virtual void UseTempObjectContext()
