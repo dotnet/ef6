@@ -308,7 +308,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
         }
 
         /// <summary>
-        ///     This method is used to cache the results of a function so the funcion is ever at most invoked
+        ///     This method is used to cache the results of a function so the function is ever at most invoked
         ///     once for each possible value of the argument and only one copy of the result for every value
         ///     of the argument is ever allocated in memory
         /// </summary>
