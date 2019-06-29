@@ -184,7 +184,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
         /// <summary>
         ///     Factory method for creating the appropriate drop-down control based on the given property descriptor.
         ///     If the property descriptor supports a UITypeEditor, a TypeEditorHost will be created with that editor.
-        ///     If not, and the TypeConverver attached to the PropertyDescriptor supports standard values, a
+        ///     If not, and the TypeConverter attached to the PropertyDescriptor supports standard values, a
         ///     TypeEditorHostListBox will be created with this TypeConverter.
         /// </summary>
         /// <param name="propertyDescriptor">A property descriptor describing the property being set</param>
