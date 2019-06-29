@@ -2892,7 +2892,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
                         // handle Ctrl-Plus to auto-size the current column.  
                         // UNDONE: the standard listview handles this to auto-size all columns, but
                         // since we may have percentage-based columns, this is not necessarily a straightforward
-                        // operation.  Most important thing here is the accessbility requirement, which is 
+                        // operation.  Most important thing here is the accessibility requirement, which is 
                         // satisfied by allowing resize of the current column from the keyboard.  
                         if (mySelectionColumn >= 0)
                         {
