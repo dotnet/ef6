@@ -189,11 +189,11 @@ namespace System.Data.Entity.Infrastructure
             }
 
             var transactionId = Guid.NewGuid();
-            var savedSuccesfully = false;
+            var savedSuccessfully = false;
             var reinitializedDatabase = false;
             var objectContext = ((IObjectContextAdapter)TransactionContext).ObjectContext;
             ((EntityConnection)objectContext.Connection).UseStoreTransaction(interceptionContext.Result);
-            while (!savedSuccesfully)
+            while (!savedSuccessfully)
             {
                 Debug.Assert(!Transactions.ContainsKey(interceptionContext.Result), "The transaction has already been registered");
                 var transactionRow = new TransactionRow { Id = transactionId, CreationTime = DateTime.Now };
@@ -203,7 +203,7 @@ namespace System.Data.Entity.Infrastructure
                 try
                 {
                     objectContext.SaveChangesInternal(SaveOptions.AcceptAllChangesAfterSave, executeInExistingTransaction: true);
-                    savedSuccesfully = true;
+                    savedSuccessfully = true;
                 }
                 catch (UpdateException)
                 {
