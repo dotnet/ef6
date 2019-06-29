@@ -54,7 +54,7 @@ namespace Microsoft.Data.Entity.Design.Core.Controls
         }
 
         /// <summary>
-        ///     MouseLeftButtonUp Handler for focusable ancestor. If renameOnClick flag is set, starts the timer to attemp rename.
+        ///     MouseLeftButtonUp Handler for focusable ancestor. If renameOnClick flag is set, starts the timer to attempt rename.
         /// </summary>
         private void focusableAncestor_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
