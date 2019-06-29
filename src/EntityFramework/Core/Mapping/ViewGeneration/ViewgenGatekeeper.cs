@@ -81,7 +81,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
 
             var foreignKeyConstraints = result.ForeignKeyConstraints;
             // Get a Clone of cell groups from cache since cells are modified during viewgen, and we don't want the cached copy to change
-            var cellGroups = result.CellGroups.Select(setOfcells => new CellGroup(setOfcells.Select(cell => new Cell(cell)))).ToList();
+            var cellGroups = result.CellGroups.Select(setOfCells => new CellGroup(setOfCells.Select(cell => new Cell(cell)))).ToList();
             var cells = result.Cells;
             var identifiers = result.Identifiers;
 
