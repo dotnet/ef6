@@ -16,7 +16,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
     using System.Text;
 
     // <summary>
-    // Enacapsulates the logic required to translate function calls represented as instances of DbFunctionExpression into SQL.
+    // Encapsulates the logic required to translate function calls represented as instances of DbFunctionExpression into SQL.
     // There are several special cases that modify how the translation should proceed. These include:
     // - 'Special' canonical functions, for which the function name or arguments differ between the EDM canonical function and the SQL function
     // - 'Special' server functions, which are similar to the 'special' canonical functions but sourced by the SQL Server provider manifest
