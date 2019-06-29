@@ -311,7 +311,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.ViewModel
 		/// <param name="sourceElement">The element that is to be related to this model element.</param>
 		/// <param name="elementGroup">The group of source ModelElements that have been rehydrated into the target store.</param>
 		/// <remarks>
-		/// This method is overriden to create the relationship between the target element and the specified source element.
+		/// This method is overridden to create the relationship between the target element and the specified source element.
 		/// The base method does nothing.
 		/// </remarks>
 		protected override void MergeRelate(DslModeling::ModelElement sourceElement, DslModeling::ElementGroup elementGroup)
@@ -685,7 +685,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.ViewModel
 		/// <param name="sourceElement">The element that is to be related to this model element.</param>
 		/// <param name="elementGroup">The group of source ModelElements that have been rehydrated into the target store.</param>
 		/// <remarks>
-		/// This method is overriden to create the relationship between the target element and the specified source element.
+		/// This method is overridden to create the relationship between the target element and the specified source element.
 		/// The base method does nothing.
 		/// </remarks>
 		protected override void MergeRelate(DslModeling::ModelElement sourceElement, DslModeling::ElementGroup elementGroup)

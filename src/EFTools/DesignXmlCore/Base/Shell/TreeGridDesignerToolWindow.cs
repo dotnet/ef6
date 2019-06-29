@@ -88,7 +88,7 @@ namespace Microsoft.Data.Entity.Design.Base.Shell
         }
 
         /// <summary>
-        ///     Overriden to create the VirtualTreeControl hosted in the tool window
+        ///     Overridden to create the VirtualTreeControl hosted in the tool window
         /// </summary>
         /// <returns></returns>
         protected override void OnToolWindowCreate()

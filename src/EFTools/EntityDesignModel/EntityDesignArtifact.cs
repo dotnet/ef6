@@ -836,7 +836,7 @@ namespace Microsoft.Data.Entity.Design.Model
         internal virtual bool IsXmlValid()
         {
             // since the xml editor will fix-up parser errors, we can't detect if the xml will parse.  This method  is 
-            // overriden in VSArtifact to see if the xml will parse.
+            // overridden in VSArtifact to see if the xml will parse.
             return true;
         }
 

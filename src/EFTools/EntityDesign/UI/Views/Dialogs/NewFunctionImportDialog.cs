@@ -211,7 +211,7 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
             }
         }
 
-        #region Overriden Methods
+        #region Overridden Methods
 
         protected override void OnClosing(CancelEventArgs e)
         {

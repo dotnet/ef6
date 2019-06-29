@@ -435,7 +435,7 @@ namespace Microsoft.Data.Entity.Design.Base.Shell
         }
 
         /// <summary>
-        ///     Overriden to preprocess key messages.
+        ///     Overridden to preprocess key messages.
         /// </summary>
         protected override bool ProcessDialogKey(Keys keyData)
         {
@@ -474,7 +474,7 @@ namespace Microsoft.Data.Entity.Design.Base.Shell
         }
 
         /// <summary>
-        ///     Overriden to preprocess key messages.
+        ///     Overridden to preprocess key messages.
         /// </summary>
         protected override bool ProcessDialogChar(char c)
         {
@@ -527,7 +527,7 @@ namespace Microsoft.Data.Entity.Design.Base.Shell
         }
 
         /// <summary>
-        ///     Overriden to run the default action specified by the currently selected branch.
+        ///     Overridden to run the default action specified by the currently selected branch.
         /// </summary>
         /// <param name="e"></param>
         protected override void OnDoubleClick(DoubleClickEventArgs e)

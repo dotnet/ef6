@@ -3028,7 +3028,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
         }
 
         /// <summary>
-        ///     Overriden to set up the list index based on current text
+        ///     Overridden to set up the list index based on current text
         /// </summary>
         protected override void OnOpeningDropDown(EventArgs e)
         {
@@ -3047,7 +3047,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
         }
 
         /// <summary>
-        ///     Overriden to set up the list index based on current text
+        ///     Overridden to set up the list index based on current text
         /// </summary>
         protected override void OnTextChanged(EventArgs e)
         {

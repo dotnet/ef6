@@ -23,7 +23,7 @@ namespace System.Data.Entity.Infrastructure
         UserCode,
 
         /// <summary>
-        /// The connection string was overriden by connection information supplied to DbContextInfo.
+        /// The connection string was overridden by connection information supplied to DbContextInfo.
         /// </summary>
         DbContextInfo
     }

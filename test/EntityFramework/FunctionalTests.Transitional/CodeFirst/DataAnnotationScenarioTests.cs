@@ -207,7 +207,7 @@ namespace FunctionalTests
         }
 
         [Fact]
-        public void NotMapped_on_base_class_property_and_overriden_property_ignores_them()
+        public void NotMapped_on_base_class_property_and_overridden_property_ignores_them()
         {
             using (var baseEntityConfiguration = new DynamicTypeDescriptionConfiguration<BaseEntity>())
             {
@@ -278,7 +278,7 @@ namespace FunctionalTests
         }
 
         [Fact]
-        public void NotMapped_on_overriden_mapped_base_class_property_throws()
+        public void NotMapped_on_overridden_mapped_base_class_property_throws()
         {
             using (var unitConfiguration = new DynamicTypeDescriptionConfiguration<Unit>())
             {
@@ -322,7 +322,7 @@ namespace FunctionalTests
         }
 
         [Fact]
-        public void NotMapped_on_unmapped_base_class_property_and_overriden_property_ignores_it()
+        public void NotMapped_on_unmapped_base_class_property_and_overridden_property_ignores_it()
         {
             using (var unitConfiguration = new DynamicTypeDescriptionConfiguration<Unit>())
             {

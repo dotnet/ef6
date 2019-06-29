@@ -235,7 +235,7 @@ namespace ProductivityApiUnitTests
         #region Virtual Dispose tests
 
         [Fact]
-        public void Dispose_can_be_overriden_in_a_derived_DbContext()
+        public void Dispose_can_be_overridden_in_a_derived_DbContext()
         {
             var mockContext = new Mock<DbContext>();
             mockContext.Protected().Setup("Dispose", true).Verifiable();

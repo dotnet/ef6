@@ -859,18 +859,18 @@ namespace System.Data.Entity.Infrastructure
         }
 
         [Fact]
-        public void Should_obtain_DefaultConnectionFactory_from_supplied_config_but_this_can_be_overriden_normal_constructor()
+        public void Should_obtain_DefaultConnectionFactory_from_supplied_config_but_this_can_be_overridden_normal_constructor()
         {
-            Should_obtain_DefaultConnectionFactory_from_supplied_config_but_this_can_be_overriden(typeof(ContextWithoutDefaultCtor));
+            Should_obtain_DefaultConnectionFactory_from_supplied_config_but_this_can_be_overridden(typeof(ContextWithoutDefaultCtor));
         }
 
         [Fact]
-        public void Should_obtain_DefaultConnectionFactory_from_supplied_config_but_this_can_be_overriden_init_constructor()
+        public void Should_obtain_DefaultConnectionFactory_from_supplied_config_but_this_can_be_overridden_init_constructor()
         {
-            Should_obtain_DefaultConnectionFactory_from_supplied_config_but_this_can_be_overriden(typeof(ContextWithoutDefaultCtorWithInit));
+            Should_obtain_DefaultConnectionFactory_from_supplied_config_but_this_can_be_overridden(typeof(ContextWithoutDefaultCtorWithInit));
         }
 
-        private void Should_obtain_DefaultConnectionFactory_from_supplied_config_but_this_can_be_overriden(Type contextType)
+        private void Should_obtain_DefaultConnectionFactory_from_supplied_config_but_this_can_be_overridden(Type contextType)
         {
             RunTestWithConnectionFactory(
                 Database.ResetDefaultConnectionFactory,
@@ -1148,18 +1148,18 @@ namespace System.Data.Entity.Infrastructure
         }
 
         [Fact]
-        public void Supplied_config_used_to_load_original_and_overriden_connection_normal_constructor()
+        public void Supplied_config_used_to_load_original_and_overridden_connection_normal_constructor()
         {
-            Supplied_config_used_to_load_original_and_overriden_connection(typeof(ContextWithConnectionNameNotInAppConfigFile));
+            Supplied_config_used_to_load_original_and_overridden_connection(typeof(ContextWithConnectionNameNotInAppConfigFile));
         }
 
         [Fact]
-        public void Supplied_config_used_to_load_original_and_overriden_connection_init_constructor()
+        public void Supplied_config_used_to_load_original_and_overridden_connection_init_constructor()
         {
-            Supplied_config_used_to_load_original_and_overriden_connection(typeof(ContextWithConnectionNameNotInAppConfigFileWithInit));
+            Supplied_config_used_to_load_original_and_overridden_connection(typeof(ContextWithConnectionNameNotInAppConfigFileWithInit));
         }
 
-        private void Supplied_config_used_to_load_original_and_overriden_connection(Type contextType)
+        private void Supplied_config_used_to_load_original_and_overridden_connection(Type contextType)
         {
             var connection = new DbConnectionInfo("GetMeFromSuppliedConfig");
             var contextInfo = new DbContextInfo(

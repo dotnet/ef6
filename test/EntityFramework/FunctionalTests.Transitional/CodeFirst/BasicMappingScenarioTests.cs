@@ -224,7 +224,7 @@ namespace FunctionalTests
         }
 
         [Fact]
-        public void Ignoring_overriden_mapped_base_class_property_throws()
+        public void Ignoring_overridden_mapped_base_class_property_throws()
         {
             var modelBuilder = new DbModelBuilder();
 

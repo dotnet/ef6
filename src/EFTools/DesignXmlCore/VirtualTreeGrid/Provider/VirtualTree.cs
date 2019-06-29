@@ -701,7 +701,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
                 get { return HasFullSubItemGain ? (StoreFullSubItemGain - ImmedSubItemGain) : 0; }
             }
 
-            // The next set of properties are overriden in by different implementations
+            // The next set of properties are overridden in by different implementations
             // of TREENODE to add functionality.
 
             /// <summary>
