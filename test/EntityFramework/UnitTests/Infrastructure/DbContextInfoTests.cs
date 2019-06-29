@@ -1282,7 +1282,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         [Fact] // CodePlex 291, 1316
-        public void CreateInstance_should_not_cause_database_initializer_to_run_even_if_context_consturctor_would_cause_it()
+        public void CreateInstance_should_not_cause_database_initializer_to_run_even_if_context_constructor_would_cause_it()
         {
             var contextInfo = new DbContextInfo(typeof(InitTestContext));
 
