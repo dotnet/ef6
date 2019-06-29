@@ -21,7 +21,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
         /// <summary>
         ///     Return the count of visible items in this branch. The branch can contain
         ///     items beyond the visible count as long as expanded items each have a unique
-        ///     index. The tree tree does not care how many total items a branch has.
+        ///     index. The tree does not care how many total items a branch has.
         /// </summary>
         int VisibleItemCount { get; }
 
