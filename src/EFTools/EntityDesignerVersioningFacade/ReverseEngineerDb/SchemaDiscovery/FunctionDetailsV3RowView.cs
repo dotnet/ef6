@@ -15,7 +15,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
         private const int ProcIsComposableIndex = 5;
         private const int ProcIsBuiltinIndex = 6;
         private const int ProcIsNiladicIndex = 7;
-        private const int ProcIstvfIndex = 8;
+        private const int ProcIsTvfIndex = 8;
         private const int ParamNameIndex = 9;
         private const int ParamTypeIndex = 10;
         private const int ParamDirectionIndex = 11;
@@ -68,7 +68,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
 
         public override bool IsTvf
         {
-            get { return ConvertDBNull<bool>(Values[ProcIstvfIndex]); }
+            get { return ConvertDBNull<bool>(Values[ProcIsTvfIndex]); }
         }
 
         public override string ParameterName
