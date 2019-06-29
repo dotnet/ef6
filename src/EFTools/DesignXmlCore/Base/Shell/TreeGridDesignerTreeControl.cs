@@ -260,7 +260,7 @@ namespace Microsoft.Data.Entity.Design.Base.Shell
         }
 
         /// <summary>
-        ///     Disbles event handlers for all columns in the tree
+        ///     Disables event handlers for all columns in the tree
         /// </summary>
         internal void RemoveColumnEventHandlers()
         {
