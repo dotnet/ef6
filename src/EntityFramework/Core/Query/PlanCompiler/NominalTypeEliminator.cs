@@ -1123,7 +1123,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             if (op.Outputs != newVars)
             {
-                // If the set of vars is empty, that means we didn;t need any of the Vars
+                // If the set of vars is empty, that means we didn't need any of the Vars
                 if (newVars.IsEmpty)
                 {
                     return n.Child0;
