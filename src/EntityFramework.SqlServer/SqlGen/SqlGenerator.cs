@@ -4009,7 +4009,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 == DbExpressionKind.Constant)
             {
                 //For constant expression we should not cast the value, 
-                // thus we don't go throught the default DbConstantExpression handling
+                // thus we don't go through the default DbConstantExpression handling
                 var sqlBuilder = new SqlBuilder();
                 sqlBuilder.Append(((DbConstantExpression)e).Value.ToString());
                 result = sqlBuilder;
