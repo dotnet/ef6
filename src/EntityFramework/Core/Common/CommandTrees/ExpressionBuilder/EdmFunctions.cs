@@ -891,7 +891,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <summary>
         /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Ceiling' function with the specified argument, which must each have a single, double or decimal result type. The result type of the expression is the same as the result type of value.
         /// </summary>
-        /// <returns>A new DbFunctionExpression that returns the smallest integer value not less than than value.</returns>
+        /// <returns>A new DbFunctionExpression that returns the smallest integer value not less than the value.</returns>
         /// <param name="value">An expression that specifies the numeric value.</param>
         public static DbFunctionExpression Ceiling(this DbExpression value)
         {
