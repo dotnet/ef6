@@ -782,7 +782,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 // we should not be wrapping all exceptions
                 if (e.RequiresContext())
                 {
-                    // we don't wan't folks to have to know all the various types of exceptions that can 
+                    // we don't want folks to have to know all the various types of exceptions that can 
                     // occur, so we just rethrow a CommandDefinitionException and make whatever we caught  
                     // the inner exception of it.
                     throw new EntityCommandCompilationException(Strings.EntityClient_CommandDefinitionPreparationFailed, e);
