@@ -141,7 +141,7 @@
     <Compile Include="Designer\DiagramElementNameCommittedArgs.cs" />
     <Compile Include="FeatureState.cs" />
     <Compile Include="SchemaQualifiedName.cs" />
-    <Compile Include="SchemaValidatioErrorCollector.cs" />
+    <Compile Include="SchemaValidationErrorCollector.cs" />
     <Compile Include="Mapping\FunctionImportPropertyMappingNameNormalizer.cs" />
     <Compile Include="Mapping\FunctionPropertyMappingNameNormalizer.cs" />
     <Compile Include="HostContext.cs" />
