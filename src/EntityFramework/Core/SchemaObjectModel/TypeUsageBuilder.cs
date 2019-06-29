@@ -214,7 +214,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
             if (noErrors)
             {
-                // Only validate the values if there are no errros encountered in the above functions.
+                // Only validate the values if there are no errors encountered in the above functions.
                 // If there are errors encountered (like for e.g. precision
                 switch (scalar.TypeKind)
                 {
