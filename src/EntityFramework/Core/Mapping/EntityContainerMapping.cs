@@ -293,7 +293,7 @@ namespace System.Data.Entity.Core.Mapping
         internal EntitySetBaseMapping GetEntitySetMapping(String setName)
         {
             DebugCheck.NotNull(setName);
-            //Key for EntitySetMapping should be EntitySet name and Entoty type name
+            //Key for EntitySetMapping should be EntitySet name and Entity type name
             EntitySetBaseMapping setMapping = null;
             m_entitySetMappings.TryGetValue(setName, out setMapping);
             return setMapping;
