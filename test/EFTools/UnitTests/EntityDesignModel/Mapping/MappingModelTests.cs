@@ -33,16 +33,16 @@ namespace Microsoft.Data.Entity.Design.Model.Mapping
 
             var modelManager = new Mock<ModelManager>(null, null).Object;
             var modelProvider = new Mock<XmlModelProvider>().Object;
-            var entityDesignArtifiact =
+            var entityDesignArtifact =
                 new Mock<EntityDesignArtifact>(modelManager, new Uri("urn:dummy"), modelProvider)
                     {
                         CallBase = true
                     }.Object;
 
-            entityDesignArtifiact.SetXObject(
+            entityDesignArtifact.SetXObject(
                 XDocument.Parse("<Edmx xmlns=\"http://schemas.microsoft.com/ado/2009/11/edmx\" />"));
 
-            using (var mappingModel = new MappingModel(entityDesignArtifiact, tmpElement))
+            using (var mappingModel = new MappingModel(entityDesignArtifact, tmpElement))
             {
                 mappingModel.SetXObject(null);
                 Assert.Equal("http://schemas.microsoft.com/ado/2009/11/mapping/cs", mappingModel.XNamespace);
