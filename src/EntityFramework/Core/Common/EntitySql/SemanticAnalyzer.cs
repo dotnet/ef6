@@ -5384,7 +5384,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             #endregion
 
             ////////////////////////////
-            // Nullabity Expressions
+            // Nullability Expressions
             ////////////////////////////
 
             //
