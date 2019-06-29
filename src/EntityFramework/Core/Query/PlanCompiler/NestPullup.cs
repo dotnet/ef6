@@ -1733,11 +1733,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // vars into m_definingNodeMap.
         // The dictionary collectionVarDefinitions (below) contains the copied definitions of such collection vars.
         // but without the wrapping PhysicalProjectOp.
-        // Example:     m_definingNodeMap contains (var1, definition1) and (var2, definintion2).
+        // Example:     m_definingNodeMap contains (var1, definition1) and (var2, definition2).
         // var2 is defined inside the definition of var1.
-        // Here we copy definition1 -> definintion1'.
+        // Here we copy definition1 -> definition1'.
         // We need to add to m_definitionNodeMap (var2', definition2').
-        // definition2' should be a copy of definiton2 in the context of to definition1',
+        // definition2' should be a copy of definition2 in the context of to definition1',
         // i.e. definition2' should relate to definition1' in same way that definition2 relates to definition1
         // </summary>
         private Node CopyCollectionVarDefinition(Node refVarDefiningNode)
