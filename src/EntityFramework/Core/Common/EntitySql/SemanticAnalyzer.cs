@@ -1150,7 +1150,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // </summary>
         // <remarks>
         // This method converts group aggregates in two phases:
-        // Phase 1 - it will resolve the actual inner (argument) expression and then anotate the ast node and add the resolved aggregate
+        // Phase 1 - it will resolve the actual inner (argument) expression and then annotate the ast node and add the resolved aggregate
         // to the scope
         // Phase 2 - if ast node was annotated, just extract the precomputed expression from the scope.
         // </remarks>
