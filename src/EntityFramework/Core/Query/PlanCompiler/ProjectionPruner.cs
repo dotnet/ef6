@@ -467,7 +467,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         // <summary>
-        // Helper method for removing redundant constant keys from GroupByOp and DistictOp.
+        // Helper method for removing redundant constant keys from GroupByOp and DistinctOp.
         // It only examines the keys defined in the given varDefListNode.
         // It removes all constant and null keys that are not referenced elsewhere,
         // but ensuring that at least one key is left.
