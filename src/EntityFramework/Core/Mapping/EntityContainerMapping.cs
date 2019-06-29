@@ -503,7 +503,7 @@ namespace System.Data.Entity.Core.Mapping
             var partitioner = new CellPartitioner(result.Cells, result.ForeignKeyConstraints);
             var cellGroups = partitioner.GroupRelatedCells();
 
-            //Clone cell groups- i.e, List<Set<Cell>> - upto cell before storing it in the cache because viewgen modified the Cell structure
+            //Clone cell groups- i.e, List<Set<Cell>> - up to cell before storing it in the cache because viewgen modified the Cell structure
             result.CellGroups = cellGroups.Select(setOfcells => new CellGroup(setOfcells.Select(cell => new Cell(cell)))).ToList();
 
             return result;

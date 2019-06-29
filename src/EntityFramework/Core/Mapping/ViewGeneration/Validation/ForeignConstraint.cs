@@ -185,7 +185,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
 
             // Check if the foreign key in the child table corresponds to the primary key, i.e., if
             // the foreign key (e.g., pid, pid2) is a superset of the actual key members (e.g., pid), it means
-            // that the foreign key is also the primary key for this table -- so we can propagate the queries upto C-Space
+            // that the foreign key is also the primary key for this table -- so we can propagate the queries up to C-Space
             // rather than doing the cell check
 
             var initialErrorLogSize = errorLog.Count;
