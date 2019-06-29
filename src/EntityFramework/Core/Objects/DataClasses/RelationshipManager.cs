@@ -1787,7 +1787,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         // <summary>
-        // Calls AttachContext on each RelatedEnd referenced by this manager and also on all the enties
+        // Calls AttachContext on each RelatedEnd referenced by this manager and also on all the entities
         // referenced by that related end.
         // </summary>
         internal void ResetContextOnRelatedEnds(ObjectContext context, EntitySet entitySet, MergeOption mergeOption)

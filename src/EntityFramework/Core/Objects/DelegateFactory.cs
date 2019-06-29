@@ -69,7 +69,7 @@ namespace System.Data.Entity.Core.Objects
         // <paramref name="value" />
         // to property type.
         // </exception>
-        // <exception cref="System.ArgumentOutOfRangeException">From generated enties via StructuralObject.SetValidValue.</exception>
+        // <exception cref="System.ArgumentOutOfRangeException">From generated entities via StructuralObject.SetValidValue.</exception>
         internal static void SetValue(EdmProperty property, object target, object value)
         {
             var setter = GetSetterDelegateForProperty(property);
