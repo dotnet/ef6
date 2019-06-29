@@ -507,13 +507,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         // <summary>
         // First defer to default handling for groupby nodes
-        // If all group aggregate vars are prunned out turn it into a GroupBy.
+        // If all group aggregate vars are pruned out turn it into a GroupBy.
         // </summary>
         public override Node Visit(GroupByIntoOp op, Node n)
         {
             var result = VisitGroupByOp(op, n);
 
-            //Transform the GroupByInto into a GroupBy if all group aggregate vars were prunned out
+            //Transform the GroupByInto into a GroupBy if all group aggregate vars were pruned out
             if (result.Op.OpType == OpType.GroupByInto
                 && n.Child3.Children.Count == 0)
             {
