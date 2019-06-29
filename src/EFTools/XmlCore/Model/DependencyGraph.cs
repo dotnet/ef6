@@ -147,7 +147,7 @@ namespace Microsoft.Data.Entity.Design.Model
             if (antiDeps == null
                 || !antiDeps.Contains(item))
             {
-                Debug.Assert(false, "dependency does not have specified anti-depencency");
+                Debug.Assert(false, "dependency does not have specified anti-dependency");
             }
             else
             {
