@@ -7222,7 +7222,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
                                 var adjustResult = branchTester.ValidateAdjustDepth(tnChild.Branch);
                                 var depthAdjustment = adjustResult.DepthAdjustment;
                                 var keepWalkingBranch = adjustResult.Continue;
-                                // Ignore any negative depth ajustment returned by the branchTester.
+                                // Ignore any negative depth adjustment returned by the branchTester.
                                 // We can't do anything with a negative adjustment here because we're 
                                 // already at 0. Also, it is very likely that this same call in the 
                                 // depth > 0 block is what put us here in the first place, so we should
