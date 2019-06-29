@@ -44,7 +44,7 @@ namespace Microsoft.Data.Entity.Design.Model
         private bool _isStructurallySafe;
 
         /// <summary>
-        ///     True if this artifact's XMLNS values are consistent with the desireed EDMX version.
+        ///     True if this artifact's XMLNS values are consistent with the desired EDMX version.
         /// </summary>
         private bool _isVersionSafe;
 
