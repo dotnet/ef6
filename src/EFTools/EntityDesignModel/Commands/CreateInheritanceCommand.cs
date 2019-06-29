@@ -205,7 +205,7 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
                             // here, to work around an xml editor bug, we clone the entity type mapping, instead of re-parenting it
                             etm.Clone(entitySetMappingOfBaseType);
 
-                            // The old EntityTyepMapping will be deleted when we delete the entity set below.  
+                            // The old EntityTypeMapping will be deleted when we delete the entity set below.  
                         }
                     }
                 }

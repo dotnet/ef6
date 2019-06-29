@@ -49,7 +49,7 @@ namespace Microsoft.Data.Entity.Design.Model.Mapping
             }
 
             //
-            // try to normalize for an EntityTyepMapping with no FunctionAssociationEnd 
+            // try to normalize for an EntityTypeMapping with no FunctionAssociationEnd 
             //
             var etm = parentItem.GetParentOfType(typeof(EntityTypeMapping)) as EntityTypeMapping;
             var fae = parentItem.GetParentOfType(typeof(FunctionAssociationEnd)) as FunctionAssociationEnd;
