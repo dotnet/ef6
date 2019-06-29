@@ -3460,7 +3460,7 @@ namespace Microsoft.Data.Entity.Design {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to To Role.
+        ///   Looks up a localized string similar to ToRole.
         /// </summary>
         public static string PropertyWindow_DisplayName_ToRole {
             get {
