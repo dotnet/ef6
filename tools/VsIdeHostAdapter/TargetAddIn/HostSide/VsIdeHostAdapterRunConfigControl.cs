@@ -76,7 +76,7 @@ namespace Microsoft.VisualStudio.TestTools.HostAdapters.VsIde
         }
 
         /// <summary>
-        /// Desciption about this editor is displayed in the help panel of main run config editor.
+        /// Description about this editor is displayed in the help panel of main run config editor.
         /// </summary>
         string IRunConfigurationEditor.Description
         {
