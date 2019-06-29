@@ -399,7 +399,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         // <summary>
-        // Given a member path and an alias, returns an eSQL string correspondng to the fully-qualified name
+        // Given a member path and an alias, returns an eSQL string corresponding to the fully-qualified name
         // <paramref
         //     name="blockAlias" />
         // .path, e.g., T1.Address.Phone.Zip.

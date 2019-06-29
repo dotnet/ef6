@@ -596,7 +596,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // <param name="input"> The input expression tree </param>
         // <param name="ignoreMissingProperties"> Should we ignore missing properties </param>
         // <param name="properties"> Output: list of properties </param>
-        // <param name="values"> Output: correspondng list of values </param>
+        // <param name="values"> Output: corresponding list of values </param>
         private void GetPropertyValues(
             TypeInfo typeInfo, OperationKind opKind, Node input, bool ignoreMissingProperties,
             out List<md.EdmProperty> properties, out List<Node> values)
