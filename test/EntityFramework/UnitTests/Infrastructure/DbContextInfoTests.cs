@@ -1328,7 +1328,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         [Fact]
-        public void Context_type_can_be_assoictaed_with_DbContextInfo_and_then_later_unsuppressed()
+        public void Context_type_can_be_associated_with_DbContextInfo_and_then_later_unsuppressed()
         {
             Assert.Null(DbContextInfo.CurrentInfo);
 
