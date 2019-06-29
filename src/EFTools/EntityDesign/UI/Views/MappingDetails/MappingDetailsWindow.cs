@@ -198,7 +198,7 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails
                         &&
                         selection != null)
                     {
-                        // if the change originated from Property Window we need to restore previuos selection
+                        // if the change originated from Property Window we need to restore previous selection
                         // otherwise the Property Window will become empty
                         Context.Items.SetValue(selection);
                     }
