@@ -1398,7 +1398,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         }
 
         // <summary>
-        // Helper method that wrapps the given expession with a conver to varchar(255)
+        // Helper method that wraps the given expession with a conver to varchar(255)
         // </summary>
         private static void AppendConvertToVarchar(SqlGenerator sqlgen, SqlBuilder result, DbExpression e)
         {
