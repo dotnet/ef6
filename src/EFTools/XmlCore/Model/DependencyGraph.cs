@@ -219,7 +219,7 @@ namespace Microsoft.Data.Entity.Design.Model
 
 #if TRACK_DEPENDENCIES
     /// <summary>
-    /// Retrieve all direct and indirect depenedents of Item item.  
+    /// Retrieve all direct and indirect dependents of Item item.  
     /// </summary>
     /// <param name="item"></param>
     /// <returns></returns>
