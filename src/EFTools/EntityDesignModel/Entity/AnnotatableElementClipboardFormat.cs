@@ -32,7 +32,7 @@ namespace Microsoft.Data.Entity.Design.Model.Entity
                 }
                 else
                 {
-                    Debug.Fail("unexepected type of XObject returned from GetAnnotationsForElement()");
+                    Debug.Fail("unexpected type of XObject returned from GetAnnotationsForElement()");
                 }
             }
         }
