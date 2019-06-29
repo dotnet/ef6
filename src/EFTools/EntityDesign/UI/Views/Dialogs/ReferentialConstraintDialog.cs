@@ -931,7 +931,7 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
 
                 if (item.IsValidPrincipalKey == false)
                 {
-                    // principal property isn'at a valid key
+                    // principal property isn't a valid key
                     var propName = String.Format(
                         CultureInfo.CurrentCulture, Resources.RefConstraintDialog_ErrorInRCPrincipalProperty,
                         item.PrincipalKey.GetLocalName());
