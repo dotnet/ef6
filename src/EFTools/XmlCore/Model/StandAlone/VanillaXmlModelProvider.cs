@@ -525,7 +525,7 @@ namespace Microsoft.Data.Tools.XmlDesignerBase.Model.StandAlone
 
         internal void UndoTransaction()
         {
-            // Undo Transaction in oppposite order
+            // Undo Transaction in opposite order
             foreach (var logger in resources.Values)
             {
                 var cmds = logger.UndoCommands;
