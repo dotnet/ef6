@@ -1344,7 +1344,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             if (_relationships != null)
             {
                 // Build a list of the dependent RelatedEnds because with overlapping FKs we could
-                // end up removing a relationship before we have suceeded in nulling all the FK values
+                // end up removing a relationship before we have succeeded in nulling all the FK values
                 // for that relationship.
                 var dependentEndsToProcess = new List<EntityReference>();
                 foreach (var relatedEnd in Relationships)
