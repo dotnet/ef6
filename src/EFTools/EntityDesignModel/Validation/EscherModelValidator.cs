@@ -46,7 +46,7 @@ namespace Microsoft.Data.Entity.Design.Model.Validation
                 if (ei.ErrorCode == ErrorCodes.ESCHER_VALIDATOR_CIRCULAR_INHERITANCE
                     || ei.ErrorCode == ErrorCodes.ESCHER_VALIDATOR_CIRCULAR_COMPLEX_TYPE_DEFINITION
                     || ei.ErrorCode == ErrorCodes.ESCHER_VALIDATOR_ENTITY_TYPE_WITHOUT_ENTITY_SET
-                    || ei.ErrorCode == ErrorCodes.ESCHER_VALIDATOR_MULTIPE_ENTITY_SETS_PER_TYPE
+                    || ei.ErrorCode == ErrorCodes.ESCHER_VALIDATOR_MULTIPLE_ENTITY_SETS_PER_TYPE
                     || ei.ErrorCode == ErrorCodes.ESCHER_VALIDATOR_ASSOCIATION_WITHOUT_ASSOCIATION_SET
                     || ei.ErrorCode == ErrorCodes.ESCHER_VALIDATOR_INCLUDES_USING
                     || ei.ErrorCode == ErrorCodes.NON_QUALIFIED_ELEMENT)
@@ -231,7 +231,7 @@ namespace Microsoft.Data.Entity.Design.Model.Validation
                         }
                         ArtifactSet.AddError(
                             new ErrorInfo(
-                                ErrorInfo.Severity.WARNING, msg, t, ErrorCodes.ESCHER_VALIDATOR_MULTIPE_ENTITY_SETS_PER_TYPE, errorClass));
+                                ErrorInfo.Severity.WARNING, msg, t, ErrorCodes.ESCHER_VALIDATOR_MULTIPLE_ENTITY_SETS_PER_TYPE, errorClass));
                     }
                 }
             }
