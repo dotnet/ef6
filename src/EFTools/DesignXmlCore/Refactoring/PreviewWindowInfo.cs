@@ -46,7 +46,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.Refactoring
         public string Warning { get; set; }
 
         /// <summary>
-        ///     Warning level for this RefactorOperaiton.
+        ///     Warning level for this RefactorOperation.
         /// </summary>
         public __PREVIEWCHANGESWARNINGLEVEL WarningLevel { get; set; }
     }
