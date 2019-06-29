@@ -1591,8 +1591,8 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
                             sp.ToPrettyString()));
                 }
 
-                var spCSideEntityTypeinTempArtifact = sp.Name.Target.EntityType as ConceptualEntityType;
-                if (null == spCSideEntityTypeinTempArtifact)
+                var spCSideEntityTypeInTempArtifact = sp.Name.Target.EntityType as ConceptualEntityType;
+                if (null == spCSideEntityTypeInTempArtifact)
                 {
                     throw new UpdateModelFromDatabaseException(
                         string.Format(
@@ -1601,8 +1601,8 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
                             sp.Name.Target.ToPrettyString()));
                 }
 
-                var spSSideEntityTypeinTempArtifact = sp.ColumnName.Target.EntityType as StorageEntityType;
-                if (null == spSSideEntityTypeinTempArtifact)
+                var spSSideEntityTypeInTempArtifact = sp.ColumnName.Target.EntityType as StorageEntityType;
+                if (null == spSSideEntityTypeInTempArtifact)
                 {
                     throw new UpdateModelFromDatabaseException(
                         string.Format(
@@ -1613,7 +1613,7 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
 
                 var csdlEntityTypeInExistingArtifact =
                     FindMatchingConceptualEntityTypeInExistingArtifact(
-                        spCSideEntityTypeinTempArtifact,
+                        spCSideEntityTypeInTempArtifact,
                         tempArtifactCEntityTypeToNewCEntityTypeInExistingArtifact);
                 if (null == csdlEntityTypeInExistingArtifact)
                 {
@@ -1622,11 +1622,11 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
                             CultureInfo.CurrentCulture,
                             Resources.UpdateFromDatabaseAssociationSetMappingCannotFindMatchingEntityType,
                             sp.ToPrettyString(),
-                            spCSideEntityTypeinTempArtifact.ToPrettyString()));
+                            spCSideEntityTypeInTempArtifact.ToPrettyString()));
                 }
 
                 var ssdlEntityTypeInExistingArtifact =
-                    FindMatchingStorageEntityTypeInExistingArtifact(spSSideEntityTypeinTempArtifact);
+                    FindMatchingStorageEntityTypeInExistingArtifact(spSSideEntityTypeInTempArtifact);
                 if (null == ssdlEntityTypeInExistingArtifact)
                 {
                     throw new UpdateModelFromDatabaseException(
@@ -1634,7 +1634,7 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
                             CultureInfo.CurrentCulture,
                             Resources.UpdateFromDatabaseAssociationSetMappingCannotFindMatchingEntityType,
                             sp.ToPrettyString(),
-                            spSSideEntityTypeinTempArtifact.ToPrettyString()));
+                            spSSideEntityTypeInTempArtifact.ToPrettyString()));
                 }
 
                 var entityProperty = FindMatchingPropertyInExistingArtifactEntityType(sp.Name.Target, csdlEntityTypeInExistingArtifact);
