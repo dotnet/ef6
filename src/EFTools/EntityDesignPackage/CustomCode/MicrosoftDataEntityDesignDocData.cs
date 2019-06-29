@@ -603,7 +603,7 @@ namespace Microsoft.Data.Entity.Design.Package
             if (UndoManager != null)
             {
                 // Set the buffer's IOleUndoManager on XmlModelProvider, so each time a Tx Commits using XmlStore, an UndoUnit will be 
-                // pushed onto the stack.  This is currently neccessary if you want XmlEditor to fire UndoRedoCompleted Event.
+                // pushed onto the stack.  This is currently necessary if you want XmlEditor to fire UndoRedoCompleted Event.
                 var artifact = EditingContextManager.GetArtifact(EditingContext);
                 Debug.Assert(artifact != null, "artifact should not be null");
                 if (artifact != null)

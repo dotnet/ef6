@@ -98,7 +98,7 @@ namespace Microsoft.VisualStudio.TestTools.HostAdapters.VsIde
         }
 
         /// <summary>
-        /// Verify the data in the editor. Prompt the user when neccessary.
+        /// Verify the data in the editor. Prompt the user when necessary.
         /// </summary>
         /// <returns>true if the data are correct and don't need correction; otherwise, false.</returns>
         bool IRunConfigurationEditor.VerifyData()
