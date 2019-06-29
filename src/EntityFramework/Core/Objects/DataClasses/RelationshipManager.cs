@@ -599,7 +599,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             if (TryGetCachedRelatedEnd(relationshipName, targetRoleName, out relatedEnd))
             {
                 // For some serialization scenarios, we have to allow replacing a related end that we already know about, but in those scenarios 
-                // the end is always empty, so we can further restrict the user calling method method directly by doing this extra validation
+                // the end is always empty, so we can further restrict the user calling the method directly by doing this extra validation
                 if (!relatedEnd.IsEmpty())
                 {
                     entityReference.InitializeWithValue(relatedEnd);
