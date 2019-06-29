@@ -3871,7 +3871,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             {
                 var columns = AddDefaultColumns(oldStatement);
 
-                // Thid could not have been called from a join node.
+                // This could not have been called from a join node.
                 Debug.Assert(oldStatement.FromExtents.Count == 1);
 
                 // if the oldStatement has a join as its input, ...
