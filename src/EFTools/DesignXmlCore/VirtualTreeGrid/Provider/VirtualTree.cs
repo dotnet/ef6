@@ -650,7 +650,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
             public TREENODE NextSibling;
 
             /// <summary>
-            ///     The head of the position tracker list associated with thie node
+            ///     The head of the position tracker list associated with this node
             /// </summary>
             public NODEPOSITIONTRACKER FirstPositionTracker;
 

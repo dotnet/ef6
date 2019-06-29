@@ -100,7 +100,7 @@ namespace Microsoft.Data.Entity.Design.Model.Mapping
                         var cet = type as ConceptualEntityType;
                         if (cet != null)
                         {
-                            // thie is a c-side entity type
+                            // this is a c-side entity type
                             while (cet != null)
                             {
                                 var nn = GetNormalizedNameRelativeToEntityType(cet, refName, parent.Artifact.ArtifactSet);
