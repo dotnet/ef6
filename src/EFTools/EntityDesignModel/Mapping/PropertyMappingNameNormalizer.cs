@@ -6,7 +6,7 @@ namespace Microsoft.Data.Entity.Design.Model.Mapping
     using System.Diagnostics;
     using Microsoft.Data.Entity.Design.Model.Entity;
 
-    internal static class ProperyMappingNameNormalizer
+    internal static class PropertyMappingNameNormalizer
     {
         internal static NormalizedName NameNormalizer(EFElement parent, string refName)
         {

@@ -28,14 +28,14 @@ namespace System.Data.Entity.Core.Mapping
     /// --ComplexPropertyMap
     /// --ComplexTypeMap
     /// --ScalarPropertyMap
-    /// --ScalarProperyMap
+    /// --ScalarPropertyMap
     /// --ScalarPropertyMap
     /// --AssociationSetMapping
     /// --AssociationTypeMapping
     /// --MappingFragment
     /// --EndPropertyMap
     /// --ScalarPropertyMap
-    /// --ScalarProperyMap
+    /// --ScalarPropertyMap
     /// --EndPropertyMap
     /// --ScalarPropertyMap
     /// This class represents the metadata for all association Type map elements in the

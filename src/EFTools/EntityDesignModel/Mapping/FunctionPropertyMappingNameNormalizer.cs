@@ -55,7 +55,7 @@ namespace Microsoft.Data.Entity.Design.Model.Mapping
             var fae = parentItem.GetParentOfType(typeof(FunctionAssociationEnd)) as FunctionAssociationEnd;
             if (fae == null)
             {
-                normalizedName = ProperyMappingNameNormalizer.NormalizePropertyNameRelativeToEntityTypeMapping(etm, parent, refName);
+                normalizedName = PropertyMappingNameNormalizer.NormalizePropertyNameRelativeToEntityTypeMapping(etm, parent, refName);
                 if (normalizedName != null)
                 {
                     return normalizedName;
@@ -119,7 +119,7 @@ namespace Microsoft.Data.Entity.Design.Model.Mapping
             {
                 if (fae.To.Status == BindingStatus.Known)
                 {
-                    nn = ProperyMappingNameNormalizer.NormalizeNameFromAssociationSetEnd(fae.To.Target, parent, refName);
+                    nn = PropertyMappingNameNormalizer.NormalizeNameFromAssociationSetEnd(fae.To.Target, parent, refName);
                 }
             }
             return nn;

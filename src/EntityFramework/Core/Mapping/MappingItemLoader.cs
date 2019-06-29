@@ -37,7 +37,7 @@ namespace System.Data.Entity.Core.Mapping
     // --EntityKey
     // --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
     // --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    // --DiscriminatorProperyMap ( constant value-->SMemberMetadata )
+    // --DiscriminatorPropertyMap ( constant value-->SMemberMetadata )
     // --EntityTypeMapping
     // --TableMappingFragment
     // --EntityKey
@@ -45,14 +45,14 @@ namespace System.Data.Entity.Core.Mapping
     // --ComplexPropertyMap
     // --ComplexTypeMap
     // --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    // --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
-    // --DiscriminatorProperyMap ( constant value-->SMemberMetadata )
+    // --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    // --DiscriminatorPropertyMap ( constant value-->SMemberMetadata )
     // --AssociationSetMapping
     // --AssociationTypeMapping
     // --TableMappingFragment
     // --EndPropertyMap
     // --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    // --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
+    // --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
     // --EndPropertyMap
     // --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
     // --EntityContainerMapping ( CMyDatabase-->SMyDatabase )
@@ -68,7 +68,7 @@ namespace System.Data.Entity.Core.Mapping
     // --ComplexPropertyMap
     // --ComplexTypeMap
     // --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    // --DiscriminatorProperyMap ( constant value-->SMemberMetadata )
+    // --DiscriminatorPropertyMap ( constant value-->SMemberMetadata )
     // --ScalarPropertyMap ( CMemberMetadata-->Constant value )
     // The CCMappingSchemaLoader loads an Xml file that has a conceptual structure
     // equivalent to the above example into in-memory data structure in a
