@@ -1172,7 +1172,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 }
 
                 // If the join edge could not be part of any of the existing groups,
-                // see whether it quailifes for leading a new group
+                // see whether it qualifies for leading a new group
                 if (!matched
                     && QualifiesForStarSelfJoinGroup(joinEdge))
                 {
