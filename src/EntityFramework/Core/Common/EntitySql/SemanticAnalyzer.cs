@@ -1130,7 +1130,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 && sr.IsInAnyGroupScope())
             {
                 //
-                // If it is an aggreagate function inside a group scope, dispatch to the expensive ConvertAggregateFunctionInGroupScope()...
+                // If it is an aggregate function inside a group scope, dispatch to the expensive ConvertAggregateFunctionInGroupScope()...
                 //
                 return new ValueExpression(ConvertAggregateFunctionInGroupScope(methodExpr, metadataFunctionGroup, sr));
             }
