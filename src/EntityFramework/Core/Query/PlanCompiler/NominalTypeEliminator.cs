@@ -1995,7 +1995,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // (1) case when X then NULL else Y, or
         // (2) case when X then Y else NULL,
         // where Y is of row type and the types of the input CaseOp, the NULL and Y are the same,
-        // it rewrittes into:  Y', where Y's null sentinel N' is:
+        // it rewrites into:  Y', where Y's null sentinel N' is:
         // (1) case when X then NULL else N, or
         // where N is Y's null sentinel.
         // The rewrite only happens if:
