@@ -2333,7 +2333,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // N ==> Project(N,{definitions-from-N, constant})
         // </summary>
         // <param name="input"> the input node to augment </param>
-        // <param name="createOp"> The fucntion to create the constant op </param>
+        // <param name="createOp"> The function to create the constant op </param>
         // <param name="constantVar"> the computed Var for the internal constant </param>
         // <returns> the augmented node </returns>
         private Node AugmentNodeWithConstant(Node input, Func<ConstantBaseOp> createOp, out Var constantVar)

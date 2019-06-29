@@ -9281,7 +9281,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
         }
 
         /// <summary>
-        ///     Helper fucntion for OnQueryContinueDrag. Allows us to reprocess
+        ///     Helper function for OnQueryContinueDrag. Allows us to reprocess
         ///     previously processed items if the DragAction changes.
         /// </summary>
         /// <param name="args">QueryContinueDragEventArgs</param>
