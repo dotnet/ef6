@@ -152,17 +152,17 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.Explorer
             return explorerParentItem;
         }
 
-        internal static Type GetViewModelTypeForEFlement(EditingContext context, EFElement efElement)
+        internal static Type GetViewModelTypeForEFElement(EditingContext context, EFElement efElement)
         {
             var xref = GetModelToBrowserModelXRef(context);
-            return xref.GetViewModelTypeForEFlement(efElement);
+            return xref.GetViewModelTypeForEFElement(efElement);
         }
 
         private readonly Dictionary<EFElement, ExplorerEFElement> _dict = new Dictionary<EFElement, ExplorerEFElement>();
 
         protected abstract bool IsDisplayedInExplorerProtected(EFElement efElement);
 
-        protected abstract Type GetViewModelTypeForEFlement(EFElement efElement);
+        protected abstract Type GetViewModelTypeForEFElement(EFElement efElement);
 
         private void Add(EFElement efElement, ExplorerEFElement explorerEFElement)
         {
