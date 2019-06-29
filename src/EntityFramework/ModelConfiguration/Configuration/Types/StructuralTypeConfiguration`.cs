@@ -103,7 +103,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        /// Configures a <see cref="T:System.byte[]" /> property that is defined on this type.
+        /// Configures a <see cref="T:System.Byte[]" /> property that is defined on this type.
         /// </summary>
         /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
         /// <returns> A configuration object that can be used to configure the property. </returns>
