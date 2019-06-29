@@ -61,7 +61,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // defines breaking opportunities that must not be ignored. For all practical purposes
         // the interpretation of mandatory breaks determines the end of one line and consequently
         // the start of the next line of query text.
-        // NOTE that CR and CRLF is treated as a composite 'character' and was obviously and intentionaly
+        // NOTE that CR and CRLF is treated as a composite 'character' and was obviously and intentionally
         // omitted in the character set bellow.
         private static readonly Char[] _newLineCharacters =
             {
@@ -665,7 +665,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // Returns true if given char is a new line character defined by
         // UNICODE 5.0, section 5.8 Newline Guidelines.
         // These are 'mandatory' line breaks. NOTE that CRLF is treated as a
-        // composite 'character' and was intentionaly omitted in the character set bellow.
+        // composite 'character' and was intentionally omitted in the character set bellow.
         // </summary>
         internal static bool IsNewLine(Char c)
         {
