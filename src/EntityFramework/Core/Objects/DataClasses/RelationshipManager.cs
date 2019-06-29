@@ -1461,7 +1461,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
                     if (!CheckIfAllPropertiesWereRetrieved(properties, propertiesToRetrieve))
                     {
-                        // Properties couldn't be found in entities in collections or refrences.
+                        // Properties couldn't be found in entities in collections or references.
                         // Try to find missing properties in related key entries.
                         // This process is slow but it is not a common case.
                         var entry = wrappedOwner.Context.ObjectStateManager.FindEntityEntry(ownerKey);
