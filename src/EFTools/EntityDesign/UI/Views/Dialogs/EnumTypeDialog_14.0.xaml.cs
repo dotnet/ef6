@@ -100,7 +100,7 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
             ForceTextBoxUpdateSource(sender);
         }
 
-        private void OnRefrenceExternalTypeClick(Object sender, RoutedEventArgs e)
+        private void OnReferenceExternalTypeClick(Object sender, RoutedEventArgs e)
         {
             if (chkReferenceExternalType.IsChecked == true)
             {
