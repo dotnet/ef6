@@ -1230,7 +1230,7 @@ Click Cancel to stop the process.</value>
   <data name="DatabaseCreation_NoDDLTemplatePathSpecified" xml:space="preserve">
     <value>The TemplatePath argument was not specified for the '{0}' activity. It must either be specified on this activity in the workflow file or passed in at runtime through the 'DDLTemplatePath' parameter in the EdmParameterBag.</value>
   </data>
-  <data name="DbGenExtensibileListConverter_UserDir" xml:space="preserve">
+  <data name="DbGenExtensibleListConverter_UserDir" xml:space="preserve">
     <value>(User)</value>
   </data>
   <data name="DbGenExtensibleListConverter_VSDir" xml:space="preserve">

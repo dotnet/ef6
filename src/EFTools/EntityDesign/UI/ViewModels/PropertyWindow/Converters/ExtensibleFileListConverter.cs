@@ -46,7 +46,7 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.PropertyWindow.Converters
                     return String.Format(
                         CultureInfo.InvariantCulture, "{0} {1}",
                         extFilePath.Substring(indexOfUserMacro + UserPathWithMacro.Length).TrimStart('\\'),
-                        Resources.DbGenExtensibileListConverter_UserDir);
+                        Resources.DbGenExtensibleListConverter_UserDir);
                 }
                 else if (indexOfVSMacro != -1)
                 {
@@ -71,7 +71,7 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.PropertyWindow.Converters
                 if (lastIndexOfSpace != -1)
                 {
                     var filename = v.Substring(0, lastIndexOfSpace);
-                    if (v.Substring(lastIndexOfSpace + 1).Equals(Resources.DbGenExtensibileListConverter_UserDir))
+                    if (v.Substring(lastIndexOfSpace + 1).Equals(Resources.DbGenExtensibleListConverter_UserDir))
                     {
                         return Path.Combine(UserPathWithMacro, filename);
                     }

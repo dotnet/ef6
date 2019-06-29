@@ -624,9 +624,9 @@ namespace Microsoft.Data.Entity.Design {
         /// <summary>
         ///   Looks up a localized string similar to (User).
         /// </summary>
-        public static string DbGenExtensibileListConverter_UserDir {
+        public static string DbGenExtensibleListConverter_UserDir {
             get {
-                return ResourceManager.GetString("DbGenExtensibileListConverter_UserDir", resourceCulture);
+                return ResourceManager.GetString("DbGenExtensibleListConverter_UserDir", resourceCulture);
             }
         }
         
