@@ -131,7 +131,7 @@ namespace System.Data.Entity.Core.Objects
             }
             
             [Fact]
-            public void If_local_transaction_is_necessary_it_gets_created_commited()
+            public void If_local_transaction_is_necessary_it_gets_created_committed()
             {
                 If_local_transaction_is_necessary_it_gets_created(transactionNecessary: true);
             }
@@ -2020,7 +2020,7 @@ namespace System.Data.Entity.Core.Objects
 
 
             [Fact]
-            public void If_local_transaction_is_necessary_it_gets_created_commited()
+            public void If_local_transaction_is_necessary_it_gets_created_committed()
             {
                 If_local_transaction_is_necessary_it_gets_created(transactionNecessary: true);
             }

@@ -186,7 +186,7 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
             }
 
             // Note down whether or not the artifact was originally dirty, since we don't want hydration commands marking the file
-            // as clean if there are uncommited diagram layout edits for instance.
+            // as clean if there are uncommitted diagram layout edits for instance.
             var artifactInitiallyDirty = _cpc.Artifact.IsDirty;
 
             // First add the commands to the command processor context so that the top-level processor can determine

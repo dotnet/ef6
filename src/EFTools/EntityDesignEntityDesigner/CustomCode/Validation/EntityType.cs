@@ -15,7 +15,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.ViewModel
         ///     Validate Entity name
         /// </summary>
         /// <param name="context"></param>
-        [ValidationMethod(ValidationCategories.Open | ValidationCategories.Save, CustomCategory = "OnTransactionCommited")]
+        [ValidationMethod(ValidationCategories.Open | ValidationCategories.Save, CustomCategory = "OnTransactionCommitted")]
         private void ValidateName(ValidationContext context)
         {
             if (!EscherAttributeContentValidator.IsValidCsdlEntityTypeName(Name))
@@ -29,7 +29,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.ViewModel
         ///     Validate Entity key
         /// </summary>
         /// <param name="context"></param>
-        [ValidationMethod(ValidationCategories.Open | ValidationCategories.Save, CustomCategory = "OnTransactionCommited")]
+        [ValidationMethod(ValidationCategories.Open | ValidationCategories.Save, CustomCategory = "OnTransactionCommitted")]
         private void ValidateKey(ValidationContext context)
         {
             try
@@ -54,7 +54,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.ViewModel
         ///     Validate inheritance (check for circular inheritance)
         /// </summary>
         /// <param name="context"></param>
-        [ValidationMethod(ValidationCategories.Open | ValidationCategories.Save, CustomCategory = "OnTransactionCommited")]
+        [ValidationMethod(ValidationCategories.Open | ValidationCategories.Save, CustomCategory = "OnTransactionCommitted")]
         private void ValidateInheritance(ValidationContext context)
         {
             var circularPath = String.Empty;

@@ -250,7 +250,7 @@ namespace System.Data.Entity.Infrastructure
         /// If there was an exception thrown checks the database for this transaction and rethrows it if not found.
         /// Otherwise marks the commit as succeeded and queues the transaction information to be deleted.
         /// </summary>
-        /// <param name="transaction">The transaction that was commited.</param>
+        /// <param name="transaction">The transaction that was committed.</param>
         /// <param name="interceptionContext">Contextual information associated with the call.</param>
         /// <seealso cref="IDbTransactionInterceptor.Committed" />
         public override void Committed(DbTransaction transaction, DbTransactionInterceptionContext interceptionContext)

@@ -779,7 +779,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.ViewModel
         ///     changes are packaged up and the ModelController is used to make the changes to the model.
         /// </summary>
         /// <param name="e"></param>
-        internal void OnTransactionCommited(TransactionCommitEventArgs e)
+        internal void OnTransactionCommitted(TransactionCommitEventArgs e)
         {
             if (_reloading)
             {

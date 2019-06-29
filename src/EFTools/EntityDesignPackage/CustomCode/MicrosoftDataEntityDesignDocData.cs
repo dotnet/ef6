@@ -758,7 +758,7 @@ namespace Microsoft.Data.Entity.Design.Package
                 var viewModel = dataEntityDesignDocView.Diagram.ModelElement as EntityDesignerViewModel;
                 if (viewModel != null)
                 {
-                    viewModel.OnTransactionCommited(e);
+                    viewModel.OnTransactionCommitted(e);
 
                     // now set the isDirty flag on Shell's UndoManager so diagram layout changes can 
                     // also get persisted; if there isn't one of our context's in the xact, then this
@@ -777,7 +777,7 @@ namespace Microsoft.Data.Entity.Design.Package
                         // so run our validation
                         if (Store != null)
                         {
-                            ValidationController.ValidateCustom(Store, "OnTransactionCommited");
+                            ValidationController.ValidateCustom(Store, "OnTransactionCommitted");
                         }
                     }
                 }
