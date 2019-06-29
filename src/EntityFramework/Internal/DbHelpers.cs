@@ -203,7 +203,7 @@ namespace System.Data.Entity.Internal
 
         // <summary>
         // Determines whether the given string is a full EF connection string with provider, provider connection string,
-        // and metadata parts, or is is instead some other form of connection string.
+        // and metadata parts, or is instead some other form of connection string.
         // </summary>
         // <param name="nameOrConnectionString"> The name or connection string. </param>
         // <returns>

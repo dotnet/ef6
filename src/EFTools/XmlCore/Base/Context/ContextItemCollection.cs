@@ -250,7 +250,7 @@ namespace Microsoft.Data.Entity.Design.Base.Context
             if (removedItems)
             {
                 // We must create a new delegate containing the 
-                // invocation list that is is left
+                // invocation list that is left
                 existing = null;
                 foreach (var d in invocationList)
                 {

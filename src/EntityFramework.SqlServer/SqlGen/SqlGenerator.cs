@@ -260,7 +260,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         private bool _forceNonUnicode;
 
         // <summary>
-        // Set when it is is safe to ignore the unicode/non-unicode aspect. See <see cref="VisitIsNullExpression" /> for an example.
+        // Set when it is safe to ignore the unicode/non-unicode aspect. See <see cref="VisitIsNullExpression" /> for an example.
         // </summary>
         private bool _ignoreForceNonUnicodeFlag;
 
