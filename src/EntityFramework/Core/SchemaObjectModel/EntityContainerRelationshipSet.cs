@@ -192,7 +192,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
             else
             {
-                // abmigous
+                // ambigous
                 AddError(
                     ErrorCode.AmbiguousEntityContainerEnd, EdmSchemaErrorSeverity.Error,
                     Strings.AmbiguousEntityContainerEnd(relationshipEnd.Name, FQName));
