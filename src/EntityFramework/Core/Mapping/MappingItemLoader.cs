@@ -2209,7 +2209,7 @@ namespace System.Data.Entity.Core.Mapping
             var value = GetAliasResolvedAttributeValue(nav.Clone(), MslConstructs.ConditionValueAttribute);
             var isNull = GetAliasResolvedAttributeValue(nav.Clone(), MslConstructs.ConditionIsNullAttribute);
 
-            //Either Value or NotNull need to be specifid on the condition mapping but not both
+            //Either Value or NotNull need to be specified on the condition mapping but not both
             if ((isNull != null)
                 && (value != null))
             {
@@ -3039,7 +3039,7 @@ namespace System.Data.Entity.Core.Mapping
                     MappingErrorCode.ConditionError, m_sourceLocation, navLineInfo, m_parsingErrors);
                 return null;
             }
-            //Either Value or NotNull need to be specifid on the condition mapping but not both
+            //Either Value or NotNull need to be specified on the condition mapping but not both
             if ((isNullAttribute != null)
                 && (value != null))
             {
