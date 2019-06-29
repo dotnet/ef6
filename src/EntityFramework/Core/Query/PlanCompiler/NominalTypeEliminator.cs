@@ -1330,7 +1330,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                             // For a TVF function call use the original non-flattened variable:
                             // the function will not return properties described in the flattened type, there would be no null sentinel and 
                             // row prop names will be as declared in the function signature.
-                            // The mismatch between the flattened type and the orignial type is fixed by wrapping into a ProjectOp produced by CreateTVFProjection(...).
+                            // The mismatch between the flattened type and the original type is fixed by wrapping into a ProjectOp produced by CreateTVFProjection(...).
                             newUnnestVar = computedVar;
                             processingTVF = ((FunctionOp)chi.Child0.Op).Function;
                         }

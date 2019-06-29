@@ -571,7 +571,7 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
 
                     cmbDependentKey.Bounds = bounds;
 
-                    // Set dropdown width to the orignial calculated value to make sure
+                    // Set dropdown width to the original calculated value to make sure
                     // we could see all text within the UI bound in the drop-down list
                     if (clickedItemRect.Width > 0)
                     {
