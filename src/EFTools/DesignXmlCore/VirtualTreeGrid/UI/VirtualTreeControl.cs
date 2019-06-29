@@ -7006,7 +7006,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
                 }
             }
             //This happens fairly often and I don't know why. Investigate. For now, get by with swapping the two
-            //VSASSERT(iLastToCheck+1>=iFirstToCheck, "Invalid first to last range of visible items! Please report bug with a consisent repro.");
+            //VSASSERT(iLastToCheck+1>=iFirstToCheck, "Invalid first to last range of visible items! Please report bug with a consistent repro.");
             if (iLastToCheck + 1 < iFirstToCheck)
             {
                 // swap the two
@@ -7143,7 +7143,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
             }
 
             //this happens fairly often and I don't know why. Investigate. For now, get by with swapping the two
-            //VSASSERT(iLastToCheck+1>=iFirstToCheck, "Invalid first to last range of visible items! Please report bug with a consisent repro.");
+            //VSASSERT(iLastToCheck+1>=iFirstToCheck, "Invalid first to last range of visible items! Please report bug with a consistent repro.");
             if (iLastToCheck + 1 < iFirstToCheck)
             {
                 // swap the two
@@ -7389,7 +7389,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
             }
             Debug.Assert(iFirstToCheck >= newTopIndexAdjusted && iLastToCheck <= iLastVisible); //Missed a case
             //This happens fairly often and I don't know why. Investigate. For now, get by with swapping the two
-            //VSASSERT(iLastToCheck+1>=iFirstToCheck, "Invalid first to last range of visible items! Please report bug with a consisent repro.");
+            //VSASSERT(iLastToCheck+1>=iFirstToCheck, "Invalid first to last range of visible items! Please report bug with a consistent repro.");
             if (iLastToCheck + 1 < iFirstToCheck)
             {
                 // swap the two
