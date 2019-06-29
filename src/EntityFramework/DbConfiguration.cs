@@ -523,7 +523,7 @@ namespace System.Data.Entity
 
         /// <summary>
         /// Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to set
-        /// a <see cref="Func{DbConnection, String, HistoryContext}" /> delegate which which be used for 
+        /// a <see cref="Func{DbConnection, String, HistoryContext}" /> delegate which can be used for 
         /// creation of the default  <see cref="Migrations.History.HistoryContext" /> for a any
         /// <see cref="DbMigrationsConfiguration" />. This default factory will only be used if no factory is
         /// set explicitly in the <see cref="DbMigrationsConfiguration" /> and if no factory has been registered
