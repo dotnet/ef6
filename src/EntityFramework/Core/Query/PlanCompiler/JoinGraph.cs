@@ -1217,7 +1217,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // </summary>
         private static bool AreMatchingForStarSelfJoinElimination(JoinEdge edge1, JoinEdge edge2)
         {
-            // In order for the join edges to be compatible thay have to  
+            // In order for the join edges to be compatible they have to  
             // represent joins on the same number of columns and of the same join kinds.
             if (edge2.LeftVars.Count != edge1.LeftVars.Count
                 ||
