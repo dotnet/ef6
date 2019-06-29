@@ -321,7 +321,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         // <summary>
-        // Replaces each occurance of the given vars with their definitions.
+        // Replaces each occurrence of the given vars with their definitions.
         // </summary>
         internal class VarRefReplacer : BasicOpVisitorOfNode
         {
@@ -336,7 +336,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             // <summary>
             // "Public" entry point. In the subtree rooted at the given root,
-            // replace each occurance of the given vars with their definitions,
+            // replace each occurrence of the given vars with their definitions,
             // where each key-value pair in the dictionary is a var-definition pair.
             // </summary>
             internal static Node Replace(Dictionary<Var, Node> varReplacementTable, Node root, Command command)

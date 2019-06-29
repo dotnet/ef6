@@ -276,7 +276,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
                     "Edm.Ceiling"
                 };
 
-        // topElementExpression is used to detect the any occurance of element expression which 
+        // topElementExpression is used to detect the any occurrence of element expression which 
         // is not a child of the top level projectExpression
         private bool topElementExpression;
         // stores the list of all the scalar subquery tables names
