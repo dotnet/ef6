@@ -23,7 +23,7 @@ namespace EFDesigner.FunctionalTests
         /// <param name="packageFixture">Pacakge fixture</param>
         /// <remarks>
         ///     The tests need PackageManager.Package to be set but don't need the
-        ///     package itself. Since it needs to be diposed IUseFixture seems fine.
+        ///     package itself. Since it needs to be disposed IUseFixture seems fine.
         ///     We don't need to set it - xUnit is keeping a reference to it and it
         ///     will dispose it after test execution is completed.
         /// </remarks>

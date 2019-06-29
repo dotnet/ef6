@@ -63,7 +63,7 @@ namespace System.Data.Entity.Core.Objects
         // but rather the disposal of the underlying connection object if the ObjectContext owns the connection,
         // or the separation of the underlying connection object from the ObjectContext if the ObjectContext does not own the connection.
         //
-        // Operations that require a connection should throw an ObjectDiposedException if the connection is null.
+        // Operations that require a connection should throw an ObjectDisposedException if the connection is null.
         // Other operations that do not need a connection should continue to work after disposal.
         private EntityConnection _connection;
 
