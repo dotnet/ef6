@@ -160,7 +160,7 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
 
             if (EdmFeatureManager.GetForeignKeysInModelFeatureState(association.Artifact.SchemaVersion).IsEnabled())
             {
-                hdrDepedent.Text = DialogsResource.RefConstraintDialog_DependentKeyHeader_SupportFKs;
+                hdrDependent.Text = DialogsResource.RefConstraintDialog_DependentKeyHeader_SupportFKs;
             }
 
             // Set the default font to VS shell font.
