@@ -329,9 +329,9 @@ namespace Microsoft.Data.Entity.Design.Model
 
                 // For most scenarios, RefName should be equal to refNameAsNameRef.ToBindingString()
                 // But in FunctionImport's Return, the values are as follow:
-                // RefName : "Collection([Old Fully-qualifed EntityType/ComplexType])"
-                // refNameasNameRef.ToBindingString(): [Old Fully-qualifed EntityType/ComplexType]
-                // replacementRefName: [New Fully-qualifed EntityType/ComplexType]
+                // RefName : "Collection([Old Fully-qualified EntityType/ComplexType])"
+                // refNameasNameRef.ToBindingString(): [Old Fully-qualified EntityType/ComplexType]
+                // replacementRefName: [New Fully-qualified EntityType/ComplexType]
                 if (String.Compare(RefName, refNameAsNameRef.ToBindingString(), StringComparison.CurrentCulture) != 0)
                 {
                     replacementRefName = RefName.Replace(refNameAsNameRef.ToBindingString(), replacementRefName);
