@@ -117,7 +117,7 @@ namespace EFDesignerTestInfrastructure.VS
         public static void ExecuteCommandForOpenDocument(this DTE dte, string fullFilePath, string command)
         {
             Debug.Assert(dte != null, "dte must not be null.");
-            Debug.Assert(!string.IsNullOrWhiteSpace(fullFilePath), "fullFilePath must not be null or emtpy string.");
+            Debug.Assert(!string.IsNullOrWhiteSpace(fullFilePath), "fullFilePath must not be null or empty string.");
 
             var serviceProvider = new ServiceProvider((IServiceProvider)dte);
 

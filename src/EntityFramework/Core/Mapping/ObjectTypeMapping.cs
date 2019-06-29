@@ -124,7 +124,7 @@ namespace System.Data.Entity.Core.Mapping
             Debug.Assert(!m_memberMapping.ContainsKey(memberMapping.EdmMember.Name));
             Debug.Assert(
                 !ReferenceEquals(m_memberMapping, EmptyMemberMapping),
-                "Make sure you don't add anything to the static emtpy member mapping");
+                "Make sure you don't add anything to the static empty member mapping");
             m_memberMapping.Add(memberMapping.EdmMember.Name, memberMapping);
         }
 
