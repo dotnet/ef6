@@ -196,7 +196,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
         {
             // If the shape is very dark, we make the title text white, and viceversa.
             StyleSet.OverrideBrushColor(DiagramBrushes.ShapeText, CachedFillColorAppearance(FillColor).TextColor);
-            // We draw a thin outline of a sligtly different color to improve distinguishability when shape color looks like background (and because it looks good).
+            // We draw a thin outline of a slightly different color to improve distinguishability when shape color looks like background (and because it looks good).
             StyleSet.OverridePenColor(OutlinePenId, CachedFillColorAppearance(FillColor).OutlineColor);
             // We shouldn't need to do this again unless the user changes the color for this shape.
             _isAdjustedForFillColor = true;
