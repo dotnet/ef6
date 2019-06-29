@@ -936,7 +936,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             while (currentParent != null
                    && currentNode != leastCommonAncestor)
             {
-                //If the current node is a rigth child of a left outer join return or participates in a inner join
+                //If the current node is a right child of a left outer join return or participates in a inner join
                 if (currentParent.Node != joinEdge.JoinNode.Node
                     &&
                     (disallowAnyJoin || currentParent.Node.Op.OpType != OpType.LeftOuterJoin || currentParent.Children[0] != currentNode)
@@ -988,22 +988,22 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             AugmentedNode currentParent;
-            AugmentedNode rigthNode;
+            AugmentedNode rightNode;
 
             if (node1.Id
                 < node2.Id)
             {
                 currentParent = node1;
-                rigthNode = node2;
+                rightNode = node2;
             }
             else
             {
                 currentParent = node2;
-                rigthNode = node1;
+                rightNode = node1;
             }
 
             while (currentParent.Id
-                   < rigthNode.Id)
+                   < rightNode.Id)
             {
                 currentParent = currentParent.Parent;
             }
