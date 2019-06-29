@@ -621,7 +621,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
             // by the store provider, but it might work if we don't reorder/reuse
             // parameters.
             //
-            // Note also that the store provider may choose to add parameters to thier
+            // Note also that the store provider may choose to add parameters to their
             // command object for some things; we'll only copy over the values for
             // parameters that we find in the EntityCommands parameters collection, so 
             // we won't damage anything the store provider did.
