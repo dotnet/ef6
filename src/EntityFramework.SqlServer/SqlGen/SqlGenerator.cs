@@ -1417,7 +1417,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         // aggf1(aexpr1) AS agg1, .. aggfn(aexprn) AS aggn
         // FROM input AS a
         // GROUP BY kexp1, kexp2, .. kexpn
-        // When we inject an innner query, the equivalent translation is:
+        // When we inject an inner query, the equivalent translation is:
         // SELECT
         // key1 AS key1, key2 AS key2, .. keyn AS keys,
         // aggf1(agg1) AS agg1, aggfn(aggn) AS aggn
