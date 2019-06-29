@@ -151,7 +151,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
 
             modelName = SanitizeModelName(modelName);
 
-            PopluateReplacementDictionary(project, replacementsDictionary, modelName);
+            PopulateReplacementDictionary(project, replacementsDictionary, modelName);
 
             _modelBuilderSettings = new ModelBuilderSettings
             {
@@ -259,7 +259,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
             }
         }
 
-        private static void PopluateReplacementDictionary(Project project, Dictionary<string, string> replacementsDictionary, string modelName)
+        private static void PopulateReplacementDictionary(Project project, Dictionary<string, string> replacementsDictionary, string modelName)
         {
             // create a "fixed" version that removes non-valid characters and leading underscores
             var fixedModelName = XmlConvert.EncodeName(modelName).TrimStart('_');
