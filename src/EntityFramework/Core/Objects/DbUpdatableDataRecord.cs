@@ -194,7 +194,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Retrieves the field value as a <see cref="T:System.Common.DbDataReader" />
+        /// Retrieves the field value as a <see cref="T:System.Data.Common.DbDataReader" />
         /// </summary>
         /// <returns>
         /// The field value as a <see cref="T:System.Data.Common.DbDataReader" />.
@@ -541,7 +541,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Retrieves the field value as a <see cref="T:System.Common.DbDataReader" />.
+        /// Retrieves the field value as a <see cref="T:System.Data.Common.DbDataReader" />.
         /// </summary>
         /// <returns>
         /// The field value as a <see cref="T:System.Data.Common.DbDataReader" />.
