@@ -311,7 +311,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
             var relatedEntityCount = 0;
 
-            // We will be modifing the collection's enumerator, so we need to make a copy of it
+            // We will be modifying the collection's enumerator, so we need to make a copy of it
             var tempEntities = new List<IEntityWrapper>(collection.CountInternal);
             foreach (var wrappedEntity in collection.GetWrappedEntities())
             {
