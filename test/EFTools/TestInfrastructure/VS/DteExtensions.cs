@@ -91,7 +91,7 @@ namespace EFDesignerTestInfrastructure.VS
                 path = Path.Combine(path, "{0}");
             }
 
-            // VCS and VB sku templates are all located in the same folder. Other skus have a language and category heirarchy.
+            // VCS and VB sku templates are all located in the same folder. Other skus have a language and category hierarchy.
             if (!skuName.Equals("VCSExpress", StringComparison.InvariantCultureIgnoreCase)
                 &&
                 !skuName.Equals("VBExpress", StringComparison.InvariantCultureIgnoreCase))

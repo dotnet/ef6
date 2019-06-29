@@ -200,7 +200,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
             // Forward compat FUTURE SYSTEM.SPATIAL
             // for now we treat all Geographic types the same, and likewise for geometry.
-            // to allow us to later introduce the full heirarchy without breaking back compat
+            // to allow us to later introduce the full hierarchy without breaking back compat
             // we require spatial types to have the IsStrict facet with a false value.    
             // Set this facet to false if the schema has the UseStrongSpatialTypes attribute with the a false.
             if (Helper.IsSpatialType(scalar.Type)

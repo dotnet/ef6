@@ -4144,7 +4144,7 @@ namespace FunctionalTests
 
         [Fact]
         // Regression for 142318
-        public void Can_have_TPH_alone_at_base_of_3_level_heirarchy()
+        public void Can_have_TPH_alone_at_base_of_3_level_hierarchy()
         {
             //         E1       -- TPH alone
             //       / | \

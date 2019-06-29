@@ -13,7 +13,7 @@
 
     <xs:attribute name="LazyLoadingEnabled" type="xs:boolean" />
 
-    <!-- Allow future support of a strongly typed heirarchy of types for spatial values -->
+    <!-- Allow future support of a strongly typed hierarchy of types for spatial values -->
     <xs:attribute name="UseStrongSpatialTypes" type="xs:boolean" default="true" />
 
 </xs:schema>
