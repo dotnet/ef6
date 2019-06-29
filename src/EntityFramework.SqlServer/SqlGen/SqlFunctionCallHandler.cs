@@ -1485,7 +1485,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         }
 
         // <summary>
-        // Hanndler for date differencing functions supported only starting from Katmai
+        // Handler for date differencing functions supported only starting from Katmai
         // </summary>
         private static ISqlFragment HandleCanonicalFunctionDateDiffKatmaiOrNewer(SqlGenerator sqlgen, DbFunctionExpression e)
         {
