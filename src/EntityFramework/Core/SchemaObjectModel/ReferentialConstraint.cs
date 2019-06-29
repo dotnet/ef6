@@ -188,7 +188,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
                         }
                     }
                     // if the ToProperty is not the key, then the upper bound must be many i.e every parent (from property) can
-                    // be related to many childs
+                    // be related to many children
                     else if (dependentRoleEnd.Multiplicity
                              != RelationshipMultiplicity.Many)
                     {

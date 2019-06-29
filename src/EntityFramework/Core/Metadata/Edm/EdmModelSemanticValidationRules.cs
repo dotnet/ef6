@@ -785,7 +785,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                                 }
                             }
                                 // if the principal role property is not the key, then the upper bound must be many i.e every parent (from property) can
-                                // be related to many childs
+                                // be related to many children
                             else if (dependentRoleEnd.RelationshipMultiplicity
                                      != RelationshipMultiplicity.Many)
                             {
