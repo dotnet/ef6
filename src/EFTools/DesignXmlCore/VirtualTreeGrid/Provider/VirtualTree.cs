@@ -6048,7 +6048,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
                                 var adjustColumn = absColumn;
 
                                 // TrackCell is currently broken for all values after absRow, but it will work down
-                                // to the row we are curently expanding. We need this call to get the affectedSubItemColumns.
+                                // to the row we are currently expanding. We need this call to get the affectedSubItemColumns.
                                 TrackCell(
                                     absRow, ref adjustColumn, ref parentRowOffset, ref affectedSubItemColumns, ref singleColumnSubItemAdjust);
                                 Debug.Assert(adjustColumn == 0);
@@ -6885,7 +6885,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
                     var adjustColumn = firstUnexpandedColumnOffset;
                     var singleColumnSubItemAdjust = 0;
                     // TrackCell is currently broken for all values after absRow, but it will work down
-                    // to the row we are curently expanding. We need this call to get the affectedSubItemColumns.
+                    // to the row we are currently expanding. We need this call to get the affectedSubItemColumns.
                     // UNDONE: We should be able to calculate affectedSubItemColumns during the course of this
                     // routine instead of rewalking the tree here.
                     TrackCell(
