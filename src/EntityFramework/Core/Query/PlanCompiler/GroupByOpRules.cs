@@ -245,7 +245,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // where agg1', agg2', .. aggm'  are the "mapped" versions
         // of agg1, agg2, .. aggm, such that the references to c1, ... ck are
         // replaced by their definitions.
-        // We only do this if each c1, ..ck is refereneced (in aggregates) at most once or it is a constant.
+        // We only do this if each c1, ..ck is referenced (in aggregates) at most once or it is a constant.
         // </summary>
         // <param name="context"> Rule processing context </param>
         // <param name="n"> Current ProjectOp node </param>
