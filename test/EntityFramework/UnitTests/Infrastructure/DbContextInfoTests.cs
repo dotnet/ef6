@@ -775,9 +775,9 @@ namespace System.Data.Entity.Infrastructure
             Assert.NotNull(objectContext);
             Assert.Equal(1, calledCount);
 
-            using (var contexct = contextInfo.CreateInstance())
+            using (var context = contextInfo.CreateInstance())
             {
-                objectContext = ((IObjectContextAdapter)contexct).ObjectContext;
+                objectContext = ((IObjectContextAdapter)context).ObjectContext;
             }
 
             Assert.NotNull(objectContext);
