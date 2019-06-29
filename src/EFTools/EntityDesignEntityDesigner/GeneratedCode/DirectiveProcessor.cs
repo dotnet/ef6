@@ -133,7 +133,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner
 		}
 	
 		/// <summary>
-		/// Override to initialize provides dictinoary
+		/// Override to initialize provides dictionary
 		/// </summary>
 		/// <param name="directiveName"></param>
 		/// <param name="providesDictionary"></param>
