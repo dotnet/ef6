@@ -2252,7 +2252,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             discriminatorVarList = Command.CreateVarList();
 
-            // We insert a dummy var and value at poistion 0 for the deriving node, which
+            // We insert a dummy var and value at position 0 for the deriving node, which
             // we should never reference;
             discriminatorVarList.Add(null);
 
