@@ -399,7 +399,7 @@ namespace Microsoft.Data.Entity.Design.Model
 
         protected virtual void DoNormalize()
         {
-            // default normalize just sets the state to normlized.
+            // default normalize just sets the state to normalized.
             State = EFElementState.Normalized;
         }
 
