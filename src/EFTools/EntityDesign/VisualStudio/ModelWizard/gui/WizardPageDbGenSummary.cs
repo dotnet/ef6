@@ -168,12 +168,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                                 }
                                 if (displayCustomWorkflowWarning)
                                 {
-                                    var cancelledDuringCustomWorkflowWarning = DismissableWarningDialog
+                                    var cancelledDuringCustomWorkflowWarning = DismissibleWarningDialog
                                         .ShowWarningDialogAndSaveDismissOption(
                                             Resources.DatabaseCreation_CustomWorkflowWarningTitle,
                                             Resources.DatabaseCreation_WarningCustomWorkflow,
                                             RegKeyNameCustomWorkflowWarning,
-                                            DismissableWarningDialog.ButtonMode.OkCancel);
+                                            DismissibleWarningDialog.ButtonMode.OkCancel);
                                     if (cancelledDuringCustomWorkflowWarning)
                                     {
                                         HandleError(
@@ -394,11 +394,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                         }
                         if (displayDdlOverwriteWarning)
                         {
-                            var cancelledDuringOverwriteDdl = DismissableWarningDialog.ShowWarningDialogAndSaveDismissOption(
+                            var cancelledDuringOverwriteDdl = DismissibleWarningDialog.ShowWarningDialogAndSaveDismissOption(
                                 Resources.DatabaseCreation_DDLOverwriteWarningTitle,
                                 String.Format(CultureInfo.CurrentCulture, Resources.DatabaseCreation_WarningOverwriteDdl, ddlFilePath),
                                 RegKeyNameDdlOverwriteWarning,
-                                DismissableWarningDialog.ButtonMode.YesNo);
+                                DismissibleWarningDialog.ButtonMode.YesNo);
                             if (cancelledDuringOverwriteDdl)
                             {
                                 return false;
@@ -441,11 +441,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                     }
                     if (displayEdmxOverwriteWarning)
                     {
-                        var cancelledDuringOverwriteSsdl = DismissableWarningDialog.ShowWarningDialogAndSaveDismissOption(
+                        var cancelledDuringOverwriteSsdl = DismissibleWarningDialog.ShowWarningDialogAndSaveDismissOption(
                             Resources.DatabaseCreation_EdmxOverwriteWarningTitle,
                             Resources.DatabaseCreation_WarningOverwriteMappings,
                             RegKeyNameEdmxOverwriteWarning,
-                            DismissableWarningDialog.ButtonMode.YesNo);
+                            DismissibleWarningDialog.ButtonMode.YesNo);
                         if (cancelledDuringOverwriteSsdl)
                         {
                             return false;

@@ -1314,11 +1314,11 @@ namespace Microsoft.Data.Entity.Design.Package
                 bool.TryParse(shouldConfirmDelete, out displayConfirmDeleteDialog);
             }
             if (displayConfirmDeleteDialog
-                && DismissableWarningDialog.ShowWarningDialogAndSaveDismissOption(
+                && DismissibleWarningDialog.ShowWarningDialogAndSaveDismissOption(
                     DialogsResource.ConfirmDeleteDialog_Title,
                     DialogsResource.ConfirmDeleteDialog_DescriptionLabel_Text,
                     RegKeyConfirmDelete,
-                    DismissableWarningDialog.ButtonMode.YesNo))
+                    DismissibleWarningDialog.ButtonMode.YesNo))
             {
                     return;
             }

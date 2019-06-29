@@ -2,7 +2,7 @@
 
 namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
 {
-    partial class DismissableWarningDialog
+    partial class DismissibleWarningDialog
     {
         /// <summary>
         /// Required designer variable.
@@ -30,7 +30,7 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DismissableWarningDialog));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DismissibleWarningDialog));
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.okButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
@@ -87,7 +87,7 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
             resources.ApplyResources(this.lblWarning, "lblWarning");
             this.lblWarning.Name = "lblWarning";
             // 
-            // DismissableWarningDialog
+            // DismissibleWarningDialog
             // 
             this.AcceptButton = this.okButton;
             resources.ApplyResources(this, "$this");
@@ -98,7 +98,7 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
             this.HelpButton = false;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "DismissableWarningDialog";
+            this.Name = "DismissibleWarningDialog";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.tableLayoutPanel1.ResumeLayout(false);
