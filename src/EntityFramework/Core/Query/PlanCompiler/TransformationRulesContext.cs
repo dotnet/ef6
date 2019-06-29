@@ -416,7 +416,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             foreach (var v in varList)
             {
-                // Any Int32 var regardless of the fasets will do
+                // Any Int32 var regardless of the facets will do
                 PrimitiveTypeKind typeKind;
                 if (TypeHelpers.TryGetPrimitiveTypeKind(v.Type, out typeKind)
                     && typeKind == PrimitiveTypeKind.Int32)
