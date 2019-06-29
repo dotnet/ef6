@@ -4508,7 +4508,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         //         an aggregate or a subquery. (SQLBUDT #504600)
         //     </item>
         // </list>
-        // Potentially, we could furhter optimize this.
+        // Potentially, we could further optimize this.
         // </summary>
         private static bool GroupByAggregatesNeedInnerQuery(IList<DbAggregate> aggregates, string inputVarRefName)
         {
