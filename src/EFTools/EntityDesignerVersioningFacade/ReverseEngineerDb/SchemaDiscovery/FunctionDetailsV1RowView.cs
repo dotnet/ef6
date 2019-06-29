@@ -13,7 +13,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
         private const int ProcIsAggregateIndex = 3;
         private const int ProcIsComposableIndex = 4;
         private const int ProcIsBuiltinIndex = 5;
-        private const int ProcIsniladicIndex = 6;
+        private const int ProcIsNiladicIndex = 6;
         private const int ParamNameIndex = 7;
         private const int ParamTypeIndex = 8;
         private const int ParamDirectionIndex = 9;
@@ -61,7 +61,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
 
         public override bool IsNiladic
         {
-            get { return ConvertDBNull<bool>(Values[ProcIsniladicIndex]); }
+            get { return ConvertDBNull<bool>(Values[ProcIsNiladicIndex]); }
         }
 
         public override bool IsTvf
