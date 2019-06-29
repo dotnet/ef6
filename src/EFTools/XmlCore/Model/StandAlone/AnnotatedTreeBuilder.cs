@@ -23,7 +23,7 @@ namespace Microsoft.Data.Tools.XmlDesignerBase.Model.StandAlone
         private XElement _root;
 
         // prevNode will hold the node in the XLinq tree that was last
-        // processesed.	 This is used for calculating end of open and close
+        // processed.	 This is used for calculating end of open and close
         // tags.
         private XNode _prevNode;
 
