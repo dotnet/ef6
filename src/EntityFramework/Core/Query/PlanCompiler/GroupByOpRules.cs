@@ -438,7 +438,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         // <summary>
         // If the GroupByOp has no aggregates:
-        // (1) and if it includes all all the keys of the input, than it is unnecessary
+        // (1) and if it includes all the keys of the input, than it is unnecessary
         // GroupBy (X, keys) -> Project(X, keys) where keys includes all keys of X.
         // (2) else it can be turned into a Distinct:
         // GroupBy (X, keys) -> Distinct(X, keys)
