@@ -94,7 +94,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.Metadata
         }
 
         [Fact]
-        public void Schema_name_infered_from_EntityType_win_with_custom_schema_name()
+        public void Schema_name_inferred_from_EntityType_win_with_custom_schema_name()
         {
             var storeItemCollection = Utils.CreateStoreItemCollection(Ssdl);
             var serializedSsdl = XDocument.Parse(StoreItemCollectionToString(storeItemCollection, "MyOwnSchema"));

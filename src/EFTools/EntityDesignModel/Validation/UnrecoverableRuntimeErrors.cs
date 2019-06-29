@@ -86,7 +86,7 @@ namespace Microsoft.Data.Entity.Design.Model.Validation
                     ErrorCode.InvalidEndEntitySet, 
                     //  An end element was not given, and cannot be inferred because too many EntityContainerEntitySet elements that are good possibilities.
                     ErrorCode.AmbiguousEntityContainerEnd, 
-                    //  An end element was not given, and cannot be infered because there is no EntityContainerEntitySets that are the correct type to be used as an EntitySet.
+                    //  An end element was not given, and cannot be inferred because there is no EntityContainerEntitySets that are the correct type to be used as an EntitySet.
                     ErrorCode.MissingExtentEntityContainerEnd, 
                     //  Not a valid parameter direction for the parameter in a function
                     ErrorCode.BadParameterDirection, 

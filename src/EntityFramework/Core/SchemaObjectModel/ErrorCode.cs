@@ -179,7 +179,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         AmbiguousEntityContainerEnd = 101,
 
         // <summary>
-        // An end element was not given, and cannot be infered because there is no EntityContainerEntitySets that are the correct type to be used as an EntitySet.
+        // An end element was not given, and cannot be inferred because there is no EntityContainerEntitySets that are the correct type to be used as an EntitySet.
         // </summary>
         MissingExtentEntityContainerEnd = 102,
 

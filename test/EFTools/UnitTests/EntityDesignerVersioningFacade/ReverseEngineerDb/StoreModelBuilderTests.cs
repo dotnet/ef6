@@ -1216,7 +1216,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
             }
 
             [Fact]
-            public void CreateEntityType_creates_readonly_entity_if_no_keys_defined_but_keys_can_be_infered()
+            public void CreateEntityType_creates_readonly_entity_if_no_keys_defined_but_keys_can_be_inferred()
             {
                 var columns =
                     new List<TableDetailsRow>
@@ -1254,7 +1254,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
             }
 
             [Fact]
-            public void CreateEntityType_creates_invalid_entity_if_no_keys_defined_and_keys_cannot_be_infered()
+            public void CreateEntityType_creates_invalid_entity_if_no_keys_defined_and_keys_cannot_be_inferred()
             {
                 var columns =
                     new List<TableDetailsRow>
@@ -1291,7 +1291,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
 
             [Fact]
             public void
-                CreateEntityType_creates_readonly_entity_if_defined_keys_have_invalid_key_type_but_keys_can_be_infered()
+                CreateEntityType_creates_readonly_entity_if_defined_keys_have_invalid_key_type_but_keys_can_be_inferred()
             {
                 var columns =
                     new List<TableDetailsRow>
@@ -1342,7 +1342,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
 
             [Fact]
             public void
-                CreateEntityType_creates_invalid_entity_if_defined_keys_have_invalid_key_type_and_keys_cannot_be_infered()
+                CreateEntityType_creates_invalid_entity_if_defined_keys_have_invalid_key_type_and_keys_cannot_be_inferred()
             {
                 var columns =
                     new List<TableDetailsRow>
