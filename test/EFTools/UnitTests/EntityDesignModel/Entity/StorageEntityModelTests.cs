@@ -54,16 +54,16 @@ namespace Microsoft.Data.Entity.Design.Model.Entity
 
             var modelManager = new Mock<ModelManager>(null, null).Object;
             var modelProvider = new Mock<XmlModelProvider>().Object;
-            var enityDesignArtifiact =
+            var entityDesignArtifiact =
                 new Mock<EntityDesignArtifact>(modelManager, new Uri("urn:dummy"), modelProvider)
                     {
                         CallBase = true
                     }.Object;
 
-            enityDesignArtifiact.SetXObject(
+            entityDesignArtifiact.SetXObject(
                 XDocument.Parse("<Edmx xmlns=\"http://schemas.microsoft.com/ado/2009/11/edmx\" />"));
 
-            using (var storageModel = new StorageEntityModel(enityDesignArtifiact, tmpElement))
+            using (var storageModel = new StorageEntityModel(entityDesignArtifiact, tmpElement))
             {
                 storageModel.SetXObject(null);
                 Assert.Equal("http://schemas.microsoft.com/ado/2009/11/edm/ssdl", storageModel.XNamespace);

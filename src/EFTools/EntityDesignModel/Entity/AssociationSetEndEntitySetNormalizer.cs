@@ -39,7 +39,7 @@ namespace Microsoft.Data.Entity.Design.Model.Entity
 
             Debug.Assert(ec != null, "AssociationSet parent should be a subclass of BaseEntityContainer");
 
-            // the normalized name for an EnitySet is 'EntityContainerName + # + EntitySetName'
+            // the normalized name for an EntitySet is 'EntityContainerName + # + EntitySetName'
             var symbol = new Symbol(entityContainerName, refName);
 
             var normalizedName = new NormalizedName(symbol, null, null, refName);

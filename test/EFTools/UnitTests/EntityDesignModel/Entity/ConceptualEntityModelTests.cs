@@ -33,16 +33,16 @@ namespace Microsoft.Data.Entity.Design.Model.Entity
 
             var modelManager = new Mock<ModelManager>(null, null).Object;
             var modelProvider = new Mock<XmlModelProvider>().Object;
-            var enityDesignArtifiact =
+            var entityDesignArtifiact =
                 new Mock<EntityDesignArtifact>(modelManager, new Uri("urn:dummy"), modelProvider)
                     {
                         CallBase = true
                     }.Object;
 
-            enityDesignArtifiact.SetXObject(
+            entityDesignArtifiact.SetXObject(
                 XDocument.Parse("<Edmx xmlns=\"http://schemas.microsoft.com/ado/2009/11/edmx\" />"));
 
-            using (var conceptualModel = new ConceptualEntityModel(enityDesignArtifiact, tmpElement))
+            using (var conceptualModel = new ConceptualEntityModel(entityDesignArtifiact, tmpElement))
             {
                 conceptualModel.SetXObject(null);
                 Assert.Equal("http://schemas.microsoft.com/ado/2009/11/edm", conceptualModel.XNamespace);

@@ -3131,7 +3131,7 @@ namespace Microsoft.Data.Entity.Design.Package
                         var property = obj as Property;
                         Debug.Assert(
                             property != null && property.EntityType == selectedProperty.EntityType,
-                            "Selected object is not a property or is from another EnityType");
+                            "Selected object is not a property or is from another EntityType");
                         if (property != null
                             && property.EntityType == selectedProperty.EntityType)
                         {
@@ -3812,7 +3812,7 @@ namespace Microsoft.Data.Entity.Design.Package
                     var property = obj as Property;
                     Debug.Assert(
                         property != null && property.EntityType == selectedProperty.EntityType,
-                        "Selected object is not a property or is from another EnityType");
+                        "Selected object is not a property or is from another EntityType");
                     if (property != null
                         && property.EntityType == selectedProperty.EntityType)
                     {

@@ -10,7 +10,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Linq;
 
     /// <summary>
-    /// Represents the Mapping metadata for an EnitytSet in CS space.
+    /// Represents the Mapping metadata for an EntitySet in CS space.
     /// </summary>
     /// <example>
     /// For Example if conceptually you could represent the CS MSL file as following
