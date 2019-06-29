@@ -334,7 +334,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
 
         // <summary>
         // Property to expose the known parameters for the query, so the Command objects
-        // constructor can poplulate it's parameter collection from.
+        // constructor can populate it's parameter collection from.
         // </summary>
         internal virtual IEnumerable<EntityParameter> Parameters
         {
