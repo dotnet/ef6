@@ -48,7 +48,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
         FacetValueOutOfRange = BaseValue + 6,
 
         /// <summary>
-        ///     The association must be skipped because a neede key column
+        ///     The association must be skipped because a needed key column
         ///     is missing
         /// </summary>
         AssociationMissingKeyColumn = BaseValue + 7,
