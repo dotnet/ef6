@@ -202,7 +202,7 @@ namespace Microsoft.Data.Entity.Design.Base.Shell
         }
 
         /// <summary>
-        ///     Each node in the tree can have an associated tracking object used to indentify it.
+        ///     Each node in the tree can have an associated tracking object used to identify it.
         ///     The branch can override this method to return the row index corresponding to the given
         ///     object.
         /// </summary>
