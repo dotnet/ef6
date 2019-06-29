@@ -297,9 +297,9 @@ namespace Microsoft.Data.Entity.Design.Model {
         /// <summary>
         ///   Looks up a localized string similar to Association &apos;{0}&apos; has no association set..
         /// </summary>
-        internal static string EscherValidation_AssociationWithtouAssociationSet {
+        internal static string EscherValidation_AssociationWithoutAssociationSet {
             get {
-                return ResourceManager.GetString("EscherValidation_AssociationWithtouAssociationSet", resourceCulture);
+                return ResourceManager.GetString("EscherValidation_AssociationWithoutAssociationSet", resourceCulture);
             }
         }
         

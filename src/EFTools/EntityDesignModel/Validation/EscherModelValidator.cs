@@ -265,7 +265,7 @@ namespace Microsoft.Data.Entity.Design.Model.Validation
                         if (a.AssociationSet == null)
                         {
                             var msg = String.Format(
-                                CultureInfo.CurrentCulture, Resources.EscherValidation_AssociationWithtouAssociationSet, a.LocalName.Value);
+                                CultureInfo.CurrentCulture, Resources.EscherValidation_AssociationWithoutAssociationSet, a.LocalName.Value);
                             ArtifactSet.AddError(
                                 new ErrorInfo(
                                     ErrorInfo.Severity.WARNING, msg, a, ErrorCodes.ESCHER_VALIDATOR_ASSOCIATION_WITHOUT_ASSOCIATION_SET,

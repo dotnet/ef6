@@ -163,7 +163,7 @@
   <data name="ErrorValidatingArtifact_StorageModelMissing" xml:space="preserve">
     <value>Could not find the storage model to validate.</value>
   </data>
-  <data name="EscherValidation_AssociationWithtouAssociationSet" xml:space="preserve">
+  <data name="EscherValidation_AssociationWithoutAssociationSet" xml:space="preserve">
     <value>Association '{0}' has no association set.</value>
   </data>
   <data name="EscherValidation_CiricularInheritance" xml:space="preserve">
