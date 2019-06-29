@@ -491,7 +491,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                                 ObjectItemAttributeAssemblyLoader.IsSchemaAttributePresent)))
                     {
                         // cache the knowledge that we found an attribute
-                        // because it can be expesive to figure out
+                        // because it can be expensive to figure out
                         _foundAssemblyWithAttribute = true;
                         objItemCollection.ImplicitLoadAllReferencedAssemblies(callingAssembly, edmItemCollection);
                     }
