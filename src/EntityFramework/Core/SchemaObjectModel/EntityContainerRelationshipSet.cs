@@ -185,7 +185,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
             else if (possibleExtents.Count == 0)
             {
-                // no matchs
+                // no matches
                 AddError(
                     ErrorCode.MissingExtentEntityContainerEnd, EdmSchemaErrorSeverity.Error,
                     Strings.MissingEntityContainerEnd(relationshipEnd.Name, FQName));

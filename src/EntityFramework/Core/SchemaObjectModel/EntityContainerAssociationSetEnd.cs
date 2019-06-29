@@ -137,7 +137,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
             else if (possibleEnds.Count == 0)
             {
-                // no matchs
+                // no matches
                 AddError(
                     ErrorCode.FailedInference, EdmSchemaErrorSeverity.Error,
                     Strings.InferRelationshipEndFailedNoEntitySetMatch(
