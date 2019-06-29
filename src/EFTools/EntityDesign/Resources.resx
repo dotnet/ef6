@@ -1012,7 +1012,7 @@
   </data>
   <data name="DatabaseCreation_ErrorTemplatePathNotValid" xml:space="preserve">
     <value>The 'TemplatePath' attribute value, '{{0}}', for the template activity '{0}' in this workflow either is not valid or does not exist.</value>
-    <comment>This is a string that is fomatted two times, hence the '{{0}}'</comment>
+    <comment>This is a string that is formatted two times, hence the '{{0}}'</comment>
   </data>
   <data name="DatabaseCreation_ErrorTextTemplatingServiceNotFound" xml:space="preserve">
     <value>The ITextTemplating service could not be found to process the template '{0}'. This service is only available within Visual Studio. Please make sure that this workflow is running within Visual Studio.</value>
@@ -1034,7 +1034,7 @@
   </data>
   <data name="DatabaseCreation_ErrorTemplatePathNonFile" xml:space="preserve">
     <value>The 'TemplatePath' input file, '{{0}}', for the template activity '{0}' in this workflow is not valid because non-file and UNC paths are not supported.</value>
-    <comment>This is a string that is fomatted two times, hence the '{{0}}'</comment>
+    <comment>This is a string that is formatted two times, hence the '{{0}}'</comment>
   </data>
   <data name="DatabaseCreation_ErrorWorkflowPathNotSet" xml:space="preserve">
     <value>The Database Generation Workflow path is not set in the EDMX file. Please make sure this is set before running the Generate Database wizard</value>
