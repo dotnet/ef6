@@ -717,7 +717,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // that var as referenced always
             var projectOp = (ProjectOp)n.Child0.Op;
 
-            //It is enougth to reference the first output, this usually is a simple constant
+            //It is enough to reference the first output, this usually is a simple constant
             AddReference(projectOp.Outputs.First);
 
             VisitChildren(n);
