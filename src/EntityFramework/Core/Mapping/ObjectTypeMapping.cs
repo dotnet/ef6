@@ -81,7 +81,7 @@ namespace System.Data.Entity.Core.Mapping
         // <summary>
         // Returns the Identity of ObjectTypeMapping.
         // The identity for an Object Type Map is the concatenation of
-        // CLR Type Idntity + ':' + CDM Type Identity
+        // CLR Type Identity + ':' + CDM Type Identity
         // </summary>
         internal override string Identity
         {
