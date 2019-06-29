@@ -30,8 +30,8 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         private const int RootDepth = 2;
         // if adding properties also add to InitializeObject()!
         private List<EdmSchemaError> _errors = new List<EdmSchemaError>();
-        // We need to keep track of functions seperately, since we can't deduce the strong name of the function, 
-        // until we have resolved the parameter names. Hence we keep track of functions seperately and add them
+        // We need to keep track of functions separately, since we can't deduce the strong name of the function, 
+        // until we have resolved the parameter names. Hence we keep track of functions separately and add them
         // to the schema types list, in the validate phase
         private List<Function> _functions;
 
