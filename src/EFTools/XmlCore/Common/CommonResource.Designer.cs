@@ -1703,9 +1703,9 @@ namespace Microsoft.Data.Tools.XmlDesignerBase.Common {
         /// <summary>
         ///   Looks up a localized string similar to Type {0} is incompatible with type {1}..
         /// </summary>
-        internal static string XmlSerialization_IncompatiableType {
+        internal static string XmlSerialization_IncompatibleType {
             get {
-                return ResourceManager.GetString("XmlSerialization_IncompatiableType", resourceCulture);
+                return ResourceManager.GetString("XmlSerialization_IncompatibleType", resourceCulture);
             }
         }
         

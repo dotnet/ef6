@@ -319,7 +319,7 @@
     <value>The content is empty.</value>
     <comment>Yippee</comment>
   </data>
-  <data name="XmlSerialization_IncompatiableType" xml:space="preserve">
+  <data name="XmlSerialization_IncompatibleType" xml:space="preserve">
     <value>Type {0} is incompatible with type {1}.</value>
     <comment>uereviewed</comment>
   </data>
