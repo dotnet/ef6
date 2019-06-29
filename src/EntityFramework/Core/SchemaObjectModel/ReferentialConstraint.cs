@@ -42,10 +42,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
                 var principalRoleEnd = _principalRole.End;
                 var dependentRoleEnd = _dependentRole.End;
 
-                bool isPrinicipalRoleKeyProperty, isDependentRoleKeyProperty;
-                bool areAllPrinicipalRolePropertiesNullable, areAllDependentRolePropertiesNullable;
-                bool isDependentRolePropertiesSubsetofKeyProperties, isPrinicipalRolePropertiesSubsetofKeyProperties;
-                bool isAnyPrinicipalRolePropertyNullable, isAnyDependentRolePropertyNullable;
+                bool isPrincipalRoleKeyProperty, isDependentRoleKeyProperty;
+                bool areAllPrincipalRolePropertiesNullable, areAllDependentRolePropertiesNullable;
+                bool isDependentRolePropertiesSubsetofKeyProperties, isPrincipalRolePropertiesSubsetofKeyProperties;
+                bool isAnyPrincipalRolePropertyNullable, isAnyDependentRolePropertyNullable;
 
                 // Validate the role name to be different
                 if (_principalRole.Name
@@ -61,7 +61,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
                 // whether the properties are the keys for the type in the ToRole
                 IsKeyProperty(
                     _dependentRole, dependentRoleEnd.Type,
-                    out isPrinicipalRoleKeyProperty,
+                    out isPrincipalRoleKeyProperty,
                     out areAllDependentRolePropertiesNullable,
                     out isAnyDependentRolePropertyNullable,
                     out isDependentRolePropertiesSubsetofKeyProperties);
@@ -71,9 +71,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
                 IsKeyProperty(
                     _principalRole, principalRoleEnd.Type,
                     out isDependentRoleKeyProperty,
-                    out areAllPrinicipalRolePropertiesNullable,
-                    out isAnyPrinicipalRolePropertyNullable,
-                    out isPrinicipalRolePropertiesSubsetofKeyProperties);
+                    out areAllPrincipalRolePropertiesNullable,
+                    out isAnyPrincipalRolePropertyNullable,
+                    out isPrincipalRolePropertiesSubsetofKeyProperties);
 
                 Debug.Assert(_principalRole.RoleProperties.Count != 0, "There should be some ref properties in Principal Role");
                 Debug.Assert(_dependentRole.RoleProperties.Count != 0, "There should be some ref properties in Dependent Role");
@@ -93,8 +93,8 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
                     // Determine expected multiplicities
                     var expectedPrincipalMultiplicity = (v1Behavior
-                                                             ? areAllPrinicipalRolePropertiesNullable
-                                                             : isAnyPrinicipalRolePropertyNullable)
+                                                             ? areAllPrincipalRolePropertiesNullable
+                                                             : isAnyPrincipalRolePropertyNullable)
                                                             ? RelationshipMultiplicity.ZeroOrOne
                                                             : RelationshipMultiplicity.One;
                     var expectedDependentMultiplicity = (v1Behavior
@@ -176,7 +176,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
                     // If the ToProperty is a key property, then the upper bound must be 1 i.e. every parent (from property) can 
                     // have exactly one child
-                    if (isPrinicipalRoleKeyProperty)
+                    if (isPrincipalRoleKeyProperty)
                     {
                         if (dependentRoleEnd.Multiplicity
                             == RelationshipMultiplicity.Many)

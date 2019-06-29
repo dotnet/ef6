@@ -579,7 +579,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Add_is_a_noop_if_FK_graph_is_already_Added_Prinicipal_and_Dependent_Modified()
+        public void Add_is_a_noop_if_FK_graph_is_already_Added_Principal_and_Dependent_Modified()
         {
             Add_moves_root_to_Added_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(
                 EntityState.Added,
@@ -587,7 +587,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Add_is_a_noop_if_FK_graph_is_already_Added_Prinicipal_and_Dependent_Deleted()
+        public void Add_is_a_noop_if_FK_graph_is_already_Added_Principal_and_Dependent_Deleted()
         {
             Add_moves_root_to_Added_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(
                 EntityState.Added,

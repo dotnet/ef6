@@ -670,10 +670,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
                             var dependentRoleEnd = constraint.ToRole;
 
                             bool isPrincipalRoleKeyProperty, isDependentRoleKeyProperty;
-                            bool areAllPrinicipalRolePropertiesNullable, areAllDependentRolePropertiesNullable;
+                            bool areAllPrincipalRolePropertiesNullable, areAllDependentRolePropertiesNullable;
                             bool isDependentRolePropertiesSubsetofKeyProperties,
-                                 isPrinicipalRolePropertiesSubsetofKeyProperties;
-                            bool isAnyPrinicipalRolePropertyNullable, isAnyDependentRolePropertyNullable;
+                                 isPrincipalRolePropertiesSubsetofKeyProperties;
+                            bool isAnyPrincipalRolePropertyNullable, isAnyDependentRolePropertyNullable;
 
                             // Resolve all the property in the dependent end attribute. Also checks whether this is nullable or not and 
                             // whether the properties are the keys for the type in the dependent end
@@ -691,9 +691,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
                                 constraint.FromRole.GetEntityType().GetValidKey().ToList(),
                                 principalRoleEnd,
                                 out isDependentRoleKeyProperty,
-                                out areAllPrinicipalRolePropertiesNullable,
-                                out isAnyPrinicipalRolePropertyNullable,
-                                out isPrinicipalRolePropertiesSubsetofKeyProperties);
+                                out areAllPrincipalRolePropertiesNullable,
+                                out isAnyPrincipalRolePropertyNullable,
+                                out isPrincipalRolePropertiesSubsetofKeyProperties);
 
                             Debug.Assert(
                                 constraint.FromRole.GetEntityType().GetValidKey().Any(),
