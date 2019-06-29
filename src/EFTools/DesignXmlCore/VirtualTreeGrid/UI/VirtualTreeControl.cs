@@ -9566,7 +9566,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
                             // tooltip does not end up returning HTTRANSPARENT all the time, so its TTF_TRANSPARENT
                             // behavior does not work, ie. mouse events do not fall thru to controls underneath. This
                             // is due to a combination of old app-specific hacks in comctl32, functional changes between
-                            // v5 and v6, and the specfic way the grid drives its tooltip. Workaround is to just
+                            // v5 and v6, and the specific way the grid drives its tooltip. Workaround is to just
                             // force HTTRANSPARENT all the time.
                             m.Result = (IntPtr)NativeMethods.HTTRANSPARENT;
                             return;
