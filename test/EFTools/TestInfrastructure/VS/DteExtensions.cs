@@ -36,7 +36,7 @@ namespace EFDesignerTestInfrastructure.VS
         /// </summary>
         public enum ProjectKind
         {
-            Libary = 0,
+            Library = 0,
             Executable
         }
 
