@@ -72,7 +72,7 @@ namespace System.Data.Entity.Core.Mapping
     // --ScalarPropertyMap ( CMemberMetadata-->Constant value )
     // The CCMappingSchemaLoader loads an Xml file that has a conceptual structure
     // equivalent to the above example into in-memory data structure in a
-    // top-dwon approach.
+    // top-down approach.
     // </example>
     // <remarks>
     // The loader uses XPathNavigator to parse the XML. The advantage of using XPathNavigator
