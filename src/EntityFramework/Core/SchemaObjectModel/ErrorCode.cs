@@ -220,7 +220,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         TypeMismatchRelationshipConstraint = 112,
 
         // <summary>
-        // Invalid multiplicty in FromRole in the relationship constraint
+        // Invalid multiplicity in FromRole in the relationship constraint
         // </summary>
         InvalidMultiplicityInRoleInRelationshipConstraint = 113,
 
