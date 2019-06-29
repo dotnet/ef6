@@ -2261,7 +2261,7 @@ public class DynamicTextTransformation
 
     /// <summary>
     /// Creates an instance of the DynamicTextTransformation class around the passed in
-    /// TextTransformation shapped instance passed in, or if the passed in instance
+    /// TextTransformation shaped instance passed in, or if the passed in instance
     /// already is a DynamicTextTransformation, it casts it and sends it back.
     /// </summary>
     public static DynamicTextTransformation Create(object instance)
@@ -2386,7 +2386,7 @@ public class DynamicHost : IDynamicHost
 
     /// <summary>
     /// Creates an instance of the DynamicHost class around the passed in
-    /// Microsoft.VisualStudio.TextTemplating.ITextTemplatingEngineHost shapped instance passed in.
+    /// Microsoft.VisualStudio.TextTemplating.ITextTemplatingEngineHost shaped instance passed in.
     /// </summary>
     public DynamicHost(object instance)
     {
