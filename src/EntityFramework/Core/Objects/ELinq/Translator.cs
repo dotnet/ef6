@@ -32,7 +32,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 _nodeTypes = nodeTypes;
             }
 
-            // Gets LINQ node types this translator should be registed to process.
+            // Gets LINQ node types this translator should be registered to process.
             internal IEnumerable<ExpressionType> NodeTypes
             {
                 get { return _nodeTypes; }

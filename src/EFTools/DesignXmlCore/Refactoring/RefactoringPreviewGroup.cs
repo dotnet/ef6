@@ -98,10 +98,10 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.Refactoring
         }
 
         /// <summary>
-        ///     Get the language service registed for passed in file extension.
+        ///     Get the language service registered for passed in file extension.
         /// </summary>
         /// <param name="fileExtension">This is the file extension for which you want to get language service for it.</param>
-        /// <returns>Registed language service for this file extension.  If nothing is registed, null will be returned.</returns>
+        /// <returns>Registered language service for this file extension.  If nothing is registered, null will be returned.</returns>
         internal Guid GetLanguageService(string fileExtension)
         {
             ArgumentValidation.CheckForEmptyString(fileExtension, "fileExtension");
