@@ -2557,7 +2557,7 @@ namespace System.Data.Entity.Core.Objects
 
                 if (RefreshMode.StoreWins == refreshMode)
                 {
-                    // remove all entites that have been removed from the store, not added by client
+                    // remove all entities that have been removed from the store, not added by client
                     foreach (var item in entities)
                     {
                         Debug.Assert(EntityState.Added != item.Value.State, "should not be possible");
@@ -2705,7 +2705,7 @@ namespace System.Data.Entity.Core.Objects
 
                 if (RefreshMode.StoreWins == refreshMode)
                 {
-                    // remove all entites that have been removed from the store, not added by client
+                    // remove all entities that have been removed from the store, not added by client
                     foreach (var item in entities)
                     {
                         Debug.Assert(EntityState.Added != item.Value.State, "should not be possible");
