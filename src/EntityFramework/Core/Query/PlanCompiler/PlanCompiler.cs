@@ -344,9 +344,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // Run transformations on the tree
             if (IsPhaseNeeded(PlanCompilerPhase.Transformations))
             {
-                var projectionPrunningNeeded = ApplyTransformations(ref beforeTransformationRules1, TransformationRulesGroup.All);
+                var projectionPruningNeeded = ApplyTransformations(ref beforeTransformationRules1, TransformationRulesGroup.All);
 
-                if (projectionPrunningNeeded)
+                if (projectionPruningNeeded)
                 {
                     beforeProjectionPruning3 = SwitchToPhase(PlanCompilerPhase.ProjectionPruning);
                     ProjectionPruner.Process(this);

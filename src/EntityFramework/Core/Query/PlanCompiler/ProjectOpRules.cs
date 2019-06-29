@@ -216,7 +216,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             // Note: Even if we don't have any local var definitions left, we should not remove
             // this project yet because: 
-            //  (1) this project node may be prunning out some outputs;
+            //  (1) this project node may be pruning out some outputs;
             //  (2) the rule Rule_ProjectWithNoLocalDefs, would do that later anyway.
 
             // Create a new vardeflist node, and set that as Child1 for the projectOp

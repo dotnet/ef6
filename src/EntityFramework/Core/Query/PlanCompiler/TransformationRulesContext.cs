@@ -23,9 +23,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // Whether any rule was applied that may have caused modifications such that projection pruning
         // may be useful
         // </summary>
-        internal bool ProjectionPrunningRequired
+        internal bool ProjectionPruningRequired
         {
-            get { return m_projectionPrunningRequired; }
+            get { return m_projectionPruningRequired; }
         }
 
         // <summary>
@@ -452,7 +452,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private readonly VarRemapper m_remapper;
         private readonly Dictionary<Node, Node> m_suppressions;
         private readonly VarVec m_remappedVars;
-        private bool m_projectionPrunningRequired;
+        private bool m_projectionPruningRequired;
         private bool m_reapplyNullabilityRules;
         private readonly Stack<Node> m_relOpAncestors = new Stack<Node>();
 #if DEBUG
@@ -530,7 +530,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // Callback function to invoke *after* rules are applied
         // Recomputes the node info, if this node has changed
         // If the rule is among the rules after which projection pruning may be beneficial,
-        // m_projectionPrunningRequired is set to true.
+        // m_projectionPruningRequired is set to true.
         // If the rule is among the rules after which reapplying the nullability rules may be beneficial,
         // m_reapplyNullabilityRules is set to true.
         // </summary>
@@ -543,10 +543,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 appliedRules.Append(rule.MethodName);
                 appliedRules.AppendLine();
 #endif
-                if (!m_projectionPrunningRequired
+                if (!m_projectionPruningRequired
                     && TransformationRules.RulesRequiringProjectionPruning.Contains(rule))
                 {
-                    m_projectionPrunningRequired = true;
+                    m_projectionPruningRequired = true;
                 }
                 if (!m_reapplyNullabilityRules
                     && TransformationRules.RulesRequiringNullabilityRulesToBeReapplied.Contains(rule))

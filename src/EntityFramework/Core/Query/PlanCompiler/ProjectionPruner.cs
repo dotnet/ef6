@@ -382,7 +382,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         // <summary>
         // ElementOp
-        // An ElementOp that is still present when Projection Prunning is invoked can only get introduced
+        // An ElementOp that is still present when Projection Pruning is invoked can only get introduced
         // in the TransformationRules phase by transforming an apply operation into a scalar subquery.
         // Such ElementOp serves as root of a defining expression of a VarDefinitionOp node and
         // thus what it produces is useful.

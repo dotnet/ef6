@@ -238,14 +238,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             // If any rule has been applied after which reapplying nullability rules may be useful,
             // reapply nullability rules.
-            bool projectionPrunningRequired;
-            if (Process(compilerState, rulesTable, out projectionPrunningRequired))
+            bool projectionPruningRequired;
+            if (Process(compilerState, rulesTable, out projectionPruningRequired))
             {
-                bool projectionPrunningRequired2;
-                Process(compilerState, NullabilityRulesTable, out projectionPrunningRequired2);
-                projectionPrunningRequired = projectionPrunningRequired || projectionPrunningRequired2;
+                bool projectionPruningRequired2;
+                Process(compilerState, NullabilityRulesTable, out projectionPruningRequired2);
+                projectionPruningRequired = projectionPruningRequired || projectionPruningRequired2;
             }
-            return projectionPrunningRequired;
+            return projectionPruningRequired;
         }
 
         // <summary>
@@ -259,7 +259,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             var ruleProcessor = new RuleProcessor();
             var context = new TransformationRulesContext(compilerState);
             compilerState.Command.Root = ruleProcessor.ApplyRulesToSubtree(context, rulesTable, compilerState.Command.Root);
-            projectionPruningRequired = context.ProjectionPrunningRequired;
+            projectionPruningRequired = context.ProjectionPruningRequired;
             return context.ReapplyNullabilityRules;
         }
     }
