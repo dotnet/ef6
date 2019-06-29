@@ -362,7 +362,7 @@
   <data name="PropertyWindow_DisplayName_End2NavigationProperty" xml:space="preserve">
     <value>End2 Navigation Property</value>
   </data>
-  <data name="PropertyWindow_Descritpion_EndNavigationProperty" xml:space="preserve">
+  <data name="PropertyWindow_Description_EndNavigationProperty" xml:space="preserve">
     <value>Name of the entity property that returns the value at this end</value>
   </data>
   <data name="PropertyWindow_DisplayName_End1OnDelete" xml:space="preserve">
@@ -371,7 +371,7 @@
   <data name="PropertyWindow_DisplayName_End2OnDelete" xml:space="preserve">
     <value>End2 OnDelete</value>
   </data>
-  <data name="PropertyWindow_Descritpion_EndOnDelete" xml:space="preserve">
+  <data name="PropertyWindow_Description_EndOnDelete" xml:space="preserve">
     <value>Specifies the action to take when an entity on this end is deleted</value>
   </data>
   <data name="PropertyWindow_DisplayName_Setter" xml:space="preserve">
@@ -589,22 +589,22 @@
   <data name="PropertyWindow_Description_Type" xml:space="preserve">
     <value>The type of the scalar property.</value>
   </data>
-  <data name="PropertyWindow_Descritpion_AssociationName" xml:space="preserve">
+  <data name="PropertyWindow_Description_AssociationName" xml:space="preserve">
     <value>The name of the association.</value>
   </data>
-  <data name="PropertyWindow_Descritpion_AssociationSetName" xml:space="preserve">
+  <data name="PropertyWindow_Description_AssociationSetName" xml:space="preserve">
     <value>The name of the association set that contains the association.</value>
   </data>
-  <data name="PropertyWindow_Descritpion_EntityContainerName" xml:space="preserve">
+  <data name="PropertyWindow_Description_EntityContainerName" xml:space="preserve">
     <value>The name of the entity container, which contains all instances of entities for the Entity Data Model.</value>
   </data>
-  <data name="PropertyWindow_Descritpion_Multiplicity" xml:space="preserve">
+  <data name="PropertyWindow_Description_Multiplicity" xml:space="preserve">
     <value>The allowed number of entities at this end of the association</value>
   </data>
-  <data name="PropertyWindow_Descritpion_Namespace" xml:space="preserve">
+  <data name="PropertyWindow_Description_Namespace" xml:space="preserve">
     <value>The namespace for the Entity Data Model.</value>
   </data>
-  <data name="PropertyWindow_Descritpion_Role" xml:space="preserve">
+  <data name="PropertyWindow_Description_Role" xml:space="preserve">
     <value>Name of this end</value>
   </data>
   <data name="ConnectionManager_AddError" xml:space="preserve">
