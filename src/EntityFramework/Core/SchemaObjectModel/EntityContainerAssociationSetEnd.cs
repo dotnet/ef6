@@ -66,7 +66,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         {
             base.ResolveTopLevelNames();
 
-            // resolve end name to the corosponding relationship end
+            // resolve end name to the corresponding relationship end
             var relationship = ParentElement.Relationship;
             if (relationship == null)
             {
