@@ -18,6 +18,14 @@ namespace ProductivityApiTests
     /// </summary>
     public class FindTests : FunctionalTestBase
     {
+#if NETCOREAPP3_0
+        // (Parameter '{parameter name}')
+        private const string ParameterSeparator = " (";
+#else
+        // \r\nParameter name: {parameter name}
+        private const string ParameterSeparator = "\r\n";
+#endif
+
         #region Simple positive cases
 
         [Fact]
@@ -1053,7 +1061,7 @@ namespace ProductivityApiTests
         [Fact]
         public void
             Non_generic_FindAsync_Base_type_returns_derived_entity_in_unchanged_state_in_preference_to_added_from_state_manager_Sanity_test(
-            
+
             )
         {
             Find_returns_derived_entity_in_unchanged_state_in_preference_to_added_from_state_manager_Sanity_test_implementation
@@ -1062,7 +1070,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void FindAsync_on_Derived_set_returns_unchanged_derived_entity_from_state_manager_even_if_key_matches_Added_base_type_entity(
-            
+
             )
         {
             Find_derived_type_from_state_manager_in_unchanged_state_in_preference_to_Added_base_type_entity
@@ -1178,9 +1186,9 @@ namespace ProductivityApiTests
 
 #endif
 
-        #endregion
+#endregion
 
-        #region Find entity with all supported Key Types
+#region Find entity with all supported Key Types
 
         // Int, string, binary have been covered earlier, so this covers the other valid primitive types
         [Fact]
@@ -1343,9 +1351,9 @@ namespace ProductivityApiTests
 
 #endif
 
-        #endregion
+#endregion
 
-        #region Composite Keys
+#region Composite Keys
 
         [Fact]
         public void Find_an_entity_with_Composite_Key_from_store()
@@ -1618,9 +1626,9 @@ namespace ProductivityApiTests
 
 #endif
 
-        #endregion
+#endregion
 
-        #region Simple negative cases
+#region Simple negative cases
 
         [Fact]
         public void Find_throws_for_wrong_number_of_key_values()
@@ -1688,7 +1696,7 @@ namespace ProductivityApiTests
                 catch (ArgumentException ex)
                 {
                     Assert.Equal("keyValues", ex.ParamName);
-                    Assert.NotEqual(-1, ex.Message.LastIndexOf("\r\n"));
+                    Assert.NotEqual(-1, ex.Message.LastIndexOf(ParameterSeparator));
 
                     Assert.IsType<EntitySqlException>(ex.InnerException);
                 }
@@ -2038,7 +2046,7 @@ namespace ProductivityApiTests
                 catch (ArgumentException ex)
                 {
                     Assert.Equal("keyValues", ex.ParamName);
-                    var withNoParam = ex.Message.Substring(0, ex.Message.LastIndexOf("\r\n"));
+                    var withNoParam = ex.Message.Substring(0, ex.Message.LastIndexOf(ParameterSeparator));
                     new StringResourceVerifier(
                         new AssemblyResourceLookup(
                             EntityFrameworkAssembly,
@@ -2117,7 +2125,7 @@ namespace ProductivityApiTests
                 catch (ArgumentException ex)
                 {
                     Assert.Equal("keyValues", ex.ParamName);
-                    var withNoParam = ex.Message.Substring(0, ex.Message.LastIndexOf("\r\n"));
+                    var withNoParam = ex.Message.Substring(0, ex.Message.LastIndexOf(ParameterSeparator));
                     new StringResourceVerifier(
                         new AssemblyResourceLookup(
                             EntityFrameworkAssembly,
@@ -2321,7 +2329,7 @@ namespace ProductivityApiTests
         [Fact]
         public void
             FindAsync_in_derived_set_when_matching_base_type_lives_in_state_manager_in_added_state_and_matching_derived_type_lives_in_store(
-            
+
             )
         {
             Find_derived_entity_when_matching_base_type_lives_in_state_manager_in_added_unchanged_or_deleted_state_and_matching_derived_type_lives_in_store
@@ -2443,6 +2451,6 @@ namespace ProductivityApiTests
 
 #endif
 
-        #endregion
+#endregion
     }
 }
