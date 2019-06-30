@@ -552,7 +552,7 @@ namespace ProductivityApiTests
                 Assert.Equal(EntityState.Added, GetStateEntry(context, category).State);
                 Assert.Equal(EntityState.Added, GetStateEntry(context, product).State);
 
-                // Assert fixup, refernce fixup happens for principal in Added, but not FK fixup.
+                // Assert fixup, reference fixup happens for principal in Added, but not FK fixup.
                 Assert.Equal(product.Category, context.Categories.Find("Beverages"));
                 Assert.Equal(null, product.CategoryId);
             }
@@ -3232,11 +3232,11 @@ namespace ProductivityApiTests
         {
             using (var context = new SpecialCharacters())
             {
-                var countriesOrRegions = context.Länder.ToList();
+                var countriesOrRegions = context.Lï¿½nder.ToList();
 
                 Assert.Equal(2, countriesOrRegions.Count);
-                Assert.Equal(1, countriesOrRegions.Count(l => l.Näme == "A"));
-                Assert.Equal(1, countriesOrRegions.Count(l => l.Näme == "B"));
+                Assert.Equal(1, countriesOrRegions.Count(l => l.Nï¿½me == "A"));
+                Assert.Equal(1, countriesOrRegions.Count(l => l.Nï¿½me == "B"));
             }
         }
 
@@ -3245,11 +3245,11 @@ namespace ProductivityApiTests
         {
             using (var context = new SpecialCharacters())
             {
-                context.Länder.Load();
+                context.Lï¿½nder.Load();
 
-                var lander = context.Länder.Find(1);
+                var lander = context.Lï¿½nder.Find(1);
                 Assert.NotNull(lander);
-                Assert.Equal("A", lander.Näme);
+                Assert.Equal("A", lander.Nï¿½me);
             }
         }
 
@@ -3258,9 +3258,9 @@ namespace ProductivityApiTests
         {
             using (var context = new SpecialCharacters())
             {
-                var lander = context.Länder.Find(1);
+                var lander = context.Lï¿½nder.Find(1);
                 Assert.NotNull(lander);
-                Assert.Equal("A", lander.Näme);
+                Assert.Equal("A", lander.Nï¿½me);
             }
         }
 
@@ -3269,11 +3269,11 @@ namespace ProductivityApiTests
         {
             using (var context = new SpecialCharacters())
             {
-                var lander = context.Länder.Add(
-                    new Länder
+                var lander = context.Lï¿½nder.Add(
+                    new Lï¿½nder
                         {
                             Id = 3,
-                            Näme = "C"
+                            Nï¿½me = "C"
                         });
 
                 Assert.Equal(EntityState.Added, context.Entry(lander).State);
@@ -3285,11 +3285,11 @@ namespace ProductivityApiTests
         {
             using (var context = new SpecialCharacters())
             {
-                var lander = context.Länder.Attach(
-                    new Länder
+                var lander = context.Lï¿½nder.Attach(
+                    new Lï¿½nder
                         {
                             Id = 3,
-                            Näme = "C"
+                            Nï¿½me = "C"
                         });
 
                 Assert.Equal(EntityState.Unchanged, context.Entry(lander).State);
@@ -3301,11 +3301,11 @@ namespace ProductivityApiTests
         {
             using (var context = new SpecialCharacters())
             {
-                var countriesOrRegions = context.Länder.SqlQuery("select * from Länder").ToList();
+                var countriesOrRegions = context.Lï¿½nder.SqlQuery("select * from Lï¿½nder").ToList();
 
                 Assert.Equal(2, countriesOrRegions.Count);
-                Assert.Equal(1, countriesOrRegions.Count(l => l.Näme == "A"));
-                Assert.Equal(1, countriesOrRegions.Count(l => l.Näme == "B"));
+                Assert.Equal(1, countriesOrRegions.Count(l => l.Nï¿½me == "A"));
+                Assert.Equal(1, countriesOrRegions.Count(l => l.Nï¿½me == "B"));
             }
         }
 
@@ -3316,32 +3316,32 @@ namespace ProductivityApiTests
                 Database.SetInitializer(new SpecialCharactersInitializer());
             }
 
-            public DbSet<Länder> Länder { get; set; }
+            public DbSet<Lï¿½nder> Lï¿½nder { get; set; }
         }
 
-        public class Länder
+        public class Lï¿½nder
         {
             [DatabaseGenerated(DatabaseGeneratedOption.None)]
             public int Id { get; set; }
 
-            public string Näme { get; set; }
+            public string Nï¿½me { get; set; }
         }
 
         public class SpecialCharactersInitializer : DropCreateDatabaseAlways<SpecialCharacters>
         {
             protected override void Seed(SpecialCharacters context)
             {
-                context.Länder.Add(
-                    new Länder
+                context.Lï¿½nder.Add(
+                    new Lï¿½nder
                         {
                             Id = 1,
-                            Näme = "A"
+                            Nï¿½me = "A"
                         });
-                context.Länder.Add(
-                    new Länder
+                context.Lï¿½nder.Add(
+                    new Lï¿½nder
                         {
                             Id = 2,
-                            Näme = "B"
+                            Nï¿½me = "B"
                         });
             }
         }

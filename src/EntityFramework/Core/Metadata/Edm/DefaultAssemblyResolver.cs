@@ -9,9 +9,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
     internal class DefaultAssemblyResolver : MetadataArtifactAssemblyResolver
     {
-        internal override bool TryResolveAssemblyReference(AssemblyName refernceName, out Assembly assembly)
+        internal override bool TryResolveAssemblyReference(AssemblyName referenceName, out Assembly assembly)
         {
-            assembly = ResolveAssembly(refernceName);
+            assembly = ResolveAssembly(referenceName);
             return assembly != null;
         }
 
