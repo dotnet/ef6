@@ -3232,11 +3232,11 @@ namespace ProductivityApiTests
         {
             using (var context = new SpecialCharacters())
             {
-                var countriesOrRegions = context.L�nder.ToList();
+                var countriesOrRegions = context.Länder.ToList();
 
                 Assert.Equal(2, countriesOrRegions.Count);
-                Assert.Equal(1, countriesOrRegions.Count(l => l.N�me == "A"));
-                Assert.Equal(1, countriesOrRegions.Count(l => l.N�me == "B"));
+                Assert.Equal(1, countriesOrRegions.Count(l => l.Näme == "A"));
+                Assert.Equal(1, countriesOrRegions.Count(l => l.Näme == "B"));
             }
         }
 
@@ -3245,11 +3245,11 @@ namespace ProductivityApiTests
         {
             using (var context = new SpecialCharacters())
             {
-                context.L�nder.Load();
+                context.Länder.Load();
 
-                var lander = context.L�nder.Find(1);
+                var lander = context.Länder.Find(1);
                 Assert.NotNull(lander);
-                Assert.Equal("A", lander.N�me);
+                Assert.Equal("A", lander.Näme);
             }
         }
 
@@ -3258,9 +3258,9 @@ namespace ProductivityApiTests
         {
             using (var context = new SpecialCharacters())
             {
-                var lander = context.L�nder.Find(1);
+                var lander = context.Länder.Find(1);
                 Assert.NotNull(lander);
-                Assert.Equal("A", lander.N�me);
+                Assert.Equal("A", lander.Näme);
             }
         }
 
@@ -3269,11 +3269,11 @@ namespace ProductivityApiTests
         {
             using (var context = new SpecialCharacters())
             {
-                var lander = context.L�nder.Add(
-                    new L�nder
+                var lander = context.Länder.Add(
+                    new Länder
                         {
                             Id = 3,
-                            N�me = "C"
+                            Näme = "C"
                         });
 
                 Assert.Equal(EntityState.Added, context.Entry(lander).State);
@@ -3285,11 +3285,11 @@ namespace ProductivityApiTests
         {
             using (var context = new SpecialCharacters())
             {
-                var lander = context.L�nder.Attach(
-                    new L�nder
+                var lander = context.Länder.Attach(
+                    new Länder
                         {
                             Id = 3,
-                            N�me = "C"
+                            Näme = "C"
                         });
 
                 Assert.Equal(EntityState.Unchanged, context.Entry(lander).State);
@@ -3301,11 +3301,11 @@ namespace ProductivityApiTests
         {
             using (var context = new SpecialCharacters())
             {
-                var countriesOrRegions = context.L�nder.SqlQuery("select * from L�nder").ToList();
+                var countriesOrRegions = context.Länder.SqlQuery("select * from Länder").ToList();
 
                 Assert.Equal(2, countriesOrRegions.Count);
-                Assert.Equal(1, countriesOrRegions.Count(l => l.N�me == "A"));
-                Assert.Equal(1, countriesOrRegions.Count(l => l.N�me == "B"));
+                Assert.Equal(1, countriesOrRegions.Count(l => l.Näme == "A"));
+                Assert.Equal(1, countriesOrRegions.Count(l => l.Näme == "B"));
             }
         }
 
@@ -3316,32 +3316,32 @@ namespace ProductivityApiTests
                 Database.SetInitializer(new SpecialCharactersInitializer());
             }
 
-            public DbSet<L�nder> L�nder { get; set; }
+            public DbSet<Länder> Länder { get; set; }
         }
 
-        public class L�nder
+        public class Länder
         {
             [DatabaseGenerated(DatabaseGeneratedOption.None)]
             public int Id { get; set; }
 
-            public string N�me { get; set; }
+            public string Näme { get; set; }
         }
 
         public class SpecialCharactersInitializer : DropCreateDatabaseAlways<SpecialCharacters>
         {
             protected override void Seed(SpecialCharacters context)
             {
-                context.L�nder.Add(
-                    new L�nder
+                context.Länder.Add(
+                    new Länder
                         {
                             Id = 1,
-                            N�me = "A"
+                            Näme = "A"
                         });
-                context.L�nder.Add(
-                    new L�nder
+                context.Länder.Add(
+                    new Länder
                         {
                             Id = 2,
-                            N�me = "B"
+                            Näme = "B"
                         });
             }
         }
