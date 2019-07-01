@@ -1,5 +1,6 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
+using System.Data.Entity.Utilities;
 using cqt = System.Data.Entity.Core.Common.CommandTrees;
 using md = System.Data.Entity.Core.Metadata.Edm;
 
@@ -54,10 +55,26 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 "The Entity Framework should try to optimize the query regardless of its size");
 
         // <summary>
-        // Determines the maximum size of the query in terms of Iqt nodes for which we attempt to do transformation rules.
-        // This number is ignored if applyTransformationsRegardlessOfSize is enabled.
+        // A boolean switch indicating whether we should not apply transformation rules regardless of the size of the Iqt.
+        // By default, the Enabled property of a boolean switch is set using the value specified in the configuration file.
+        // Configuring the switch with a value of 0 sets the Enabled property to false; configuring the switch with a nonzero
+        // value to set the Enabled property to true. If the BooleanSwitch constructor cannot find initial switch settings
+        // in the configuration file, the Enabled property of the new switch is set to false by default.
         // </summary>
-        private const int MaxNodeCountForTransformations = 10000;
+        private static readonly BooleanSwitch _disableTransformationsRegardlessOfSize =
+            new BooleanSwitch(
+                "System.Data.Entity.Core.EntityClient.DisableOptimization",
+                "The Entity Framework should not try to optimize the query regardless of its size");
+
+        // <summary>
+        // An integer switch specifying the maximum size of the query in terms of Iqt nodes for which we attempt to do transformation rules.
+        // This number is ignored if applyTransformationsRegardlessOfSize or disableTransformationsRegardlessOfSize is enabled.
+        // </summary>
+        private static readonly IntegerSwitch _maxNodeCountForTransformations =
+            new IntegerSwitch(
+                "System.Data.Entity.Core.EntityClient.MaxNodeCountForTransformations",
+                "The Entity Framework should not try to optimize the query if the Iqt size is larger than the specified value",
+                "10000");
 
         // <summary>
         // The CTree we're compiling a plan for.
@@ -120,13 +137,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 Debug.Fail(message);
 
-                // NOTE: I considered, at great length, whether to have the assertion message text 
+                // NOTE: I considered, at great length, whether to have the assertion message text
                 //       included in the exception we throw; in the end, there really isn't a reliable
                 //       equivalent to the C++ __LINE__ and __FILE__ macros in C# (at least not without
-                //       using the C++ PreProcessor...ick)  The StackTrace object comes close but 
-                //       doesn't handle inlined callers properly for our needs (MethodA() calls MethodB() 
+                //       using the C++ PreProcessor...ick)  The StackTrace object comes close but
+                //       doesn't handle inlined callers properly for our needs (MethodA() calls MethodB()
                 //       calls us, but MethodB() is inlined, so we'll get MethodA() info instead), and
-                //       since these are retail "Asserts" (as in: we're not supposed to get them in our 
+                //       since these are retail "Asserts" (as in: we're not supposed to get them in our
                 //       shipping code, and we're doing this to avoid a null-ref which is even worse) I
                 //       elected to simplify this by just including them as the additional info.
                 throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.AssertionFailed, 0, message);
@@ -281,7 +298,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             //
             // We always need the pre-processor and the codegen phases.
-            // It is generally a good thing to run through the transformation rules, and 
+            // It is generally a good thing to run through the transformation rules, and
             // the projection pruning phases.
             // The "optional" phases are AggregatePushdown, Normalization, NTE, NestPullup and JoinElimination
             //
@@ -486,18 +503,26 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private bool ComputeMayApplyTransformations()
         {
             //
-            // If the nextNodeId is less than MaxNodeCountForTransformations then we don't need to 
-            // calculate the acutal node count, it must be less than  MaxNodeCountForTransformations
+            // No check needed if optimizations are disabled
+            //
+            if (_disableTransformationsRegardlessOfSize.Enabled)
+            {
+                return false;
+            }
+
+            //
+            // If the nextNodeId is less than MaxNodeCountForTransformations then we don't need to
+            // calculate the actual node count, it must be less than  MaxNodeCountForTransformations
             //
             if (_applyTransformationsRegardlessOfSize.Enabled
-                || m_command.NextNodeId < MaxNodeCountForTransformations)
+                || m_command.NextNodeId < _maxNodeCountForTransformations.CurrentValue)
             {
                 return true;
             }
 
             //Compute the actual node count
             var actualCount = NodeCounter.Count(m_command.Root);
-            return (actualCount < MaxNodeCountForTransformations);
+            return (actualCount < _maxNodeCountForTransformations.CurrentValue);
         }
 
         // <summary>
