@@ -12,6 +12,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Resources;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
+    using Linq;
     using SortKey = System.Data.Entity.Core.Query.InternalTrees.SortKey;
 
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
@@ -1893,17 +1894,18 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 PlanCompiler.Assert(aggVar is ComputedVar, "Non-ComputedVar encountered in Aggregate VarDefOp");
 
                 var aggOpNode = aggVarDefNode.Child0;
-                var aggDef = VisitNode(aggOpNode.Child0);
+                var args = aggOpNode.Children.Select(VisitNode);
+
                 var funcAggOp = aggOpNode.Op as AggregateOp;
                 PlanCompiler.Assert(funcAggOp != null, "Non-Aggregate Node encountered as child of Aggregate VarDefOp Node");
                 DbFunctionAggregate newFuncAgg;
                 if (funcAggOp.IsDistinctAggregate)
                 {
-                    newFuncAgg = funcAggOp.AggFunc.AggregateDistinct(aggDef);
+                    newFuncAgg = funcAggOp.AggFunc.AggregateDistinct(args);
                 }
                 else
                 {
-                    newFuncAgg = funcAggOp.AggFunc.Aggregate(aggDef);
+                    newFuncAgg = funcAggOp.AggFunc.Aggregate(args);
                 }
 
                 PlanCompiler.Assert(outputAggVars.Contains(aggVar), "Defined aggregate Var not in Output Aggregate Vars list?");

@@ -1294,7 +1294,29 @@ FROM ( SELECT
             QueryTestHelpers.VerifyQuery(query, workspace, expectedSql);
         }
 
-        public class CodePlex2160 : FunctionalTestBase
+		[Fact]
+		public void Using_ssdl_defined_aggregate_function_multiple_parameters() {
+			var query =
+				@"select gkey, [ĎefauľtNamėspacĕ].Store.F_UniqueCount(C.Address.Region, C.Address.City)
+FROM ProductContainer.Customers as C
+Group By C.Address.Region as gkey";
+
+			var expectedSql =
+				@"SELECT 
+1 AS [C1], 
+[GroupBy1].[K1] AS [Region], 
+[GroupBy1].[A1] AS [C2]
+FROM ( SELECT 
+    [Extent1].[Region] AS [K1], 
+    [dbo].[F_UniqueCount]([Extent1].[Region], [Extent1].[City]) AS [A1]
+    FROM [dbo].[Customers] AS [Extent1]
+    GROUP BY [Extent1].[Region]
+)  AS [GroupBy1]";
+
+			QueryTestHelpers.VerifyQuery(query, workspace, expectedSql);
+		}
+
+		public class CodePlex2160 : FunctionalTestBase
         {
             public class Foo
             {

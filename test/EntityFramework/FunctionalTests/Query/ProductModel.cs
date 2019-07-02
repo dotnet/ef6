@@ -45,6 +45,10 @@ namespace System.Data.Entity.Query
       </CollectionType> 
     </ReturnType> 
   </Function>
+ <Function Name=""F_UniqueCount"" Schema=""dbo"" Aggregate=""true"" BuiltIn=""false"" IsComposable=""true"" NiladicFunction=""false"" ReturnType=""int"">
+	<Parameter Name=""arg1"" Type=""Collection(nvarchar)"" Mode=""In"" />
+    <Parameter Name=""arg2"" Type=""Collection(nvarchar)"" Mode=""In"" />
+  </Function>
 </Schema>";
 
         public const string Msl =
