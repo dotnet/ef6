@@ -4327,7 +4327,7 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
-        // A string like "Error in Function '{0}'. Aggregate Functions should take exactly one input parameter."
+        // A string like "Error in Function '{0}'. Aggregate Functions should take at least one input parameter."
         // </summary>
         internal static string InvalidNumberOfParametersForAggregateFunction(object p0)
         {
