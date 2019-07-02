@@ -39,7 +39,7 @@ namespace CmdLine
         // </remarks>
         private const string TokenizeExpressionFormat =
             @"(?{0}i) # Case Sensitive Option
-# Capture the switch begin of string or preceeded by whitespace
+# Capture the switch begin of string or preceded by whitespace
 (?<SwitchSeparator>\A[{1}])
 # Capture the switch name
 (?<SwitchName>[^{2}+-]+) 

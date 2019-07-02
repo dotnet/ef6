@@ -232,7 +232,7 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
             get
             {
                 // we store the return from the create call in _sp, but there is a chance that
-                // post-processing in an integry check will have moved this scalar property to another ETM,
+                // post-processing in an integrity check will have moved this scalar property to another ETM,
                 // if this is case, go find the new one
                 if (_sp != null
                     && _sp.XObject == null)

@@ -15,11 +15,11 @@ namespace Microsoft.Data.Entity.Design.Refactoring
     {
         private const string DashWithSpaces = " - ";
 
-        internal VsObjectSearchResult(string fileName, string displayText, int lineNumer, int columnNumber)
+        internal VsObjectSearchResult(string fileName, string displayText, int lineNumber, int columnNumber)
         {
             FileName = fileName;
             DisplayText = displayText;
-            LineNumber = lineNumer;
+            LineNumber = lineNumber;
             ColumnNumber = columnNumber;
         }
 
@@ -41,7 +41,7 @@ namespace Microsoft.Data.Entity.Design.Refactoring
                 criteria.eSrchType = VSOBSEARCHTYPE.SO_ENTIREWORD;
                 criteria.szName = name;
 
-                // Need to switch between case sensitive and case insentive searches for C# and VB
+                // Need to switch between case sensitive and case insensitive searches for C# and VB
                 switch (searchLanguage)
                 {
                     case ObjectSearchLanguage.CSharp:

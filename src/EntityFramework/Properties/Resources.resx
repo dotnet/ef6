@@ -954,7 +954,7 @@
   <data name="EdmModel_Validator_Syntactic_EdmModel_NameIsNotAllowed" xml:space="preserve">
     <value>The specified name is not allowed: '{0}'.</value>
   </data>
-  <data name="EdmModel_Validator_Syntactic_EdmAssociationType_AssocationEndMustNotBeNull" xml:space="preserve">
+  <data name="EdmModel_Validator_Syntactic_EdmAssociationType_AssociationEndMustNotBeNull" xml:space="preserve">
     <value>AssociationEnd must not be null.</value>
   </data>
   <data name="EdmModel_Validator_Syntactic_EdmAssociationConstraint_DependentEndMustNotBeNull" xml:space="preserve">
@@ -963,7 +963,7 @@
   <data name="EdmModel_Validator_Syntactic_EdmAssociationConstraint_DependentPropertiesMustNotBeEmpty" xml:space="preserve">
     <value>ToProperties must not be empty.</value>
   </data>
-  <data name="EdmModel_Validator_Syntactic_EdmNavigationProperty_AssocationMustNotBeNull" xml:space="preserve">
+  <data name="EdmModel_Validator_Syntactic_EdmNavigationProperty_AssociationMustNotBeNull" xml:space="preserve">
     <value>Association must not be null.</value>
   </data>
   <data name="EdmModel_Validator_Syntactic_EdmNavigationProperty_ResultEndMustNotBeNull" xml:space="preserve">
@@ -4952,7 +4952,7 @@
   <data name="ComposableFunctionImportsReturningEntitiesNotSupported" xml:space="preserve">
     <value>Mapping function imports returning entities is not supported.</value>
   </data>
-  <data name="StructuralTypeMappingsMustNotBeNullForFunctionImportsReturingNonScalarValues" xml:space="preserve">
+  <data name="StructuralTypeMappingsMustNotBeNullForFunctionImportsReturningNonScalarValues" xml:space="preserve">
     <value>Structural type mappings must not be null or empty for function imports returning non-scalar values.</value>
   </data>
   <data name="InvalidReturnTypeForComposableFunction" xml:space="preserve">

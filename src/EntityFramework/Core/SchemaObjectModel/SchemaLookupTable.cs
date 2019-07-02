@@ -9,7 +9,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Diagnostics;
 
     // <summary>
-    // Reponsible for keep map from alias to namespace for a given schema.
+    // Responsible for keep map from alias to namespace for a given schema.
     // </summary>
     internal sealed class AliasResolver
     {

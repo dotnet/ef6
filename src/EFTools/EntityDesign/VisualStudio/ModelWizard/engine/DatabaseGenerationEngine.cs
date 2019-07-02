@@ -230,7 +230,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                 }
 
                 // When the user had a v2 edmx file (it can happen when creating a new empty model in a project targeting 
-                // .NET Framework 4 and the project does not have refereces to any of EF dlls) and selected EF6 in 
+                // .NET Framework 4 and the project does not have references to any of EF dlls) and selected EF6 in 
                 // the "create database from model" wizard we need to update the artifact to use v3 schemas otherwise
                 // there will be a watermark saying that the edmx is not correct for the EF version and needs to be updated.
                 // We only want to run this command if the version really changed to avoid the overhead.

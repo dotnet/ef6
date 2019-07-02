@@ -38,7 +38,7 @@ namespace Microsoft.Data.Entity.Design.Model.Mapping
                     _name = new SingleItemBinding<ComplexConceptualProperty>(
                         this,
                         AttributeName,
-                        ProperyMappingNameNormalizer.NameNormalizer
+                        PropertyMappingNameNormalizer.NameNormalizer
                         );
                 }
                 return _name;

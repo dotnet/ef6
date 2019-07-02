@@ -66,7 +66,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         {
             base.ResolveTopLevelNames();
 
-            // resolve end name to the corosponding relationship end
+            // resolve end name to the corresponding relationship end
             var relationship = ParentElement.Relationship;
             if (relationship == null)
             {
@@ -137,7 +137,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
             else if (possibleEnds.Count == 0)
             {
-                // no matchs
+                // no matches
                 AddError(
                     ErrorCode.FailedInference, EdmSchemaErrorSeverity.Error,
                     Strings.InferRelationshipEndFailedNoEntitySetMatch(

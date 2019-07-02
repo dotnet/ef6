@@ -1789,7 +1789,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Model_is_built_and_existance_checked_only_once_when_database_exists_and_contains_metadata()
+        public void Model_is_built_and_existence_checked_only_once_when_database_exists_and_contains_metadata()
         {
             using (var context = new BaseModelContext(SimpleConnection<ExistingDatabaseContext>()))
             {
@@ -1823,7 +1823,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Model_is_built_and_existance_checked_only_once_when_database_exists_and_contains_no_metadata()
+        public void Model_is_built_and_existence_checked_only_once_when_database_exists_and_contains_no_metadata()
         {
             using (var context = new BaseModelContext(SimpleConnection<ExistingDatabaseNoMetadataContext>()))
             {
@@ -1861,7 +1861,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Model_is_built_and_existance_checked_only_once_when_database_does_not_exist()
+        public void Model_is_built_and_existence_checked_only_once_when_database_does_not_exist()
         {
             using (var context = new BaseModelContext(SimpleConnection<NewDatabaseContext>()))
             {
@@ -1891,7 +1891,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Model_is_built_and_existance_checked_only_once_when_dropping_and_creating_database()
+        public void Model_is_built_and_existence_checked_only_once_when_dropping_and_creating_database()
         {
             using (var context = new BaseModelContext(SimpleConnection<DropCreateContext>()))
             {

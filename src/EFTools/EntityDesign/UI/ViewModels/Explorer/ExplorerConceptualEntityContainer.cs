@@ -55,7 +55,7 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.Explorer
             }
             else if (typeof(FunctionImport) == childElementType)
             {
-                // if asked what FunctionImport parent node is redirect to the parent (i.e. the ConceptulaEntityModel)
+                // if asked what FunctionImport parent node is redirect to the parent (i.e. the ConceptualEntityModel)
                 // This is because, for FunctionImports, we are not using the same parent-child relationship in the 
                 // View-Model that we are in the Model
                 return Parent.GetParentNodeForElement(childElement);

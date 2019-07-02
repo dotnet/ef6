@@ -44,7 +44,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // </summary>
         // <param name="astExpr"> ast command tree </param>
         // <remarks>
-        // <exception cref="System.Data.Entity.Core.EntityException">Thrown when Syntatic or Semantic rules are violated and the query cannot be accepted</exception>
+        // <exception cref="System.Data.Entity.Core.EntityException">Thrown when Syntactic or Semantic rules are violated and the query cannot be accepted</exception>
         // <exception cref="System.Data.Entity.Core.MetadataException">Thrown when metadata related service requests fail</exception>
         // <exception cref="System.Data.Entity.Core.MappingException">Thrown when mapping related service requests fail</exception>
         // </remarks>
@@ -77,7 +77,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // </summary>
         // <param name="astExpr"> ast command tree </param>
         // <remarks>
-        // <exception cref="System.Data.Entity.Core.EntityException">Thrown when Syntatic or Semantic rules are violated and the query cannot be accepted</exception>
+        // <exception cref="System.Data.Entity.Core.EntityException">Thrown when Syntactic or Semantic rules are violated and the query cannot be accepted</exception>
         // <exception cref="System.Data.Entity.Core.MetadataException">Thrown when metadata related service requests fail</exception>
         // <exception cref="System.Data.Entity.Core.MappingException">Thrown when mapping related service requests fail</exception>
         // </remarks>
@@ -212,7 +212,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // <summary>
         // Dispatches/Converts statement expressions.
         // </summary>
-        // <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
+        // <param name="sr"> SemanticResolver instance relative to a specific typespace/system </param>
         private static ParseResult ConvertStatement(Statement astStatement, SemanticResolver sr)
         {
             DebugCheck.NotNull(astStatement);
@@ -240,7 +240,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // <summary>
         // Converts query statement AST to a <see cref="DbQueryCommandTree" />
         // </summary>
-        // <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
+        // <param name="sr"> SemanticResolver instance relative to a specific typespace/system </param>
         private static ParseResult ConvertQueryStatementToDbCommandTree(Statement astStatement, SemanticResolver sr)
         {
             DebugCheck.NotNull(astStatement);
@@ -802,7 +802,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 }
 
                 //
-                // Add aggregate to aggreate list.
+                // Add aggregate to aggregate list.
                 //
                 aggregateInfo.AttachToAstNode(sr.GenerateInternalName("groupPartition"), definition);
                 aggregateInfo.EvaluatingScopeRegion.GroupAggregateInfos.Add(aggregateInfo);
@@ -1024,7 +1024,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         private static ValueExpression ConvertTypeConstructorCall(MetadataType metadataType, MethodExpr methodExpr, SemanticResolver sr)
         {
             //
-            // Ensure edmType has a contructor.
+            // Ensure edmType has a constructor.
             //
             if (!TypeSemantics.IsComplexType(metadataType.TypeUsage)
                 &&
@@ -1130,7 +1130,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 && sr.IsInAnyGroupScope())
             {
                 //
-                // If it is an aggreagate function inside a group scope, dispatch to the expensive ConvertAggregateFunctionInGroupScope()...
+                // If it is an aggregate function inside a group scope, dispatch to the expensive ConvertAggregateFunctionInGroupScope()...
                 //
                 return new ValueExpression(ConvertAggregateFunctionInGroupScope(methodExpr, metadataFunctionGroup, sr));
             }
@@ -1150,7 +1150,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // </summary>
         // <remarks>
         // This method converts group aggregates in two phases:
-        // Phase 1 - it will resolve the actual inner (argument) expression and then anotate the ast node and add the resolved aggregate
+        // Phase 1 - it will resolve the actual inner (argument) expression and then annotate the ast node and add the resolved aggregate
         // to the scope
         // Phase 2 - if ast node was annotated, just extract the precomputed expression from the scope.
         // </remarks>
@@ -1402,7 +1402,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             }
 
             //
-            // Add aggregate to aggreate list.
+            // Add aggregate to aggregate list.
             //
             aggregateInfo.AttachToAstNode(sr.GenerateInternalName("groupAgg" + functionType.Name), functionAggregate);
             aggregateInfo.EvaluatingScopeRegion.GroupAggregateInfos.Add(aggregateInfo);
@@ -2192,7 +2192,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // <summary>
         // Converts Arithmetic Expressions Args
         // </summary>
-        // <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
+        // <param name="sr"> SemanticResolver instance relative to a specific typespace/system </param>
         private static Pair<DbExpression, DbExpression> ConvertArithmeticArgs(BuiltInExpr astBuiltInExpr, SemanticResolver sr)
         {
             var operands = ConvertValueExpressionsWithUntypedNulls(
@@ -2233,7 +2233,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // <summary>
         // Converts Plus Args - specific case since string edmType is an allowed edmType for '+'
         // </summary>
-        // <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
+        // <param name="sr"> SemanticResolver instance relative to a specific typespace/system </param>
         private static Pair<DbExpression, DbExpression> ConvertPlusOperands(BuiltInExpr astBuiltInExpr, SemanticResolver sr)
         {
             var operands = ConvertValueExpressionsWithUntypedNulls(
@@ -2273,7 +2273,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // <summary>
         // Converts Logical Expression Args
         // </summary>
-        // <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
+        // <param name="sr"> SemanticResolver instance relative to a specific typespace/system </param>
         private static Pair<DbExpression, DbExpression> ConvertLogicalArgs(BuiltInExpr astBuiltInExpr, SemanticResolver sr)
         {
             var leftExpr = ConvertValueExpressionAllowUntypedNulls(astBuiltInExpr.Arg1, sr);
@@ -2319,7 +2319,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // <summary>
         // Converts Equal Comparison Expression Args
         // </summary>
-        // <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
+        // <param name="sr"> SemanticResolver instance relative to a specific typespace/system </param>
         private static Pair<DbExpression, DbExpression> ConvertEqualCompArgs(BuiltInExpr astBuiltInExpr, SemanticResolver sr)
         {
             //
@@ -2349,7 +2349,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // <summary>
         // Converts Order Comparison Expression Args
         // </summary>
-        // <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
+        // <param name="sr"> SemanticResolver instance relative to a specific typespace/system </param>
         private static Pair<DbExpression, DbExpression> ConvertOrderCompArgs(BuiltInExpr astBuiltInExpr, SemanticResolver sr)
         {
             var compArgs = ConvertValueExpressionsWithUntypedNulls(
@@ -2376,7 +2376,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // <summary>
         // Converts Set Expression Args
         // </summary>
-        // <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
+        // <param name="sr"> SemanticResolver instance relative to a specific typespace/system </param>
         private static Pair<DbExpression, DbExpression> ConvertSetArgs(BuiltInExpr astBuiltInExpr, SemanticResolver sr)
         {
             //
@@ -2507,7 +2507,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // <summary>
         // Converts Set 'IN' expression args
         // </summary>
-        // <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
+        // <param name="sr"> SemanticResolver instance relative to a specific typespace/system </param>
         private static Pair<DbExpression, DbExpression> ConvertInExprArgs(BuiltInExpr astBuiltInExpr, SemanticResolver sr)
         {
             var rightExpr = ConvertValueExpression(astBuiltInExpr.Arg2, sr);
@@ -5384,7 +5384,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             #endregion
 
             ////////////////////////////
-            // Nullabity Expressions
+            // Nullability Expressions
             ////////////////////////////
 
             //

@@ -73,7 +73,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner
 		}
 		
 		/// <summary>
-		/// Serivce provider used to access services from the hosting environment.
+		/// Service provider used to access services from the hosting environment.
 		/// </summary>
 		protected global::System.IServiceProvider ServiceProvider
 		{

@@ -14,7 +14,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.Refactoring
         private readonly IList<FileChange> _changes;
 
         /// <summary>
-        ///     Contructor of this event, which takes the a list of FileChange.
+        ///     Constructor of this event, which takes the a list of FileChange.
         /// </summary>
         /// <param name="changes"></param>
         public ApplyChangesEventArgs(IList<FileChange> changes)

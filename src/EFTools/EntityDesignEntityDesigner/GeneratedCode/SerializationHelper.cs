@@ -159,7 +159,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner
 		/// <param name="writer">XmlWriter to write serialized data to.</param>
 		/// <param name="attributeName">Name of the attribute to be written</param>
 		/// <param name="attributeValue">Value of the attribute to be written</param>
-		/// <remarks>This is an extension point to allow customisation e.g. to encode the data
+		/// <remarks>This is an extension point to allow customization e.g. to encode the data
 		/// being written to the file.</remarks>
 		internal virtual void WriteAttributeString(DslModeling::SerializationContext serializationContext, DslModeling::ModelElement element, global::System.Xml.XmlWriter writer, string attributeName, string attributeValue)
 		{
@@ -174,7 +174,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner
 		/// <param name="writer">XmlWriter to write serialized data to.</param>
 		/// <param name="elementName">Name of the element to be written.</param>
 		/// <param name="elementValue">Value of the element to be written.</param>
-		/// <remarks>This is an extension point to allow customisation e.g. to encode the data
+		/// <remarks>This is an extension point to allow customization e.g. to encode the data
 		/// being written to the file.</remarks>
 		internal virtual void WriteElementString(DslModeling::SerializationContext serializationContext, DslModeling::ModelElement element, global::System.Xml.XmlWriter writer, string elementName, string elementValue)
 		{
@@ -189,7 +189,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner
 		/// <param name="reader">XmlReader to read the serialized data from.</param>
 		/// <param name="attributeName">The name of the attribute to be read.</param>
 		/// <returns>The value of the attribute.</returns>
-		/// <remarks>This is an extension point to allow customisation e.g. to decode the data
+		/// <remarks>This is an extension point to allow customization e.g. to decode the data
 		/// being written to the file.</remarks>
 		internal virtual string ReadAttribute(DslModeling::SerializationContext serializationContext, DslModeling::ModelElement element, global::System.Xml.XmlReader reader, string attributeName)
 		{
@@ -203,7 +203,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner
 		/// <param name="element">The element whose attributes have just been written.</param>
 		/// <param name="reader">XmlReader to read the serialized data from.</param>
 		/// <returns>The value of the element.</returns>
-		/// <remarks>This is an extension point to allow customisation e.g. to decode the data
+		/// <remarks>This is an extension point to allow customization e.g. to decode the data
 		/// being written to the file.</remarks>
 		internal virtual string ReadElementContentAsString(DslModeling::SerializationContext serializationContext, DslModeling::ModelElement element, global::System.Xml.XmlReader reader)
 		{

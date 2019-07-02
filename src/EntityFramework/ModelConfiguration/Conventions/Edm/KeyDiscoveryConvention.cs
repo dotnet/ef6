@@ -35,7 +35,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         }
 
         /// <summary>
-        /// When overriden returns the subset of properties that will be part of the primary key.
+        /// When overridden returns the subset of properties that will be part of the primary key.
         /// </summary>
         /// <param name="entityType"> The entity type. </param>
         /// <param name="primitiveProperties"> The primitive types of the entities</param>

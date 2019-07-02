@@ -101,7 +101,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         // <summary>
-        // Do I contain the specifed property?
+        // Do I contain the specified property?
         // </summary>
         // <param name="p"> The property </param>
         // <returns> true, if I do </returns>

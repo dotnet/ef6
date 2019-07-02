@@ -29,19 +29,19 @@ namespace System.Data.Entity.Core.Mapping
     /// --ComplexPropertyMap
     /// --ComplexTypeMapping
     /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    /// --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
-    /// --DiscriminatorProperyMap ( constant value-->SMemberMetadata )
+    /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    /// --DiscriminatorPropertyMap ( constant value-->SMemberMetadata )
     /// --ComplexTypeMapping
     /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    /// --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
-    /// --DiscriminatorProperyMap ( constant value-->SMemberMetadata )
+    /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    /// --DiscriminatorPropertyMap ( constant value-->SMemberMetadata )
     /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
     /// --AssociationSetMapping
     /// --AssociationTypeMapping
     /// --MappingFragment
     /// --EndPropertyMap
     /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    /// --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
+    /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
     /// --EndPropertyMap
     /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
     /// This class represents the metadata for all the end property map elements in the

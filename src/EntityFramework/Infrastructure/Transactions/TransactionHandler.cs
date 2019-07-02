@@ -507,7 +507,7 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         /// Can be implemented in a derived class.
         /// </summary>
-        /// <param name="transaction">The transaction being commited.</param>
+        /// <param name="transaction">The transaction being committed.</param>
         /// <param name="interceptionContext">Contextual information associated with the call.</param>
         /// <seealso cref="IDbTransactionInterceptor.Committing"/>
         public virtual void Committing(DbTransaction transaction, DbTransactionInterceptionContext interceptionContext)
@@ -517,7 +517,7 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         /// Can be implemented in a derived class.
         /// </summary>
-        /// <param name="transaction">The transaction that was commited.</param>
+        /// <param name="transaction">The transaction that was committed.</param>
         /// <param name="interceptionContext">Contextual information associated with the call.</param>
         /// <seealso cref="IDbTransactionInterceptor.Committed"/>
         public virtual void Committed(DbTransaction transaction, DbTransactionInterceptionContext interceptionContext)

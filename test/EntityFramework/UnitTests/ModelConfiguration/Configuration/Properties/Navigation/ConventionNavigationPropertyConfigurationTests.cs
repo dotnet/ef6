@@ -203,7 +203,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         }
 
         [Fact]
-        public void HasInverseNavigationProperty_throws_on_invalid_nagivation_property()
+        public void HasInverseNavigationProperty_throws_on_invalid_navigation_property()
         {
             var navigationProperty = typeof(LightweighEntity).GetDeclaredProperty("ValidNavigationProperty");
             var lightweightConfiguration =
@@ -219,7 +219,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         }
 
         [Fact]
-        public void HasInverseNavigationProperty_throws_on_nonmatching_nagivation_property()
+        public void HasInverseNavigationProperty_throws_on_nonmatching_navigation_property()
         {
             var navigationProperty = typeof(LightweighEntity).GetDeclaredProperty("UnrelatedNavigationProperty");
             var configuration = new NavigationPropertyConfiguration(navigationProperty);

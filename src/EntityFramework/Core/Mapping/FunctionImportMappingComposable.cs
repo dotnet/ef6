@@ -154,7 +154,7 @@ namespace System.Data.Entity.Core.Mapping
             if (!TypeSemantics.IsScalarType(resultType)
                 && (structuralTypeMappings == null || structuralTypeMappings.Count == 0))
             {
-                throw new ArgumentException(Strings.StructuralTypeMappingsMustNotBeNullForFunctionImportsReturingNonScalarValues);
+                throw new ArgumentException(Strings.StructuralTypeMappingsMustNotBeNullForFunctionImportsReturningNonScalarValues);
             }
 
             m_structuralTypeMappings = structuralTypeMappings;

@@ -336,7 +336,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     // If no propagation rules are defined, it suggests an invalid workload (e.g.
                     // a required entity or relationship is missing). In general, such exceptions
                     // should be caught by the RelationshipConstraintValidator, but we defensively
-                    // check for problems here regardless. For instance, a 0..1:1..1 self-assocation
+                    // check for problems here regardless. For instance, a 0..1:1..1 self-association
                     // implied a stronger constraint that cannot be checked by RelationshipConstraintValidator.
 
                     // First gather state entries contributing to the problem

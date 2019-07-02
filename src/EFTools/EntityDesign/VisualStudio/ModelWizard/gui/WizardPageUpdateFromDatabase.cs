@@ -261,7 +261,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         private void UpdateSettingsFromGui()
         {
             Wizard.ModelBuilderSettings.DatabaseObjectFilters = GetSelectedFilterEntriesFromTreeView();
-            Wizard.ModelBuilderSettings.LoadingDBMetatdataTime = _stopwatch.Elapsed;
+            Wizard.ModelBuilderSettings.LoadingDBMetadataTime = _stopwatch.Elapsed;
             Wizard.ModelBuilderSettings.UsePluralizationService = chkPluralize.Checked;
             Wizard.ModelBuilderSettings.IncludeForeignKeysInModel = chkIncludeForeignKeys.Checked;
         }
@@ -307,7 +307,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 
         // <summary>
         //     DoWork event handler: Get database objects in a background thread.
-        //     This method is called by background worker component on a diffferent thread than the UI thread.
+        //     This method is called by background worker component on a different thread than the UI thread.
         //     We use the ModelBuilderEngine to get database objects to display
         // </summary>
         private void bgWorkerPopulateTree_DoWork(object sender, DoWorkEventArgs args)

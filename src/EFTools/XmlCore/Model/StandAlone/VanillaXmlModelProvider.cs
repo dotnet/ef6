@@ -525,7 +525,7 @@ namespace Microsoft.Data.Tools.XmlDesignerBase.Model.StandAlone
 
         internal void UndoTransaction()
         {
-            // Undo Transaction in oppposite order
+            // Undo Transaction in opposite order
             foreach (var logger in resources.Values)
             {
                 var cmds = logger.UndoCommands;
@@ -1371,7 +1371,7 @@ namespace Microsoft.Data.Tools.XmlDesignerBase.Model.StandAlone
             }
         }
 
-        private ResourceEntry GetResoureEntry(object src)
+        private ResourceEntry GetResourceEntry(object src)
         {
             ResourceEntry rEntry = null;
             if (_resourceTable.ContainsKey(src))
@@ -1389,7 +1389,7 @@ namespace Microsoft.Data.Tools.XmlDesignerBase.Model.StandAlone
 
             lock (_resourceTable)
             {
-                lockTarget = GetResoureEntry(resource);
+                lockTarget = GetResourceEntry(resource);
 
                 if (lockTarget == null)
                 {
@@ -1597,10 +1597,10 @@ namespace Microsoft.Data.Tools.XmlDesignerBase.Model.StandAlone
             return new NodeNameCommand(change);
         }
 
-        internal virtual NodeValueCommmand CreateSetValueCommand(
+        internal virtual NodeValueCommand CreateSetValueCommand(
             VanillaXmlModelProvider provider, NodeValueChange change)
         {
-            return new NodeValueCommmand(change);
+            return new NodeValueCommand(change);
         }
     }
 
@@ -1778,9 +1778,9 @@ namespace Microsoft.Data.Tools.XmlDesignerBase.Model.StandAlone
         }
     }
 
-    internal class NodeValueCommmand : XmlModelCommand
+    internal class NodeValueCommand : XmlModelCommand
     {
-        public NodeValueCommmand(NodeValueChange change)
+        public NodeValueCommand(NodeValueChange change)
             : base(change)
         {
         }
@@ -1824,7 +1824,7 @@ namespace Microsoft.Data.Tools.XmlDesignerBase.Model.StandAlone
 
         public override bool Merge(ModelCommand other)
         {
-            var s = other as NodeValueCommmand;
+            var s = other as NodeValueCommand;
             if (s != null
                 && s != this
                 && s.Change.Node == Change.Node)

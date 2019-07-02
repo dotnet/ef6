@@ -160,7 +160,7 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
 
         protected override void PostInvoke(CommandProcessorContext cpc)
         {
-            // in the conceptual model, changing key states will inpact MSL generated any
+            // in the conceptual model, changing key states will impact MSL generated any
             // inferred ref constraints
             if (Property.EntityModel.IsCSDL)
             {

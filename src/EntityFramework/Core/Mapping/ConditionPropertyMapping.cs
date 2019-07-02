@@ -21,7 +21,7 @@ namespace System.Data.Entity.Core.Mapping
     /// --EntityKey
     /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
     /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    /// --ConditionProperyMap ( constant value-->SMemberMetadata )
+    /// --ConditionPropertyMap ( constant value-->SMemberMetadata )
     /// --EntityTypeMapping
     /// --MappingFragment
     /// --EntityKey
@@ -29,14 +29,14 @@ namespace System.Data.Entity.Core.Mapping
     /// --ComplexPropertyMap
     /// --ComplexTypeMap
     /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    /// --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
-    /// --ConditionProperyMap ( constant value-->SMemberMetadata )
+    /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    /// --ConditionPropertyMap ( constant value-->SMemberMetadata )
     /// --AssociationSetMapping
     /// --AssociationTypeMapping
     /// --MappingFragment
     /// --EndPropertyMap
     /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    /// --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
+    /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
     /// --EndPropertyMap
     /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
     /// This class represents the metadata for all the condition property map elements in the

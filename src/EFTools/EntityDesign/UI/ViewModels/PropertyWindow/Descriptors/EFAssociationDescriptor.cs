@@ -52,7 +52,7 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.PropertyWindow.Descriptors
             }
         }
 
-        [LocDescription("PropertyWindow_Descritpion_AssociationName")]
+        [LocDescription("PropertyWindow_Description_AssociationName")]
         [MergableProperty(false)]
         public override string Name
         {
@@ -62,7 +62,7 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.PropertyWindow.Descriptors
 
         [LocCategory("PropertyWindow_Category_General")]
         [LocDisplayName("PropertyWindow_DisplayName_AssociationSetName")]
-        [LocDescription("PropertyWindow_Descritpion_AssociationSetName")]
+        [LocDescription("PropertyWindow_Description_AssociationSetName")]
         [MergableProperty(false)]
         public string AssociationSetName
         {
@@ -128,7 +128,7 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.PropertyWindow.Descriptors
 
         [LocCategory("PropertyWindow_Category_General")]
         [LocDisplayName("PropertyWindow_DisplayName_End1Multiplicity")]
-        [LocDescription("PropertyWindow_Descritpion_Multiplicity")]
+        [LocDescription("PropertyWindow_Description_Multiplicity")]
         [TypeConverter(typeof(End1MultiplicityConverter))]
         public string End1Multiplicity
         {
@@ -143,7 +143,7 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.PropertyWindow.Descriptors
 
         [LocCategory("PropertyWindow_Category_General")]
         [LocDisplayName("PropertyWindow_DisplayName_End2Multiplicity")]
-        [LocDescription("PropertyWindow_Descritpion_Multiplicity")]
+        [LocDescription("PropertyWindow_Description_Multiplicity")]
         [TypeConverter(typeof(End2MultiplicityConverter))]
         public string End2Multiplicity
         {
@@ -175,7 +175,7 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.PropertyWindow.Descriptors
 
         [LocCategory("PropertyWindow_Category_General")]
         [LocDisplayName("PropertyWindow_DisplayName_End1Role")]
-        [LocDescription("PropertyWindow_Descritpion_Role")]
+        [LocDescription("PropertyWindow_Description_Role")]
         [MergableProperty(false)]
         public string End1Role
         {
@@ -190,7 +190,7 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.PropertyWindow.Descriptors
 
         [LocCategory("PropertyWindow_Category_General")]
         [LocDisplayName("PropertyWindow_DisplayName_End2Role")]
-        [LocDescription("PropertyWindow_Descritpion_Role")]
+        [LocDescription("PropertyWindow_Description_Role")]
         [MergableProperty(false)]
         public string End2Role
         {
@@ -222,7 +222,7 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.PropertyWindow.Descriptors
 
         [LocCategory("PropertyWindow_Category_General")]
         [LocDisplayName("PropertyWindow_DisplayName_End1NavigationProperty")]
-        [LocDescription("PropertyWindow_Descritpion_EndNavigationProperty")]
+        [LocDescription("PropertyWindow_Description_EndNavigationProperty")]
         [MergableProperty(false)]
         public string End1NavigationProperty
         {
@@ -237,7 +237,7 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.PropertyWindow.Descriptors
 
         [LocCategory("PropertyWindow_Category_General")]
         [LocDisplayName("PropertyWindow_DisplayName_End2NavigationProperty")]
-        [LocDescription("PropertyWindow_Descritpion_EndNavigationProperty")]
+        [LocDescription("PropertyWindow_Description_EndNavigationProperty")]
         [MergableProperty(false)]
         public string End2NavigationProperty
         {
@@ -269,7 +269,7 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.PropertyWindow.Descriptors
 
         [LocCategory("PropertyWindow_Category_General")]
         [LocDisplayName("PropertyWindow_DisplayName_End1OnDelete")]
-        [LocDescription("PropertyWindow_Descritpion_EndOnDelete")]
+        [LocDescription("PropertyWindow_Description_EndOnDelete")]
         [TypeConverter(typeof(OnDeleteActionConverter))]
         [MergableProperty(false)]
         public string End1OnDelete
@@ -285,7 +285,7 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.PropertyWindow.Descriptors
 
         [LocCategory("PropertyWindow_Category_General")]
         [LocDisplayName("PropertyWindow_DisplayName_End2OnDelete")]
-        [LocDescription("PropertyWindow_Descritpion_EndOnDelete")]
+        [LocDescription("PropertyWindow_Description_EndOnDelete")]
         [TypeConverter(typeof(OnDeleteActionConverter))]
         [MergableProperty(false)]
         public string End2OnDelete

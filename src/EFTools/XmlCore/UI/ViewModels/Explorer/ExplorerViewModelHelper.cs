@@ -226,7 +226,7 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.Explorer
             {
                 var e2 = elementStack.Last.Value;
                 elementStack.RemoveLast();
-                var viewModelType = ModelToExplorerModelXRef.GetViewModelTypeForEFlement(editingContext, e2);
+                var viewModelType = ModelToExplorerModelXRef.GetViewModelTypeForEFElement(editingContext, e2);
                 // if viewModelType is null then that kind of EFElement is not displayed
                 // in the Explorer (e.g. S-side StorageEntityContainer and children)
                 if (null != viewModelType)

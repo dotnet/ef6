@@ -47,7 +47,7 @@ namespace Microsoft.Data.Entity.Design.Model.Mapping
             }
             else if (asm != null)
             {
-                // this is a condition under an AssocationSetMapping or a ScalarProperty under an EndProperty
+                // this is a condition under an AssociationSetMapping or a ScalarProperty under an EndProperty
                 // regardless, use the reference to our S-Space from the asm
                 if (asm.StoreEntitySet.Status == BindingStatus.Known)
                 {

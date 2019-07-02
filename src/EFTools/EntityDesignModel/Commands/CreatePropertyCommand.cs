@@ -197,7 +197,7 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
         /// <summary>
         ///     Creates a property in the passed in entity of the default Type (non-nullable String).
         ///     NOTE: If the cpc already has an active transaction, these changes will be in that transaction
-        ///     and the caller of this helper method must commit it to see these changes commited.
+        ///     and the caller of this helper method must commit it to see these changes committed.
         /// </summary>
         /// <param name="cpc"></param>
         /// <param name="name">The name of the new property</param>
@@ -219,7 +219,7 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
         ///     Creates a new property in the passed in conceptual entity and optionally sets additional
         ///     facets on the property.
         ///     NOTE: If the cpc already has an active transaction, these changes will be in that transaction
-        ///     and the caller of this helper method must commit it to see these changes commited.
+        ///     and the caller of this helper method must commit it to see these changes committed.
         /// </summary>
         /// <param name="cpc"></param>
         /// <param name="name">The name of the property</param>
@@ -257,7 +257,7 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
         ///     Creates a new property in the passed in storage entity and optionally sets additional
         ///     facets on the property.
         ///     NOTE: If the cpc already has an active transaction, these changes will be in that transaction
-        ///     and the caller of this helper method must commit it to see these changes commited.
+        ///     and the caller of this helper method must commit it to see these changes committed.
         /// </summary>
         /// <param name="cpc"></param>
         /// <param name="name">The name of the property</param>

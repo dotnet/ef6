@@ -108,7 +108,7 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.PropertyWindow.Descriptors
         }
 
         /// <summary>
-        ///     overriden by derived classes to return a list of Property Extenders
+        ///     Overridden by derived classes to return a list of Property Extenders
         /// </summary>
         internal virtual IList<object> GetPropertyExtenders()
         {
@@ -116,7 +116,7 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.PropertyWindow.Descriptors
         }
 
         /// <summary>
-        ///     overriden by derived classes to perform initialization after _element is initialized
+        ///     Overridden by derived classes to perform initialization after _element is initialized
         /// </summary>
         protected virtual void OnTypeDescriptorInitialize()
         {

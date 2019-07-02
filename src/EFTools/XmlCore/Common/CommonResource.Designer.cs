@@ -290,18 +290,18 @@ namespace Microsoft.Data.Tools.XmlDesignerBase.Common {
         /// <summary>
         ///   Looks up a localized string similar to Starting execution loop of {0} times....
         /// </summary>
-        internal static string EE_ExecutionInfo_InitilizingLoop {
+        internal static string EE_ExecutionInfo_InitializingLoop {
             get {
-                return ResourceManager.GetString("EE_ExecutionInfo_InitilizingLoop", resourceCulture);
+                return ResourceManager.GetString("EE_ExecutionInfo_InitializingLoop", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to You cancelled the query..
         /// </summary>
-        internal static string EE_ExecutionInfo_QueryCancelledbyUser {
+        internal static string EE_ExecutionInfo_QueryCancelledByUser {
             get {
-                return ResourceManager.GetString("EE_ExecutionInfo_QueryCancelledbyUser", resourceCulture);
+                return ResourceManager.GetString("EE_ExecutionInfo_QueryCancelledByUser", resourceCulture);
             }
         }
         
@@ -1703,9 +1703,9 @@ namespace Microsoft.Data.Tools.XmlDesignerBase.Common {
         /// <summary>
         ///   Looks up a localized string similar to Type {0} is incompatible with type {1}..
         /// </summary>
-        internal static string XmlSerialization_IncompatiableType {
+        internal static string XmlSerialization_IncompatibleType {
             get {
-                return ResourceManager.GetString("XmlSerialization_IncompatiableType", resourceCulture);
+                return ResourceManager.GetString("XmlSerialization_IncompatibleType", resourceCulture);
             }
         }
         

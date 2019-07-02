@@ -108,7 +108,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
         /// </summary>
         /// <param name="row">Target row</param>
         /// <param name="column">Target column</param>
-        /// <returns>Populated VirtualTreeAccessibilityData structue, or VirtualTreeAccessibilityData.Empty</returns>
+        /// <returns>Populated VirtualTreeAccessibilityData structure, or VirtualTreeAccessibilityData.Empty</returns>
         VirtualTreeAccessibilityData GetAccessibilityData(int row, int column);
 
         //Begin a label edit. Return true to continue, false to abort.

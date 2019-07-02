@@ -224,7 +224,7 @@ namespace FunctionalTests
         }
 
         [Fact]
-        public void Ignoring_overriden_mapped_base_class_property_throws()
+        public void Ignoring_overridden_mapped_base_class_property_throws()
         {
             var modelBuilder = new DbModelBuilder();
 
@@ -4144,7 +4144,7 @@ namespace FunctionalTests
 
         [Fact]
         // Regression for 142318
-        public void Can_have_TPH_alone_at_base_of_3_level_heirarchy()
+        public void Can_have_TPH_alone_at_base_of_3_level_hierarchy()
         {
             //         E1       -- TPH alone
             //       / | \

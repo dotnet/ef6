@@ -21,9 +21,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _referenceResolver = referenceResolver;
         }
 
-        internal override bool TryResolveAssemblyReference(AssemblyName refernceName, out Assembly assembly)
+        internal override bool TryResolveAssemblyReference(AssemblyName referenceName, out Assembly assembly)
         {
-            assembly = _referenceResolver(refernceName);
+            assembly = _referenceResolver(referenceName);
             return assembly != null;
         }
 

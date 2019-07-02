@@ -388,7 +388,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
         ///     The service provider
         /// </param>
         /// <returns>
-        ///     A refernce to the IVsProject3 interface for the misceleneous project.
+        ///     A reference to the IVsProject3 interface for the miscellaneous project.
         /// </returns>
         private static IVsProject3 GetMiscellaneousProject()
         {
@@ -411,7 +411,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
         ///     The service provider
         /// </param>
         /// <returns>
-        ///     A refernce to the IVsProject3 interface for the misceleneous project.
+        ///     A reference to the IVsProject3 interface for the miscellaneous project.
         /// </returns>
         public static IVsProject3 GetMiscellaneousProject(IServiceProvider provider)
         {

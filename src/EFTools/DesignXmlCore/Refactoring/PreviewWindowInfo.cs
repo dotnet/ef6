@@ -20,7 +20,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.Refactoring
         public string ConfirmButtonText { get; set; }
 
         /// <summary>
-        ///     Discription of this RefactorOperation.
+        ///     Description of this RefactorOperation.
         /// </summary>
         public string Description { get; set; }
 
@@ -30,7 +30,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.Refactoring
         public string HelpContext { get; set; }
 
         /// <summary>
-        ///     The text view discription, that appears on the header of the
+        ///     The text view description, that appears on the header of the
         ///     text view in preview dialog.
         /// </summary>
         public string TextViewDescription { get; set; }
@@ -46,7 +46,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.Refactoring
         public string Warning { get; set; }
 
         /// <summary>
-        ///     Warning level for this RefactorOperaiton.
+        ///     Warning level for this RefactorOperation.
         /// </summary>
         public __PREVIEWCHANGESWARNINGLEVEL WarningLevel { get; set; }
     }

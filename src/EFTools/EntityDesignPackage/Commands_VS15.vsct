@@ -1098,7 +1098,7 @@
   <KeyBindings>
     <!--
     To define a binding, we have to specify the sequence of keys to press to activate the command (keystate).
-    A key binding can use one or two key and optionlly up to two modifiers (Alt, Control or Shift keys); the
+    A key binding can use one or two key and optionally up to two modifiers (Alt, Control or Shift keys); the
     keys are specified using the key1 and key2 attributes (key2 can be omitted) and the modifiers using the
     mod1 and mod2 attributes (both optional).
     The editor attribute is used to specify the UI context that activates the key binding.

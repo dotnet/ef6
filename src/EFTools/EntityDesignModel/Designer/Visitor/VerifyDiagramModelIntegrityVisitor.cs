@@ -87,7 +87,7 @@ namespace Microsoft.Data.Entity.Design.Model.Visitor
             {
                 var sb = new StringBuilder(base.AllSerializedErrors);
 
-                sb.AppendLine("Diagram objects that are orphaneed: ");
+                sb.AppendLine("Diagram objects that are orphaned: ");
                 sb.AppendLine(SerializeDiagramObject(_orphanedDiagramObjects));
 
                 sb.AppendLine("Diagram objects that are duplicated: ");

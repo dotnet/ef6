@@ -44,7 +44,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.ModelChanges
                         viewModel.GetDiagram().ActiveDiagramView.Selection.Set((DiagramItem)null);
 
                         // in this case inheritance was not created in the model, so we need to delete it from the view model
-                        // we don't want any rules to fire for this, so suspend them temporarly
+                        // we don't want any rules to fire for this, so suspend them temporarily
                         _inheritance.Store.RuleManager.SuspendRuleNotification();
                         using (var t = _inheritance.Store.TransactionManager.BeginTransaction())
                         {

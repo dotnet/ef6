@@ -29,7 +29,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             [Fact]
-            public void Returns_number_of_enties_affected()
+            public void Returns_number_of_entities_affected()
             {
                 var entityStateManagerMock = new Mock<ObjectStateManager>();
                 entityStateManagerMock.Setup(m => m.HasChanges()).Returns(true);
@@ -176,7 +176,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             [Fact]
-            public void Returns_number_of_enties_affected()
+            public void Returns_number_of_entities_affected()
             {
                 var entityStateManagerMock = new Mock<ObjectStateManager>();
                 entityStateManagerMock.Setup(m => m.HasChanges()).Returns(true);

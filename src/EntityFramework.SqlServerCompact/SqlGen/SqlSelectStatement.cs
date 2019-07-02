@@ -22,7 +22,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
     // We do not have HAVING, since the CQT does not have such a node.
     // Each of the fields is a SqlBuilder, so we can keep appending SQL strings
     // or other fragments to build up the clause.
-    // We have a IsDistinct property to indicate that we want distict columns.
+    // We have a IsDistinct property to indicate that we want distinct columns.
     // This is given out of band, since the input expression to the select clause
     // may already have some columns projected out, and we use append-only SqlBuilders.
     // The DISTINCT is inserted when we finally write the object into a string.
@@ -47,7 +47,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
     internal sealed class SqlSelectStatement : ISqlFragment
     {
         // <summary>
-        // Whether the columns ouput by this sql statement were renamed from what given in the command tree.
+        // Whether the columns output by this sql statement were renamed from what given in the command tree.
         // </summary>
         internal bool OutputColumnsRenamed { get; set; }
 

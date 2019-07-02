@@ -5121,7 +5121,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner
 		/// <param name="serializationContext">Serialization context.</param>
 		/// <param name="reader">XmlReader to read serialized data from.</param>
 		/// <param name="partition">Partition in which new elements should be created.</param>
-		/// <param name="derivedTypesOnly">If true, this method will only check derived types, but not the domain class iitself.</param>
+		/// <param name="derivedTypesOnly">If true, this method will only check derived types, but not the domain class itself.</param>
 		private DslModeling::ModelElement InternalTryCreateInstance (DslModeling::SerializationContext serializationContext, global::System.Xml.XmlReader reader, DslModeling::Partition partition, bool derivedTypesOnly)
 		{
 			DslModeling::ModelElement result = null;
@@ -5817,7 +5817,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner
 		/// <param name="serializationContext">Serialization context.</param>
 		/// <param name="reader">XmlReader to read serialized data from.</param>
 		/// <param name="partition">Partition in which new elements should be created.</param>
-		/// <param name="derivedTypesOnly">If true, this method will only check derived types, but not the domain class iitself.</param>
+		/// <param name="derivedTypesOnly">If true, this method will only check derived types, but not the domain class itself.</param>
 		private DslModeling::ModelElement InternalTryCreateInstance (DslModeling::SerializationContext serializationContext, global::System.Xml.XmlReader reader, DslModeling::Partition partition, bool derivedTypesOnly)
 		{
 			DslModeling::ModelElement result = null;
@@ -6564,7 +6564,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner
 		/// <param name="serializationContext">Serialization context.</param>
 		/// <param name="reader">XmlReader to read serialized data from.</param>
 		/// <param name="partition">Partition in which new elements should be created.</param>
-		/// <param name="derivedTypesOnly">If true, this method will only check derived types, but not the domain class iitself.</param>
+		/// <param name="derivedTypesOnly">If true, this method will only check derived types, but not the domain class itself.</param>
 		private DslModeling::ModelElement InternalTryCreateInstance (DslModeling::SerializationContext serializationContext, global::System.Xml.XmlReader reader, DslModeling::Partition partition, bool derivedTypesOnly)
 		{
 			DslModeling::ModelElement result = null;
@@ -7494,7 +7494,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner
 		/// <param name="serializationContext">Serialization context.</param>
 		/// <param name="reader">XmlReader to read serialized data from.</param>
 		/// <param name="partition">Partition in which new elements should be created.</param>
-		/// <param name="derivedTypesOnly">If true, this method will only check derived types, but not the domain class iitself.</param>
+		/// <param name="derivedTypesOnly">If true, this method will only check derived types, but not the domain class itself.</param>
 		private DslModeling::ModelElement InternalTryCreateInstance (DslModeling::SerializationContext serializationContext, global::System.Xml.XmlReader reader, DslModeling::Partition partition, bool derivedTypesOnly)
 		{
 			DslModeling::ModelElement result = null;
@@ -8188,7 +8188,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner
 		/// <param name="serializationContext">Serialization context.</param>
 		/// <param name="reader">XmlReader to read serialized data from.</param>
 		/// <param name="partition">Partition in which new elements should be created.</param>
-		/// <param name="derivedTypesOnly">If true, this method will only check derived types, but not the domain class iitself.</param>
+		/// <param name="derivedTypesOnly">If true, this method will only check derived types, but not the domain class itself.</param>
 		private DslModeling::ModelElement InternalTryCreateInstance (DslModeling::SerializationContext serializationContext, global::System.Xml.XmlReader reader, DslModeling::Partition partition, bool derivedTypesOnly)
 		{
 			DslModeling::ModelElement result = null;

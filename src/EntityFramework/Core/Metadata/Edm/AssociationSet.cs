@@ -14,9 +14,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
     public sealed class AssociationSet : RelationshipSet
     {
         // <summary>
-        // Initializes a new instance of AssocationSet with the given name and the association type
+        // Initializes a new instance of AssociationSet with the given name and the association type
         // </summary>
-        // <param name="name"> The name of the Assocation set </param>
+        // <param name="name"> The name of the Association set </param>
         // <param name="associationType"> The association type of the entities that this associationship set type contains </param>
         internal AssociationSet(string name, AssociationType associationType)
             : base(name, null, null, null, associationType)

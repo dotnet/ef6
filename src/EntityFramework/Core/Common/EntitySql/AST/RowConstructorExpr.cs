@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
     // <summary>
-    // Represents Row contructor expression.
+    // Represents Row constructor expression.
     // </summary>
     internal sealed class RowConstructorExpr : Node
     {

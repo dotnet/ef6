@@ -65,7 +65,7 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.Explorer
         }
 
         // TODO - make this private, and remove the need to pass in the type to GetNew()/GetNewOrExisting().
-        protected override Type GetViewModelTypeForEFlement(EFElement efElement)
+        protected override Type GetViewModelTypeForEFElement(EFElement efElement)
         {
             if (!IsDisplayedInExplorer(efElement))
             {

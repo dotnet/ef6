@@ -274,7 +274,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             get { return _targets; }
         }
 
-        // Define lists of functions that take string arugments and return strings.
+        // Define lists of functions that take string arguments and return strings.
         private static readonly ISet<string> _canonicalAndStoreStringFunctionsOneArg =
             new HashSet<string>(StringComparer.Ordinal)
                 {
@@ -473,7 +473,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             {
                 var sqlStatement = VisitExpressionEnsureSqlStatement(targetTree.Query);
 
-                Debug.Assert(sqlStatement != null, "The outer most sql statment is null");
+                Debug.Assert(sqlStatement != null, "The outer most sql statement is null");
 
                 sqlStatement.IsTopMost = true;
                 result = sqlStatement;
@@ -1403,7 +1403,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         //         an aggregate or a subquery. (SQLBUDT #504600)
         //     </item>
         //     <item>
-        //         Sql Server requries each GROUP BY expression (key) to contain at least one column
+        //         Sql Server requires each GROUP BY expression (key) to contain at least one column
         //         that is not an outer reference. (SQLBUDT #616523)
         //     </item>
         //     <item>
@@ -1417,7 +1417,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         // aggf1(aexpr1) AS agg1, .. aggfn(aexprn) AS aggn
         // FROM input AS a
         // GROUP BY kexp1, kexp2, .. kexpn
-        // When we inject an innner query, the equivalent translation is:
+        // When we inject an inner query, the equivalent translation is:
         // SELECT
         // key1 AS key1, key2 AS key2, .. keyn AS keys,
         // aggf1(agg1) AS agg1, aggfn(aggn) AS aggn
@@ -3467,7 +3467,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 // This is case only for SQL 8.0 when the left child has order by in it
                 // If the output columns of the left child got renamed, 
                 // then the output of the union all is renamed
-                // All this currenlty only happens for UNION ALL, because INTERSECT and
+                // All this currently only happens for UNION ALL, because INTERSECT and
                 // EXCEPT get translated for SQL 8.0 before SqlGen.
                 var selectStatement = new SqlSelectStatement();
                 selectStatement.From.Append("( ");
@@ -3886,7 +3886,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             {
                 var columns = AddDefaultColumns(oldStatement);
 
-                // Thid could not have been called from a join node.
+                // This could not have been called from a join node.
                 Debug.Assert(oldStatement.FromExtents.Count == 1);
 
                 // if the oldStatement has a join as its input, ...
@@ -4024,7 +4024,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 == DbExpressionKind.Constant)
             {
                 //For constant expression we should not cast the value, 
-                // thus we don't go throught the default DbConstantExpression handling
+                // thus we don't go through the default DbConstantExpression handling
                 var sqlBuilder = new SqlBuilder();
                 sqlBuilder.Append(((DbConstantExpression)e).Value.ToString());
                 result = sqlBuilder;
@@ -4343,7 +4343,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         //         an aggregate or a subquery. (SQLBUDT #504600)
         //     </item>
         // </list>
-        // Potentially, we could furhter optimize this.
+        // Potentially, we could further optimize this.
         // </summary>
         private static bool GroupByAggregatesNeedInnerQuery(IList<DbAggregate> aggregates, string inputVarRefName)
         {

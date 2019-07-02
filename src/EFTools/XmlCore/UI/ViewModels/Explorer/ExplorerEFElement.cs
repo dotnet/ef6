@@ -475,7 +475,7 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.Explorer
                             Resources.BadRemoveChildNotParent, explorerElement.Name, Name));
                     return;
                     // TODO: we need to provide a general exception-handling mechanism and replace the above Assert()
-                    // by e.g. the excepiton below
+                    // by e.g. the exception below
                     // throw new ArgumentException(string.Format(CultureInfo.CurrentCulture,
                     //     Resources.BadRemoveChildNotParent, explorerElement.Name, this.Name));
                 }

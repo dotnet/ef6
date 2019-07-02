@@ -58,19 +58,19 @@ namespace Microsoft.Data.Entity.Design.Model.Entity
             }
 
             var c = parent.XContainer;
-            XElement predecesor = null;
+            XElement predecessor = null;
             foreach (var e in c.Elements())
             {
                 if (e.Name.NamespaceName.Equals(expectedNamespace, StringComparison.OrdinalIgnoreCase))
                 {
-                    predecesor = e;
+                    predecessor = e;
                 }
                 else
                 {
                     break;
                 }
             }
-            return predecesor;
+            return predecessor;
         }
     }
 }

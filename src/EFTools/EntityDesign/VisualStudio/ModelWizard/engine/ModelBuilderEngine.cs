@@ -18,7 +18,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
     {
         public DbModel Model { get; private set; }
 
-        // virutal for testing
+        // virtual for testing
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public virtual void GenerateModel(ModelBuilderSettings settings, IVsUtils vsUtils = null, 
             ModelBuilderEngineHostContext hostContext = null)
@@ -71,7 +71,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             {
                 generatingModelWatch.Stop();
 
-                hostContext.LogMessage(FormatMessage(Resources.LoadingDBMetadataTimeMsg, settings.LoadingDBMetatdataTime));
+                hostContext.LogMessage(FormatMessage(Resources.LoadingDBMetadataTimeMsg, settings.LoadingDBMetadataTime));
                 hostContext.LogMessage(FormatMessage(Resources.GeneratingModelTimeMsg, generatingModelWatch.Elapsed));
             }
         }
