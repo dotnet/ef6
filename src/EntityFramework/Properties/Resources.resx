@@ -288,7 +288,7 @@
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="ConflictingTypeAnnotation" xml:space="preserve">
-    <value>Annotation '{0}' value '{1}' conflicts with value '{2}' for table '{3}'. Annotations of a given name configured for a given table must be specified only once or have have matching values in each configuration.</value>
+    <value>Annotation '{0}' value '{1}' conflicts with value '{2}' for table '{3}'. Annotations of a given name configured for a given table must be specified only once or have matching values in each configuration.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="ConflictingColumnConfiguration" xml:space="preserve">

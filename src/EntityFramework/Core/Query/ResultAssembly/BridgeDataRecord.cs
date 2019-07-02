@@ -155,7 +155,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         private object CloseNestedObjectImplicitly()
         {
             // it would be nice to use Interlocked.Exchange to avoid multi-thread `race condition risk
-            // when the the bridge is being misused by the user accessing it with multiple threads.
+            // when the bridge is being misused by the user accessing it with multiple threads.
             // but this is called frequently enough to have a performance impact
             var currentNestedRecord = _currentNestedRecord;
             if (null != currentNestedRecord)
@@ -183,7 +183,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         private async Task CloseNestedObjectImplicitlyAsync(CancellationToken cancellationToken)
         {
             // it would be nice to use Interlocked.Exchange to avoid multi-thread `race condition risk
-            // when the the bridge is being misused by the user accessing it with multiple threads.
+            // when the bridge is being misused by the user accessing it with multiple threads.
             // but this is called frequently enough to have a performance impact
             var currentNestedRecord = _currentNestedRecord;
             if (null != currentNestedRecord)
@@ -691,7 +691,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         // </summary>
         public override bool IsDBNull(int ordinal)
         {
-            // This doesn't seem ideal, but the the problem is that I need 
+            // This doesn't seem ideal, but the problem is that I need 
             // to make sure I don't monkey with caching things, and if I
             // call IsDBNull directly on the store reader, I'll potentially
             // lose data because I'm expecting SequentialAccess rules.

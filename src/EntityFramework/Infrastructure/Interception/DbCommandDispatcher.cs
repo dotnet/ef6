@@ -13,7 +13,7 @@ namespace System.Data.Entity.Infrastructure.Interception
     /// Used for dispatching operations to a <see cref="DbCommand" /> such that any <see cref="IDbCommandInterceptor" />
     /// registered on <see cref="DbInterception" /> will be notified before and after the
     /// operation executes.
-    /// Instances of this class are obtained through the the <see cref="DbInterception.Dispatch" /> fluent API.
+    /// Instances of this class are obtained through the <see cref="DbInterception.Dispatch" /> fluent API.
     /// </summary>
     /// <remarks>
     /// This class is used internally by Entity Framework when executing commands. It is provided publicly so that

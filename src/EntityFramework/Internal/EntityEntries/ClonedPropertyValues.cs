@@ -7,7 +7,7 @@ namespace System.Data.Entity.Internal
 
     // <summary>
     // An implementation of <see cref="InternalPropertyValues" /> that represents a clone of another
-    // dictionary.  That is, all the property values have been been copied into this dictionary.
+    // dictionary.  That is, all the property values have been copied into this dictionary.
     // </summary>
     internal class ClonedPropertyValues : InternalPropertyValues
     {

@@ -922,7 +922,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         // <summary>
-        // Can the right table of the joinEdge be filtered by joins on the the way up the the given leastCommonAncestor.
+        // Can the right table of the joinEdge be filtered by joins on the way up the given leastCommonAncestor.
         // It can, if
         // - dissallowAnyJoin is specified, or
         // - if it is on the right side of a left outer join or participates in any inner join, thus it is only
@@ -1051,7 +1051,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 //
                 // Bug 446708: Make sure that the "replacement" column is 
-                //   referenced, if the the current column is referenced
+                //   referenced, if the current column is referenced
                 //
                 if (tableNode.Table.ReferencedColumns.IsSet(tableVars[i]))
                 {

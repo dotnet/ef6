@@ -10,7 +10,7 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
     using Microsoft.Data.Entity.Design.Model.Mapping;
 
     /// <summary>
-    ///     Use this command to change the the FunctionScalarProperty.
+    ///     Use this command to change the FunctionScalarProperty.
     /// </summary>
     internal class ChangeFunctionScalarPropertyCommand : Command
     {

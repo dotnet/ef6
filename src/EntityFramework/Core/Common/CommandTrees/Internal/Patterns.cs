@@ -104,7 +104,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
 #if _ENABLE_UNUSED_PATTERNS_
     /// <summary>
-    /// Returns a pattern that is matched if the the argument has a Boolean result type
+    /// Returns a pattern that is matched if the argument has a Boolean result type
     /// </summary>
         internal static Func<DbExpression, bool> MatchBooleanType { get { return (e => TypeSemantics.IsBooleanType(e.ResultType)); } }
 #endif

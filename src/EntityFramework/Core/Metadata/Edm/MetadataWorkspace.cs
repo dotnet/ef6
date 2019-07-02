@@ -548,7 +548,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="identity">The conceptual model on which the item is searched.</param>
         /// <param name="space">The conceptual model on which the item is searched.</param>
         /// <param name="item">
-        /// When this method returns, contains a <see cref="T:System.Data.Metadata.Edm.GlobalIem" /> object. This parameter is passed uninitialized.
+        /// When this method returns, contains a <see cref="T:System.Data.Metadata.Edm.GlobalItem" /> object. This parameter is passed uninitialized.
         /// </param>
         /// <typeparam name="T">The type returned by the method.</typeparam>
         public virtual bool TryGetItem<T>(string identity, DataSpace space, out T item) where T : GlobalItem
@@ -577,7 +577,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="ignoreCase">true to perform the case-insensitive search; otherwise, false.</param>
         /// <param name="dataSpace">The conceptual model on which the item is searched.</param>
         /// <param name="item">
-        /// When this method returns, contains a <see cref="T:System.Data.Metadata.Edm.GlobalIem" /> object. This parameter is passed uninitialized.
+        /// When this method returns, contains a <see cref="T:System.Data.Metadata.Edm.GlobalItem" /> object. This parameter is passed uninitialized.
         /// </param>
         /// <typeparam name="T">The type returned by the method.</typeparam>
         public virtual bool TryGetItem<T>(string identity, bool ignoreCase, DataSpace dataSpace, out T item) where T : GlobalItem

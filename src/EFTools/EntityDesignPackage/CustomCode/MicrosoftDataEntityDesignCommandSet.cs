@@ -848,7 +848,7 @@ namespace Microsoft.Data.Entity.Design.Package
                 {
                     var entityShape = view.Selection.PrimaryItem.Shape as EntityTypeShape;
 
-                    // if EntityShape is null, the user might select the the entity shape compartment.
+                    // if EntityShape is null, the user might select the entity shape compartment.
                     if (entityShape == null)
                     {
                         var compartment = view.Selection.PrimaryItem.Shape as ElementListCompartment;

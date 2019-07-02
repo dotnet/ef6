@@ -39,7 +39,7 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Explorer
 
             _tickSize = GetTickSize(adornedElement);
 
-            // The center point of of the adorner shape that will be rendered
+            // The center point of the adorner shape that will be rendered
             _center = new Point(adornedElement.ActualWidth / 2, adornerY);
         }
 

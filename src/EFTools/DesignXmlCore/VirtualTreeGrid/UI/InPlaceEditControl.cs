@@ -80,7 +80,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
 
         /// <summary>
         ///     The windows message (WM_LBUTTONDOWN) that launched the edit
-        ///     control. Use 0 for for a timer, selection change, or explicit
+        ///     control. Use 0 for a timer, selection change, or explicit
         ///     launch. Used to support mouse behavior while a control is in-place
         ///     activating in response to a mouse click.
         /// </summary>
@@ -204,7 +204,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
 
         /// <summary>
         ///     The windows message (WM_LBUTTONDOWN) that launched the edit
-        ///     control. Use 0 for for a timer, selection change, or explicit
+        ///     control. Use 0 for a timer, selection change, or explicit
         ///     launch. Used to support mouse behavior while a control is in-place
         ///     activating in response to a mouse click.
         /// </summary>

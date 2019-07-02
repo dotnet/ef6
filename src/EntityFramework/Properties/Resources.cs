@@ -391,7 +391,7 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
-        // A string like "Annotation '{0}' value '{1}' conflicts with value '{2}' for table '{3}'. Annotations of a given name configured for a given table must be specified only once or have have matching values in each configuration."
+        // A string like "Annotation '{0}' value '{1}' conflicts with value '{2}' for table '{3}'. Annotations of a given name configured for a given table must be specified only once or have matching values in each configuration."
         // </summary>
         internal static string ConflictingTypeAnnotation(object p0, object p1, object p2, object p3)
         {
@@ -14302,7 +14302,7 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
-        // InvalidOperationException with message like "Annotation '{0}' value '{1}' conflicts with value '{2}' for table '{3}'. Annotations of a given name configured for a given table must be specified only once or have have matching values in each configuration."
+        // InvalidOperationException with message like "Annotation '{0}' value '{1}' conflicts with value '{2}' for table '{3}'. Annotations of a given name configured for a given table must be specified only once or have matching values in each configuration."
         // </summary>
         internal static Exception ConflictingTypeAnnotation(object p0, object p1, object p2, object p3)
         {

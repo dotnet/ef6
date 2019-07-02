@@ -67,7 +67,7 @@ namespace System.Data.Entity
         /// </summary>
         /// <param name="assembly"> The assembly. </param>
         /// <param name="prefix"> The prefix to use for each name. </param>
-        /// <param name="overwrite"> if set to <c>true</c> then an existing file of the same name name will be overwritten. </param>
+        /// <param name="overwrite"> if set to <c>true</c> then an existing file of the same name will be overwritten. </param>
         /// <param name="names"> The resource names, which will become the file names. </param>
         public static void CopyEmbeddedResourcesToCurrentDir(
             Assembly assembly, string prefix, bool overwrite,

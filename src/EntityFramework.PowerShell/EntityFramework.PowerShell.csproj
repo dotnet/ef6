@@ -10,11 +10,9 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Shell.Interop.8.0" Version="$(MicrosoftVisualStudioShellInterop80Version)" />
-    <PackageReference Include="VSLangProj " Version="$(VSLangProjVersion)" />
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
 

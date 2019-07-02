@@ -111,7 +111,7 @@ namespace System.Data.Entity.Query.LinqToEntities
                             InnerEnum = i.EnumProperty
                         });
 
-                // verify that all all entities with matching enum values are joined
+                // verify that all entities with matching enum values are joined
                 // and that correct enum values get joined
                 var firstEnum = context.AllTypes.ToList().Take(1).First().EnumProperty;
                 var allTypesWithFirstEnumIds = context.AllTypes.ToList().Where(a => a.EnumProperty == firstEnum).Select(a => a.Id).ToList();

@@ -2348,7 +2348,7 @@ namespace Microsoft.Data.Entity.Design.Model
             IEnumerable<Association> participatingAssociations =
                 Association.GetAssociationsForEntityType(entityTypeShape.EntityType.SafeTarget);
 
-            // Find all all associationConnectors in the diagram.
+            // Find all associationConnectors in the diagram.
             foreach (var association in participatingAssociations)
             {
                 foreach (

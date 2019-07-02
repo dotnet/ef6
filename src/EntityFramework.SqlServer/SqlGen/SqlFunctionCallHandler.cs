@@ -1409,49 +1409,52 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
         // <summary>
         // TruncateTime(DateTime X)
-        // PreKatmai:    TRUNCATETIME(X) => CONVERT(DATETIME, CONVERT(VARCHAR(255), expression, 102),  102)
-        // Katmai:    TRUNCATETIME(X) => CONVERT(DATETIME2, CONVERT(VARCHAR(255), expression, 102),  102)
+        // PreKatmai:    TRUNCATETIME(X) => DATEADD(d, DATEDIFF(d, 0, expression), 0)
+        // Katmai:       TRUNCATETIME(X) => CAST(CAST(expression AS DATE) as DATETIME2)
         // TruncateTime(DateTimeOffset X)
-        // TRUNCATETIME(X) => CONVERT(datetimeoffset, CONVERT(VARCHAR(255), expression,  102)
-        // + ' 00:00:00 ' +  Right(convert(varchar(255), @arg, 121), 6),  102)
+        // Katmai only: TRUNCATETIME(X) => TODATETIMEOFFSET(CAST(expression AS DATE), DATEPART(tz, expression)))
         // </summary>
         private static ISqlFragment HandleCanonicalFunctionTruncateTime(SqlGenerator sqlgen, DbFunctionExpression e)
         {
             //The type that we need to return is based on the argument type.
-            string typeName = null;
-            var isDateTimeOffset = false;
-
             var typeKind = e.Arguments[0].ResultType.GetPrimitiveTypeKind();
+            var isDateTimeOffset = (typeKind == PrimitiveTypeKind.DateTimeOffset);
 
-            if (typeKind == PrimitiveTypeKind.DateTime)
+            Debug.Assert(isDateTimeOffset || typeKind == PrimitiveTypeKind.DateTime, "Unexpected type to TruncateTime" + typeKind.ToString());
+
+            if (sqlgen.IsPreKatmai && isDateTimeOffset)
             {
-                typeName = sqlgen.IsPreKatmai ? "datetime" : "datetime2";
+                throw new NotSupportedException(Strings.SqlGen_CanonicalFunctionNotSupportedPriorSql10(e.Function.Name));
             }
-            else if (typeKind == PrimitiveTypeKind.DateTimeOffset)
+
+
+            var result = new SqlBuilder();
+            var argumentFragment = e.Arguments[0].Accept(sqlgen);
+
+            if (sqlgen.IsPreKatmai)
             {
-                typeName = "datetimeoffset";
-                isDateTimeOffset = true;
+                result.Append("dateadd(d, datediff(d, 0, ");
+                result.Append(argumentFragment);
+                result.Append("), 0)");
             }
             else
             {
-                Debug.Assert(true, "Unexpected type to TruncateTime" + typeKind.ToString());
+                if (!isDateTimeOffset)
+                {
+                    result.Append("cast(cast(");
+                    result.Append(argumentFragment);
+                    result.Append(" as date) as datetime2)");
+                }
+                else
+                {
+                    result.Append("todatetimeoffset(cast(");
+                    result.Append(argumentFragment);
+                    result.Append(" as date), datepart(tz, ");
+                    result.Append(argumentFragment);
+                    result.Append("))");
+                }
             }
 
-            var result = new SqlBuilder();
-            result.Append("convert (");
-            result.Append(typeName);
-            result.Append(", convert(varchar(255), ");
-            result.Append(e.Arguments[0].Accept(sqlgen));
-            result.Append(", 102) ");
-
-            if (isDateTimeOffset)
-            {
-                result.Append("+ ' 00:00:00 ' +  Right(convert(varchar(255), ");
-                result.Append(e.Arguments[0].Accept(sqlgen));
-                result.Append(", 121), 6)  ");
-            }
-
-            result.Append(",  102)");
             return result;
         }
 

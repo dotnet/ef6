@@ -577,7 +577,8 @@ namespace System.Data.Entity.Spatial
         /// <returns>true if this geometry value relates to other according to the specified intersection pattern matrix; otherwise false.</returns>
         /// <param name="other">The geometry value that should be compared with this geometry value for relation.</param>
         /// <param name="matrix">A string that contains the text representation of the (DE-9IM) intersection pattern that defines the relation.</param>
-        /// <exception cref="T:System.ArgumentNullException">othermatrix</exception>
+        /// <exception cref="T:System.ArgumentNullException">other</exception>
+        /// <exception cref="T:System.ArgumentNullException">matrix</exception>
         public bool Relate(DbGeometry other, string matrix)
         {
             Check.NotNull(other, "other");

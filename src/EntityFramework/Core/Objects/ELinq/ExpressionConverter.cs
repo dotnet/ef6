@@ -832,7 +832,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
             }
 
-            // try to find the appropriate target target for the cast
+            // try to find the appropriate target for the cast
             var toType = GetCastTargetType(source.ResultType, toClrType, fromClrType, true);
             if (null == toType)
             {
@@ -914,7 +914,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             DebugCheck.NotNull(input);
 
             // If input looks like "select x from (...) as x", rewrite it as "(...)".
-            // If input has span information attached to to it then leave it as is, otherwise 
+            // If input has span information attached to it then leave it as is, otherwise 
             // span info will be lost.
             Span span;
             if (input.ExpressionKind == DbExpressionKind.Project

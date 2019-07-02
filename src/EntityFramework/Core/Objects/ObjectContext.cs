@@ -686,7 +686,7 @@ namespace System.Data.Entity.Core.Objects
 
             if (existingEntry == null)
             {
-                // If the exact object being added is already in the context, there there is no way we need to
+                // If the exact object being added is already in the context, there is no way we need to
                 // load the type for it, and since this is expensive, we only do the load if we have to.
 
                 // SQLBUDT 480919: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
@@ -815,7 +815,7 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="T:System.InvalidOperationException">
         /// The  entity  is in a <see cref="F:System.Data.Entity.EntityState.Detached" />,
         /// <see
-        ///     cref="F:System.Data.Entity.EntityState.Added," />
+        ///     cref="F:System.Data.Entity.EntityState.Added" />
         /// or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state or the  entity  is attached to another instance of
         /// <see
         ///     cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
@@ -836,7 +836,7 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="T:System.InvalidOperationException">
         /// The  entity  is in a <see cref="F:System.Data.Entity.EntityState.Detached" />,
         /// <see
-        ///     cref="F:System.Data.Entity.EntityState.Added," />
+        ///     cref="F:System.Data.Entity.EntityState.Added" />
         /// or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state or the  entity  is attached to another instance of
         /// <see
         ///     cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
@@ -857,7 +857,7 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="T:System.InvalidOperationException">
         /// The  entity  is in a <see cref="F:System.Data.Entity.EntityState.Detached" />,
         /// <see
-        ///     cref="F:System.Data.Entity.EntityState.Added," />
+        ///     cref="F:System.Data.Entity.EntityState.Added" />
         /// or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state or the  entity  is attached to another instance of
         /// <see
         ///     cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
@@ -887,7 +887,7 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="T:System.InvalidOperationException">
         /// The  entity  is in a <see cref="F:System.Data.Entity.EntityState.Detached" />,
         /// <see
-        ///     cref="F:System.Data.Entity.EntityState.Added," />
+        ///     cref="F:System.Data.Entity.EntityState.Added" />
         /// or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state or the  entity  is attached to another instance of
         /// <see
         ///     cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
@@ -905,7 +905,7 @@ namespace System.Data.Entity.Core.Objects
             wrappedEntity.RelationshipManager.GetRelatedEnd(navProp, throwArgumentException: removedConvert).Load(mergeOption);
         }
 
-        // Wraps the given entity and checks that it has a non-null context (i.e. that is is not detached).
+        // Wraps the given entity and checks that it has a non-null context (i.e. that it is not detached).
         private IEntityWrapper WrapEntityAndCheckContext(object entity, string refType)
         {
             var wrappedEntity = EntityWrapperFactory.WrapEntityUsingContext(entity, this);
@@ -1195,7 +1195,7 @@ namespace System.Data.Entity.Core.Objects
 
             if (existingEntry == null)
             {
-                // If the exact object being added is already in the context, there there is no way we need to
+                // If the exact object being added is already in the context, there is no way we need to
                 // load the type for it, and since this is expensive, we only do the load if we have to.
 
                 // SQLBUDT 480919: Ensure the assembly containing the entity's CLR type is loaded into the workspace.

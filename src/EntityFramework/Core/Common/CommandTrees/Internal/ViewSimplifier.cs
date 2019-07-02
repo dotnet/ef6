@@ -129,7 +129,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
             // foreign key constraint are used to determine if the entity set is the dependent set.
             // If it is the dependent set, then it is possible to augment the view definition with a
             // related entity ref that represents the navigation of the relationship set's relationship
-            // from the dependent end (this entity set) to the the principal end (the entity set that
+            // from the dependent end (this entity set) to the principal end (the entity set that
             // is referenced by the other association set end of the relationship set).
             //
             var principalSetsAndDependentTypes = new HashSet<Tuple<EntityType, AssociationSetEnd, ReferentialConstraint>>();

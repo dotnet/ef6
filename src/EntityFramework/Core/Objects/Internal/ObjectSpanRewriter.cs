@@ -447,7 +447,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 var rewrittenRowTypeUsage = TypeUsage.Create(rewrittenRow);
                 DbExpression rewritten = rewrittenRowTypeUsage.New(columnArguments);
 
-                // SQLBUDT #554182: If we insert a new projection we should should make sure to 
+                // SQLBUDT #554182: If we insert a new projection we should make sure to 
                 // not interfere with the nullability of the input. 
                 // In particular, if the input row is null and we construct a new row as a projection over its columns
                 // we would get a row consisting of nulls, instead of a null row. 

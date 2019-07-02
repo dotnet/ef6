@@ -102,7 +102,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
         #endregion // Equals override and related functions
 
         /// <summary>
-        ///     The column number in the the grid
+        ///     The column number in the grid
         /// </summary>
         public int Column
         {

@@ -343,9 +343,14 @@ namespace System.Data.Entity.Infrastructure
 
             protected override Mock<InternalCollectionEntry> CreateInternalEntryMock()
             {
-                return new Mock<InternalCollectionEntry>(
-                    new Mock<InternalEntityEntryForMock<object>>().Object,
+                var internalEntityEntry = new Mock<InternalEntityEntryForMock<object>>().Object;
+                var internalEntryMock = new Mock<InternalCollectionEntry>(
+                    internalEntityEntry,
                     new NavigationEntryMetadata(typeof(object), typeof(object), "fake collection", isCollection: true));
+
+                internalEntryMock.Setup(e => e.InternalEntityEntry).Returns(internalEntityEntry);
+                
+                return internalEntryMock;
             }
         }
 
@@ -360,9 +365,14 @@ namespace System.Data.Entity.Infrastructure
 
             protected override Mock<InternalCollectionEntry> CreateInternalEntryMock()
             {
-                return new Mock<InternalCollectionEntry>(
-                    new Mock<InternalEntityEntryForMock<object>>().Object,
+                var internalEntityEntry = new Mock<InternalEntityEntryForMock<object>>().Object;
+                var internalEntryMock = new Mock<InternalCollectionEntry>(
+                    internalEntityEntry,
                     new NavigationEntryMetadata(typeof(object), typeof(object), "fake collection", isCollection: true));
+                
+                internalEntryMock.Setup(e => e.InternalEntityEntry).Returns(internalEntityEntry);
+
+                return internalEntryMock;
             }
         }
 

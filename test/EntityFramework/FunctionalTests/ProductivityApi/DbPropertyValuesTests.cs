@@ -1053,7 +1053,7 @@ namespace ProductivityApiTests
 
         #endregion
 
-        #region Tests for cloning generic property values to to other property values
+        #region Tests for cloning generic property values to other property values
 
         [Fact]
         public void Current_values_can_be_copied_into_a_cloned_dictionary()
@@ -1131,7 +1131,7 @@ namespace ProductivityApiTests
 
         #endregion
 
-        #region Tests for cloning non-generic property values to to other property values
+        #region Tests for cloning non-generic property values to other property values
 
         [Fact]
         public void Current_values_can_be_copied_into_a_non_generic_cloned_dictionary()

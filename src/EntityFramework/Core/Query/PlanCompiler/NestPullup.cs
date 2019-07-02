@@ -1106,7 +1106,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // introduce some prefix sortkeys, but there aren't any now.
             var nestOp = Command.CreateMultiStreamNestOp(new List<SortKey>(), outputVars, collectionInfoList);
 
-            // Insert the current node at the head of the the list of collections
+            // Insert the current node at the head of the list of collections
             collectionNodes.Insert(0, projectNode);
             var nestNode = Command.CreateNode(nestOp, collectionNodes);
 
@@ -2105,7 +2105,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             // While we're at it, we'll build a new list of top-level output columns, which
             // should include only the Discriminator, the columns from the driving collection,
-            // and and one column for each of the nested collections.
+            // and one column for each of the nested collections.
 
             // Start building the flattenedOutputVarList that the top level PhysicalProjectOp
             // is to output.
@@ -2339,7 +2339,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private Node AugmentNodeWithConstant(Node input, Func<ConstantBaseOp> createOp, out Var constantVar)
         {
             // Construct the op for the constant value and 
-            // a VarDef node that that defines it.
+            // a VarDef node that defines it.
             var constantOp = createOp();
             var constantNode = Command.CreateNode(constantOp);
             var varDefListNode = Command.CreateVarDefListNode(constantNode, out constantVar);

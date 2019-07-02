@@ -1214,7 +1214,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        /// Generates code to specify the default value for a <see cref="T:byte[]" /> column.
+        /// Generates code to specify the default value for a <see cref="T:System.Byte[]" /> column.
         /// </summary>
         /// <param name="defaultValue"> The value to be used as the default. </param>
         /// <returns> Code representing the default value. </returns>

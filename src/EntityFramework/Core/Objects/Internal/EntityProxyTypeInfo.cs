@@ -134,7 +134,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             DebugCheck.NotNull(workspace);
             DebugCheck.NotNull(clrType);
 
-            // Note that this gets any relationship that the CLR type participates in in any entity set. For MEST, this
+            // Note that this gets any relationship that the CLR type participates in any entity set. For MEST, this
             // could result in too many relationships being returned, but this doesn't matter since the extra ones will
             // not be used. Also, MEST is rare.
             return ((ObjectItemCollection)workspace.GetItemCollection(DataSpace.OSpace)).GetItems<AssociationType>().Where(

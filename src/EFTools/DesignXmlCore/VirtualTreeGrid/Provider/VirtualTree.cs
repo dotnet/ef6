@@ -7986,7 +7986,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
             // 3) Active methods, which fire events back to the single and multi-column trees in response
             //    to actions at a given index (as opposed to pass through methods, which take branches).
             //    These methods are implemented by translating he single-column row into a multi-column
-            //    row and and deferring to the main VirtualTree implementation, which will fire events
+            //    row and deferring to the main VirtualTree implementation, which will fire events
             //    to both the multi-column tree and the single-column view.
             private readonly VirtualTree myParent;
 

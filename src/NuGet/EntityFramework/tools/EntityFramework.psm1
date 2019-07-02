@@ -57,36 +57,25 @@ function Add-EFProvider
         [string] $TypeName
     )
 
-	if (!(Check-Project $project))
-	{
-	    return
-	}
-
-    $runner = New-EFConfigRunner $Project
-
-    try
+    $configPath = GetConfigPath($Project)
+    if (!$configPath)
     {
-        Invoke-RunnerCommand $runner System.Data.Entity.ConnectionFactoryConfig.AddProviderCommand @( $InvariantName, $TypeName )
-        $error = Get-RunnerError $runner
-
-        if ($error)
-        {
-            if ($knownExceptions -notcontains $error.TypeName)
-            {
-                Write-Host $error.StackTrace
-            }
-            else
-            {
-                Write-Verbose $error.StackTrace
-            }
-
-            throw $error.Message
-        }
+        return
     }
-    finally
-    {				
-        Remove-Runner $runner
-    }
+
+    [xml] $configXml = Get-Content $configPath
+
+    $providers = $configXml.configuration.entityFramework.providers
+
+    $providers.provider |
+        ?{ $_.invariantName -eq $InvariantName } |
+        %{ $providers.RemoveChild($_) | Out-Null }
+
+    $provider = $providers.AppendChild($configXml.CreateElement('provider'))
+    $provider.SetAttribute('invariantName', $InvariantName)
+    $provider.SetAttribute('type', $TypeName)
+
+    $configXml.Save($configPath)
 }
 
 <#
@@ -133,99 +122,36 @@ function Add-EFDefaultConnectionFactory
         [string[]] $ConstructorArguments
     )
 
-	if (!(Check-Project $project))
-	{
-	    return
-	}
-
-    $runner = New-EFConfigRunner $Project
-
-    try
+    $configPath = GetConfigPath($Project)
+    if (!$configPath)
     {
-        Invoke-RunnerCommand $runner System.Data.Entity.ConnectionFactoryConfig.AddDefaultConnectionFactoryCommand @( $TypeName, $ConstructorArguments )
-        $error = Get-RunnerError $runner
+        return
+    }
 
-        if ($error)
+    [xml] $configXml = Get-Content $configPath
+
+    $entityFramework = $configXml.configuration.entityFramework
+    $defaultConnectionFactory = $entityFramework.defaultConnectionFactory
+    if ($defaultConnectionFactory)
+    {
+        $entityFramework.RemoveChild($defaultConnectionFactory) | Out-Null
+    }
+    $defaultConnectionFactory = $entityFramework.AppendChild($configXml.CreateElement('defaultConnectionFactory'))
+
+    $defaultConnectionFactory.SetAttribute('type', $TypeName)
+
+    if ($ConstructorArguments)
+    {
+        $parameters = $defaultConnectionFactory.AppendChild($configXml.CreateElement('parameters'))
+
+        foreach ($constructorArgument in $ConstructorArguments)
         {
-            if ($knownExceptions -notcontains $error.TypeName)
-            {
-                Write-Host $error.StackTrace
-            }
-            else
-            {
-                Write-Verbose $error.StackTrace
-            }
-
-            throw $error.Message
+            $parameter = $parameters.AppendChild($configXml.CreateElement('parameter'))
+            $parameter.SetAttribute('value', $constructorArgument)
         }
     }
-    finally
-    {				
-        Remove-Runner $runner
-    }
-}
 
-<#
-.SYNOPSIS
-    Initializes the Entity Framework section in the project config file
-    and sets defaults.
-
-.DESCRIPTION
-    Creates the 'entityFramework' section of the project config file and sets
-    the default connection factory to use SQL Express if it is running on the
-    machine, or LocalDb otherwise. Note that installing a different provider
-    may change the default connection factory.  The config file is
-    automatically saved if and only if a change was made.
-
-    In addition, any reference to 'System.Data.Entity.dll' in the project is
-    removed.
-    
-    This command is typically used only by Entity Framework provider NuGet
-    packages and is run from the 'install.ps1' script.
-
-.PARAMETER Project
-    The Visual Studio project to update. When running in the NuGet install.ps1
-    script the '$project' variable provided as part of that script should be
-    used.
-#>
-function Initialize-EFConfiguration
-{
-    param (
-        [parameter(Position = 0,
-            Mandatory = $true)]
-        $Project
-    )
-
-	if (!(Check-Project $project))
-	{
-	    return
-	}
-
-    $runner = New-EFConfigRunner $Project
-
-    try
-    {
-        Invoke-RunnerCommand $runner System.Data.Entity.ConnectionFactoryConfig.InitializeEntityFrameworkCommand
-        $error = Get-RunnerError $runner
-
-        if ($error)
-        {
-            if ($knownExceptions -notcontains $error.TypeName)
-            {
-                Write-Host $error.StackTrace
-            }
-            else
-            {
-                Write-Verbose $error.StackTrace
-            }
-
-            throw $error.Message
-        }
-    }
-    finally
-    {				
-        Remove-Runner $runner
-    }
+    $configXml.Save($configPath)
 }
 
 <#
@@ -267,7 +193,7 @@ function Initialize-EFConfiguration
     configuration file.
 
 .PARAMETER ConnectionString
-    Specifies the the connection string to use. If omitted, the context's
+    Specifies the connection string to use. If omitted, the context's
     default connection will be used.
 
 .PARAMETER ConnectionProviderName
@@ -392,7 +318,7 @@ function Enable-Migrations
     configuration file.
 
 .PARAMETER ConnectionString
-    Specifies the the connection string to use. If omitted, the context's
+    Specifies the connection string to use. If omitted, the context's
     default connection will be used.
 
 .PARAMETER ConnectionProviderName
@@ -517,7 +443,7 @@ function Add-Migration
     configuration file.
 
 .PARAMETER ConnectionString
-    Specifies the the connection string to use. If omitted, the context's
+    Specifies the connection string to use. If omitted, the context's
     default connection will be used.
 
 .PARAMETER ConnectionProviderName
@@ -638,7 +564,7 @@ function Update-Database
     configuration file.
 
 .PARAMETER ConnectionString
-    Specifies the the connection string to use. If omitted, the context's
+    Specifies the connection string to use. If omitted, the context's
     default connection will be used.
 
 .PARAMETER ConnectionProviderName
@@ -1026,4 +952,47 @@ function Hint-Downgrade ($name) {
     }
 }
 
-Export-ModuleMember @( 'Enable-Migrations', 'Add-Migration', 'Update-Database', 'Get-Migrations', 'Add-EFProvider', 'Add-EFDefaultConnectionFactory', 'Initialize-EFConfiguration') -Variable InitialDatabase
+function GetConfigPath($project)
+{
+    $solution = Get-VSService 'Microsoft.VisualStudio.Shell.Interop.SVsSolution' 'Microsoft.VisualStudio.Shell.Interop.IVsSolution'
+
+    $hierarchy = $null
+    $hr = $solution.GetProjectOfUniqueName($project.UniqueName, [ref] $hierarchy)
+    [Runtime.InteropServices.Marshal]::ThrowExceptionForHR($hr)    
+
+    $aggregatableProject = Get-Interface $hierarchy 'Microsoft.VisualStudio.Shell.Interop.IVsAggregatableProject'
+    if (!$aggregatableProject)
+    {
+        $projectTypes = $project.Kind
+    }
+    else
+    {
+        $projectTypeGuids = $null
+        $hr = $aggregatableProject.GetAggregateProjectTypeGuids([ref] $projectTypeGuids)
+        [Runtime.InteropServices.Marshal]::ThrowExceptionForHR($hr)
+
+        $projectTypes = $projectTypeGuids.Split(';')
+    }
+
+    $configFileName = 'app.config'
+    foreach ($projectType in $projectTypes)
+    {
+        if ('{349C5851-65DF-11DA-9384-00065B846F21}', '{E24C65DC-7377-472B-9ABA-BC803B73C61A}' -contains $projectType)
+        {
+            $configFileName = 'web.config'
+            break
+        }
+    }
+
+    try
+    {
+        $configPath = $project.ProjectItems.Item($configFileName).Properties.Item('FullPath').Value
+    }
+    catch
+    {
+    }
+
+    return $configPath
+}
+
+Export-ModuleMember @( 'Enable-Migrations', 'Add-Migration', 'Update-Database', 'Get-Migrations', 'Add-EFProvider', 'Add-EFDefaultConnectionFactory') -Variable InitialDatabase

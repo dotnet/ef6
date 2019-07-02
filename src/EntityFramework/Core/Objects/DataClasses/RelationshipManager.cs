@@ -599,7 +599,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             if (TryGetCachedRelatedEnd(relationshipName, targetRoleName, out relatedEnd))
             {
                 // For some serialization scenarios, we have to allow replacing a related end that we already know about, but in those scenarios 
-                // the end is always empty, so we can further restrict the user calling method method directly by doing this extra validation
+                // the end is always empty, so we can further restrict the user calling the method directly by doing this extra validation
                 if (!relatedEnd.IsEmpty())
                 {
                     entityReference.InitializeWithValue(relatedEnd);
@@ -1484,7 +1484,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             if (!ownerKey.IsTemporary || includeOwnValues)
             {
                 // NOTE this part is never executed when the method is called from ObjectStateManager.AcceptChanges(),
-                //      so we don't try to "retrieve" properties from the the same (callers) entity.
+                //      so we don't try to "retrieve" properties from the same (callers) entity.
                 var entry = wrappedOwner.Context.ObjectStateManager.FindEntityEntry(ownerKey);
                 Debug.Assert(entry != null, "Owner entry not found in the object state manager");
                 entry.GetOtherKeyProperties(properties);

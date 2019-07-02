@@ -384,7 +384,7 @@ namespace System.Data.Entity.Hierarchy
         /// <param name="hid1"> a HierarchyId to compare </param>
         /// <param name="hid2"> a HierarchyId to compare </param>
         /// <returns> 
-        ///     true if the the first parameter is less than the second parameter, false otherwise 
+        ///     true if the first parameter is less than the second parameter, false otherwise 
         /// </returns>
         public static bool operator <(HierarchyId hid1, HierarchyId hid2)
         {
@@ -398,7 +398,7 @@ namespace System.Data.Entity.Hierarchy
         /// <param name="hid1"> a HierarchyId to compare </param>
         /// <param name="hid2"> a HierarchyId to compare </param>
         /// <returns> 
-        ///     true if the the first parameter is greater than the second parameter, false otherwise 
+        ///     true if the first parameter is greater than the second parameter, false otherwise 
         /// </returns>
         public static bool operator >(HierarchyId hid1, HierarchyId hid2)
         {
@@ -411,7 +411,7 @@ namespace System.Data.Entity.Hierarchy
         /// <param name="hid1"> a HierarchyId to compare </param>
         /// <param name="hid2"> a HierarchyId to compare </param>
         /// <returns> 
-        ///     true if the the first parameter is less or equal than the second parameter, false otherwise 
+        ///     true if the first parameter is less or equal than the second parameter, false otherwise 
         /// </returns>
         public static bool operator <=(HierarchyId hid1, HierarchyId hid2)
         {
@@ -425,7 +425,7 @@ namespace System.Data.Entity.Hierarchy
         /// <param name="hid1"> a HierarchyId to compare </param>
         /// <param name="hid2"> a HierarchyId to compare </param>
         /// <returns> 
-        ///     true if the the first parameter is greater or equal than the second parameter, false otherwise 
+        ///     true if the first parameter is greater or equal than the second parameter, false otherwise 
         /// </returns>
         public static bool operator >=(HierarchyId hid1, HierarchyId hid2)
         {

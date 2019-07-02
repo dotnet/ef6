@@ -243,7 +243,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner
 		}
 		
 		/// <summary>
-		/// Given a toolbox item "unique ID" returns the the toolbox item using cached dictionary
+		/// Given a toolbox item "unique ID" returns the toolbox item using cached dictionary
 		/// </summary>
 		/// <param name="itemId">The unique ToolboxItem to retrieve</param>
 		private DslDesign::ModelingToolboxItem GetToolboxItem(string itemId)
