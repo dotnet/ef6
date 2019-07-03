@@ -985,7 +985,7 @@ namespace Microsoft.VisualStudio.TestTools.HostAdapters.VsIde
                     executionAttribute = typeof(VsIdePostHostExecutionMethod);
                     break;
                 default:
-                    throw new ArgumentException("Unknow Execution Type.");
+                    throw new ArgumentException("Unknown Execution Type.");
             }
 
             foreach (var m in testType.GetMethods())
