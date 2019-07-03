@@ -896,7 +896,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
 
             // <summary>
-            // Common code for both Simple and Discrminated Column Maps.
+            // Common code for both Simple and Discriminated Column Maps.
             // </summary>
             private TranslatorResult ProcessCollectionColumnMap(CollectionColumnMap columnMap, TranslatorArg arg)
             {
