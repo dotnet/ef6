@@ -3877,7 +3877,7 @@ namespace System.Data.Entity.Core.Objects
                     }
                     // "forceChange" is false because we don't want to actually set the property values
                     // here if they are aready set to the same thing--we don't want the events and setting
-                    // the modified flag is irrelavent during AcceptChanges.
+                    // the modified flag is irrelevant during AcceptChanges.
                     reference.UpdateForeignKeyValues(WrappedEntity, existingPrincipal, changedFKs: null, forceChange: false);
                 }
                 else
@@ -3932,7 +3932,7 @@ namespace System.Data.Entity.Core.Objects
                         Debug.Assert(principalRef != null, "Expected reference to exist and be an entity reference (not collection)");
                         // "forceChange" is false because we don't want to actually set the property values
                         // here if they are aready set to the same thing--we don't want the events and setting
-                        // the modified flag is irrelavent during AcceptChanges.
+                        // the modified flag is irrelevant during AcceptChanges.
                         principalRef.UpdateForeignKeyValues(dependent, WrappedEntity, changedFKs: null, forceChange: false);
                     }
                 }
