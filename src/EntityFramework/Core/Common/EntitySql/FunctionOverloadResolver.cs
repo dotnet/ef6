@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // <summary>
         // Resolves <paramref name="argTypes" /> against the list of function signatures.
         // </summary>
-        // <returns> Funciton metadata </returns>
+        // <returns> Function metadata </returns>
         internal static EdmFunction ResolveFunctionOverloads(
             IList<EdmFunction> functionsMetadata,
             IList<TypeUsage> argTypes,
@@ -42,7 +42,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // <summary>
         // Resolves <paramref name="argTypes" /> against the list of function signatures.
         // </summary>
-        // <returns> Funciton metadata </returns>
+        // <returns> Function metadata </returns>
         internal static EdmFunction ResolveFunctionOverloads(
             IList<EdmFunction> functionsMetadata,
             IList<TypeUsage> argTypes,
@@ -73,7 +73,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // <param name="getSignatureParams"> function formal signature getter </param>
         // <param name="getParameterTypeUsage"> TypeUsage getter for a signature param </param>
         // <param name="getParameterMode"> ParameterMode getter for a signature param </param>
-        // <returns> Funciton metadata </returns>
+        // <returns> Function metadata </returns>
         internal static TFunctionMetadata ResolveFunctionOverloads<TFunctionMetadata, TFunctionParameterMetadata>(
             IList<TFunctionMetadata> functionsMetadata,
             IList<TypeUsage> argTypes,
