@@ -4044,7 +4044,7 @@ namespace System.Data.Entity.Core.Objects
         // - TransactionManager.DeletedRelationshipsByForeignKey
         // If the FK change will result in fix-up then two entries
         // are added to TransactionManager.AddedRelationshipsByForeignKey
-        // (one for each direction of the new realtionship)
+        // (one for each direction of the new relationship)
         // </summary>
         internal void DetectChangesInForeignKeys()
         {
