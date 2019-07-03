@@ -368,13 +368,13 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.CustomSerializer
                         end2.Type.Target != null, "Association End: " + end2.DisplayName + " does not reference a valid entity-type.");
                     if (end2.Type.Target != null)
                     {
-                        var modelTargetNavigatioNProperty =
+                        var modelTargetNavigationProperty =
                             ModelHelper.FindNavigationPropertyForAssociationEnd(end2.Type.Target as ConceptualEntityType, end2);
-                        if (modelTargetNavigatioNProperty != null)
+                        if (modelTargetNavigationProperty != null)
                         {
                             var viewTargetNavigationProperty =
                                 ModelToDesignerModelXRef.GetExisting(
-                                    viewModel.EditingContext, modelTargetNavigatioNProperty, viewModel.Partition) as
+                                    viewModel.EditingContext, modelTargetNavigationProperty, viewModel.Partition) as
                                 ViewModelNavigationProperty;
                             if (viewTargetNavigationProperty != null)
                             {

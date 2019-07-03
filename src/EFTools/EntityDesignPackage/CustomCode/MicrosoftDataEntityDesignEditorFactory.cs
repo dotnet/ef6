@@ -30,7 +30,7 @@ namespace Microsoft.Data.Entity.Design.Package
         #region IVsEditorFactoryNotify Members
 
         int IVsEditorFactoryNotify.NotifyDependentItemSaved(
-            IVsHierarchy pHier, uint itemidParent, string pszMkDocumentParent, uint itemidDpendent, string pszMkDocumentDependent)
+            IVsHierarchy pHier, uint itemidParent, string pszMkDocumentParent, uint itemidDependent, string pszMkDocumentDependent)
         {
             return VSConstants.S_OK;
         }

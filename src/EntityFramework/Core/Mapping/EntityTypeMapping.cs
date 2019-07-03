@@ -32,14 +32,14 @@ namespace System.Data.Entity.Core.Mapping
     /// --ScalarPropertyMap
     /// --ComplexPropertyMap
     /// --ScalarPropertyMap
-    /// --ScalarProperyMap
+    /// --ScalarPropertyMap
     /// --ScalarPropertyMap
     /// --AssociationSetMapping
     /// --AssociationTypeMapping
     /// --MappingFragment
     /// --EndPropertyMap
     /// --ScalarPropertyMap
-    /// --ScalarProperyMap
+    /// --ScalarPropertyMap
     /// --EndPropertyMap
     /// --ScalarPropertyMap
     /// This class represents the metadata for all entity Type map elements in the

@@ -62,7 +62,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 );
 
         internal static readonly EdmModelValidationRule<AssociationType>
-            EdmAssociationType_AssocationEndMustNotBeNull =
+            EdmAssociationType_AssociationEndMustNotBeNull =
                 new EdmModelValidationRule<AssociationType>(
                     (context, edmAssociationType) =>
                         {
@@ -72,7 +72,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                                 context.AddError(
                                     edmAssociationType,
                                     XmlConstants.End,
-                                    Strings.EdmModel_Validator_Syntactic_EdmAssociationType_AssocationEndMustNotBeNull);
+                                    Strings.EdmModel_Validator_Syntactic_EdmAssociationType_AssociationEndMustNotBeNull);
                             }
                         }
                     );
@@ -111,7 +111,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     );
 
         internal static readonly EdmModelValidationRule<NavigationProperty>
-            EdmNavigationProperty_AssocationMustNotBeNull =
+            EdmNavigationProperty_AssociationMustNotBeNull =
                 new EdmModelValidationRule<NavigationProperty>(
                     (context, edmNavigationProperty) =>
                         {
@@ -120,7 +120,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                                 context.AddError(
                                     edmNavigationProperty,
                                     XmlConstants.Relationship,
-                                    Strings.EdmModel_Validator_Syntactic_EdmNavigationProperty_AssocationMustNotBeNull);
+                                    Strings.EdmModel_Validator_Syntactic_EdmNavigationProperty_AssociationMustNotBeNull);
                             }
                         }
                     );

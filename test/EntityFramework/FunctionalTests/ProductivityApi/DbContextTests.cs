@@ -710,7 +710,7 @@ namespace ProductivityApiTests
 
         private void SaveChanges_performs_DetectChanges_implementation(Func<DbContext, int> saveChanges)
         {
-            // NOTE: This is split out into a seperate test from the above test because 
+            // NOTE: This is split out into a separate test from the above test because 
             //       it is important no other APIs are called between the modification 
             //       and calling SaveChanges due to other APIs calling DetectChanges implicitly
 
@@ -3589,7 +3589,7 @@ namespace ProductivityApiTests
 
             // this only works for integrated security, or when password is persisted after connecting
             // otherwise we can't connect to database during context initialization (password is gone from connection string)
-            if (DatabaseTestHelpers.IsIntegratedSecutity(connectionString) ||
+            if (DatabaseTestHelpers.IsIntegratedSecurity(connectionString) ||
                 DatabaseTestHelpers.PersistsSecurityInfo(connectionString))
             {
 
@@ -3626,7 +3626,7 @@ namespace ProductivityApiTests
 
             // this only works for integrated security, or when password is persisted after connecting
             // otherwise we can't connect to database during context initialization (password is gone from connection string)
-            if (DatabaseTestHelpers.IsIntegratedSecutity(connectionString) ||
+            if (DatabaseTestHelpers.IsIntegratedSecurity(connectionString) ||
                 DatabaseTestHelpers.PersistsSecurityInfo(connectionString))
             {
                 using (var connection = new SqlConnection(connectionString))

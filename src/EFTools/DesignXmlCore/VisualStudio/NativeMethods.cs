@@ -1022,7 +1022,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             public int iImage; // index of bitmap in ImageList
             public int iOrder;
             public uint type; // [in] filter type (defined what pvFilter is a pointer to)
-            public IntPtr pvFilter; // [in] fillter data see above
+            public IntPtr pvFilter; // [in] filter data see above
         }
 
         [StructLayout(LayoutKind.Sequential)]

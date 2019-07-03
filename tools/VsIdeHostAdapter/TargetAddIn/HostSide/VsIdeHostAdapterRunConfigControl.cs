@@ -15,7 +15,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace Microsoft.VisualStudio.TestTools.HostAdapters.VsIde
 {
     /// <summary>
-    /// UI control for my host adapter configuartion. Hosted inside test run config editor.
+    /// UI control for my host adapter configuration. Hosted inside test run config editor.
     /// It contains a data grid view where you could define environment variables.
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Vs", Justification = "Public class, cannot rename")]
@@ -38,7 +38,7 @@ namespace Microsoft.VisualStudio.TestTools.HostAdapters.VsIde
         /// Initialize the editor to a default state based on given test run.
         /// </summary>
         /// <param name="serviceProvider"></param>
-        /// <param name="run">Obselete. Always null.</param>
+        /// <param name="run">Obsolete. Always null.</param>
         void IRunConfigurationEditor.Initialize(System.IServiceProvider serviceProvider, TestRun run)
         {
             // Initialize to something like: 7.0, 7.1, 8.0
@@ -76,7 +76,7 @@ namespace Microsoft.VisualStudio.TestTools.HostAdapters.VsIde
         }
 
         /// <summary>
-        /// Desciption about this editor is displayed in the help panel of main run config editor.
+        /// Description about this editor is displayed in the help panel of main run config editor.
         /// </summary>
         string IRunConfigurationEditor.Description
         {
@@ -98,7 +98,7 @@ namespace Microsoft.VisualStudio.TestTools.HostAdapters.VsIde
         }
 
         /// <summary>
-        /// Verify the data in the editor. Prompt the user when neccessary.
+        /// Verify the data in the editor. Prompt the user when necessary.
         /// </summary>
         /// <returns>true if the data are correct and don't need correction; otherwise, false.</returns>
         bool IRunConfigurationEditor.VerifyData()

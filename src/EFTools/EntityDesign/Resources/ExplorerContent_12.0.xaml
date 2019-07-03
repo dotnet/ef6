@@ -222,7 +222,7 @@
                                   <Path x:Name="ExpandPath" Data="M 0 0 L 4 4 L 0 8 Z"
                                         Stroke="{DynamicResource {x:Static vsShell11:TreeViewColors.GlyphBrushKey}}"
                                         SnapsToDevicePixels="False" >
-                                    <!-- Expander triangles needs half-pixel possitioning to render correctly -->
+                                    <!-- Expander triangles needs half-pixel positioning to render correctly -->
                                     <Path.RenderTransform>
                                       <TranslateTransform  X="6.5" Y="4.5"/>
                                     </Path.RenderTransform>

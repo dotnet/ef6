@@ -126,7 +126,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             var groupByOp = (GroupByIntoOp)definingGroupNode.Op;
             groupByOp.Outputs.Set(newFunctionVar);
 
-            //Propagate the new var throught the ancestors of the GroupByInto
+            //Propagate the new var through the ancestors of the GroupByInto
             for (var i = 0; i < groupByAncestors.Count; i++)
             {
                 var groupByAncestor = groupByAncestors[i];

@@ -189,11 +189,11 @@ namespace System.Data.Entity.Infrastructure
             }
 
             var transactionId = Guid.NewGuid();
-            var savedSuccesfully = false;
+            var savedSuccessfully = false;
             var reinitializedDatabase = false;
             var objectContext = ((IObjectContextAdapter)TransactionContext).ObjectContext;
             ((EntityConnection)objectContext.Connection).UseStoreTransaction(interceptionContext.Result);
-            while (!savedSuccesfully)
+            while (!savedSuccessfully)
             {
                 Debug.Assert(!Transactions.ContainsKey(interceptionContext.Result), "The transaction has already been registered");
                 var transactionRow = new TransactionRow { Id = transactionId, CreationTime = DateTime.Now };
@@ -203,7 +203,7 @@ namespace System.Data.Entity.Infrastructure
                 try
                 {
                     objectContext.SaveChangesInternal(SaveOptions.AcceptAllChangesAfterSave, executeInExistingTransaction: true);
-                    savedSuccesfully = true;
+                    savedSuccessfully = true;
                 }
                 catch (UpdateException)
                 {
@@ -250,7 +250,7 @@ namespace System.Data.Entity.Infrastructure
         /// If there was an exception thrown checks the database for this transaction and rethrows it if not found.
         /// Otherwise marks the commit as succeeded and queues the transaction information to be deleted.
         /// </summary>
-        /// <param name="transaction">The transaction that was commited.</param>
+        /// <param name="transaction">The transaction that was committed.</param>
         /// <param name="interceptionContext">Contextual information associated with the call.</param>
         /// <seealso cref="IDbTransactionInterceptor.Committed" />
         public override void Committed(DbTransaction transaction, DbTransactionInterceptionContext interceptionContext)

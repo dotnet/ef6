@@ -78,7 +78,7 @@ namespace Microsoft.Data.Entity.Design.Model.Validation
                     ErrorCode.InvalidMultiplicity, 
                     // The value for the Action attribute is not valid or not allowed in the current context
                     ErrorCode.InvalidAction, 
-                    // An error occured processing the On&lt;Operation&gt; elements
+                    // An error occurred processing the On&lt;Operation&gt; elements
                     // Designer -- ErrorCode.InvalidOperation, 
                     // Ends were given for the Property element of a EntityContainer that is not a RelationshipSet
                     ErrorCode.InvalidContainerTypeForEnd, 
@@ -86,7 +86,7 @@ namespace Microsoft.Data.Entity.Design.Model.Validation
                     ErrorCode.InvalidEndEntitySet, 
                     //  An end element was not given, and cannot be inferred because too many EntityContainerEntitySet elements that are good possibilities.
                     ErrorCode.AmbiguousEntityContainerEnd, 
-                    //  An end element was not given, and cannot be infered because there is no EntityContainerEntitySets that are the correct type to be used as an EntitySet.
+                    //  An end element was not given, and cannot be inferred because there is no EntityContainerEntitySets that are the correct type to be used as an EntitySet.
                     ErrorCode.MissingExtentEntityContainerEnd, 
                     //  Not a valid parameter direction for the parameter in a function
                     ErrorCode.BadParameterDirection, 
@@ -134,7 +134,7 @@ namespace Microsoft.Data.Entity.Design.Model.Validation
                     //  Binary type properties which are part of entity key are currently not supported 
                     // Designer -- ErrorCode.BinaryEntityKeyCurrentlyNotSupported, 
             
-                    //  The primitive type kind does not have a prefered mapping
+                    //  The primitive type kind does not have a preferred mapping
                     // Designer -- ErrorCode.NoPreferredMappingForPrimitiveTypeKind,
             
                     //  More than one PreferredMapping for a PrimitiveTypeKind
@@ -174,7 +174,7 @@ namespace Microsoft.Data.Entity.Design.Model.Validation
                     //  Empty DefiningQuery text
                     ErrorCode.EmptyDefiningQuery,
             
-                    //  Schema, Table and DefiningQuery are all specified, and are mutualy exlusive
+                    //  Schema, Table and DefiningQuery are all specified, and are mutually exclusive
                     ErrorCode.TableAndSchemaAreMutuallyExclusiveWithDefiningQuery,
             
                     //  Provider manifest does not allow a type to explicitly promote to itself, this is an implicit assumption.

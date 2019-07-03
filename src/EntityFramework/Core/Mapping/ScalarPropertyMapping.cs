@@ -26,14 +26,14 @@ namespace System.Data.Entity.Core.Mapping
     /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
     /// --ComplexPropertyMap
     /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    /// --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
+    /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
     /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
     /// --AssociationSetMapping
     /// --AssociationTypeMapping
     /// --MappingFragment
     /// --EndPropertyMap
     /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    /// --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
+    /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
     /// --EndPropertyMap
     /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
     /// This class represents the metadata for all the scalar property map elements in the

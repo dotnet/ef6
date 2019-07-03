@@ -108,9 +108,9 @@ namespace Microsoft.Data.Entity.Design.Model
         }
 
         /// <summary>
-        ///     A "ghost node" is a node in the EFObject hiearchy that does not have an explicit XElement in the xml file.
+        ///     A "ghost node" is a node in the EFObject hierarchy that does not have an explicit XElement in the xml file.
         ///     The edm files allow some syntactic short-hand to make authoring files a bit easier.  This means that there
-        ///     are *implied* nodes in our model hiearchy.  For example, this
+        ///     are *implied* nodes in our model hierarchy.  For example, this
         ///     <EntityTypeMapping TableName="xyz">...</EntityTypeMapping>
         ///     And this
         ///     <EntityTypeMapping>
@@ -399,7 +399,7 @@ namespace Microsoft.Data.Entity.Design.Model
 
         protected virtual void DoNormalize()
         {
-            // default normalize just sets the state to normlized.
+            // default normalize just sets the state to normalized.
             State = EFElementState.Normalized;
         }
 

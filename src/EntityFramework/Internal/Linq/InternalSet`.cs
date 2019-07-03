@@ -399,7 +399,7 @@ namespace System.Data.Entity.Internal.Linq
             DebugCheck.NotNull(entities);
 
             // prevent "enumerator was changed" exception
-            // if entities is syncronized with other elements
+            // if entities is synchronized with other elements
             // (e.g: local view from DbSet.Local.)
             var copyOfEntities = entities.Cast<object>().ToList();
 

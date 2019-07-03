@@ -1661,32 +1661,32 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         private IEnumerable<AddForeignKeyOperation> FindAddedForeignKeys(
-            ICollection<Tuple<AssociationType, AssociationType>> assocationTypePairs,
+            ICollection<Tuple<AssociationType, AssociationType>> associationTypePairs,
             ICollection<RenameColumnOperation> renamedColumns)
         {
-            DebugCheck.NotNull(assocationTypePairs);
+            DebugCheck.NotNull(associationTypePairs);
             DebugCheck.NotNull(renamedColumns);
 
             return _target.StoreItemCollection.GetItems<AssociationType>()
-                .Except(assocationTypePairs.Select(p => p.Item2))
+                .Except(associationTypePairs.Select(p => p.Item2))
                 .Concat(
-                    assocationTypePairs
+                    associationTypePairs
                         .Where(at => !DiffAssociations(at.Item1.Constraint, at.Item2.Constraint, renamedColumns))
                         .Select(at => at.Item2))
                 .Select(at => BuildAddForeignKeyOperation(at.Constraint, _target));
         }
 
         private IEnumerable<DropForeignKeyOperation> FindDroppedForeignKeys(
-            ICollection<Tuple<AssociationType, AssociationType>> assocationTypePairs,
+            ICollection<Tuple<AssociationType, AssociationType>> associationTypePairs,
             ICollection<RenameColumnOperation> renamedColumns)
         {
-            DebugCheck.NotNull(assocationTypePairs);
+            DebugCheck.NotNull(associationTypePairs);
             DebugCheck.NotNull(renamedColumns);
 
             return _source.StoreItemCollection.GetItems<AssociationType>()
-                .Except(assocationTypePairs.Select(p => p.Item1))
+                .Except(associationTypePairs.Select(p => p.Item1))
                 .Concat(
-                    assocationTypePairs
+                    associationTypePairs
                         .Where(at => !DiffAssociations(at.Item1.Constraint, at.Item2.Constraint, renamedColumns))
                         .Select(at => at.Item1))
                 .Select(at => BuildDropForeignKeyOperation(at.Constraint, _source));

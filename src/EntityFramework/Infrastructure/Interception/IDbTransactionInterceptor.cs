@@ -45,14 +45,14 @@ namespace System.Data.Entity.Infrastructure.Interception
         /// <summary>
         /// This method is called before <see cref="DbTransaction.Commit" /> is invoked.
         /// </summary>
-        /// <param name="transaction">The transaction being commited.</param>
+        /// <param name="transaction">The transaction being committed.</param>
         /// <param name="interceptionContext">Contextual information associated with the call.</param>
         void Committing(DbTransaction transaction, DbTransactionInterceptionContext interceptionContext);
 
         /// <summary>
         /// This method is called after <see cref="DbTransaction.Commit" /> is invoked.
         /// </summary>
-        /// <param name="transaction">The transaction that was commited.</param>
+        /// <param name="transaction">The transaction that was committed.</param>
         /// <param name="interceptionContext">Contextual information associated with the call.</param>
         void Committed(DbTransaction transaction, DbTransactionInterceptionContext interceptionContext);
 

@@ -177,7 +177,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.Refactoring
         }
 
         /// <summary>
-        ///     Used to diaplay changes in text view.
+        ///     Used to display changes in text view.
         /// </summary>
         /// <param name="index"></param>
         /// <param name="pIUnknownTextView"></param>

@@ -71,7 +71,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.Common
         }
 
         /// <summary>
-        ///     Instanciates a new VsTextBuffer from the local registry
+        ///     Instantiates a new VsTextBuffer from the local registry
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="localRegistry"></param>

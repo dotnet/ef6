@@ -95,7 +95,7 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
 
         protected override void InvokeInternal(CommandProcessorContext cpc)
         {
-            Debug.Assert(_element != null, "InvokeIntenal is called when _element is null");
+            Debug.Assert(_element != null, "InvokeInternal is called when _element is null");
 
             if (_element == null)
             {

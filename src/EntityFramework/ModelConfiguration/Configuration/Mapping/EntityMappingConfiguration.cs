@@ -1068,17 +1068,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                     continue;
                 }
 
-                var oneToOneAssocations = FindAllOneToOneFKAssociationTypes(
+                var oneToOneAssociations = FindAllOneToOneFKAssociationTypes(
                     databaseMapping.Model, entityType, candidateType);
 
                 var rootType = candidateType.GetRootType();
                 if (!associationsToSharedTable.ContainsKey(rootType))
                 {
-                    associationsToSharedTable.Add(rootType, oneToOneAssocations.ToList());
+                    associationsToSharedTable.Add(rootType, oneToOneAssociations.ToList());
                 }
                 else
                 {
-                    associationsToSharedTable[rootType].AddRange(oneToOneAssocations);
+                    associationsToSharedTable[rootType].AddRange(oneToOneAssociations);
                 }
             }
 

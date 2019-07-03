@@ -60,8 +60,8 @@ namespace System.Data.Entity.Core.Mapping
         // passing in the C-space EntityContainer  and
         // the s-space Entity container metadata objects.
         // </summary>
-        // <param name="entityContainer"> Entity Continer type that is being mapped on the C-side </param>
-        // <param name="storageEntityContainer"> Entity Continer type that is being mapped on the S-side </param>
+        // <param name="entityContainer"> Entity Container type that is being mapped on the C-side </param>
+        // <param name="storageEntityContainer"> Entity Container type that is being mapped on the S-side </param>
         internal EntityContainerMapping(
             EntityContainer entityContainer, EntityContainer storageEntityContainer,
             StorageMappingItemCollection storageMappingItemCollection, bool validate, bool generateUpdateViews)
@@ -92,8 +92,8 @@ namespace System.Data.Entity.Core.Mapping
         private readonly string identity;
         private readonly bool m_validate;
         private readonly bool m_generateUpdateViews;
-        private readonly EntityContainer m_entityContainer; //Entity Continer type that is being mapped on the C-side
-        private readonly EntityContainer m_storageEntityContainer; //Entity Continer type that the C-space container is being mapped to
+        private readonly EntityContainer m_entityContainer; //Entity Container type that is being mapped on the C-side
+        private readonly EntityContainer m_storageEntityContainer; //Entity Container type that the C-space container is being mapped to
 
         private readonly Dictionary<string, EntitySetBaseMapping> m_entitySetMappings =
             new Dictionary<string, EntitySetBaseMapping>(StringComparer.Ordinal);
@@ -293,7 +293,7 @@ namespace System.Data.Entity.Core.Mapping
         internal EntitySetBaseMapping GetEntitySetMapping(String setName)
         {
             DebugCheck.NotNull(setName);
-            //Key for EntitySetMapping should be EntitySet name and Entoty type name
+            //Key for EntitySetMapping should be EntitySet name and Entity type name
             EntitySetBaseMapping setMapping = null;
             m_entitySetMappings.TryGetValue(setName, out setMapping);
             return setMapping;
@@ -503,8 +503,8 @@ namespace System.Data.Entity.Core.Mapping
             var partitioner = new CellPartitioner(result.Cells, result.ForeignKeyConstraints);
             var cellGroups = partitioner.GroupRelatedCells();
 
-            //Clone cell groups- i.e, List<Set<Cell>> - upto cell before storing it in the cache because viewgen modified the Cell structure
-            result.CellGroups = cellGroups.Select(setOfcells => new CellGroup(setOfcells.Select(cell => new Cell(cell)))).ToList();
+            //Clone cell groups- i.e, List<Set<Cell>> - up to cell before storing it in the cache because viewgen modified the Cell structure
+            result.CellGroups = cellGroups.Select(setOfCells => new CellGroup(setOfCells.Select(cell => new Cell(cell)))).ToList();
 
             return result;
         }

@@ -71,7 +71,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                 return configProjectItem;
             }
 
-            _project.ProjectItems.AddFromTemplate(GetConfigItempTemplatePath(), _configFileName);
+            _project.ProjectItems.AddFromTemplate(GetConfigItemTemplatePath(), _configFileName);
             return GetConfigProjectItem();
         }
 
@@ -164,7 +164,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             return configProjectItem != null ? configProjectItem.FileNames[1] : null;
         }
 
-        private string GetConfigItempTemplatePath()
+        private string GetConfigItemTemplatePath()
         {
             var projectLanguage = _vsUtils.GetLanguageForProject(_project);
 

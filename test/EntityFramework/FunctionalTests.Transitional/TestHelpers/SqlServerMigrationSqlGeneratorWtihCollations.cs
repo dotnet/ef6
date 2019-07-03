@@ -131,7 +131,7 @@ namespace System.Data.Entity.TestHelpers
 
             if (_tableCollation != null)
             {
-                // Need to alter any column that doesn't have explictly set collation
+                // Need to alter any column that doesn't have explicitly set collation
                 foreach (var column in alterTableOperation.Columns.Where(
                     c => c.ClrType == typeof(string)
                          && !c.Annotations.ContainsKey(CollationAttribute.AnnotationName)))

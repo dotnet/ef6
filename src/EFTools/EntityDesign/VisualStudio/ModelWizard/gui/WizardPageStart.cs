@@ -115,7 +115,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             // Prevents flickering if the user provides a name of the model that
             // conflicts with an existing file. If this happens we block activation
             // of the next page so the wizard will want to re-activate this page. 
-            // Beacuse we close the wizard form anyways we can block activating 
+            // Because we close the wizard form anyways we can block activating 
             // this page which will prevent flickering.
             return base.OnActivate() && !Wizard.FileAlreadyExistsError;
         }

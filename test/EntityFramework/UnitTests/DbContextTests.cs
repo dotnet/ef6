@@ -235,7 +235,7 @@ namespace ProductivityApiUnitTests
         #region Virtual Dispose tests
 
         [Fact]
-        public void Dispose_can_be_overriden_in_a_derived_DbContext()
+        public void Dispose_can_be_overridden_in_a_derived_DbContext()
         {
             var mockContext = new Mock<DbContext>();
             mockContext.Protected().Setup("Dispose", true).Verifiable();
@@ -708,8 +708,8 @@ END");
         [Fact]
         public void Can_replace_connection()
         {
-            var intializer = new ReplaceConnectionInitializer();
-            Database.SetInitializer(intializer);
+            var initializer = new ReplaceConnectionInitializer();
+            Database.SetInitializer(initializer);
 
             using (var context = new ReplaceConnectionContext())
             {
@@ -728,7 +728,7 @@ END");
                     context.Database.Initialize(force: true);
                     Assert.Equal(
                         "NewReplaceConnectionContextDatabase",
-                        intializer.DatabaseNameUsedDuringInitialization);
+                        initializer.DatabaseNameUsedDuringInitialization);
                 }
             }
         }
@@ -736,8 +736,8 @@ END");
         [Fact]
         public void Can_replace_connection_with_different_provider()
         {
-            var intializer = new ReplaceConnectionInitializer();
-            Database.SetInitializer(intializer);
+            var initializer = new ReplaceConnectionInitializer();
+            Database.SetInitializer(initializer);
 
             using (var context = new ReplaceConnectionContext())
             {
@@ -758,7 +758,7 @@ END");
                     context.Database.Initialize(force: true);
                     Assert.Equal(
                         "NewReplaceConnectionContextDatabase.sdf",
-                        intializer.DatabaseNameUsedDuringInitialization);
+                        initializer.DatabaseNameUsedDuringInitialization);
                 }
             }
         }

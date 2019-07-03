@@ -26,7 +26,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         #endregion
 
-        #region overriden methods
+        #region Overridden methods
 
         internal override bool Match(Node node)
         {

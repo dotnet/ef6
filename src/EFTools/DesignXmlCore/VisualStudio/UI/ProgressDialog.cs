@@ -87,8 +87,8 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VisualStudio.UI
                 backgroundWorker.IsBusy == false, "Should not attempt to start the background job when the backgroundWorker is already busy");
             if (false == backgroundWorker.IsBusy)
             {
-                closeInterrruptButton.Text = Resources.ProgressDialogCloseInterruptButtonInterruptText; // set button to interrupt mode
-                closeInterrruptButton.Enabled = true;
+                closeInterruptButton.Text = Resources.ProgressDialogCloseInterruptButtonInterruptText; // set button to interrupt mode
+                closeInterruptButton.Enabled = true;
                 backgroundWorker.RunWorkerAsync(_progressDialogWorkArgument);
             }
         }
@@ -115,7 +115,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VisualStudio.UI
             // simulate a user clicking the Stop button
             if (_currentUserState.CurrentIteration >= SimulateStopAfter)
             {
-                closeInterrruptButton_Click(this, EventArgs.Empty);
+                closeInterruptButton_Click(this, EventArgs.Empty);
             }
 
             #endregion
@@ -144,8 +144,8 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VisualStudio.UI
                     indent += "  ";
                 }
                 Status = sb.ToString();
-                closeInterrruptButton.Text = Resources.ProgressDialogCloseInterruptButtonCloseText;
-                closeInterrruptButton.Enabled = true;
+                closeInterruptButton.Text = Resources.ProgressDialogCloseInterruptButtonCloseText;
+                closeInterruptButton.Enabled = true;
                 if (BackgroundWorkCompletedEventStorage != null)
                 {
                     BackgroundWorkCompletedEventStorage(this, EventArgs.Empty);
@@ -159,8 +159,8 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VisualStudio.UI
                     CultureInfo.CurrentCulture, Resources.ProgressDialogBackgroundJobCancellationMessage, _currentUserState.CurrentIteration,
                     _currentUserState.NumberIterations, _currentUserState.CurrentStatusMessage);
                 Status = statusText;
-                closeInterrruptButton.Text = Resources.ProgressDialogCloseInterruptButtonCloseText;
-                closeInterrruptButton.Enabled = true;
+                closeInterruptButton.Text = Resources.ProgressDialogCloseInterruptButtonCloseText;
+                closeInterruptButton.Enabled = true;
                 if (BackgroundWorkCompletedEventStorage != null)
                 {
                     BackgroundWorkCompletedEventStorage(this, EventArgs.Empty);
@@ -170,7 +170,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VisualStudio.UI
             {
                 // background job completed successfully - close dialog
                 DialogResult = DialogResult.OK; // set result to OK so that caller knows what happened
-                closeInterrruptButton.Enabled = false;
+                closeInterruptButton.Enabled = false;
                 if (BackgroundWorkCompletedEventStorage != null)
                 {
                     BackgroundWorkCompletedEventStorage(this, EventArgs.Empty);
@@ -179,13 +179,13 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VisualStudio.UI
             }
         }
 
-        private void closeInterrruptButton_Click(object sender, EventArgs e)
+        private void closeInterruptButton_Click(object sender, EventArgs e)
         {
-            if (closeInterrruptButton.Text.Equals(
+            if (closeInterruptButton.Text.Equals(
                 Resources.ProgressDialogCloseInterruptButtonInterruptText, StringComparison.CurrentCulture))
             {
                 // user clicked on closeInterruptButton in Interrupt mode - so cancel background job
-                closeInterrruptButton.Enabled = false; // when cancellation is received button will be re-enabled in Close mode
+                closeInterruptButton.Enabled = false; // when cancellation is received button will be re-enabled in Close mode
                 backgroundWorker.CancelAsync();
             }
             else

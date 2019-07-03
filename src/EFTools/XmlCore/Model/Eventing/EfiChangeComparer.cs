@@ -34,9 +34,9 @@ namespace Microsoft.Data.Entity.Design.Model.Eventing
     {
         /// <summary>
         ///     Sort changes so that Deletes are first, creates are second and updates are third.
-        ///     For example: Sort updates to process EntityType first, then Associaiton, then others.
+        ///     For example: Sort updates to process EntityType first, then Association, then others.
         ///     Sort is stable (i.e. it is preserving order of items that have equal values).
-        ///     This is acomplished by comparing original position of items for which GetVal() returned same value.
+        ///     This is accomplished by comparing original position of items for which GetVal() returned same value.
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>

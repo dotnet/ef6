@@ -102,8 +102,8 @@ namespace System.Data.Entity.Core.Objects.Internal
         internal void BeginAddTracking()
         {
             Debug.Assert(!IsAddTracking);
-            Debug.Assert(PopulatedEntityReferences == null, "Expected promotion index to be null when begining tracking.");
-            Debug.Assert(AlignedEntityReferences == null, "Expected promotion index to be null when begining tracking.");
+            Debug.Assert(PopulatedEntityReferences == null, "Expected promotion index to be null when beginning tracking.");
+            Debug.Assert(AlignedEntityReferences == null, "Expected promotion index to be null when beginning tracking.");
             IsAddTracking = true;
             PopulatedEntityReferences = new HashSet<EntityReference>();
             AlignedEntityReferences = new HashSet<EntityReference>();

@@ -34,7 +34,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.Common
             }
 
             /// <summary>
-            ///     Finializer.
+            ///     Finalizer.
             /// </summary>
             ~WaitCursor()
             {

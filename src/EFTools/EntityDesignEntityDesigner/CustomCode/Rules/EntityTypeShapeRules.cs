@@ -54,7 +54,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.Rules
                     // top left corner, it will not change the location of the shape because any point smaller than (0.5,0.5) will be rounded off to (0.5,0.5)
                     // because of the NestedShapeMargin. This means that the old and new value of the absolute bounds will not change after the drop point
                     // is applied to the new ViewModel shape's default location. Normally this would not be a problem, but when we create the EntityTypeShape in
-                    // the model we initally assign it a random (x,y) value (see CreateEntityTypeShapeCommand.cs) and we're relying on the EntityTypeShapeChange
+                    // the model we initially assign it a random (x,y) value (see CreateEntityTypeShapeCommand.cs) and we're relying on the EntityTypeShapeChange
                     // command issued by this rule to update the model x,y values so that the correct co-ords are persisted in the *.diagram file.
                     // Therefore there is an extra check in the IF statement below to catch the case where the user adds their first shape in the diagram at the
                     // top left corner inside the NestedShapeMargin as this is the easiest edge case to hit. Note that this will not protect against edge cases

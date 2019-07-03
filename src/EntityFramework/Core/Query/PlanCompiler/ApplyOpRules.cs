@@ -382,7 +382,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
 
             // Dev10 #480443: If any of the definitions changes we need to recompute the node info.
-            var anyVarDefChagned = false;
+            var anyVarDefChanged = false;
             foreach (var varDefNode in varDefListNode.Children)
             {
                 PlanCompiler.Assert(varDefNode.Op.OpType == OpType.VarDef, "Expected VarDefOp. Found " + varDefNode.Op.OpType + " instead");
@@ -419,12 +419,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     }
                     varDefNode.Child0 = currentDefinition;
                     command.RecomputeNodeInfo(varDefNode);
-                    anyVarDefChagned = true;
+                    anyVarDefChanged = true;
                 }
             }
 
             // Recompute node info if needed
-            if (anyVarDefChagned)
+            if (anyVarDefChanged)
             {
                 command.RecomputeNodeInfo(varDefListNode);
             }

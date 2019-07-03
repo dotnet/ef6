@@ -28,7 +28,7 @@ namespace Microsoft.Data.Entity.Design.Model.UpdateFromDatabase
         }
 
         /// <summary>
-        ///     returns all the tables mapped to columns on the "Dependent" end of the referential constraing
+        ///     returns all the tables mapped to columns on the "Dependent" end of the referential constraining
         /// </summary>
         internal override IEnumerable<DatabaseObject> AssociationTables
         {

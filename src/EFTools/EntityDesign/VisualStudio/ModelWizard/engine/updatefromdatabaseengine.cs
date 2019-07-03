@@ -113,7 +113,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
 
             // We can reload only after we added EF references to the project otherwise we would get a watermark
             // saying that the schema version does not match the referenced EF version which would not be true.
-            // If we reload becuase there was an extension that potentially modified the artifact then it does not matter.
+            // If we reload because there was an extension that potentially modified the artifact then it does not matter.
             if (shouldReloadArtifact)
             {
                 artifact.ReloadArtifact();
@@ -425,7 +425,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                 _fromDbDocument = ((EdmxModelBuilderEngine)settings.ModelBuilderEngine).Edmx;
                 _projectItem = VsUtils.GetProjectItemForDocument(_artifact.Uri.LocalPath, PackageManager.Package);
 
-                // make a copy of the artifact before any chagnes are done to it.  This is the "original document" that will be passed to extensions
+                // make a copy of the artifact before any changes are done to it.  This is the "original document" that will be passed to extensions
                 _originalDocument = XDocument.Parse(_artifact.XDocument.ToString(), LoadOptions.PreserveWhitespace);
             }
 

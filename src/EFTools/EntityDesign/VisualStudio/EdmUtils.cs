@@ -358,7 +358,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
                 }
             }
 
-            // if we could not resolve the asembly using global or project design time assembly resolution, return string empty.
+            // if we could not resolve the assembly using global or project design time assembly resolution, return string empty.
             return String.Empty;
         }
 

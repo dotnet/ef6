@@ -79,7 +79,7 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.PropertyWindow.Descriptors
         }
 
         /// <summary>
-        ///     overriden by derived classes to perform initialization after _attribute is initialized
+        ///     Overridden by derived classes to perform initialization after _attribute is initialized
         /// </summary>
         protected virtual void OnTypeDescriptorInitialize()
         {

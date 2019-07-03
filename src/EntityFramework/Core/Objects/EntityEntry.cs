@@ -2416,7 +2416,7 @@ namespace System.Data.Entity.Core.Objects
                 && ObjectStateManager.FindEntityEntry(relatedObject) == null)
             {
                 // If the relatedObject is not tracked by the context, let's detect it before OSM.PerformAdd to avoid
-                // making RelatedEnd.Add() more complicated (it would have to know when the values in relatedEndTo can be overriden, and when not
+                // making RelatedEnd.Add() more complicated (it would have to know when the values in relatedEndTo can be overridden, and when not
                 relatedEndTo.VerifyNavigationPropertyForAdd(_wrappedEntity);
             }
 

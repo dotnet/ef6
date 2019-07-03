@@ -279,12 +279,12 @@ namespace Microsoft.Data.Entity.Design.Model.Entity
                     // Delete both old XElement and the preceding whitespace.
                     // Preceding whitespace is preferred over trailing whitespace because we don't want to remove the last property's trailing white-space since
                     // it has different indent level than the rest (see EFElement's EnsureFirstNodeWhitespaceSeparation method).
-                    var preceedingNewLine = toBeDeleteElement.PreviousNode as XText;
-                    while (preceedingNewLine != null
-                           && String.IsNullOrWhiteSpace(preceedingNewLine.Value))
+                    var precedingNewLine = toBeDeleteElement.PreviousNode as XText;
+                    while (precedingNewLine != null
+                           && String.IsNullOrWhiteSpace(precedingNewLine.Value))
                     {
-                        var toBeDeletedWhiteSpace = preceedingNewLine;
-                        preceedingNewLine = preceedingNewLine.PreviousNode as XText;
+                        var toBeDeletedWhiteSpace = precedingNewLine;
+                        precedingNewLine = precedingNewLine.PreviousNode as XText;
                         toBeDeletedWhiteSpace.Remove();
                     }
                     toBeDeleteElement.Remove();

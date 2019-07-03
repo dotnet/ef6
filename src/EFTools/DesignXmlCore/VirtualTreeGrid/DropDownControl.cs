@@ -184,7 +184,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
         /// <summary>
         ///     Factory method for creating the appropriate drop-down control based on the given property descriptor.
         ///     If the property descriptor supports a UITypeEditor, a TypeEditorHost will be created with that editor.
-        ///     If not, and the TypeConverver attached to the PropertyDescriptor supports standard values, a
+        ///     If not, and the TypeConverter attached to the PropertyDescriptor supports standard values, a
         ///     TypeEditorHostListBox will be created with this TypeConverter.
         /// </summary>
         /// <param name="propertyDescriptor">A property descriptor describing the property being set</param>
@@ -414,7 +414,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
         ///     Note that this only applies to cases where the value changes, if the value does not change
         ///     or the user cancels the edit, the edit control will remain active regardless of the value of
         ///     this property.
-        ///     The default value is false, which means that the label edit conrol remains active.
+        ///     The default value is false, which means that the label edit control remains active.
         /// </summary>
         /// <value></value>
         public bool DismissLabelEditOnDropDownClose { get; set; }
@@ -2685,7 +2685,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
     }
 
     /// <summary>
-    ///     Edit control displayed in the TypeEditorHost.  Just a TextBox with some addtional
+    ///     Edit control displayed in the TypeEditorHost.  Just a TextBox with some additional
     ///     key message processing for opening the drop down.
     /// </summary>
     [SuppressMessage("Whitehorse.CustomRules", "WH03:WinFormControlCatchUnhandledExceptions",
@@ -2695,7 +2695,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
         private readonly TypeEditorHost _dropDownParent;
 
         /// <summary>
-        ///     Edit control displayed in the TypeEditorHost.  Just a TextBox with some addtional
+        ///     Edit control displayed in the TypeEditorHost.  Just a TextBox with some additional
         ///     key message processing for opening the drop down.
         /// </summary>
         public TypeEditorHostTextBox(TypeEditorHost dropDownParent)
@@ -3028,7 +3028,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
         }
 
         /// <summary>
-        ///     Overriden to set up the list index based on current text
+        ///     Overridden to set up the list index based on current text
         /// </summary>
         protected override void OnOpeningDropDown(EventArgs e)
         {
@@ -3047,7 +3047,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
         }
 
         /// <summary>
-        ///     Overriden to set up the list index based on current text
+        ///     Overridden to set up the list index based on current text
         /// </summary>
         protected override void OnTextChanged(EventArgs e)
         {

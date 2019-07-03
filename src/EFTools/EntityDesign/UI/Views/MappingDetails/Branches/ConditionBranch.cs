@@ -132,7 +132,7 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Branches
             }
             if (column == 2)
             {
-                // if the value of condition is empty string we want to show gray text "<Emtpy String>" instead
+                // if the value of condition is empty string we want to show gray text "<Empty String>" instead
                 var mc = GetElement(row) as MappingCondition;
                 if (mc != null
                     && mc.IsValueEmptyString)

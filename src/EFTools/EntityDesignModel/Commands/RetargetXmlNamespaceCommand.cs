@@ -73,7 +73,7 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
                 }
 
                 // Do not reload artifact here
-                // Until the transaction is commited, the XLinq representation of the parsed xml tree hasn't been generated yet.
+                // Until the transaction is committed, the XLinq representation of the parsed xml tree hasn't been generated yet.
             }
         }
 

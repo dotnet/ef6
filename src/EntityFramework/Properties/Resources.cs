@@ -1881,9 +1881,9 @@ namespace System.Data.Entity.Resources
         // <summary>
         // A string like "AssociationEnd must not be null."
         // </summary>
-        internal static string EdmModel_Validator_Syntactic_EdmAssociationType_AssocationEndMustNotBeNull
+        internal static string EdmModel_Validator_Syntactic_EdmAssociationType_AssociationEndMustNotBeNull
         {
-            get { return EntityRes.GetString(EntityRes.EdmModel_Validator_Syntactic_EdmAssociationType_AssocationEndMustNotBeNull); }
+            get { return EntityRes.GetString(EntityRes.EdmModel_Validator_Syntactic_EdmAssociationType_AssociationEndMustNotBeNull); }
         }
 
         // <summary>
@@ -1905,9 +1905,9 @@ namespace System.Data.Entity.Resources
         // <summary>
         // A string like "Association must not be null."
         // </summary>
-        internal static string EdmModel_Validator_Syntactic_EdmNavigationProperty_AssocationMustNotBeNull
+        internal static string EdmModel_Validator_Syntactic_EdmNavigationProperty_AssociationMustNotBeNull
         {
-            get { return EntityRes.GetString(EntityRes.EdmModel_Validator_Syntactic_EdmNavigationProperty_AssocationMustNotBeNull); }
+            get { return EntityRes.GetString(EntityRes.EdmModel_Validator_Syntactic_EdmNavigationProperty_AssociationMustNotBeNull); }
         }
 
         // <summary>
@@ -12433,9 +12433,9 @@ namespace System.Data.Entity.Resources
         // <summary>
         // A string like "Structural type mappings must not be null or empty for function imports returning non-scalar values."
         // </summary>
-        internal static string StructuralTypeMappingsMustNotBeNullForFunctionImportsReturingNonScalarValues
+        internal static string StructuralTypeMappingsMustNotBeNullForFunctionImportsReturningNonScalarValues
         {
-            get { return EntityRes.GetString(EntityRes.StructuralTypeMappingsMustNotBeNullForFunctionImportsReturingNonScalarValues); }
+            get { return EntityRes.GetString(EntityRes.StructuralTypeMappingsMustNotBeNullForFunctionImportsReturningNonScalarValues); }
         }
 
         // <summary>
@@ -15967,10 +15967,10 @@ namespace System.Data.Entity.Resources
         internal const string EdmModel_Validator_Syntactic_MissingName = "EdmModel_Validator_Syntactic_MissingName";
         internal const string EdmModel_Validator_Syntactic_EdmModel_NameIsTooLong = "EdmModel_Validator_Syntactic_EdmModel_NameIsTooLong";
         internal const string EdmModel_Validator_Syntactic_EdmModel_NameIsNotAllowed = "EdmModel_Validator_Syntactic_EdmModel_NameIsNotAllowed";
-        internal const string EdmModel_Validator_Syntactic_EdmAssociationType_AssocationEndMustNotBeNull = "EdmModel_Validator_Syntactic_EdmAssociationType_AssocationEndMustNotBeNull";
+        internal const string EdmModel_Validator_Syntactic_EdmAssociationType_AssociationEndMustNotBeNull = "EdmModel_Validator_Syntactic_EdmAssociationType_AssociationEndMustNotBeNull";
         internal const string EdmModel_Validator_Syntactic_EdmAssociationConstraint_DependentEndMustNotBeNull = "EdmModel_Validator_Syntactic_EdmAssociationConstraint_DependentEndMustNotBeNull";
         internal const string EdmModel_Validator_Syntactic_EdmAssociationConstraint_DependentPropertiesMustNotBeEmpty = "EdmModel_Validator_Syntactic_EdmAssociationConstraint_DependentPropertiesMustNotBeEmpty";
-        internal const string EdmModel_Validator_Syntactic_EdmNavigationProperty_AssocationMustNotBeNull = "EdmModel_Validator_Syntactic_EdmNavigationProperty_AssocationMustNotBeNull";
+        internal const string EdmModel_Validator_Syntactic_EdmNavigationProperty_AssociationMustNotBeNull = "EdmModel_Validator_Syntactic_EdmNavigationProperty_AssociationMustNotBeNull";
         internal const string EdmModel_Validator_Syntactic_EdmNavigationProperty_ResultEndMustNotBeNull = "EdmModel_Validator_Syntactic_EdmNavigationProperty_ResultEndMustNotBeNull";
         internal const string EdmModel_Validator_Syntactic_EdmAssociationEnd_EntityTypeMustNotBeNull = "EdmModel_Validator_Syntactic_EdmAssociationEnd_EntityTypeMustNotBeNull";
         internal const string EdmModel_Validator_Syntactic_EdmEntitySet_ElementTypeMustNotBeNull = "EdmModel_Validator_Syntactic_EdmEntitySet_ElementTypeMustNotBeNull";
@@ -17286,7 +17286,7 @@ namespace System.Data.Entity.Resources
         internal const string ComposableFunctionOrFunctionImportMustDeclareReturnType = "ComposableFunctionOrFunctionImportMustDeclareReturnType";
         internal const string NonComposableFunctionCannotBeMappedAsComposable = "NonComposableFunctionCannotBeMappedAsComposable";
         internal const string ComposableFunctionImportsReturningEntitiesNotSupported = "ComposableFunctionImportsReturningEntitiesNotSupported";
-        internal const string StructuralTypeMappingsMustNotBeNullForFunctionImportsReturingNonScalarValues = "StructuralTypeMappingsMustNotBeNullForFunctionImportsReturingNonScalarValues";
+        internal const string StructuralTypeMappingsMustNotBeNullForFunctionImportsReturningNonScalarValues = "StructuralTypeMappingsMustNotBeNullForFunctionImportsReturningNonScalarValues";
         internal const string InvalidReturnTypeForComposableFunction = "InvalidReturnTypeForComposableFunction";
         internal const string NonComposableFunctionMustNotDeclareReturnType = "NonComposableFunctionMustNotDeclareReturnType";
         internal const string CommandTextFunctionsNotComposable = "CommandTextFunctionsNotComposable";

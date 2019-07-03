@@ -4,7 +4,7 @@ namespace Microsoft.Data.Entity.Design.Model.Mapping
 {
     using System.Diagnostics;
 
-    internal static class FunctionImportProperyMappingNameNormalizer
+    internal static class FunctionImportPropertyMappingNameNormalizer
     {
         internal static NormalizedName NameNormalizer(EFElement parent, string refName)
         {

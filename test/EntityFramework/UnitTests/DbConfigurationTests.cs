@@ -417,7 +417,7 @@ namespace System.Data.Entity
             }
 
             [Fact]
-            public void ConnectionFactory_set_in_code_can_be_overriden_before_config_is_locked()
+            public void ConnectionFactory_set_in_code_can_be_overridden_before_config_is_locked()
             {
                 Assert.IsType<SqlConnectionFactory>(DbConfiguration.DependencyResolver.GetService<IDbConnectionFactory>());
                 Assert.IsType<DefaultUnitTestsConnectionFactory>(FunctionalTestsConfiguration.OriginalConnectionFactories[0]);

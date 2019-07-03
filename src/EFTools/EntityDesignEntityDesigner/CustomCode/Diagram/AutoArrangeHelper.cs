@@ -66,7 +66,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
                 if (_autoArrangeInfo.Objects.Count > 0
                     || _autoArrangeInfo.HiddenObjects.Count > 0)
                 {
-                    //Arrange the new elemenst before the transaction finishes:
+                    //Arrange the new elements before the transaction finishes:
                     using (var t = diagram.Store.TransactionManager.BeginTransaction(Resources.Tx_LayoutDiagram))
                     {
                         //Place single object where the user dropped, and multiple get autoarranged

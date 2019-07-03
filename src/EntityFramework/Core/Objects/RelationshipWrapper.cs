@@ -56,7 +56,7 @@ namespace System.Data.Entity.Core.Objects
             AssociationSet = extent;
             Debug.Assert(extent.ElementType.AssociationEndMembers.Count == 2, "only 2 ends are supported");
 
-            // this assert is explictly commented out to show that the two are similar but different
+            // this assert is explicitly commented out to show that the two are similar but different
             // we should always use AssociationEndMembers, never CorrespondingAssociationEndMember
             //Debug.Assert(AssociationSet.AssociationSetEnds.Count == 2, "only 2 set ends supported");
             //Debug.Assert(extent.ElementType.AssociationEndMembers[0] == AssociationSet.AssociationSetEnds[0].CorrespondingAssociationEndMember, "should be same end member");

@@ -1949,7 +1949,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
         ///     of items in the header must match the number of columns in the current
         ///     tree or multi-column tree.
         /// </summary>
-        /// <param name="headers">An array of headers, with ascending perctages as specified in the VirtualTreeColumnHeader documentation.</param>
+        /// <param name="headers">An array of headers, with ascending percentages as specified in the VirtualTreeColumnHeader documentation.</param>
         /// <param name="calculatePercentage">true if the percentages for non-fixed width columns should be divided evenly among all proportional headers.</param>
         public void SetColumnHeaders(VirtualTreeColumnHeader[] headers, bool calculatePercentage)
         {
