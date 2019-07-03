@@ -395,7 +395,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         // are only allowed to be scalars or complex type constructors based on direct property references
         // to the store entity set's scalar properties.
         // SELECT CASE
-        // WHEN y.Discriminator = SUBTTYPE1_Value THEN SUBTYPE1()
+        // WHEN y.Discriminator = SUBTYPE1_Value THEN SUBTYPE1()
         // ...
         // WHEN y.Discriminator = SUBTYPE_n-1_Value THEN SUBTYPE_n-1()
         // ELSE SUBTYPE_n()
