@@ -187,7 +187,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         protected override TypeUsage VisitTypeUsage(TypeUsage type)
         {
             //
-            // If the target metatadata workspace contains the same type instances, then the type does not
+            // If the target metadata workspace contains the same type instances, then the type does not
             // need to be 'mapped' and the same TypeUsage instance may be returned. This can happen if the
             // target workspace and the workspace of the source Command Tree are using the same ItemCollection.
             //
