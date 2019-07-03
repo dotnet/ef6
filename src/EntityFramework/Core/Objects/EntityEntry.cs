@@ -1498,10 +1498,10 @@ namespace System.Data.Entity.Core.Objects
 
                         if (oldComplexMemberValue == null)
                         {
-                            var orignalValueIndex = FindOriginalValueIndex(complexMemberMetadata, oldComplexObject);
-                            if (orignalValueIndex >= 0)
+                            var originalValueIndex = FindOriginalValueIndex(complexMemberMetadata, oldComplexObject);
+                            if (originalValueIndex >= 0)
                             {
-                                _originalValues.RemoveAt(orignalValueIndex);
+                                _originalValues.RemoveAt(originalValueIndex);
                             }
                         }
                     }
@@ -1714,7 +1714,7 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        // This method is used for entities which don't implement IEntityWithChangeTracker to store orignal values of properties
+        // This method is used for entities which don't implement IEntityWithChangeTracker to store original values of properties
         // which are later used to detect changes in properties
         internal void TakeSnapshot(bool onlySnapshotComplexProperties)
         {
