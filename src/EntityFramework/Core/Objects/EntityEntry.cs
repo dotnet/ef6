@@ -3804,7 +3804,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         // <summary>
-        // Performs fixuyup of foreign keys based on referencesd between objects.  This should only be called
+        // Performs fixup of foreign keys based on referencesd between objects.  This should only be called
         // for Added objects since this is the only time that references take precedence over FKs in fixup.
         // </summary>
         internal void FixupForeignKeysByReference()
