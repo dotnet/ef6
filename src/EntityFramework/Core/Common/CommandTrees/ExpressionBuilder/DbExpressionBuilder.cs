@@ -3307,7 +3307,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         // related Entities using the 'WITH RELATIONSHIP' clause in eSQL.
         // </summary>
         // <param name="sourceEnd"> The relationship end from which navigation takes place </param>
-        // <param name="targetEnd"> The relationship end to which navigation may be satisifed using the target entity ref </param>
+        // <param name="targetEnd"> The relationship end to which navigation may be satisfied using the target entity ref </param>
         // <param name="targetEntity"> An expression that produces a reference to the target entity (and must therefore have a Ref result type) </param>
         internal static DbRelatedEntityRef CreateRelatedEntityRef(
             RelationshipEndMember sourceEnd, RelationshipEndMember targetEnd, DbExpression targetEntity)
