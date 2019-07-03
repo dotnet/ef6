@@ -765,7 +765,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
             {
                 Check.NotNull(varRef, "varRef");
 
-                // if we encounter an unsubstitutued var ref, give up...
+                // if we encounter an unsubstituted var ref, give up...
                 if (IsOuterBindingVarRef(varRef))
                 {
                     m_doomed = true;
