@@ -257,7 +257,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         // <summary>
         // Emits an expression that represents a NullEntityWrapper instance.
         // </summary>
-        // <returns> An expression represnting a wrapped null </returns>
+        // <returns> An expression representing a wrapped null </returns>
         internal static Expression Emit_WrappedNullConstant()
         {
             return Expression.Property(null, EntityWrapperFactory_NullWrapper);
