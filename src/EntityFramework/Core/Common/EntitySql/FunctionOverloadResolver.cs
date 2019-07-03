@@ -161,7 +161,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                         if (!ReferenceEquals(bestCandidateRank, rank)) // do not compare best candidate against itself
                         {
                             // All individual ranks of the best candidate must equal or better than the ranks of all other candidates,
-                            // otherwise we consider it ambigous, even though it has an unambigously best total rank.
+                            // otherwise we consider it ambigous, even though it has an unambiguously best total rank.
                             for (var i = 0; i < rank.Length; ++i)
                             {
                                 if (bestCandidateRank[i]

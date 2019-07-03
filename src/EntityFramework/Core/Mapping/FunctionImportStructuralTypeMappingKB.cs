@@ -437,13 +437,13 @@ namespace System.Data.Entity.Core.Mapping
             }
 
             // Make sure that for each type with satisfiable candidateFunction all assignments for the type resolve to only that type.
-            var unambigouslyReachableMap = new BitArray(candidateFunctions.Length, true);
+            var unambiguouslyReachableMap = new BitArray(candidateFunctions.Length, true);
             for (var i = 0; i < candidateFunctions.Length; ++i)
             {
                 if (candidateFunctions[i].IsZero())
                 {
                     // The i-th type is unreachable regardless of other types.
-                    unambigouslyReachableMap[i] = false;
+                    unambiguouslyReachableMap[i] = false;
                 }
                 else
                 {
@@ -452,8 +452,8 @@ namespace System.Data.Entity.Core.Mapping
                         if (!converter.Solver.And(candidateFunctions[i], candidateFunctions[j]).IsZero())
                         {
                             // The i-th and j-th types have common assignments, hence they aren't unambiguously reachable.
-                            unambigouslyReachableMap[i] = false;
-                            unambigouslyReachableMap[j] = false;
+                            unambiguouslyReachableMap[i] = false;
+                            unambiguouslyReachableMap[j] = false;
                         }
                     }
                 }
@@ -461,7 +461,7 @@ namespace System.Data.Entity.Core.Mapping
             var reachableTypes = new Set<EntityType>();
             for (var i = 0; i < candidateFunctions.Length; ++i)
             {
-                if (unambigouslyReachableMap[i])
+                if (unambiguouslyReachableMap[i])
                 {
                     reachableTypes.Add(MappedEntityTypes[i]);
                 }
