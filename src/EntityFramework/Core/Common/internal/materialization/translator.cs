@@ -1104,7 +1104,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 var stateSlotNumber = AllocateStateSlot();
                 coordinatorScratchpad.StateSlotNumber = stateSlotNumber;
 
-                // Ensure that the element type of the collec element translator
+                // Ensure that the element type of the collection element translator
                 coordinatorScratchpad.Element = element;
 
                 // Build expressions to set the key values into their state slots, and
