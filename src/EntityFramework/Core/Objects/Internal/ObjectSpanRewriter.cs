@@ -451,7 +451,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 // not interfere with the nullability of the input. 
                 // In particular, if the input row is null and we construct a new row as a projection over its columns
                 // we would get a row consisting of nulls, instead of a null row. 
-                // Thus, given an input X, we rewritte it as:  if (X is null) then NULL else rewritten.
+                // Thus, given an input X, we rewrite it as:  if (X is null) then NULL else rewritten.
                 if (newRow == null)
                 {
                     DbExpression condition = expression.IsNull();
