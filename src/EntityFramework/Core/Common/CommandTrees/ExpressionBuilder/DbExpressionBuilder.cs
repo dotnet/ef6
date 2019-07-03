@@ -3299,7 +3299,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         // Creates a new <see cref="DbRelatedEntityRef" /> that describes how to satisfy the relationship
         // navigation operation from <paramref name="sourceEnd" /> to <paramref name="targetEnd" />, which
         // must be declared by the same relationship type.
-        // DbRelatedEntityRefs are used in conjuction with <see cref="DbNewInstanceExpression" />
+        // DbRelatedEntityRefs are used in conjunction with <see cref="DbNewInstanceExpression" />
         // to construct Entity instances that are capable of resolving relationship navigation operations based on
         // the provided DbRelatedEntityRefs without the need for additional navigation operations.
         // Note also that this factory method is not intended to be part of the public Command Tree API
