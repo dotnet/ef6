@@ -105,7 +105,7 @@ namespace System.Data.Entity.Core.Common
         }
 
         // <summary>
-        // Determine wheter a given typeusage is valid for Distinct operator
+        // Determine whether a given typeusage is valid for Distinct operator
         // </summary>
         internal static bool IsValidDistinctOpType(TypeUsage typeUsage)
         {
@@ -113,7 +113,7 @@ namespace System.Data.Entity.Core.Common
         }
 
         // <summary>
-        // Determine wheter a given typeusage is valid for set comparison operator such as UNION, INTERSECT and EXCEPT
+        // Determine whether a given typeusage is valid for set comparison operator such as UNION, INTERSECT and EXCEPT
         // </summary>
         internal static bool IsSetComparableOpType(TypeUsage typeUsage)
         {
