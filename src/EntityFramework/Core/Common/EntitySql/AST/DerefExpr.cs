@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         // <summary>
-        // Ieturns ref argument expression.
+        // Returns ref argument expression.
         // </summary>
         internal Node ArgExpr
         {
