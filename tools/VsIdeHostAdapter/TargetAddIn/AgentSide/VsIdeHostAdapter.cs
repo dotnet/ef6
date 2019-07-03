@@ -566,7 +566,7 @@ namespace Microsoft.VisualStudio.TestTools.HostAdapters.VsIde
                     }
                 }
 
-                // m_runConfig can be null if cleanup is called too early, i.e. before we comleted init.
+                // m_runConfig can be null if cleanup is called too early, i.e. before we completed init.
                 if (m_runConfig != null && m_runConfig.IsExecutedUnderDebugger)
                 {
                     // Detach debugger for VS we are going to shut down.
@@ -614,7 +614,7 @@ namespace Microsoft.VisualStudio.TestTools.HostAdapters.VsIde
 
         private void CleanupHostSession()
         {
-            // m_runConfig can be null if cleanup is called too early, i.e. before we comleted init.
+            // m_runConfig can be null if cleanup is called too early, i.e. before we completed init.
             if (m_runConfig != null && m_runConfig.IsExecutedUnderDebugger)
             {
                 Debug.Assert(m_hostSession != null);
