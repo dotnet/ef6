@@ -18,7 +18,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         // beyond this size per prefix, we don't cache the names (really large queries)
         private const int CacheSize = 250;
 
-        // this caches integer->string so that happens less fequently
+        // this caches integer->string so that happens less frequently
         private static readonly string[] _counterNames = new string[CacheSize];
 
         // We are using a copy-on-write instead of lock-on-read because dictionary is not multi-reader/single-writer safe.
