@@ -399,7 +399,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
             // Pauses the operation of the eviction timer.
             // </summary>
             // <returns>
-            // If this eviction timer has already been stopped (using the <see cref="Stop" /> method), returns <c>false</c> ; otherwise, returns <c>true</c> to indicate that the call successfully suspended the inderlying
+            // If this eviction timer has already been stopped (using the <see cref="Stop" /> method), returns <c>false</c> ; otherwise, returns <c>true</c> to indicate that the call successfully suspended the underlying
             // <see
             //     cref="Timer" />
             // and no further periodic callbacks will be generated until the <see cref="Resume" /> method is called.
