@@ -298,7 +298,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             by the L_PAREN, which makes them look like method expression. The reason for this stronger restriction is to
             disallow the following kind of ambiguos queries:
             Function Key(c Customer) AS (Key(c))
-            select Key(cust) from Customsers as cust
+            select Key(cust) from Customers as cust
             */
 
             Token token;
