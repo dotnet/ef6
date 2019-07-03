@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         // Initializes a query expression ast node.
         // </summary>
         // <param name="selectClause"> select clause </param>
-        // <param name="fromClause"> from clasuse </param>
+        // <param name="fromClause"> from clause </param>
         // <param name="whereClause"> optional where clause </param>
         // <param name="groupByClause"> optional group by clause </param>
         // <param name="havingClause"> optional having clause </param>
