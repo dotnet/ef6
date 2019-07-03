@@ -165,7 +165,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         // <summary>
-        // Constructs a new EntityCommand given a EntityConnection and an EntityCommandDefition. This
+        // Constructs a new EntityCommand given a EntityConnection and an EntityCommandDefinition. This
         // constructor is used by ObjectQueryExecution plan to execute an ObjectQuery.
         // </summary>
         // <param name="connection"> The connection against which this EntityCommand should execute </param>
