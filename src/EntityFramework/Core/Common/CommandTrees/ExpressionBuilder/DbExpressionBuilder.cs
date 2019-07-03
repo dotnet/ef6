@@ -1778,7 +1778,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <param name="type">Metadata for the relation type that represents the relationship.</param>
         /// <param name="fromEndName">The name of the property of the relation type that represents the end of the relationship from which navigation should occur.</param>
         /// <param name="toEndName">The name of the property of the relation type that represents the end of the relationship to which navigation should occur.</param>
-        /// <param name="navigateFrom">An expression the specifies the instance from which naviagtion should occur.</param>
+        /// <param name="navigateFrom">An expression the specifies the instance from which navigation should occur.</param>
         /// <exception cref="T:System.ArgumentNullException">type, fromEndName, toEndName or navigateFrom is null.</exception>
         /// <exception cref="T:System.ArgumentException">type is not associated with this command tree's metadata workspace or navigateFrom is associated with a different command tree, or type does not declare a relation end property with name toEndName or fromEndName, or navigateFrom has a result type that is not compatible with the property type of the relation end property with name fromEndName.</exception>
         public static DbRelationshipNavigationExpression Navigate(
