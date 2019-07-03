@@ -3113,7 +3113,7 @@ namespace System.Data.Entity.Core.Objects
         // the only O-layer interaction we have is through delegates from entity.
         internal void SetCurrentEntityValue(StateManagerTypeMetadata metadata, int ordinal, object userObject, object newValue)
         {
-            // required to validate state because entity could be detatched from this context and added to another context
+            // required to validate state because entity could be detached from this context and added to another context
             // and we want this to fail instead of setting the value which would redirect to the other context
             ValidateState();
 

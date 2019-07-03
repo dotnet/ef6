@@ -4436,7 +4436,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Name_can_be_obtained_for_exposed_reference_nav_property_on_detatched_entity()
+        public void Name_can_be_obtained_for_exposed_reference_nav_property_on_detached_entity()
         {
             Name_can_be_obtained_for_exposed_reference_nav_property_implementation(detached: true);
         }
