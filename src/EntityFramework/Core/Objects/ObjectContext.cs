@@ -1152,7 +1152,7 @@ namespace System.Data.Entity.Core.Objects
             entityEntry.CompareKeyProperties(originalEntity);
 
             // The ObjectStateEntry.UpdateModifiedFields uses a variation of Shaper.UpdateRecord method 
-            // which additionaly marks properties as modified as necessary.
+            // which additionally marks properties as modified as necessary.
             entityEntry.UpdateOriginalValues(wrappedOriginalEntity.Entity);
 
             // return the current entity
