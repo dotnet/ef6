@@ -5,11 +5,11 @@
       <Uri>https://github.com/dotnet/corefx</Uri>
       <Sha>b132f92c28e4c4f696610f48cd9b3afb78b5eff3</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="3.0.0-preview8-27902-17">
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="3.0.0-preview8-27902-18">
       <Uri>https://github.com/dotnet/core-setup</Uri>
       <Sha>12e23a26553790a3e4bf3565cf00a6d3e7e4146e</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Runtime.win-x64" Version="3.0.0-preview8-27902-17">
+    <Dependency Name="Microsoft.NETCore.App.Runtime.win-x64" Version="3.0.0-preview8-27902-18">
       <Uri>https://github.com/dotnet/core-setup</Uri>
       <Sha>12e23a26553790a3e4bf3565cf00a6d3e7e4146e</Sha>
     </Dependency>
