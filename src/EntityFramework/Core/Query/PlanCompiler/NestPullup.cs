@@ -1728,7 +1728,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // Copies the given defining node for a collection var, but also makes sure to 'register' all newly
         // created collection vars (i.e. copied).
         // SQLBUDT #557427: The defining node that is being copied may itself contain definitions to other
-        // collection vars. These defintions would be present in m_definingNodeMap. However, after we make a copy
+        // collection vars. These definitions would be present in m_definingNodeMap. However, after we make a copy
         // of the defining node, we need to make sure to also put 'matching' definitions of these other collection
         // vars into m_definingNodeMap.
         // The dictionary collectionVarDefinitions (below) contains the copied definitions of such collection vars.

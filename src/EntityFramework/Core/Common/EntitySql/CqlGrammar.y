@@ -167,7 +167,7 @@ queryStatement      : optQueryDefList generalExpr optSemiColon
                     ;
 
 //~~~~~~~~~~~~~~~~~~~~~~~~
-// Query inline defintions
+// Query inline definitions
 //~~~~~~~~~~~~~~~~~~~~~~~~
 
 optQueryDefList:    /* e */
@@ -1342,7 +1342,7 @@ literalExpr         : LITERAL
                     ;
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// Type defintions
+// Type definitions
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 typeDef             : typeName

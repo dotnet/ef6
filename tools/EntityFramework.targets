@@ -62,7 +62,7 @@ Project global post-settings and targets.
   <Import Project="EFTools.common.tasks" Condition="'$(BuildingToolingProject)' == 'true'" />
   <Import Project="$(CustomAfterEntityFrameworkTargets)" Condition="Exists('$(CustomAfterEntityFrameworkTargets)')" Label="Post-targets Build Extensibility Point." />
 
-  <!-- Post-imports defintions: Set (overwrite) computed properties after all dependent properties have been resolved -->
+  <!-- Post-imports definitions: Set (overwrite) computed properties after all dependent properties have been resolved -->
 
   <PropertyGroup>
     <AssemblyVersion>$(VersionMajor).$(VersionMinor).0.$(VersionRevision)</AssemblyVersion>
