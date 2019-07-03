@@ -3823,7 +3823,7 @@ namespace System.Data.Entity.Core.Objects
 
         // <summary>
         // Fixup the FKs by the current reference values
-        // Do this in the order of fixing up values from the principal ends first, and then propogate those values to the dependents
+        // Do this in the order of fixing up values from the principal ends first, and then propagate those values to the dependents
         // </summary>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private void FixupForeignKeysByReference(List<EntityEntry> visited)

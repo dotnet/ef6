@@ -23,7 +23,7 @@ namespace System.Data.Entity.Core.Objects
         // Specifies whether events handled from an underlying collection or individual bound item
         // should result in list change events being fired from this IBindingList.
         // <b>True</b> to prevent events from being fired from this IBindingList;
-        // otherwise <b>false</b> to allow events to propogate.
+        // otherwise <b>false</b> to allow events to propagate.
         // </summary>
         private bool _suspendEvent;
 
