@@ -33,7 +33,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         // <summary>
-        // Oeturns order expression.
+        // Returns order expression.
         // </summary>
         internal Node OrderExpr
         {
