@@ -593,7 +593,7 @@ namespace System.Data.Entity.Core.Common
         }
 
         // <summary>
-        // If the type refered to by the TypeUsage is a RefType, extracts the EntityType and returns true,
+        // If the type referred to by the TypeUsage is a RefType, extracts the EntityType and returns true,
         // otherwise returns false.
         // </summary>
         // <param name="type"> TypeUsage that may or may not refer to a RefType </param>
