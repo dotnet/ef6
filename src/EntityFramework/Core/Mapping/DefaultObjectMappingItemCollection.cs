@@ -547,7 +547,7 @@ namespace System.Data.Entity.Core.Mapping
             {
                 var memberType = Helper.GetSpatialNormalizedPrimitiveType(edmMember.TypeUsage.EdmType);
 
-                // We expect the CLR prmitive type and their corresponding EDM primitive types to have the same primitive type kind (at least for now)
+                // We expect the CLR primitive type and their corresponding EDM primitive types to have the same primitive type kind (at least for now)
                 if (memberType.PrimitiveTypeKind
                     != ((PrimitiveType)objectMember.TypeUsage.EdmType).PrimitiveTypeKind)
                 {
