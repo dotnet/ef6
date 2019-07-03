@@ -3894,7 +3894,7 @@ namespace System.Data.Entity.Core.Objects
             foreach (var principal in ForeignKeyPrincipals)
             {
                 // Added principal end.  Fixup FKs on all dependents.
-                // This is necessary because of the case where a PK in an added entity is changed after it and its dependnents
+                // This is necessary because of the case where a PK in an added entity is changed after it and its dependents
                 // are added to the context--see bug 628752.
                 var fkOverlapsPk = false; // Set to true if we find out that the FK overlaps the dependent PK
                 var dependentPropsChecked = false; // Set to true once we have checked whether or not the FK overlaps the PK
