@@ -230,7 +230,7 @@ namespace System.Data.Entity.Core.Common.Internal
                                 }
                                 else
                                 {
-                                    // Othewise not a separator
+                                    // Otherwise not a separator
                                     throw new ArgumentException(Strings.ADP_InvalidMultipartNameDelimiterUsage, "path");
                                 }
                             }
