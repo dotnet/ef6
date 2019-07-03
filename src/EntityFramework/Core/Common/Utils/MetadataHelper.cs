@@ -738,7 +738,7 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         // <summary>
-        // Check if all the SchemaErrors have the serverity of SchemaErrorSeverity.Warning
+        // Check if all the SchemaErrors have the severity of SchemaErrorSeverity.Warning
         // </summary>
         internal static bool CheckIfAllErrorsAreWarnings(IList<EdmSchemaError> schemaErrors)
         {
