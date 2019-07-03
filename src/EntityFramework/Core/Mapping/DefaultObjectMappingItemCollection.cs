@@ -373,8 +373,8 @@ namespace System.Data.Entity.Core.Mapping
                 foreach (var column in rowType.Properties)
                 {
                     var cdmPropertyType = ConvertOSpaceToCSpaceType(column.TypeUsage.EdmType);
-                    var cdmPorperty = new EdmProperty(column.Name, TypeUsage.Create(cdmPropertyType));
-                    cdmProperties.Add(cdmPorperty);
+                    var cdmProperty = new EdmProperty(column.Name, TypeUsage.Create(cdmPropertyType));
+                    cdmProperties.Add(cdmProperty);
                 }
                 cdmType = new RowType(cdmProperties, rowType.InitializerMetadata);
             }
