@@ -180,7 +180,7 @@ namespace System.Data.Entity.Core.Common.Utils
                    member.TypeUsage.EdmType.BuiltInTypeKind == BuiltInTypeKind.EnumType;
         }
 
-        // effects: Returns true if member's type has a discrete domain (i.e. is bolean type)
+        // effects: Returns true if member's type has a discrete domain (i.e. is boolean type)
         // Note: enums don't have discrete domains as we allow domain of the underlying type.
         internal static bool HasDiscreteDomain(EdmType edmType)
         {
