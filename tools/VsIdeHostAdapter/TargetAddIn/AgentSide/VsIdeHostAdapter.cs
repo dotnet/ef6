@@ -280,7 +280,7 @@ namespace Microsoft.VisualStudio.TestTools.HostAdapters.VsIde
             }
             catch (RemotingException remotingException)
             {
-                SendResult("Remoting Exception in IBaseAdapter.RecieveMessage(): " + remotingException.Message, TestOutcome.Warning);
+                SendResult("Remoting Exception in IBaseAdapter.ReceiveMessage(): " + remotingException.Message, TestOutcome.Warning);
             }
         }
 

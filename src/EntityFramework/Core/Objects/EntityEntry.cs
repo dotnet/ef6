@@ -3108,7 +3108,7 @@ namespace System.Data.Entity.Core.Objects
 
         // This API are mainly for DbDataRecord implementations to get and set the values
         // also for loadoptions, setoldvalue will be used.
-        // we should handle just for C-space, we will not recieve a call from O-space for set
+        // we should handle just for C-space, we will not receive a call from O-space for set
         // We will not also return any value in term of O-Layer. all set and gets for us is in terms of C-layer.
         // the only O-layer interaction we have is through delegates from entity.
         internal void SetCurrentEntityValue(StateManagerTypeMetadata metadata, int ordinal, object userObject, object newValue)
