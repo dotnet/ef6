@@ -105,7 +105,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
         // value; returns an existing entry if the key is already in the
         // dictionary.
         // </summary>
-        // <param name="outQueryCacheEntry"> The existing entry in the dicitionary if already there; inQueryCacheEntry if none was found and inQueryCacheEntry was added instead. </param>
+        // <param name="outQueryCacheEntry"> The existing entry in the dictionary if already there; inQueryCacheEntry if none was found and inQueryCacheEntry was added instead. </param>
         // <returns> true if the output entry was already found; false if it had to be added. </returns>
         internal bool TryLookupAndAdd(QueryCacheEntry inQueryCacheEntry, out QueryCacheEntry outQueryCacheEntry)
         {
