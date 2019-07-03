@@ -305,7 +305,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             //
             // In the case of eSQL untyped null will float up to the point of isStructurallyEqual(...) above.
-            // Below it eveything should be normal.
+            // Below it everything should be normal.
             //
             Debug.Assert(fromType != null, "fromType != null");
             Debug.Assert(toType != null, "toType != null");
