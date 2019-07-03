@@ -49,7 +49,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         // <summary>
-        // Returns collattion identifier if one exists.
+        // Returns collation identifier if one exists.
         // </summary>
         internal Identifier Collation
         {
