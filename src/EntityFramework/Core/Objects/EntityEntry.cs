@@ -699,14 +699,14 @@ namespace System.Data.Entity.Core.Objects
                     RelationshipEntry next;
                     if (currentIsKey0)
                     {
-                        // if this.EntityKey matches Key0, NextKey0 is the next element in the lsit
+                        // if this.EntityKey matches Key0, NextKey0 is the next element in the list
                         Debug.Assert(EntityKey.Equals(current.RelationshipWrapper.Key0), "entity key didn't match");
                         next = current.NextKey0;
                         current.NextKey0 = null;
                     }
                     else
                     {
-                        // if this.EntityKey matches Key1, NextKey1 is the next element in the lsit
+                        // if this.EntityKey matches Key1, NextKey1 is the next element in the list
                         Debug.Assert(EntityKey.Equals(current.RelationshipWrapper.Key1), "entity key didn't match");
                         next = current.NextKey1;
                         current.NextKey1 = null;
