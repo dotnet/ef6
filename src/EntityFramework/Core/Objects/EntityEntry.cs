@@ -3914,7 +3914,7 @@ namespace System.Data.Entity.Core.Objects
                             var member = dependentEntry._cacheTypeMetadata.Member(dependentOrdinal);
                             if (member.IsPartOfKey)
                             {
-                                // If the FK overlpas the PK then we can't set it for non-Added entities.
+                                // If the FK overlaps the PK then we can't set it for non-Added entities.
                                 // In this situation we just continue with the next one and if the conflict
                                 // may then be flagged later as a RIC check.
                                 fkOverlapsPk = true;
