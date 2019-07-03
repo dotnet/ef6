@@ -1393,7 +1393,7 @@ namespace System.Data.Entity.Core.Objects
             if (member.IsComplex
                 && retValue != null)
             {
-                // need to get the new StateManagerTypeMetadata for nested /complext member
+                // need to get the new StateManagerTypeMetadata for nested /complex member
                 switch (updatableRecord)
                 {
                     case ObjectStateValueRecord.OriginalReadonly:
