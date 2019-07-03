@@ -73,7 +73,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         internal static void ReportIncompatibleCommonType(ErrorContext errCtx, TypeUsage leftType, TypeUsage rightType)
         {
             //
-            // 'navigate' through the type structure in order to find where the incompability is
+            // 'navigate' through the type structure in order to find where the incompatibility is
             //
             ReportIncompatibleCommonType(errCtx, leftType, rightType, leftType, rightType);
 
