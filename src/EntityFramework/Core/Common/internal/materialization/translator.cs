@@ -68,7 +68,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 "translating the root of the query must populate RootCoordinatorScratchpad");
 
             // We're good. Go ahead and recursively compile the CoordinatorScratchpads we
-            // created in the vistor into CoordinatorFactories which contain compiled
+            // created in the visitor into CoordinatorFactories which contain compiled
             // delegates for the expressions we generated.
             var coordinatorFactory = (CoordinatorFactory<T>)translatorVisitor.RootCoordinatorScratchpad.Compile();
 

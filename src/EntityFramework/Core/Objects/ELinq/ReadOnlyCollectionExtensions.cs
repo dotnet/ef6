@@ -5,7 +5,7 @@ namespace System.Linq.Expressions.Internal
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
 
-    // Because we are using the source file for ExpressionVistor from System.Core
+    // Because we are using the source file for ExpressionVisitor from System.Core
     // we need to add code to facilitate some external calls that ExpressionVisitor makes.
     // The classes in this file do that.
 
