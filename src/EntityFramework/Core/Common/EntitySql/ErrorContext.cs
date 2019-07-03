@@ -23,7 +23,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         internal bool UseContextInfoAsResourceIdentifier = true;
 
         // <summary>
-        // Represents a referece to the original command text.
+        // Represents a reference to the original command text.
         // </summary>
         internal string CommandText;
     }

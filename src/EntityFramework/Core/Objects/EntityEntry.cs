@@ -567,7 +567,7 @@ namespace System.Data.Entity.Core.Objects
 
             ValidateState();
 
-            // store a referece to the cache because this.ObjectStatemanager will be null if the requested state is Detached
+            // store a reference to the cache because this.ObjectStatemanager will be null if the requested state is Detached
             var osm = ObjectStateManager;
             osm.TransactionManager.BeginLocalPublicAPI();
             try
