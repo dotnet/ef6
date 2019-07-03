@@ -100,7 +100,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             if ((null == _cache)
                 || unchecked((uint)_cache.Length <= (uint)index))
             {
-                // names are not cached beyond a particlar size
+                // names are not cached beyond a particular size
                 name = String.Concat(_prefix, index.ToString(CultureInfo.InvariantCulture));
             }
             else if (null == (name = _cache[index]))
