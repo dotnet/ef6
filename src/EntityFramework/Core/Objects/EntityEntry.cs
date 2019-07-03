@@ -3923,7 +3923,7 @@ namespace System.Data.Entity.Core.Objects
                         }
                     }
                     // This code relies on the fact that a dependent referenced to an Added principal must be either Added or
-                    // Modified since we cannpt trust thestate of the principal PK and therefore the dependent FK must also
+                    // Modified since we cannot trust thestate of the principal PK and therefore the dependent FK must also
                     // be considered not completely trusted--it may need to be updated.
                     if (dependentEntry.State == EntityState.Added
                         || (dependentEntry.State == EntityState.Modified && !fkOverlapsPk))
