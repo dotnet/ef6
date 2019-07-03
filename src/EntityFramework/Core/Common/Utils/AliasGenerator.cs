@@ -47,7 +47,7 @@ namespace System.Data.Entity.Core.Common.Utils
         {
             _prefix = prefix ?? String.Empty;
 
-            // don't cache all alias, some are truely unique like CommandTree.BindingAliases
+            // don't cache all alias, some are truly unique like CommandTree.BindingAliases
             if (0 < cacheSize)
             {
                 string[] cache = null;
