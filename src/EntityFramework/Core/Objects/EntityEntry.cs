@@ -2832,7 +2832,7 @@ namespace System.Data.Entity.Core.Objects
                     {
                         thisRole = GetAssociationEndMember(relationshipEntry).Name;
 
-                        // Check if curent entry is a dependent end of the referential constraint
+                        // Check if current entry is a dependent end of the referential constraint
                         if (constraint.ToRole.Name == thisRole)
                         {
                             Debug.Assert(!otherEnd.EntityKey.IsTemporary, "key of key entry can't be temporary");
@@ -2912,7 +2912,7 @@ namespace System.Data.Entity.Core.Objects
                     {
                         thisRole = GetAssociationEndMember(relationshipEntry).Name;
 
-                        // Check if curent entry is a principal end of the referential constraint
+                        // Check if current entry is a principal end of the referential constraint
                         if (constraint.FromRole.Name == thisRole)
                         {
                             Debug.Assert(!otherEnd.EntityKey.IsTemporary, "key of Unchanged or Modified entry can't be temporary");
