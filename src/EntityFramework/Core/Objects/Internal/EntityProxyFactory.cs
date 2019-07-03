@@ -406,7 +406,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 proxyTypeInfo = new EntityProxyTypeInfo(
                     proxyType,
                     ospaceEntityType,
-                    proxyTypeBuilder.CreateInitalizeCollectionMethod(proxyType),
+                    proxyTypeBuilder.CreateInitializeCollectionMethod(proxyType),
                     proxyTypeBuilder.BaseGetters,
                     proxyTypeBuilder.BaseSetters,
                     workspace);
@@ -627,9 +627,9 @@ namespace System.Data.Entity.Core.Objects.Internal
                 get { return _ospaceEntityType.ClrType; }
             }
 
-            public DynamicMethod CreateInitalizeCollectionMethod(Type proxyType)
+            public DynamicMethod CreateInitializeCollectionMethod(Type proxyType)
             {
-                return _ipocoImplementor.CreateInitalizeCollectionMethod(proxyType);
+                return _ipocoImplementor.CreateInitializeCollectionMethod(proxyType);
             }
 
             public List<PropertyInfo> BaseGetters

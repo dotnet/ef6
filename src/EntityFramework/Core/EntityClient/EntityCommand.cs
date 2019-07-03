@@ -63,7 +63,7 @@ namespace System.Data.Entity.Core.EntityClient
         {
             DebugCheck.NotNull(interceptionContext);
 
-            // Initalize the member field with proper default values
+            // Initialize the member field with proper default values
             _designTimeVisible = true;
             _commandType = CommandType.Text;
             _updatedRowSource = UpdateRowSource.Both;
