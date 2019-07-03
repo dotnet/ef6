@@ -16,7 +16,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
     // Utility class that walks a mapping view and returns a simplified expression with projection
     // nodes collapsed. Specifically recognizes the following common pattern in mapping views:
     // outerProject(outerBinding(innerProject(innerBinding, innerNew)), outerProjection)
-    // Recognizes simple disciminator patterns of the form:
+    // Recognizes simple discriminator patterns of the form:
     // select
     // case when Disc = value1 then value Type1(...)
     // case when Disc = value2 then value Type2(...)
