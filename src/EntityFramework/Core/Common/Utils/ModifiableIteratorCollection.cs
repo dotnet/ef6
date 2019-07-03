@@ -86,7 +86,7 @@ namespace System.Data.Entity.Core.Common.Utils
         // effects: Yields the elements in this
         internal IEnumerable<TElement> Elements()
         {
-            // We cannnot check that an iterator is under progress because
+            // We cannot check that an iterator is under progress because
             // the last time around, the caller may have called a "break" in
             // their foreach
 
