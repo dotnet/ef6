@@ -376,13 +376,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             {
                 var scalarPropMap = propMap as ScalarPropertyMapping;
                 var complexPropMap = propMap as ComplexPropertyMapping;
-                var associationEndPropertypMap = propMap as EndPropertyMapping;
+                var associationEndPropertyMap = propMap as EndPropertyMapping;
                 var conditionMap = propMap as ConditionPropertyMapping;
 
                 Debug.Assert(
                     scalarPropMap != null ||
                     complexPropMap != null ||
-                    associationEndPropertypMap != null ||
+                    associationEndPropertyMap != null ||
                     conditionMap != null, "Unimplemented property mapping");
 
                 if (scalarPropMap != null)
@@ -434,13 +434,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                 }
 
                 // Check if the property mapping is for an association
-                if (associationEndPropertypMap != null)
+                if (associationEndPropertyMap != null)
                 {
                     // create join tree node representing this relation end
-                    var associationEndNode = new MemberPath(cNode, associationEndPropertypMap.AssociationEnd);
+                    var associationEndNode = new MemberPath(cNode, associationEndPropertyMap.AssociationEnd);
                     // call recursively
                     ExtractProperties(
-                        associationEndPropertypMap.PropertyMappings, associationEndNode, cSlots,
+                        associationEndPropertyMap.PropertyMappings, associationEndNode, cSlots,
                         ref cQueryWhereClause, sRootExtent, sSlots, ref sQueryWhereClause);
                 }
 
