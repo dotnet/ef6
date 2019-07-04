@@ -1548,7 +1548,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                         {
                             var argAlias = QuoteIdentifier(member.Name + "_" + childIndex);
 
-                            //In this case the argument to the aggratete is reference to the one projected out by the
+                            //In this case the argument to the aggregate is reference to the one projected out by the
                             // inner query
                             var wrappingAggregateArgument = new SqlBuilder();
                             wrappingAggregateArgument.Append(fromSymbol);
