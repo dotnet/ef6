@@ -78,7 +78,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             rootNode = IsolateUnions(rootNode);
 
             // The isolation with Union is different from IsolateUnions --
-            // the above isolation finds collections of chidren in a
+            // the above isolation finds collections of children in a
             // node and connects them by union. The below one only considers
             // two children at a time
             rootNode = IsolateByOperator(rootNode, CellTreeOpType.Union);
