@@ -47,7 +47,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         // <summary>
-        // Determine a CLR Type to use a property descriptro form an EDM TypeUsage
+        // Determine a CLR Type to use a property descriptor form an EDM TypeUsage
         // </summary>
         // <param name="typeUsage"> The EDM TypeUsage containing metadata about the type </param>
         // <returns> A CLR type that represents that EDM type </returns>
