@@ -646,9 +646,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
                 // <summary>
                 // Recursively rewrite the argument expression to unwrap any "structured" set sources
-                // using ExpressionCoverter.NormalizeSetSource(). This is currently required for IGrouping
+                // using ExpressionConverter.NormalizeSetSource(). This is currently required for IGrouping
                 // and EntityCollection as argument types to functions.
-                // NOTE: Changes made to this function might have to be applied to ExpressionCoverter.NormalizeSetSource() too.
+                // NOTE: Changes made to this function might have to be applied to ExpressionConverter.NormalizeSetSource() too.
                 // </summary>
                 private CqtExpression NormalizeAllSetSources(ExpressionConverter parent, CqtExpression argumentExpr)
                 {
