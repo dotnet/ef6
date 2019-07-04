@@ -199,7 +199,7 @@ namespace System.Data.Entity.Core.Objects
         {
             ListChangedEventArgs changeArgs = null;
 
-            // Since event is coming from cache and it might be shared amoung different queries
+            // Since event is coming from cache and it might be shared among different queries
             // we have to check to see if correct event is being handled.
             if (e.Element.GetType().IsAssignableFrom(typeof(TElement))
                 &&
