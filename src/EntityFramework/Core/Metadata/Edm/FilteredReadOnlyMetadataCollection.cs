@@ -158,7 +158,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 if (_predicate(item))
                 {
-                    // Since we are gauranteed to have a unique identity per collection, this item must of T Type
+                    // Since we are guaranteed to have a unique identity per collection, this item must of T Type
                     return base.IndexOf((TDerived)item);
                 }
             }
