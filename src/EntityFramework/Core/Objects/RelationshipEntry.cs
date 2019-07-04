@@ -611,8 +611,8 @@ namespace System.Data.Entity.Core.Objects
 
         internal void ChangeRelationshipState(EntityEntry targetEntry, RelatedEnd relatedEnd, EntityState requestedState)
         {
-            Debug.Assert(requestedState != EntityState.Modified, "Invalid requested state for relationsihp");
-            Debug.Assert(State != EntityState.Modified, "Invalid initial state for relationsihp");
+            Debug.Assert(requestedState != EntityState.Modified, "Invalid requested state for relationship");
+            Debug.Assert(State != EntityState.Modified, "Invalid initial state for relationship");
 
             var initialState = State;
 
