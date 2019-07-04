@@ -108,7 +108,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
         }
 
         // <summary>
-        // Returns the slot value corresponfing to this object.
+        // Returns the slot value corresponding to this object.
         // </summary>
         internal ProjectedSlot SlotValue
         {
