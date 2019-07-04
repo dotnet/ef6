@@ -69,7 +69,7 @@ namespace System.Data.Entity.Core.Objects
             get { return _isPartOfKey; }
         }
 
-        public virtual object GetValue(object userObject) // wrapp it in cacheentry
+        public virtual object GetValue(object userObject) // wrap it in cacheentry
         {
             Debug.Assert(null != _clrProperty);
             var dataObject = DelegateFactory.GetValue(_clrProperty, userObject);
