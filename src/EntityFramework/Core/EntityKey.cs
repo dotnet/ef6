@@ -994,7 +994,7 @@ namespace System.Data.Entity.Core
                 // Optimize for key with just one property.
                 _singletonKeyValue = record[entityType.KeyMembers[0].Name];
 
-                // We have to throw here rather than asserting because elsewhere in the stack we depend on catching this exceptiopn.
+                // We have to throw here rather than asserting because elsewhere in the stack we depend on catching this exception.
                 if (EntityUtil.IsNull(_singletonKeyValue))
                 {
                     throw new ArgumentException(Strings.EntityKey_NoNullsAllowedInKeyValuePairs, "record");
@@ -1008,7 +1008,7 @@ namespace System.Data.Entity.Core
                 {
                     _compositeKeyValues[i] = record[entityType.KeyMembers[i].Name];
 
-                    // We have to throw here rather than asserting because elsewhere in the stack we depend on catching this exceptiopn.
+                    // We have to throw here rather than asserting because elsewhere in the stack we depend on catching this exception.
                     if (EntityUtil.IsNull(_compositeKeyValues[i]))
                     {
                         throw new ArgumentException(Strings.EntityKey_NoNullsAllowedInKeyValuePairs, "record");
