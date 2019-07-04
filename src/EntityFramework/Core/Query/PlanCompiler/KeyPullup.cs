@@ -264,7 +264,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     {
                         op.VarMap[i].Add(outputBranchDiscriminatorVar, branchDiscriminatorVar);
                         // We don't need to add this to the branch outputs, because it's already there,
-                        // otherwise we wouln't have gotten here, yes?
+                        // otherwise we wouldn't have gotten here, yes?
                     }
                     else
                     {
