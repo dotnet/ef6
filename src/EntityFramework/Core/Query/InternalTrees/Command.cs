@@ -849,7 +849,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         // <summary>
-        // Build out a new NewEntityOp constructing the uscoped entity <paramref name="type" />.
+        // Build out a new NewEntityOp constructing the unscoped entity <paramref name="type" />.
         // </summary>
         internal virtual NewEntityOp CreateNewEntityOp(TypeUsage type, List<RelProperty> relProperties)
         {
