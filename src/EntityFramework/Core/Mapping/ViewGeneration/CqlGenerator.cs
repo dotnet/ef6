@@ -119,7 +119,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             // tree and then we layer case statements on top of that view --
             // one case statement for each multiconstant entry
 
-            // Dertmine the slots that are projected by the whole tree. Tell
+            // Determine the slots that are projected by the whole tree. Tell
             // the children that they need to produce those slots somehow --
             // if they don't have it, they can produce null
             var requiredSlots = GetRequiredSlots();
