@@ -177,7 +177,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             // group using FOJ
             var unionNode = new OpCellTreeNode(m_viewgenContext, CellTreeOpType.Union);
 
-            // childrenSet keeps track of the children that need to be procesed/partitioned
+            // childrenSet keeps track of the children that need to be processed/partitioned
             var childrenSet = new ModifiableIteratorCollection<CellTreeNode>(rootNode.Children);
 
             while (false == childrenSet.IsEmpty)
@@ -520,7 +520,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             // determine if any of the remaining children should be in the
             // same group as X.
 
-            // childrenSet keeps track of the children that need to be procesed/partitioned
+            // childrenSet keeps track of the children that need to be processed/partitioned
             var childrenSet = new ModifiableIteratorCollection<CellTreeNode>(children);
 
             // Find groups with same or subsumed constants and create a join

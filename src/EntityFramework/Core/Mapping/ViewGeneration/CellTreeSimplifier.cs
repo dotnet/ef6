@@ -84,7 +84,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                 children = GroupNonAssociativeLeafChildren(children);
             }
 
-            // childrenSet keeps track of the children that need to be procesed/partitioned
+            // childrenSet keeps track of the children that need to be processed/partitioned
             var newNode = new OpCellTreeNode(m_viewgenContext, rootNode.OpType);
             CellTreeNode lastChild = null;
             var skipRest = false;
