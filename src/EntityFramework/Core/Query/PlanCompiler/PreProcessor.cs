@@ -1932,7 +1932,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
                 //
-            // Multiset constructors with only one elment or with multiple elments all of 
+            // Multiset constructors with only one element or with multiple elements all of 
             //   which are constants or nulls are converted into: 
             //    
             // UnionAll(Project(SingleRowTable, e1), Project(SingleRowTable, e2), ...)

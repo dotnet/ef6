@@ -258,7 +258,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
             else if (CanHandleElement(reader, XmlConstants.CommandText))
             {
-                HandleCommandTextFunctionElment(reader);
+                HandleCommandTextFunctionElement(reader);
                 return true;
             }
             else if (CanHandleElement(reader, XmlConstants.Parameter))
@@ -638,7 +638,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             IsComposable = isComposable;
         }
 
-        private void HandleCommandTextFunctionElment(XmlReader reader)
+        private void HandleCommandTextFunctionElement(XmlReader reader)
         {
             DebugCheck.NotNull(reader);
 
