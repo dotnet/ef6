@@ -33,7 +33,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         // any particular extent unless the tree has nodes of the same extent
         // embedded two leaves below LASJ or LOJ, e.g., if we have a tree
         // (where Ni indicates a node for extent i - one Ni can be different
-        // from anohter Ni: 
+        // from another Ni: 
         // [N0 IJ N1] LASJ N0 --> This will not be simplified
         // canBooleansOverlap indicates whether an original input cell
         // contributes to multiple nodes in this tree, e.g., V1 IJ V2 UNION V2 IJ V3
