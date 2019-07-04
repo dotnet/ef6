@@ -119,7 +119,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         #endregion
 
-        #region AncillarOps
+        #region AncillaryOps
 
         #endregion
 
