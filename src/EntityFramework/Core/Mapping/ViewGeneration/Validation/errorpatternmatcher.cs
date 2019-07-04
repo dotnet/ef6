@@ -553,7 +553,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                                 else
                                 {
                                     //MSG:  These two fragments are equal on the S-side but not so on the C-side. 
-                                    //      Try adding an Association with Referntial Integrity constraint if they are
+                                    //      Try adding an Association with Referential Integrity constraint if they are
                                     //      mapped to different EntitySets in order to make theme equal on the C-side.
                                     //TestCase (no need, Table mapped to multiple ES tests cover this scenario)
                                     errorString.Append(Strings.Viewgen_ErrorPattern_Partition_Eq_Unk);
