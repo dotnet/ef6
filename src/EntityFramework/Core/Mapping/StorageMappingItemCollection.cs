@@ -872,7 +872,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         // <summary>
-        // Finds members participating in the assocciation and adds them to the <paramref name="interestingMembers" />.
+        // Finds members participating in the association and adds them to the <paramref name="interestingMembers" />.
         // </summary>
         // <param name="associationTypeMapping"> Association type mapping. Must not be null. </param>
         // <param name="interestingMembers"> The list the interesting members (if any) will be added to. Must not be null. </param>
