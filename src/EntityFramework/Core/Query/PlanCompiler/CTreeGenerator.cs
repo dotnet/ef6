@@ -2185,7 +2185,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             ExitExpressionBindingScope(inputInfo);
 
             //
-            // Update the property path to the Input and Apply vars appropriately based on the names used in their ExpressionBindings, which will then form the column names in the record output type of the AppyExpression
+            // Update the property path to the Input and Apply vars appropriately based on the names used in their ExpressionBindings, which will then form the column names in the record output type of the ApplyExpression
             //
             inputInfo.PublishedVars.PrependProperty(inputInfo.PublisherName);
             applyInfo.PublishedVars.PrependProperty(applyInfo.PublisherName);
