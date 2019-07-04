@@ -80,7 +80,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Utils
         ImpossibleCondition = Value + 30,
         // NonNullable S-Side member is mapped to nullable C-Side member
         NullableMappingForNonNullableColumn = Value + 31,
-        //Error specifiying Conditions, caught during Error Pattern Matching
+        //Error specifying Conditions, caught during Error Pattern Matching
         ErrorPatternConditionError = Value + 32,
         //Invalid ways of splitting Extents, caught during Error Pattern Matching
         ErrorPatternSplittingError = Value + 33,
