@@ -76,7 +76,7 @@ namespace System.Data.Entity.Core.Objects
             return dataObject;
         }
 
-        public void SetValue(object userObject, object value) // if record , unwrapp to object, use materializer in cacheentry
+        public void SetValue(object userObject, object value) // if record , unwrap to object, use materializer in cacheentry
         {
             Debug.Assert(null != _clrProperty);
             if (DBNull.Value == value)
