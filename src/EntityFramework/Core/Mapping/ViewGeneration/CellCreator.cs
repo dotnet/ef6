@@ -204,7 +204,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             var leftSlots = new List<ProjectedSlot>();
             var rightSlots = new List<ProjectedSlot>();
 
-            //Check for impossible conditions (otehrwise we get inaccurate pre-validation errors)
+            //Check for impossible conditions (otherwise we get inaccurate pre-validation errors)
             var negatedCondition = new ScalarConstant(!conditionValue);
 
             if (originalCell.GetLeftQuery(viewTarget).Conditions
