@@ -212,7 +212,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             withRelationship = null;
 
             //Get the map for foreign key end
-            var foreignKeyEndMap = GetForeignKeyEndMapFromAssocitionMap(collocatedAssociationSetMap);
+            var foreignKeyEndMap = GetForeignKeyEndMapFromAssociationMap(collocatedAssociationSetMap);
             if (foreignKeyEndMap == null
                 || foreignKeyEndMap.AssociationEnd.RelationshipMultiplicity == RelationshipMultiplicity.Many)
             {
@@ -261,7 +261,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         //Gets the end that is not mapped to the primary key of the table
-        private static EndPropertyMapping GetForeignKeyEndMapFromAssocitionMap(
+        private static EndPropertyMapping GetForeignKeyEndMapFromAssociationMap(
             AssociationSetMapping collocatedAssociationSetMap)
         {
             var mapFragment = collocatedAssociationSetMap.TypeMappings.First().MappingFragments.First();
