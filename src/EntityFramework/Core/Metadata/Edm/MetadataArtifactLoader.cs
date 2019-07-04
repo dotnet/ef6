@@ -175,12 +175,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
                         Strings.NotValidInputPath, new ArgumentException(Strings.ADP_CollectionParameterElementIsNullOrEmpty("filePaths")));
                 }
 
-                var trimedPath = path.Trim();
-                if (trimedPath.Length > 0)
+                var trimmedPath = path.Trim();
+                if (trimmedPath.Length > 0)
                 {
                     loaders.Add(
                         Create(
-                            trimedPath,
+                            trimmedPath,
                             extensionCheck,
                             validExtension,
                             uriRegistry,
