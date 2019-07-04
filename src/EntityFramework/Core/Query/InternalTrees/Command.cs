@@ -1494,7 +1494,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         // <param name="columnMap"> column map for the collection element </param>
         // <param name="flattenedElementVars"> elementVars with any nested collections pulled up </param>
         // <param name="keys"> keys specific to this collection </param>
-        // <param name="sortKeys"> sort keys specific to this collecion </param>
+        // <param name="sortKeys"> sort keys specific to this collection </param>
         // <param name="discriminatorValue"> discriminator value for this collection (under the current nestOp) </param>
         // <returns> a new CollectionInfo instance </returns>
         internal static CollectionInfo CreateCollectionInfo(

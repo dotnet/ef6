@@ -30,7 +30,7 @@ LEFT OUTER JOIN [dbo].[ArubaTasks] AS [Extent2] ON [Extent1].[Id] = [Extent2].[A
                 var query = context.Runs.SelectMany(c => c.Tasks.DefaultIfEmpty());
                 QueryTestHelpers.VerifyDbQuery(query, expectedSql);
 
-                // verify that owners that have empty collecion of bugs are projected as nulls
+                // verify that owners that have empty collection of bugs are projected as nulls
                 var results = query.ToList();
                 var ownersWithoutBugsCount = context.Runs.Count(o => !o.Tasks.Any());
                 Assert.Equal(ownersWithoutBugsCount, results.Count(r => r == null));
@@ -202,7 +202,7 @@ LEFT OUTER JOIN  (SELECT [Extent2].[Id] AS [Id1], [Extent2].[Comment] AS [Commen
                 var query = context.Failures.GroupJoin(context.Bugs, f => f.Id, b => b.Failure.Id, (f, b) => new { f, b }).SelectMany(r => r.b.DefaultIfEmpty());
                 QueryTestHelpers.VerifyDbQuery(query, expectedSql);
 
-                // verify that failures that have empty collecion of bugs are projected as nulls
+                // verify that failures that have empty collection of bugs are projected as nulls
                 var results = query.ToList();
                 var failuresWithoutBugsCount = context.Failures.Count(o => !o.Bugs.Any());
                 Assert.Equal(failuresWithoutBugsCount, results.Count(r => r == null));
