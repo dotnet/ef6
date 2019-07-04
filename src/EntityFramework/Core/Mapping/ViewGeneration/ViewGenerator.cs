@@ -108,7 +108,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
 
             m_config.SetTimeForFinishedActivity(PerfType.CellCreation);
             // Check if the cellgroup is consistent and all known S constraints are
-            // satisified by the known C constraints
+            // satisfied by the known C constraints
             var validator = new CellGroupValidator(m_cellGroup, m_config);
             var errorLog = validator.Validate();
 
@@ -168,7 +168,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             }
 
             // Check if the cellgroup is consistent and all known S constraints are
-            // satisified by the known C constraints
+            // satisfied by the known C constraints
             var validator = new CellGroupValidator(m_cellGroup, m_config);
             var errorLog = validator.Validate();
             if (errorLog.Count > 0)
