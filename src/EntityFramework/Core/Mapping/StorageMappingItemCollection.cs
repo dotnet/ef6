@@ -964,7 +964,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         // <summary>
-        // Recurses down the complex property to find whether any of the nseted properties has concurrency mode set to "Fixed"
+        // Recurses down the complex property to find whether any of the nested properties has concurrency mode set to "Fixed"
         // </summary>
         // <param name="complexMapping"> Complex property mapping. Must not be null. </param>
         // <returns>
