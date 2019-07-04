@@ -79,7 +79,7 @@ namespace System.Data.Entity.Core.Mapping
             }
             else
             {
-                // find out all the tyes that is isparent type of this lookup type
+                // find out all the types that is isparent type of this lookup type
                 var nodesInBaseHierarchy =
                     _columnListForIsTypeOfType.Where(t => t.Type.IsAssignableFrom(typeForRename));
 
