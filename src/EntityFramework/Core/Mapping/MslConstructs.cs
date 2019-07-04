@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Diagnostics;
 
     // <summary>
-    // Defines all the string constrcuts defined in CS MSL specification
+    // Defines all the string constructs defined in CS MSL specification
     // </summary>
     internal static class MslConstructs
     {
