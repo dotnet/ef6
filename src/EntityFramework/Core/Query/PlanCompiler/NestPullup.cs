@@ -742,7 +742,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             Node newNode;
 
             // If the ProjectOp's input is a SortOp, swap the ProjectOp and the SortOp, 
-            // to allow the SortOp to buble up and be honored. This may only occur if the original input to the  
+            // to allow the SortOp to bubble up and be honored. This may only occur if the original input to the  
             // ProjectOp was an UnnestOp (or a Project over a Unnest Op). 
             if (n.Child0.Op.OpType
                 == OpType.Sort)
