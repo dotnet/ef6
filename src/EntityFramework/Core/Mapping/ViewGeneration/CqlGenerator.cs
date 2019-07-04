@@ -351,7 +351,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         }
 
         // <summary>
-        // Returns an array of size <see cref="TotalSlots" /> which indicates the slots that are needed to constuct value at
+        // Returns an array of size <see cref="TotalSlots" /> which indicates the slots that are needed to construct value at
         // <paramref
         //     name="caseMemberPath" />
         // ,
