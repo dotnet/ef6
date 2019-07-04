@@ -239,7 +239,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 Debug.Assert(scalarPropertyMaps.Count() == 1, "Can't Map the same column multiple times in the same end");
                 var scalarPropertyMap = scalarPropertyMaps.First();
 
-                // Create SlotInfo for Freign Key member that needs to be projected.
+                // Create SlotInfo for Foreign Key member that needs to be projected.
                 var sSlot = new MemberProjectedSlot(new MemberPath(sRootNode, scalarPropertyMap.Column));
                 var endMemberKeyPath = new MemberPath(prefix, edmProperty);
                 toEndEntityKeyMemberPaths.Add(endMemberKeyPath);
