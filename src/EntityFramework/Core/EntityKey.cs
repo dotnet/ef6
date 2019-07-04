@@ -248,7 +248,7 @@ namespace System.Data.Entity.Core
             _singletonKeyValue = singletonKeyValue;
             _entitySetName = entitySet.Name;
             _entityContainerName = entitySet.EntityContainer.Name;
-            _keyNames = entitySet.ElementType.KeyMemberNames; // using EntitySetBase avoids an (EntityType) cast that EntitySet encoure
+            _keyNames = entitySet.ElementType.KeyMemberNames; // using EntitySetBase avoids an (EntityType) cast that EntitySet incurs
 
             AssertCorrectState(entitySet, false);
             _isLocked = true;
@@ -270,7 +270,7 @@ namespace System.Data.Entity.Core
             _compositeKeyValues = compositeKeyValues;
             _entitySetName = entitySet.Name;
             _entityContainerName = entitySet.EntityContainer.Name;
-            _keyNames = entitySet.ElementType.KeyMemberNames; // using EntitySetBase avoids an (EntityType) cast that EntitySet encoure
+            _keyNames = entitySet.ElementType.KeyMemberNames; // using EntitySetBase avoids an (EntityType) cast that EntitySet incurs
 
             AssertCorrectState(entitySet, false);
             _isLocked = true;
