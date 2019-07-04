@@ -283,7 +283,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         // effects: Check for problems in each cell that are not detected by the
         // "C-constraints-imply-S-constraints" principle. If the check fails,
         // adds relevant error info to m_errorLog and returns false. Else
-        // retrns true
+        // returns true
         private bool PerformSingleCellChecks()
         {
             var errorLogSize = m_errorLog.Count;
