@@ -496,7 +496,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             {
                 foreach (var returnType in _returnTypeList)
                 {
-                    // FunctiomImportElement has additional validation for return types.
+                    // FunctionImportElement has additional validation for return types.
                     returnType.Validate();
                 }
             }
