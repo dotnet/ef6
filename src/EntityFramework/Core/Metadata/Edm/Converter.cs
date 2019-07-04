@@ -248,7 +248,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 Debug.Assert(
                     element is TypeElement &&
                     element.Schema.DataModel == SchemaDataModelOption.ProviderManifestModel,
-                    "Unknown Type in somschema");
+                    "Unknown Type in somSchema");
                 return null;
             }
 
