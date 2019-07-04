@@ -2173,7 +2173,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 m_compilerState.MarkPhaseAsNeeded(PlanCompilerPhase.JoinElimination);
             }
 
-            // If a subquery was added with an exists node, we have to go througth Normalization
+            // If a subquery was added with an exists node, we have to go through Normalization
             if (base.ProcessJoinOp(n))
             {
                 m_compilerState.MarkPhaseAsNeeded(PlanCompilerPhase.Normalization);
