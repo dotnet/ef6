@@ -1513,7 +1513,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         // <summary>
         // Returns the current entity set scope, if any, for an entity type constructor.
-        // The scope defines the result of the construtor as a scoped entity type.
+        // The scope defines the result of the constructor as a scoped entity type.
         // </summary>
         private EntitySet GetCurrentEntityTypeScope()
         {
