@@ -33,7 +33,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Utils
         // The partitions (from multiconstants) cannot be differentiated
         AmbiguousMultiConstants = Value + 5,
         //Unused: 6
-        // Non-key projected multiple times (denormalzed)
+        // Non-key projected multiple times (denormalized)
         NonKeyProjectedWithOverlappingPartitions = Value + 7,
         // New concurrency tokens defined in derived class
         ConcurrencyDerivedClass = Value + 8,
