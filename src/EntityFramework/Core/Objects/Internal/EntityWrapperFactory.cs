@@ -47,7 +47,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 return NullEntityWrapper.NullWrapper;
             }
             // We used a cache of functions based on the actual type of entity that we need to wrap.
-            // Creatung these functions is slow, but once they are created they are relatively fast.
+            // Creating these functions is slow, but once they are created they are relatively fast.
             var wrappedEntity = _delegateCache.Evaluate(entity.GetType())(entity);
             wrappedEntity.RelationshipManager.SetWrappedOwner(wrappedEntity, entity);
             // We cast to object here to avoid calling the overridden != operator on EntityKey.
