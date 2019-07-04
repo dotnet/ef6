@@ -330,7 +330,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
 
         // effects: Generates a view for an extent "extent" that belongs to
         // schema "schema". extentCells are the cells for this extent.
-        // Adds the view corrsponding to the extent to "views"
+        // Adds the view corresponding to the extent to "views"
         private QueryRewriter GenerateDirectionalViewsForExtent(
             ViewTarget viewTarget, EntitySetBase extent, CqlIdentifiers identifiers, ViewSet views)
         {
