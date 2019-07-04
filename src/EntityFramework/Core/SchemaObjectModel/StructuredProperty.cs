@@ -57,7 +57,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         // <summary>
-        // The nullablity of this property.
+        // The nullability of this property.
         // </summary>
         public bool Nullable
         {
