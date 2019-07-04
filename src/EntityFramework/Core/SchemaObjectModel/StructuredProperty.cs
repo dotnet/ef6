@@ -160,7 +160,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             {
                 Debug.Assert(
                     Schema.SchemaVersion != XmlConstants.EdmVersionForV1,
-                    "CollctionKind Attribute is not supported in EDM V1");
+                    "CollectionKind Attribute is not supported in EDM V1");
             }
 
             var schemaEnumType = _type as SchemaEnumType;
