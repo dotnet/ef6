@@ -169,7 +169,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             }
 
             // Different children groups are connected by a Union
-            // node -- the secltion domain of one group is disjoint from
+            // node -- the selection domain of one group is disjoint from
             // another group's selection domain, i.e., group A1 contributes
             // tuples to the extent which are disjoint from the tuples by
             // A2. So we can connect these groups by union alls.
