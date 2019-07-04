@@ -185,7 +185,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             var mappedConditionMembers = new Set<MemberPath>();
 
             //Both of these data-structs help in finding duplicate conditions
-            var setOfconditions = new Set<CompositeCondition>(new ConditionComparer());
+            var setOfConditions = new Set<CompositeCondition>(new ConditionComparer());
             var firstLCWForCondition = new Dictionary<CompositeCondition, LeftCellWrapper>(new ConditionComparer());
 
             foreach (var leftCellWrapper in leftCellWrappers)
@@ -263,7 +263,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                 if (condMembersValues.Count > 0) //it is possible that there are no condition members
                 {
                     //Check if the composite condition has been encountered before
-                    if (setOfconditions.Contains(condMembersValues))
+                    if (setOfConditions.Contains(condMembersValues))
                     {
                         //Extents may be Equal on right side (e.g: by some form of Refconstraint)
                         if (!RightSideEqual(firstLCWForCondition[condMembersValues], leftCellWrapper))
@@ -280,7 +280,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                     }
                     else
                     {
-                        setOfconditions.Add(condMembersValues);
+                        setOfConditions.Add(condMembersValues);
 
                         //Remember which cell the condition came from.. used for error reporting
                         firstLCWForCondition.Add(condMembersValues, leftCellWrapper);
