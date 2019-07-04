@@ -129,7 +129,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             var viewBlock = m_view.ToCqlBlock(requiredSlots, m_identifiers, ref m_currentBlockNum, ref withRelationships);
 
             // Handle case statements for multiconstant entries
-            // Right now, we have a simplication step that removes one of the
+            // Right now, we have a simplification step that removes one of the
             // entries and adds ELSE instead
             foreach (var statement in m_caseStatements.Values)
             {
