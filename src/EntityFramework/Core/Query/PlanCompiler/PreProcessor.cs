@@ -1711,7 +1711,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         // <summary>
         // Handler for NewEntityOp.
-        // Assignes scope to the entity constructor if it hasn't been assigned before.
+        // Assigns scope to the entity constructor if it hasn't been assigned before.
         // </summary>
         // <param name="op"> the NewEntityOp </param>
         // <param name="n"> the node tree corresponding to the op </param>
