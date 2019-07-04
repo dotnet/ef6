@@ -302,7 +302,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         // <summary>
-        // When an entity enters Object Services that was retreived with NoTracking, it may not have certain fields set that are in many cases
+        // When an entity enters Object Services that was retrieved with NoTracking, it may not have certain fields set that are in many cases
         // assumed to be present. This method updates the wrapper with a key and a context.
         // </summary>
         // <param name="wrapper"> The wrapped entity </param>
