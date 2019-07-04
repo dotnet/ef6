@@ -1540,7 +1540,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region NodeInfo
 
         // <summary>
-        // Get auxilliary information for a Node
+        // Get auxiliary information for a Node
         // </summary>
         // <param name="n"> the node </param>
         // <returns> node info for this node </returns>
