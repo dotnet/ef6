@@ -139,7 +139,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                     //Check if member is projected in this cell.
                     if (cell.SQuery.GetProjectedMembers().Contains(memberToExpand))
                     {
-                        // Creationg additional cel can fail when the condition to be appended contradicts existing condition in the CellQuery
+                        // Creating additional cel can fail when the condition to be appended contradicts existing condition in the CellQuery
                         // We don't add contradictions because they seem to cause unrelated problems in subsequent validation routines
                         Cell resultCell = null;
                         if (TryCreateAdditionalCellWithCondition(
