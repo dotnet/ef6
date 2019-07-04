@@ -246,7 +246,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             {
                 return NullEntityWrapper.NullWrapper;
             }
-            // First attempt to find an existing wrapper in the ObjectStateMager.
+            // First attempt to find an existing wrapper in the ObjectStateManager.
             if (stateManager != null)
             {
                 existingEntry = stateManager.FindEntityEntry(entity);
