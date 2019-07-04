@@ -520,7 +520,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         // <summary>
         // Applies a IsNotNull(sentinelVar) filter to the given node.
-        // The filter is pushed below all MultiStremNest-s, because this part of the tree has
+        // The filter is pushed below all MultiStreamNest-s, because this part of the tree has
         // already been visited and it is expected that the MultiStreamNests have bubbled up
         // above the filters.
         // </summary>
