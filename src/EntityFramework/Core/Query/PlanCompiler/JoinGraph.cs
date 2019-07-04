@@ -2456,18 +2456,18 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // Helper method for <see cref="GetLeastCommonAncestor(int, int)" />
         // Given a root node pick its immediate child to which the node identified with the given nodeId bellongs.
         // </summary>
-        // <returns> The immediate child of the given root that is root of the subree that contains the node with the given nodeId. </returns>
+        // <returns> The immediate child of the given root that is root of the subtree that contains the node with the given nodeId. </returns>
         private static AugmentedNode PickSubtree(int nodeId, AugmentedNode root)
         {
-            var subree = root.Children[0];
+            var subtree = root.Children[0];
             var i = 1;
-            while ((subree.Id < nodeId)
+            while ((subtree.Id < nodeId)
                    && (i < root.Children.Count))
             {
-                subree = root.Children[i];
+                subtree = root.Children[i];
                 i++;
             }
-            return subree;
+            return subtree;
         }
 
         #endregion

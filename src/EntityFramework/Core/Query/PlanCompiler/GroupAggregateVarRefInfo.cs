@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     // <summary>
     // Helper class to track usage of GroupAggregateVarInfo
     // It represents the usage of a single GroupAggregateVar.
-    // The usage is defined by the computation, it should be a subree whose only
+    // The usage is defined by the computation, it should be a subtree whose only
     // external reference is the group var represented by the GroupAggregateVarInfo.
     // </summary>
     internal class GroupAggregateVarRefInfo

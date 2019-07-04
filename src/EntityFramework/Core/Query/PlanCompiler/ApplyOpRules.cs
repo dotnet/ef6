@@ -664,7 +664,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         // <summary>
-        // A visitor that calculates the number of output columns for a subree
+        // A visitor that calculates the number of output columns for a subtree
         // with a given root
         // </summary>
         internal class OutputCountVisitor : BasicOpVisitorOfT<int>
@@ -676,7 +676,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             #region Public Methods
 
             // <summary>
-            // Calculates the number of output columns for the subree
+            // Calculates the number of output columns for the subtree
             // rooted at the given node
             // </summary>
             internal static int CountOutputs(Node node)
@@ -814,7 +814,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             // <summary>
             // Public entry point.
-            // Remaps the subree rooted at the given tree
+            // Remaps the subtree rooted at the given tree
             // </summary>
             internal static void RemapSubtree(Node root, Command command, Var oldVar)
             {
