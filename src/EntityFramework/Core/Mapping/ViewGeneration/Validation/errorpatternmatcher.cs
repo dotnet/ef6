@@ -688,7 +688,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                     if (anotherCellQuery.GetProjectedMembers().Contains(conditionMember))
                     {
                         mappedConditionMembers.Add(conditionMember);
-                        //error condition memer is projected somewhere
+                        //error condition member is projected somewhere
                         m_errorLog.AddEntry(
                             new ErrorLog.Record(
                                 ViewGenErrorCode.ErrorPatternConditionError,
