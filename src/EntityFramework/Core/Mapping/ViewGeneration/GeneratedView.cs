@@ -173,7 +173,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
 
         private readonly EntitySetBase m_extent;
         private readonly EdmType m_type;
-        private DbQueryCommandTree m_commandTree; //We cache CQTs for Update Views sicne that is the one update stack works of.
+        private DbQueryCommandTree m_commandTree; //We cache CQTs for Update Views since that is the one update stack works of.
         private readonly string m_eSQL;
         private Node m_internalTreeNode; //we cache IQTs for Query Views since that is the one query stack works of.
         private DiscriminatorMap m_discriminatorMap;
