@@ -425,18 +425,18 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
                         var nonConditionalAttributes =
                             GetNonConditionalScalarMembers(edmType, currentPath, _domainMap).Union(
                                 GetNonConditionalComplexMembers(edmType, currentPath, _domainMap)).ToList();
-                        IEnumerable<MemberPath> notCoverdAttributes;
+                        IEnumerable<MemberPath> notCoveredAttributes;
                         if (nonConditionalAttributes.Count > 0
                             &&
                             !FindRewritingAndUsedViews(
-                                nonConditionalAttributes, domainWhereClause, outputUsedViews, out rewriting, out notCoverdAttributes))
+                                nonConditionalAttributes, domainWhereClause, outputUsedViews, out rewriting, out notCoveredAttributes))
                         {
                             //Error: No mapping specified for some attributes
                             // remove keys
                             nonConditionalAttributes = new List<MemberPath>(nonConditionalAttributes.Where(a => !a.IsPartOfKey));
                             Debug.Assert(nonConditionalAttributes.Count > 0, "Must have caught key-only case earlier");
 
-                            AddUnrecoverableAttributesError(notCoverdAttributes, domainAddedWhereClause, errorLog);
+                            AddUnrecoverableAttributesError(notCoveredAttributes, domainAddedWhereClause, errorLog);
                         }
                         else
                         {

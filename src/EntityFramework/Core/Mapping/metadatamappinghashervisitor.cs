@@ -281,7 +281,7 @@ namespace System.Data.Entity.Core.Mapping
 
             #region Inner data visit
 
-            // Name is coverd by Identity
+            // Name is covered by Identity
             AddObjectContentToHashBuilder(associationSet.Identity);
             AddObjectContentToHashBuilder(associationSet.Schema);
             AddObjectContentToHashBuilder(associationSet.Table);
