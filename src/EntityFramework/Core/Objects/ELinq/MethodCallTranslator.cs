@@ -1350,7 +1350,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                             parent.CreateCanonicalFunction(Length, call, thisString)
                                   .Minus(arg1.Plus(arg2));
 
-                        // Substring(this, substringStartIndex, substringLenght)
+                        // Substring(this, substringStartIndex, substringLength)
                         CqtExpression secondSubstring =
                             parent.CreateCanonicalFunction(
                                 Substring, call,

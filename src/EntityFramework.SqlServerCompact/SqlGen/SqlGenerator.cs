@@ -3262,7 +3262,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         }
 
         // <summary>
-        // Right(string, length) -> SUBSTRING(string, DATALENGHT(CAST(string as NTEXT))/2 + 1 - length, length)
+        // Right(string, length) -> SUBSTRING(string, DATALENGTH(CAST(string as NTEXT))/2 + 1 - length, length)
         // </summary>
         private static ISqlFragment HandleCanonicalFunctionRight(SqlGenerator sqlgen, DbFunctionExpression e)
         {
