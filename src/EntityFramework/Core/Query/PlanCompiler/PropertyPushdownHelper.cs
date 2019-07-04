@@ -186,7 +186,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // <remarks>
         // Several of the ScalarOps take the default handling, to simply ask
         // for all the children's properties:
-        // AggegateOp
+        // AggregateOp
         // ArithmeticOp
         // CastOp
         // ConditionalOp
