@@ -26,7 +26,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     // down the tree pushing properties to each child of a node. It builds two maps:
     // (*) a node-property map
     // (*) a var-property map
-    // Each of these keeps trackof the properties needed from each node/var.
+    // Each of these keeps track of the properties needed from each node/var.
     // These maps are returned to the caller and will be used by the NominalTypeEliminator
     // module to eliminate all structured types.
     // </summary>
