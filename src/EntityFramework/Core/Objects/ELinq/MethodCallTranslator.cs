@@ -1332,7 +1332,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     //Concat(result, Substring(this, (arg1 + arg2) +1, Length(this) - (arg1 + arg2))) 
                     if (call.Arguments.Count == 2)
                     {
-                        //If there are two arguemtns, we only support cases when the second one translates to a non-negative constant
+                        //If there are two arguments, we only support cases when the second one translates to a non-negative constant
                         var arg2 = parent.TranslateExpression(call.Arguments[1]);
                         if (!IsNonNegativeIntegerConstant(arg2))
                         {
