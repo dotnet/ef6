@@ -1762,7 +1762,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
 
                 // Translator for static method calls into canonical functions when only the name of the canonical function
-                // is different from the name of the method, but the argumens match.
+                // is different from the name of the method, but the arguments match.
                 // Translation:
                 //      MethodName(arg1, arg2, .., argn) -> CanonicalFunctionName(arg1, arg2, .., argn)
                 internal override CqtExpression Translate(ExpressionConverter parent, MethodCallExpression call)
