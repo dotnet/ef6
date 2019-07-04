@@ -278,7 +278,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             }
             catch (Exception e)
             {
-                // Catching all the exception types since Query parser seems to be throwing veriety of
+                // Catching all the exception types since Query parser seems to be throwing a variety of
                 // exceptions - EntityException, ArgumentException, ArgumentNullException etc.
                 if (e.IsCatchableExceptionType())
                 {
