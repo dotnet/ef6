@@ -273,7 +273,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // <param name="context"> RuleProcessing context </param>
         // <param name="applyNode"> The ApplyOp subtree </param>
         // <param name="newNode"> transformed subtree </param>
-        // <returns> Transfomation status </returns>
+        // <returns> Transformation status </returns>
         private static bool ProcessCrossApplyOverProject(RuleProcessingContext context, Node applyNode, out Node newNode)
         {
             newNode = applyNode;
@@ -338,7 +338,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // <param name="context"> RuleProcessing context </param>
         // <param name="applyNode"> The ApplyOp subtree </param>
         // <param name="newNode"> transformed subtree </param>
-        // <returns> Transfomation status </returns>
+        // <returns> Transformation status </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "VarDefOp")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
