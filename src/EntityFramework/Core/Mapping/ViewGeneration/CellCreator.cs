@@ -451,7 +451,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                     {
                         //Produce a Condition Expression for the Condition Map.
                         var conditionExpression = GetConditionExpression(sRootExtent, conditionMap);
-                        //Add the condition expression to the exisiting S side Where clause using an "And"
+                        //Add the condition expression to the existing S side Where clause using an "And"
                         sQueryWhereClause = BoolExpression.CreateAnd(sQueryWhereClause, conditionExpression);
                     }
                     else
@@ -459,7 +459,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                         Debug.Assert(conditionMap.Property != null);
                         //Produce a Condition Expression for the Condition Map.
                         var conditionExpression = GetConditionExpression(cNode, conditionMap);
-                        //Add the condition expression to the exisiting C side Where clause using an "And"
+                        //Add the condition expression to the existing C side Where clause using an "And"
                         cQueryWhereClause = BoolExpression.CreateAnd(cQueryWhereClause, conditionExpression);
                     }
                 }
