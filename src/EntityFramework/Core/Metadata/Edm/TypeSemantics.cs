@@ -55,7 +55,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // Determines if the two types are structurally equivalent.
         // </summary>
         // <remarks>
-        // Equivalence for nomimal types is based on lexical identity and structural equivalence for structural types.
+        // Equivalence for nominal types is based on lexical identity and structural equivalence for structural types.
         // Structural equivalence for row types is based only on equivalence of property types, property names are ignored.
         // </remarks>
         // <returns> true if equivalent, false otherwise </returns>
