@@ -20,7 +20,7 @@ namespace System.Data.Entity.Core.Objects
         private readonly bool _isReadOnly;
 
         // <summary>
-        // For testing purpuses only.
+        // For testing purposes only.
         // </summary>
         internal FieldDescriptor(string propertyName)
             : base(propertyName, null)
