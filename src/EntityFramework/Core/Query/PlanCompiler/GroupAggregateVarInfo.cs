@@ -56,7 +56,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         // <summary>
-        // Are there are agregates that are candidates to be pushed into the DefiningGroupNode
+        // Are there are aggregates that are candidates to be pushed into the DefiningGroupNode
         // </summary>
         internal bool HasCandidateAggregateNodes
         {
