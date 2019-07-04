@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Diagnostics.CodeAnalysis;
 
     // <summary>
-    // Simple implemenation of the BasicOpVisitor interface.
+    // Simple implementation of the BasicOpVisitor interface.
     // </summary>
     internal abstract class BasicOpVisitor
     {
