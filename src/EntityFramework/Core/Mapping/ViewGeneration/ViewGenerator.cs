@@ -62,7 +62,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             // values from the S-side as well -- this is needed for domain
             // constraint propagation, i.e., values from the S-side get
             // propagated to te oneOfConst on the C-side. So we better get
-            // the "possiblveValues" stuff to contain those constants as well
+            // the "possibleValues" stuff to contain those constants as well
             MemberDomainMap.PropagateUpdateDomainToQueryDomain(cellGroup, m_queryDomainMap, m_updateDomainMap);
 
             UpdateWhereClauseForEachCell(cellGroup, m_queryDomainMap, m_updateDomainMap, m_config);
