@@ -298,7 +298,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
 
                     var extent = extentMap.Set;
                     Debug.Assert(
-                        extent != null, "Extent map for a null extent or type of extentMap.Exent " +
+                        extent != null, "Extent map for a null extent or type of extentMap.Extent " +
                                         "is not Extent");
 
                     // For each table mapping for the type mapping, we create cells
