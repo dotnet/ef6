@@ -588,7 +588,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                             if (isCDisjoint)
                             {
                                 //MSG:  One of the fragments is a subset of the other on the S-side but they are disjoint on the C-side.
-                                //      If you intended overlap on the S-side ensure they have similar relationship on teh C-side.
+                                //      If you intended overlap on the S-side ensure they have similar relationship on the C-side.
                                 //      You may need to use IsTypeOf() quantifier or loosen conditions in one of the fragments.
                                 //TestCase (9, 10)
                                 errorString.Append(Strings.Viewgen_ErrorPattern_Partition_Sub_Disj);
@@ -596,7 +596,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                             else if (isCEqual) //equal
                             {
                                 //MSG:  One of the fragments is a subset of the other on the S-side but they are equal on the C-side.
-                                //      If you intended overlap on the S-side ensure they have similar relationship on teh C-side.
+                                //      If you intended overlap on the S-side ensure they have similar relationship on the C-side.
                                 //TestCase (10)
 
                                 if (CSideHasDifferentEntitySets(fragment1, fragment2))
@@ -617,7 +617,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                             {
                                 //unknown
                                 //MSG:  One of the fragments is a subset of the other on the S-side but they are disjoint on the C-side.
-                                //      If you intended overlap on the S-side ensure they have similar relationship on teh C-side.
+                                //      If you intended overlap on the S-side ensure they have similar relationship on the C-side.
                                 //TestCase (no need, Table mapped to multiple ES tests cover this scenario)
                                 errorString.Append(Strings.Viewgen_ErrorPattern_Partition_Sub_Unk);
                             }

@@ -2738,7 +2738,7 @@ namespace System.Data.Entity.Core.Objects
                 foreach (var relationshipEntry in _cache.CopyOfRelationshipsByKey(EntityKey))
                 {
                     // Only delete the relationship entry if it is not already deleted (in which case we cannot access its values)
-                    // and when the given (optionally) relationshipSet matches the one in teh relationship entry
+                    // and when the given (optionally) relationshipSet matches the one in the relationship entry
                     if ((relationshipEntry.State != EntityState.Deleted)
                         &&
                         (relationshipSet == null || relationshipSet == relationshipEntry.EntitySet))
