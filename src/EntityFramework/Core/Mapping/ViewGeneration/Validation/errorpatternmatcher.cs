@@ -77,7 +77,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                 == ViewTarget.QueryView)
             {
                 //Find all types for the given EntitySet
-                var unmapepdTypesInExtent =
+                var unmappedTypesInExtent =
                     new Set<EdmType>(
                         MetadataHelper.GetTypeAndSubtypesOf(
                             m_viewgenContext.Extent.ElementType, m_viewgenContext.EdmItemCollection, false /*isAbstract*/));
@@ -95,7 +95,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                                 var typeConst = cellConst as TypeConstant;
                                 if (typeConst != null)
                                 {
-                                    unmapepdTypesInExtent.Remove(typeConst.EdmType);
+                                    unmappedTypesInExtent.Remove(typeConst.EdmType);
                                 }
                             }
                         }
@@ -103,13 +103,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                 }
 
                 //We are left with a type that has no mapping
-                if (unmapepdTypesInExtent.Count > 0)
+                if (unmappedTypesInExtent.Count > 0)
                 {
                     //error unmapped type
                     m_errorLog.AddEntry(
                         new ErrorLog.Record(
                             ViewGenErrorCode.ErrorPatternMissingMappingError,
-                            Strings.ViewGen_Missing_Type_Mapping(BuildCommaSeparatedErrorString(unmapepdTypesInExtent)),
+                            Strings.ViewGen_Missing_Type_Mapping(BuildCommaSeparatedErrorString(unmappedTypesInExtent)),
                             m_viewgenContext.AllWrappersForExtent, ""));
                 }
             }
