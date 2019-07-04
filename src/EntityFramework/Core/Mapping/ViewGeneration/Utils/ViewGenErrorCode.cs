@@ -90,7 +90,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Utils
         ErrorPatternMissingMappingError = Value + 35,
         //Mapping fragments don't overlap on a key or foreign key under read-only scenario
         NoJoinKeyOrFKProvidedInMapping = Value + 36,
-        //If there is a fragment with distinct flag, there should be no othe fragment between that C and S extent
+        //If there is a fragment with distinct flag, there should be no other fragment between that C and S extent
         MultipleFragmentsBetweenCandSExtentWithDistinct = Value + 37,
     }
 }
