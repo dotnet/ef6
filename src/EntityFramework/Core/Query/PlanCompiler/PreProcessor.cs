@@ -334,7 +334,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // <summary>
         // If the discriminator map we're already tracking for this type (in this entityset)
         // isn't already rooted at our required type, then we have to suppress the use of
-        // the discriminator maps when we constrct the structuredtypes; see SQLBUDT #615744
+        // the discriminator maps when we construct the structuredtypes; see SQLBUDT #615744
         // </summary>
         private void DetermineDiscriminatorMapUsage(
             Node viewNode, EntitySetBase entitySet, EntityTypeBase rootEntityType, bool includeSubtypes)
