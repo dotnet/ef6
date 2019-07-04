@@ -968,7 +968,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 m_command.CreateGetEntityRefOp(relProperty.FromEnd.TypeUsage),
                 sourceEntityNode);
 
-            // Hanlde the 1:M and N:M cases
+            // Handle the 1:M and N:M cases
             if (relProperty.ToEnd.RelationshipMultiplicity
                 == RelationshipMultiplicity.Many)
             {
