@@ -151,7 +151,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             ProcessedEntities = new HashSet<IEntityWrapper>();
             WrappedEntities = new Dictionary<object, IEntityWrapper>(ObjectReferenceEqualityComparer.Default);
 
-            OriginalMergeOption = null; // this must be set explicitely to value!=null later when the merge option is known
+            OriginalMergeOption = null; // this must be set explicitly to value!=null later when the merge option is known
         }
 
         internal void EndAttachTracking()
