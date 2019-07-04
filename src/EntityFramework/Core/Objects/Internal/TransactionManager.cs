@@ -126,7 +126,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             AlignedEntityReferences = null;
             PromotedRelationships = null;
 
-            // Clear flags/dictionaries only if we are not in the iddle of DetectChanges.
+            // Clear flags/dictionaries only if we are not in the middle of DetectChanges.
             if (!IsDetectChanges)
             {
                 TrackProcessedEntities = false;
