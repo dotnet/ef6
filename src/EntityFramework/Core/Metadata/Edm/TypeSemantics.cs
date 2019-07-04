@@ -599,7 +599,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // <summary>
         // Determines if type1 is equal-comparable to type2.
         // in order for type1 and type2 to be equal-comparable, they must be
-        // individualy equal-comparable and have a common super-type.
+        // individually equal-comparable and have a common super-type.
         // </summary>
         // <param name="type1"> an instance of a TypeUsage </param>
         // <param name="type2"> an instance of a TypeUsage </param>
@@ -628,7 +628,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // <summary>
         // Determines if type1 is order-comparable to type2.
         // in order for type1 and type2 to be order-comparable, they must be
-        // individualy order-comparable and have a common super-type.
+        // individually order-comparable and have a common super-type.
         // </summary>
         // <param name="type1"> an instance of a TypeUsage </param>
         // <param name="type2"> an instance of a TypeUsage </param>
