@@ -282,7 +282,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         // </summary>
         // <returns> Enumerable of the current set of CLR proxy types. This value will never be null. </returns>
         // <remarks>
-        // The enumerable is based on a shapshot of the current list of types.
+        // The enumerable is based on a snapshot of the current list of types.
         // </remarks>
         internal static IEnumerable<Type> GetKnownProxyTypes()
         {
