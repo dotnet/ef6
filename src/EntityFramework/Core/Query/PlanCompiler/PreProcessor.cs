@@ -283,7 +283,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 if (m_command.MetadataWorkspace.TryGetGeneratedViewOfType(entitySet, requiredType, includeSubtypes, out definingQuery))
                 {
                     //
-                    // At this point a type-specific view was found that satisifies the type filter's
+                    // At this point a type-specific view was found that satisfies the type filter's
                     // constraints in terms of required type and whether subtypes should be included;
                     // the type filter itself is now unnecessary and should be set to null indicating
                     // that it can be safely removed (see ProcessScanTableOp and Visit(FilterOp) for this).
