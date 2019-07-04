@@ -442,7 +442,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 // Copy over any eLinq initializer metadata (if present, or null if not).
                 // Note that this initializer metadata does not strictly match the new row type
                 // that includes spanned columns, but will be correct once the object materializer
-                // has interpreted the query results to produce the correct value for each colum.
+                // has interpreted the query results to produce the correct value for each column.
                 var rewrittenRow = new RowType(properties, rowType.InitializerMetadata);
                 var rewrittenRowTypeUsage = TypeUsage.Create(rewrittenRow);
                 DbExpression rewritten = rewrittenRowTypeUsage.New(columnArguments);

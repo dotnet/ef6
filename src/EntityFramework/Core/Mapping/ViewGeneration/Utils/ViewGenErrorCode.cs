@@ -56,7 +56,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Utils
         // Foreign key mapped to relationship - but parent table not mapped
         // to any end of relationship
         ForeignKeyParentTableNotMappedToEnd = Value + 18,
-        // Foreign key mapping to C-space does not preserve colum order
+        // Foreign key mapping to C-space does not preserve column order
         ForeignKeyColumnOrderIncorrect = Value + 19,
         // Disjointness constraint violated in C-space
         DisjointConstraintViolation = Value + 20,
