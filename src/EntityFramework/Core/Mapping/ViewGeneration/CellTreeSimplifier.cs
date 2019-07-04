@@ -522,7 +522,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             return true;
         }
 
-        // effects: Given two duplicate eliination choices, returns an OR of them
+        // effects: Given two duplicate elimination choices, returns an OR of them
         private static CellQuery.SelectDistinct MergeDupl(CellQuery.SelectDistinct d1, CellQuery.SelectDistinct d2)
         {
             if (d1 == CellQuery.SelectDistinct.Yes
