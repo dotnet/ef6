@@ -77,7 +77,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Utils
         //Unused: 28
         //Unused: 29
         // Mapping condition that is not possible according to S-side constraints
-        ImpopssibleCondition = Value + 30,
+        ImpossibleCondition = Value + 30,
         // NonNullable S-Side member is mapped to nullable C-Side member
         NullableMappingForNonNullableColumn = Value + 31,
         //Error specifiying Conditions, caught during Error Pattern Matching

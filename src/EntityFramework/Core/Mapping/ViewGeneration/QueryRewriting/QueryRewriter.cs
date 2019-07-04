@@ -739,7 +739,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
                         Debug.Assert(fragment != null);
 
                         var record = new ErrorLog.Record(
-                            ViewGenErrorCode.ImpopssibleCondition, Strings.Viewgen_QV_RewritingNotFound(fragment.RightExtent.ToString()),
+                            ViewGenErrorCode.ImpossibleCondition, Strings.Viewgen_QV_RewritingNotFound(fragment.RightExtent.ToString()),
                             fragment.Cells, String.Empty);
                         _errorLog.AddEntry(record);
                     }
