@@ -126,7 +126,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                 }
             }
 
-            // Expand cells that project members collected earlier with T/F conditiions
+            // Expand cells that project members collected earlier with T/F conditions
             foreach (var cell in cells.ToArray())
             {
                 //Each member gets its own expansion. Including multiple condition candidates in one SQuery
