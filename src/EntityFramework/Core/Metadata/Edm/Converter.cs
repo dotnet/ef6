@@ -1097,7 +1097,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // <summary>
         // Converts SchemaEnumType instance to Metadata EnumType.
         // </summary>
-        // <param name="somEnumType"> SchemaEnumType to be covnerted. </param>
+        // <param name="somEnumType"> SchemaEnumType to be converted. </param>
         // <param name="newGlobalItems"> Global item objects where newly created Metadata EnumType will be added. </param>
         private static EnumType ConvertToEnumType(SchemaEnumType somEnumType, Dictionary<SchemaElement, GlobalItem> newGlobalItems)
         {
