@@ -450,7 +450,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             {
                 case CellTreeOpType.IJ:
                     // Project[D1, D2, A, B, C] Select[cond1 and cond2] (T)
-                    // We simply merge the two lists of booleans -- no conjuct is added
+                    // We simply merge the two lists of booleans -- no conjunct is added
                     // conjunct1 and conjunct2 don't change
 
                     // query1.WhereCaluse AND query2.WhereCaluse
