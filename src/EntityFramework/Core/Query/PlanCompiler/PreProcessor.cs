@@ -1886,7 +1886,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // Handles a NewMultiset constructor, i.e. {x, y, z}
         // 1. Empty multiset constructors are simply converted into:
         // select x from singlerowtable as x where false
-        // 2. Mulltset constructors with only one element or with multiple elements all of
+        // 2. Multiset constructors with only one element or with multiple elements all of
         // which are constants or nulls are converted into:
         // select x from dual union all select y from dual union all select z
         // 3. All others are converted into:
