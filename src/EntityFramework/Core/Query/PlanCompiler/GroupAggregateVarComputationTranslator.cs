@@ -48,7 +48,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // </summary>
         // <param name="subtree"> The input subtree </param>
         // <param name="groupAggregateVarInfo"> The groupAggregateVarInfo over which the input subtree can be translated </param>
-        // <param name="templateNode"> A tree that is equvalent to the input tree, but over the group aggregate variable represented by the groupAggregetVarInfo </param>
+        // <param name="templateNode"> A tree that is equivalent to the input tree, but over the group aggregate variable represented by the groupAggregetVarInfo </param>
         // <returns> True, if the translation can be done, false otherwise </returns>
         public static bool TryTranslateOverGroupAggregateVar(
             Node subtree,
