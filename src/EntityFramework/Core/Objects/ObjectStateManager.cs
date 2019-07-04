@@ -401,7 +401,7 @@ namespace System.Data.Entity.Core.Objects
                 newEntry.AttachObjectStateManagerToEntity();
                 AddEntityEntryToDictionary(newEntry, newEntry.State);
 
-                // fire ColectionChanged event  only when a new entity is added to cache
+                // fire CollectionChanged event  only when a new entity is added to cache
                 OnObjectStateManagerChanged(CollectionChangeAction.Add, newEntry.Entity);
 
                 // When adding, we do this in AddSingleObject since we don't want to do it before the context is attached.
@@ -1475,7 +1475,7 @@ namespace System.Data.Entity.Core.Objects
             newEntry.AttachObjectStateManagerToEntity();
             AddEntityEntryToDictionary(newEntry, newEntry.State);
 
-            // fire ColectionChanged event only when a new entity is added to cache
+            // fire CollectionChanged event only when a new entity is added to cache
             OnObjectStateManagerChanged(CollectionChangeAction.Add, newEntry.Entity);
 
             return newEntry;
