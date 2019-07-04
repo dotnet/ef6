@@ -513,7 +513,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         // <summary>
         // Called in the finally clause of each overridden property setter to ensure that the flag
         // indicating that we are in an FK setter is cleared.  Note that the wrapped entity is passed as
-        // an object becayse IEntityWrapper is an internal type and is therefore not accessable to
+        // an object because IEntityWrapper is an internal type and is therefore not accessable to
         // the proxy type.  Once we're in the framework it is cast back to an IEntityWrapper.
         // </summary>
         private static void ResetFKSetterFlag(object wrappedEntityAsObject)
