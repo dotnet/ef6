@@ -1044,7 +1044,7 @@ namespace System.Data.Entity.Core.Mapping
 
             // for partial update scenarios (e.g. EntityDataSourceControl) all members are interesting otherwise the data may be corrupt. 
             // See bugs #272992 and #124460 in DevDiv database for more details. For full update scenarios and the obsolete 
-            // MetadataWorkspace.GetRequiredOriginalValueMembers() metod we return only members with Version set to "Original".
+            // MetadataWorkspace.GetRequiredOriginalValueMembers() method we return only members with Version set to "Original".
             if (interestingMembersKind == InterestingMembersKind.PartialUpdate)
             {
                 // (5) Members included in Update ModificationFunction
