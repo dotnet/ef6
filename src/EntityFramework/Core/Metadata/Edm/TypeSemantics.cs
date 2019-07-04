@@ -279,7 +279,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         // <summary>
         // determines if fromType can be cast to toType. this operation is valid only
-        // if fromtype and totype are polimorphic types.
+        // if fromtype and totype are polymorphic types.
         // </summary>
         internal static bool IsValidPolymorphicCast(TypeUsage fromType, TypeUsage toType)
         {
@@ -293,7 +293,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         // <summary>
         // determines if fromEdmType can be cast to toEdmType. this operation is valid only
-        // if fromtype and totype are polimorphic types.
+        // if fromtype and totype are polymorphic types.
         // </summary>
         internal static bool IsValidPolymorphicCast(EdmType fromEdmType, EdmType toEdmType)
         {
@@ -467,7 +467,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         // <summary>
-        // determines if type is a polimorphic type, ie, EntityType or ComplexType.
+        // determines if type is a polymorphic type, ie, EntityType or ComplexType.
         // </summary>
         internal static bool IsPolymorphicType(TypeUsage type)
         {
