@@ -1925,7 +1925,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // - The keys of the nest operation
         // - The discriminator column for the nest operation
         // - the list of postfix sort keys (used to represent nested collections)
-        // Note that we only add the first occurrance of a var to the list; further
+        // Note that we only add the first occurrence of a var to the list; further
         // references to the same variable would be trumped by the first one.
         // </summary>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
