@@ -1386,7 +1386,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         // <summary>
-        // Creates a new UnionAllOp, with a branch descriminator.
+        // Creates a new UnionAllOp, with a branch discriminator.
         // </summary>
         // <param name="leftMap"> Mappings from the Output Vars to the Vars produced by the left argument </param>
         // <param name="rightMap"> Mappings from the Output Vars to the Vars produced by the right argument </param>

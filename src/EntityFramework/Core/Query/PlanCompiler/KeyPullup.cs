@@ -169,7 +169,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // (3) Slap a projectOp around each branch, adding a branch discriminator
         // var and all the missing keys.  When keys are missing from a different
         // branch, we'll construct null ops for them on the other branches.  If
-        // a branch already has a branch descriminator, we'll re-use it instead
+        // a branch already has a branch discriminator, we'll re-use it instead
         // of constructing a new one.  (Of course, if there aren't any keys to
         // add and it's already including the branch discriminator we won't
         // need the projectOp)
