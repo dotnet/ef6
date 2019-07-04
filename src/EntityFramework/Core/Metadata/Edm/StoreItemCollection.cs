@@ -233,7 +233,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             providerManifestToken = loader.ProviderManifestToken;
             providerInvariantName = loader.ProviderInvariantName;
 
-            // load the items into the colleciton
+            // load the items into the collection
             if (!loader.HasNonWarningErrors)
             {
                 LoadProviderManifest(loader.ProviderManifest /* check for system namespace */);
