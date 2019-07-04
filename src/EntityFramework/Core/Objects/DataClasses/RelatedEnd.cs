@@ -742,7 +742,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// </exception>
         public void Load()
         {
-            // CheckOwnerNull is called in the impementation
+            // CheckOwnerNull is called in the implementation
             Load(DefaultMergeOption);
         }
 
