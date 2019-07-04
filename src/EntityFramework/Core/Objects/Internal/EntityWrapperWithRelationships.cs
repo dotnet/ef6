@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 
     // <summary>
     // An extension of the EntityWrapper class for entities that implement IEntityWithRelationships.
-    // Using this class causes creation of the RelationshipManager to be defered to the entity object.
+    // Using this class causes creation of the RelationshipManager to be deferred to the entity object.
     // </summary>
     // <typeparam name="TEntity"> The type of entity wrapped </typeparam>
     internal sealed class EntityWrapperWithRelationships<TEntity> : EntityWrapper<TEntity>
