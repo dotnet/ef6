@@ -433,7 +433,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                     }
                 }
 
-                // Check if the property mapping is for an associaion
+                // Check if the property mapping is for an association
                 if (associationEndPropertypMap != null)
                 {
                     // create join tree node representing this relation end
