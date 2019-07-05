@@ -149,7 +149,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
             // |      |       |      |
             // --------       --------
             // 
-            // Notice that the new "link table association" muliplicities are opposite of what is comming into the original link table
+            // Notice that the new "link table association" multiplicities are opposite of what is comming into the original link table
             // this seems counter intuitive at first, but makes sense when you think all the way through it
             //
             // CascadeDelete Behavior (we can assume the runtime will always delete cascade 

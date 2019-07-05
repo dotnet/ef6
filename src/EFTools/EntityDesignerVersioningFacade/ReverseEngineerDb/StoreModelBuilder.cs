@@ -230,7 +230,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
                         excludedKeyColumnNames, tableName, errors, out needsDefiningQuery);
             }
 
-            // no key columns found - a read only entity type will be created if key columns can be infered;
+            // no key columns found - a read only entity type will be created if key columns can be inferred;
             // otherwise an invalid entity (without key properties) will be created
             if (!keyColumnNames.Any())
             {
@@ -240,7 +240,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
             }
 
             // found key columns whose types are valid EF primitive types but not valid key property types (e.g. binary type in v1 or 
-            // geospatial types) - a read only entity will be created if key columns can be infered; // otherwise an invalid entity 
+            // geospatial types) - a read only entity will be created if key columns can be inferred; // otherwise an invalid entity 
             // (without key properties) will be created
             if (invalidKeyTypeColumnNames.Any())
             {
@@ -346,12 +346,12 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
             Debug.Assert(!string.IsNullOrEmpty(tableName), "!string.IsNullOrEmpty(tableName)");
             Debug.Assert(errors != null, "errors != null");
 
-            var inferedKeyProperties = InferKeyProperties(properties);
+            var inferredKeyProperties = InferKeyProperties(properties);
 
             // the entity type is read only if we could infer at least one valid key property and therefore will need the defining query
             // otherwise the entity is invalid and will not need a defining query since there will be no corresponding entity
             // set for this entity type and the type itself will be commented out in the SSDL
-            needsDefiningQuery = inferedKeyProperties.Any();
+            needsDefiningQuery = inferredKeyProperties.Any();
 
             errors.Add(
                 needsDefiningQuery
@@ -372,7 +372,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
 
             var metadataProperties = CreateMetadataProperties(!needsDefiningQuery, errors);
 
-            return CreateEntityType(name, inferedKeyProperties, properties, metadataProperties);
+            return CreateEntityType(name, inferredKeyProperties, properties, metadataProperties);
         }
 
         private EntityType CreateEntityType(
@@ -1384,7 +1384,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
                             foreignKeys,
                             primaryKeys,
                             toType.Name),
-                        (int)ModelBuilderErrorCode.UnsupportedForeinKeyPattern,
+                        (int)ModelBuilderErrorCode.UnsupportedForeignKeyPattern,
                         EdmSchemaErrorSeverity.Warning));
 
                 return true;

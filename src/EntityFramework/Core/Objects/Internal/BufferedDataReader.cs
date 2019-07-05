@@ -176,7 +176,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "nullableColumns")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "columnTypes")]
         internal async Task InitializeAsync(
-            string providerManifestToken, DbProviderServices providerSerivces, Type[] columnTypes, bool[] nullableColumns,
+            string providerManifestToken, DbProviderServices providerServices, Type[] columnTypes, bool[] nullableColumns,
             CancellationToken cancellationToken)
         {
             if (_underlyingReader == null)
@@ -195,20 +195,20 @@ namespace System.Data.Entity.Core.Objects.Internal
                 {
                     _bufferedDataRecords.Add(await
                         ShapedBufferedDataRecord.InitializeAsync(
-                            providerManifestToken, providerSerivces, reader, columnTypes, nullableColumns, cancellationToken)
+                            providerManifestToken, providerServices, reader, columnTypes, nullableColumns, cancellationToken)
                             .WithCurrentCulture());
                 }
                 else
                 {
                     _bufferedDataRecords.Add(await
-                        ShapelessBufferedDataRecord.InitializeAsync(providerManifestToken, providerSerivces, reader, cancellationToken)
+                        ShapelessBufferedDataRecord.InitializeAsync(providerManifestToken, providerServices, reader, cancellationToken)
                             .WithCurrentCulture());
                 }
 
                 while (await reader.NextResultAsync(cancellationToken).WithCurrentCulture())
                 {
                     _bufferedDataRecords.Add(await
-                        ShapelessBufferedDataRecord.InitializeAsync(providerManifestToken, providerSerivces, reader, cancellationToken)
+                        ShapelessBufferedDataRecord.InitializeAsync(providerManifestToken, providerServices, reader, cancellationToken)
                             .WithCurrentCulture());
                 }
 

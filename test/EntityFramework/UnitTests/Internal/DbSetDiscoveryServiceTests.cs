@@ -422,7 +422,7 @@ namespace System.Data.Entity.Internal
         }
 
         [Fact]
-        public void DbSetDiscoveryAttribute_on_overriden_property_is_used()
+        public void DbSetDiscoveryAttribute_on_overridden_property_is_used()
         {
             var context = new DerivedDbContextForPropertyOverrideLevel2();
             DiscoverAndInitializeSets(context, 1);
@@ -462,7 +462,7 @@ namespace System.Data.Entity.Internal
         }
 
         [Fact]
-        public void DbSetDiscoveryAttribute_on_class_applies_to_properties_overriden_in_that_class()
+        public void DbSetDiscoveryAttribute_on_class_applies_to_properties_overridden_in_that_class()
         {
             var context = new DerivedDbContextWithInheritanceBLevel2();
             DiscoverAndInitializeSets(context, 1);

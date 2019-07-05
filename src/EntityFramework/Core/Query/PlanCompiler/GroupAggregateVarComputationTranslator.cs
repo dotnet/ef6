@@ -154,7 +154,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // Unnest
         // where the unnest is over the group aggregate var and the output var
         // is either a reference to the group aggregate var or to a constant, it returns the
-        // translation of the ouput var.
+        // translation of the output var.
         // </summary>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]

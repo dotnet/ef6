@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             DebugCheck.NotNull(resultType);
             DebugCheck.NotNull(arguments);
-            Debug.Assert(arguments.Count == 1, "DbAggregate requires a single argument");
+            Debug.Assert(arguments.Count >= 1, "DbAggregate requires at least one argument");
 
             _type = resultType;
             _args = arguments;

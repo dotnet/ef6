@@ -26,7 +26,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         // <summary>
-        // Intializes a method ast node with relationships.
+        // Initializes a method ast node with relationships.
         // </summary>
         internal MethodExpr(
             Node expr,

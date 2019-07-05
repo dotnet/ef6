@@ -416,9 +416,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             {
                 if (IsAggregate)
                 {
-                    // Make sure that the function has exactly one parameter and that takes
+                    // Make sure that the function has at least one parameter and the first parameter takes
                     // a collection type
-                    if (Parameters.Count != 1)
+                    if (Parameters.Count == 0)
                     {
                         AddError(
                             ErrorCode.InvalidNumberOfParametersForAggregateFunction,
@@ -429,7 +429,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
                     else if (Parameters.GetElementAt(0).CollectionKind
                              == CollectionKind.None)
                     {
-                        // Since we have already checked that there should be exactly one parameter, it should be safe to get the
+                        // Since we have already checked that there should be at least one parameter, it should be safe to get the
                         // first parameter for the function
                         var param = Parameters.GetElementAt(0);
 

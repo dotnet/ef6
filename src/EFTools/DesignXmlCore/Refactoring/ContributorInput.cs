@@ -8,7 +8,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.Refactoring
     ///     ex) SymbolChangeContributorInput, SymbolReferenceChangeContributorInput
     ///     We will have RefactorOperation on each ContributorInput.
     ///     The RefactorOperation class will set this property when it creates the initial ContributorInput.
-    ///     Then the RefactoringManager will be reponsible to pass this property to any side effect ContributorInput.
+    ///     Then the RefactoringManager will be responsible to pass this property to any side effect ContributorInput.
     /// </summary>
     internal abstract class ContributorInput
     {

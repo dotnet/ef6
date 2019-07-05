@@ -27,10 +27,10 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         internal static ShapelessBufferedDataRecord Initialize(
-            string providerManifestToken, DbProviderServices providerSerivces, DbDataReader reader)
+            string providerManifestToken, DbProviderServices providerServices, DbDataReader reader)
         {
             var record = new ShapelessBufferedDataRecord();
-            record.ReadMetadata(providerManifestToken, providerSerivces, reader);
+            record.ReadMetadata(providerManifestToken, providerServices, reader);
 
             var fieldCount = record.FieldCount;
             var resultSet = new List<object[]>();
@@ -79,10 +79,10 @@ namespace System.Data.Entity.Core.Objects.Internal
 #if !NET40
 
         internal static async Task<ShapelessBufferedDataRecord> InitializeAsync(
-            string providerManifestToken, DbProviderServices providerSerivces, DbDataReader reader, CancellationToken cancellationToken)
+            string providerManifestToken, DbProviderServices providerServices, DbDataReader reader, CancellationToken cancellationToken)
         {
             var record = new ShapelessBufferedDataRecord();
-            record.ReadMetadata(providerManifestToken, providerSerivces, reader);
+            record.ReadMetadata(providerManifestToken, providerServices, reader);
 
             var fieldCount = record.FieldCount;
             var resultSet = new List<object[]>();

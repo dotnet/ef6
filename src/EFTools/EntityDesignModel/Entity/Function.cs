@@ -94,15 +94,15 @@ namespace Microsoft.Data.Entity.Design.Model.Entity
             {
                 if (_aggregateAttr == null)
                 {
-                    _aggregateAttr = new AggregrateDefaultableValue(this);
+                    _aggregateAttr = new AggregateDefaultableValue(this);
                 }
                 return _aggregateAttr;
             }
         }
 
-        private class AggregrateDefaultableValue : DefaultableValue<bool>
+        private class AggregateDefaultableValue : DefaultableValue<bool>
         {
-            internal AggregrateDefaultableValue(EFElement parent)
+            internal AggregateDefaultableValue(EFElement parent)
                 : base(parent, AttributeAggregate)
             {
             }

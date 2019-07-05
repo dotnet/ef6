@@ -374,7 +374,7 @@ public class CodeGenerationTools
 
     /// <summary>
     /// If the value parameter is null or empty an empty string is returned,
-    /// otherwise it retuns value with a single space concatenated on the end.
+    /// otherwise it returns value with a single space concatenated on the end.
     /// </summary>
     public string SpaceAfter(string value)
     {
@@ -383,7 +383,7 @@ public class CodeGenerationTools
 
     /// <summary>
     /// If the value parameter is null or empty an empty string is returned,
-    /// otherwise it retuns value with a single space concatenated on the end.
+    /// otherwise it returns value with a single space concatenated on the end.
     /// </summary>
     public string SpaceBefore(string value)
     {
@@ -392,7 +392,7 @@ public class CodeGenerationTools
 
     /// <summary>
     /// If the value parameter is null or empty an empty string is returned,
-    /// otherwise it retuns value with append concatenated on the end.
+    /// otherwise it returns value with append concatenated on the end.
     /// </summary>
     public string StringAfter(string value, string append)
     {
@@ -406,7 +406,7 @@ public class CodeGenerationTools
 
     /// <summary>
     /// If the value parameter is null or empty an empty string is returned,
-    /// otherwise it retuns value with prepend concatenated on the front.
+    /// otherwise it returns value with prepend concatenated on the front.
     /// </summary>
     public string StringBefore(string prepend, string value)
     {
@@ -469,7 +469,7 @@ public class CodeGenerationTools
     }
 
     /// <summary>
-    /// Retuns as full of a name as possible, if a namespace is provided
+    /// Returns as full of a name as possible, if a namespace is provided
     /// the namespace and name are combined with a period, otherwise just
     /// the name is returned.
     /// </summary>
@@ -484,7 +484,7 @@ public class CodeGenerationTools
     }
 
     /// <summary>
-    /// Retuns a literal representing the supplied value.
+    /// Returns a literal representing the supplied value.
     /// </summary>
     public string CreateLiteral(object value)
     {
@@ -1292,7 +1292,7 @@ public class CodeRegion
     }
 
     /// <summary>
-    /// Starts the begining of a region
+    /// Starts the beginning of a region
     /// </summary>
     public void Begin(string regionName)
     {
@@ -1305,7 +1305,7 @@ public class CodeRegion
     }
 
     /// <summary>
-    /// Start the begining of a region, indented
+    /// Start the beginning of a region, indented
     /// the numbers of levels specified
     /// </summary>
     public void Begin(string regionName, int levelsToIncreaseIndent)
@@ -1323,8 +1323,8 @@ public class CodeRegion
     }
 
     /// <summary>
-    /// Ends a region, or totaly removes it if nothing
-    /// was generted since the begining of the region.
+    /// Ends a region, or totally removes it if nothing
+    /// was generated since the beginning of the region.
     /// </summary>
     public void End()
     {
@@ -1332,8 +1332,8 @@ public class CodeRegion
     }
 
     /// <summary>
-    /// Ends a region, or totaly removes it if nothing
-    /// was generted since the begining of the region, also outdents
+    /// Ends a region, or totally removes it if nothing
+    /// was generated since the beginning of the region, also outdents
     /// the number of levels specified.
     /// </summary>
     public void End(int levelsToDecrease)
@@ -1359,7 +1359,7 @@ public class CodeRegion
     public int CurrentIndentLevel { get { return _regionIndentLevel; } }
 
     /// <summary>
-    /// Get a string of spaces equivelent to the number of indents
+    /// Get a string of spaces equivalent to the number of indents
     /// desired.
     /// </summary>
     public static string GetIndent(int indentLevel)
@@ -1893,7 +1893,7 @@ public class DynamicTextTransformation
 
     /// <summary>
     /// Creates an instance of the DynamicTextTransformation class around the passed in
-    /// TextTransformation shapped instance passed in, or if the passed in instance
+    /// TextTransformation shaped instance passed in, or if the passed in instance
     /// already is a DynamicTextTransformation, it casts it and sends it back.
     /// </summary>
     public static DynamicTextTransformation Create(object instance)
@@ -1924,17 +1924,17 @@ public class DynamicTextTransformation
     }
 
     /// <summary>
-    /// Gets the value of the wrapped TextTranformation instance's GenerationEnvironment property
+    /// Gets the value of the wrapped TextTransformation instance's GenerationEnvironment property
     /// </summary>
     public StringBuilder GenerationEnvironment { get { return (StringBuilder)_generationEnvironment.GetValue(_instance, null); } }
 
     /// <summary>
-    /// Gets the value of the wrapped TextTranformation instance's Errors property
+    /// Gets the value of the wrapped TextTransformation instance's Errors property
     /// </summary>
     public System.CodeDom.Compiler.CompilerErrorCollection Errors { get { return (System.CodeDom.Compiler.CompilerErrorCollection)_errors.GetValue(_instance, null); } }
 
     /// <summary>
-    /// Calls the wrapped TextTranformation instance's Write method.
+    /// Calls the wrapped TextTransformation instance's Write method.
     /// </summary>
     public void Write(string text)
     {
@@ -1942,7 +1942,7 @@ public class DynamicTextTransformation
     }
 
     /// <summary>
-    /// Calls the wrapped TextTranformation instance's WriteLine method.
+    /// Calls the wrapped TextTransformation instance's WriteLine method.
     /// </summary>
     public void WriteLine(string text)
     {
@@ -1950,7 +1950,7 @@ public class DynamicTextTransformation
     }
 
     /// <summary>
-    /// Gets the value of the wrapped TextTranformation instance's Host property
+    /// Gets the value of the wrapped TextTransformation instance's Host property
     /// if available (shows up when hostspecific is set to true in the template directive) and returns
     /// the appropriate implementation of IDynamicHost
     /// </summary>
@@ -1976,7 +1976,7 @@ public class DynamicTextTransformation
 
 
 /// <summary>
-/// Reponsible for abstracting the use of Host between times
+/// Responsible for abstracting the use of Host between times
 /// when it is available and not
 /// </summary>
 public interface IDynamicHost
@@ -2003,7 +2003,7 @@ public interface IDynamicHost
 }
 
 /// <summary>
-/// Reponsible for implementing the IDynamicHost as a dynamic
+/// Responsible for implementing the IDynamicHost as a dynamic
 /// shape wrapper over the Microsoft.VisualStudio.TextTemplating.ITextTemplatingEngineHost interface
 /// rather than type dependent wrapper.  We don't use the
 /// interface type so that the code can be run in preprocessed mode
@@ -2018,7 +2018,7 @@ public class DynamicHost : IDynamicHost
 
     /// <summary>
     /// Creates an instance of the DynamicHost class around the passed in
-    /// Microsoft.VisualStudio.TextTemplating.ITextTemplatingEngineHost shapped instance passed in.
+    /// Microsoft.VisualStudio.TextTemplating.ITextTemplatingEngineHost shaped instance passed in.
     /// </summary>
     public DynamicHost(object instance)
     {
@@ -2067,7 +2067,7 @@ public class DynamicHost : IDynamicHost
 }
 
 /// <summary>
-/// Reponsible for implementing the IDynamicHost when the
+/// Responsible for implementing the IDynamicHost when the
 /// Host property is not available on the TextTemplating type. The Host
 /// property only exists when the hostspecific attribute of the template
 /// directive is set to true.
@@ -2076,7 +2076,7 @@ public class NullHost : IDynamicHost
 {
     /// <summary>
     /// An abstraction of the call to Microsoft.VisualStudio.TextTemplating.ITextTemplatingEngineHost ResolveParameterValue
-    /// that simply retuns null.
+    /// that simply returns null.
     /// </summary>
     public string ResolveParameterValue(string id, string name, string otherName)
     {
@@ -2085,7 +2085,7 @@ public class NullHost : IDynamicHost
 
     /// <summary>
     /// An abstraction of the call to Microsoft.VisualStudio.TextTemplating.ITextTemplatingEngineHost ResolvePath
-    /// that simply retuns the path passed in.
+    /// that simply returns the path passed in.
     /// </summary>
     public string ResolvePath(string path)
     {

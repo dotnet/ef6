@@ -41,7 +41,7 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
 
         protected override void PreInvoke(CommandProcessorContext cpc)
         {
-            // Save off the deleted function mport name
+            // Save off the deleted function import name
             DeletedFunctionImportName = FunctionImport.Name.Value;
 
             base.PreInvoke(cpc);

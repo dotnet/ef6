@@ -171,7 +171,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
         }
 
         /// <summary>
-        ///     The even handler when ojbects are dragged over the designer.
+        ///     The even handler when objects are dragged over the designer.
         /// </summary>
         /// <param name="e"></param>
         public override void OnDragEnter(DiagramDragEventArgs e)

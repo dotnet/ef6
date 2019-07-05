@@ -779,7 +779,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.ViewModel
         ///     changes are packaged up and the ModelController is used to make the changes to the model.
         /// </summary>
         /// <param name="e"></param>
-        internal void OnTransactionCommited(TransactionCommitEventArgs e)
+        internal void OnTransactionCommitted(TransactionCommitEventArgs e)
         {
             if (_reloading)
             {
@@ -796,7 +796,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.ViewModel
 
                 Debug.Assert(
                     changeContext.ViewModelChanges.Count == viewModelChanges.Count,
-                    "Not all changes from the view model were of type ViewModleChange");
+                    "Not all changes from the view model were of type ViewModelChange");
 
                 try
                 {

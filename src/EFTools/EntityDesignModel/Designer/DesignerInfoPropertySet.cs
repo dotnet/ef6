@@ -119,7 +119,7 @@ namespace Microsoft.Data.Entity.Design.Model.Designer
                 var propertyName = elem.Attribute(EFNameableItem.AttributeName).Value;
                 // Fix for bug 390580 - only include DesignerProperty if one with that name
                 // does not already exist (otherwise Dictionary throws when you attempt to add
-                // it which casues VS to crash)
+                // it which causes VS to crash)
                 if (false == _designerProperties.ContainsKey(propertyName))
                 {
                     var prop = new DesignerProperty(this, elem);

@@ -450,7 +450,7 @@ namespace UnitTests
         }
 
         [Fact]
-        public void Schema_accepts_context_with_databaseInitilizer_child_element()
+        public void Schema_accepts_context_with_databaseInitializer_child_element()
         {
             Validate("<context type='MyContext'><databaseInitializer type='MyContext' /></context>");
         }
@@ -675,7 +675,7 @@ namespace UnitTests
         private void Validate(string config, bool allowAllTypesAtTopLevel = true)
         {
             // this will throw for warnings while validating without 
-            // handler will not throw for warings.
+            // handler will not throw for warnings.
             Validate(config, allowAllTypesAtTopLevel, (o, e) => { throw e.Exception; });
         }
 

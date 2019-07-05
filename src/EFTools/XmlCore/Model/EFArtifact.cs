@@ -830,7 +830,7 @@ namespace Microsoft.Data.Entity.Design.Model
 
                             // at times (like when the last child is removed), the XLinq tree will 
                             // collapse whitespace nodes and we will get 'set value' on the 
-                            // preceeding element, we can ignore these
+                            // preceding element, we can ignore these
                             continue;
                         }
 

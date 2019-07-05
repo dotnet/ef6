@@ -113,7 +113,7 @@ namespace System.Data.Entity.Core.Common.Utils
 
         // 'protected' constructor
 
-        // 'protected' API that may be overriden to customize printing
+        // 'protected' API that may be overridden to customize printing
 
         // <summary>
         // Called once on the root of the tree before printing begins

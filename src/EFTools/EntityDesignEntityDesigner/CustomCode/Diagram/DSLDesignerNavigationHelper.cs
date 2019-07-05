@@ -215,7 +215,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
                     // see if any direct children are bindings bound to something in c-space
                     foreach (var child in container.Children)
                     {
-                        // check every binding to see if it is bound to seomthing in cspace
+                        // check every binding to see if it is bound to something in cspace
                         var b = child as ItemBinding;
                         if (b != null)
                         {

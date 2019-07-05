@@ -10,7 +10,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Linq;
 
     /// <summary>
-    /// Represents the Mapping metadata for an EnitytSet in CS space.
+    /// Represents the Mapping metadata for an EntitySet in CS space.
     /// </summary>
     /// <example>
     /// For Example if conceptually you could represent the CS MSL file as following
@@ -35,7 +35,7 @@ namespace System.Data.Entity.Core.Mapping
         private Lazy<List<AssociationSetEnd>> _implicitlyMappedAssociationSetEnds;
 
         /// <summary>
-        /// Initialiazes a new EntitySetMapping instance.
+        /// Initializes a new EntitySetMapping instance.
         /// </summary>
         /// <param name="entitySet">The entity set to be mapped.</param>
         /// <param name="containerMapping">The parent container mapping.</param>

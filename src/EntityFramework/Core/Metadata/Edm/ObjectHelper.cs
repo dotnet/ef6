@@ -148,7 +148,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             TypeUsage cspaceType,
             TypeUsage sspaceType)
         {
-            // if we are already C-Space, dont call the provider. this can happen for functions.
+            // if we are already C-Space, don't call the provider. this can happen for functions.
             var modelEquivalentSspace = sspaceType;
             if (sspaceType.EdmType.DataSpace
                 == DataSpace.SSpace)

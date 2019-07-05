@@ -319,7 +319,7 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Tables
                         cmd2.PostInvokeEvent += (o, eventsArgs) =>
                             {
                                 var sp = cmd2.ScalarProperty;
-                                Debug.Assert(sp != null, "CreateFragmentScalarPropertyTreeCommand falied to create a ScalarProperty");
+                                Debug.Assert(sp != null, "CreateFragmentScalarPropertyTreeCommand failed to create a ScalarProperty");
                                 ModelItem = sp;
                             };
 

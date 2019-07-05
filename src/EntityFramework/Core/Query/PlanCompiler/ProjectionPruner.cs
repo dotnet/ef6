@@ -382,7 +382,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         // <summary>
         // ElementOp
-        // An ElementOp that is still present when Projection Prunning is invoked can only get introduced
+        // An ElementOp that is still present when Projection Pruning is invoked can only get introduced
         // in the TransformationRules phase by transforming an apply operation into a scalar subquery.
         // Such ElementOp serves as root of a defining expression of a VarDefinitionOp node and
         // thus what it produces is useful.
@@ -467,7 +467,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         // <summary>
-        // Helper method for removing redundant constant keys from GroupByOp and DistictOp.
+        // Helper method for removing redundant constant keys from GroupByOp and DistinctOp.
         // It only examines the keys defined in the given varDefListNode.
         // It removes all constant and null keys that are not referenced elsewhere,
         // but ensuring that at least one key is left.
@@ -507,13 +507,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         // <summary>
         // First defer to default handling for groupby nodes
-        // If all group aggregate vars are prunned out turn it into a GroupBy.
+        // If all group aggregate vars are pruned out turn it into a GroupBy.
         // </summary>
         public override Node Visit(GroupByIntoOp op, Node n)
         {
             var result = VisitGroupByOp(op, n);
 
-            //Transform the GroupByInto into a GroupBy if all group aggregate vars were prunned out
+            //Transform the GroupByInto into a GroupBy if all group aggregate vars were pruned out
             if (result.Op.OpType == OpType.GroupByInto
                 && n.Child3.Children.Count == 0)
             {
@@ -717,7 +717,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // that var as referenced always
             var projectOp = (ProjectOp)n.Child0.Op;
 
-            //It is enougth to reference the first output, this usually is a simple constant
+            //It is enough to reference the first output, this usually is a simple constant
             AddReference(projectOp.Outputs.First);
 
             VisitChildren(n);

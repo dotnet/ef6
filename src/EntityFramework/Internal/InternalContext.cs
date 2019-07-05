@@ -614,7 +614,7 @@ namespace System.Data.Entity.Internal
         /// By default expression like 
         /// .Select(x => NewProperty = func(x.Property)).Where(x => x.NewProperty == ...)
         /// are simplified to avoid nested SELECT
-        /// In some cases, simplifing query with UDFs could caused to suboptimal plans due to calling UDF twice.
+        /// In some cases, simplifying query with UDFs could caused to suboptimal plans due to calling UDF twice.
         /// Also some SQL functions aren't allow in WHERE clause.
         /// Disabling that behavior
         /// </summary>
@@ -1199,7 +1199,7 @@ namespace System.Data.Entity.Internal
 
         // <summary>
         // Gets or sets an object representing a config file used for looking for DefaultConnectionFactory entries,
-        // database intializers and connection strings.
+        // database initializers and connection strings.
         // </summary>
         public virtual AppConfig AppConfig
         {

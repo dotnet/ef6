@@ -54,7 +54,7 @@ namespace Microsoft.Data.Entity.Design.Core.Controls
         }
 
         /// <summary>
-        ///     MouseLeftButtonUp Handler for focusable ancestor. If renameOnClick flag is set, starts the timer to attemp rename.
+        ///     MouseLeftButtonUp Handler for focusable ancestor. If renameOnClick flag is set, starts the timer to attempt rename.
         /// </summary>
         private void focusableAncestor_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
@@ -70,7 +70,7 @@ namespace Microsoft.Data.Entity.Design.Core.Controls
         /// </summary>
         private void focusableAncestor_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            Debug.Assert(FocusableAncestor != null, "Focusable Ancestor in EditibleControl should not have been null!");
+            Debug.Assert(FocusableAncestor != null, "Focusable Ancestor in EditableControl should not have been null!");
 
             _renameOnClick = FocusableAncestor.IsKeyboardFocusWithin;
         }
@@ -83,7 +83,7 @@ namespace Microsoft.Data.Entity.Design.Core.Controls
         {
             StopRenameTimer();
 
-            Debug.Assert(FocusableAncestor != null, "Focusable Ancestor in EditibleControl should not have been null!");
+            Debug.Assert(FocusableAncestor != null, "Focusable Ancestor in EditableControl should not have been null!");
 
             //check if it's still focused at the moment
             if (FocusableAncestor.IsKeyboardFocusWithin)

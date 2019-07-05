@@ -43,7 +43,7 @@ namespace Microsoft.Data.Entity.Design.Model.Mapping
                     _property = new SingleItemBinding<Property>(
                         this,
                         AttributeName,
-                        FunctionImportProperyMappingNameNormalizer.NameNormalizer
+                        FunctionImportPropertyMappingNameNormalizer.NameNormalizer
                         );
                 }
                 return _property;

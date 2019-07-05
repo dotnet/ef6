@@ -84,7 +84,7 @@ Actual:'{1}'",
 
         private static bool IsMatchWithAnyPlaceholderValues(string expectedMessage, string actualMessage, bool isExactMatch)
         {
-            // Find the sections of the Exception message seperated by {x} tags
+            // Find the sections of the Exception message separated by {x} tags
             var sections = FindMessageSections(expectedMessage);
 
             // Check that each section is present in the actual message in correct order

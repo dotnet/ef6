@@ -195,7 +195,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
                             (EdmType)Converter.LoadSchemaElement(_type, _type.Schema.ProviderManifest, convertedItemCache, newGlobalItems);
                         if (edmType != null)
                         {
-                            _typeUsageBuilder.ValidateAndSetTypeUsage(edmType, false); //use typeusagebuilder so dont lose facet information
+                            _typeUsageBuilder.ValidateAndSetTypeUsage(edmType, false); //use typeusagebuilder so don't lose facet information
                             _typeUsage = TypeUsage.Create(new CollectionType(_typeUsageBuilder.TypeUsage));
                         }
 

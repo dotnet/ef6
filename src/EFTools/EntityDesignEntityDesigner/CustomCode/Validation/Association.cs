@@ -15,7 +15,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.ViewModel
         ///     Validate Association name
         /// </summary>
         /// <param name="context"></param>
-        [ValidationMethod(ValidationCategories.Open | ValidationCategories.Save, CustomCategory = "OnTransactionCommited")]
+        [ValidationMethod(ValidationCategories.Open | ValidationCategories.Save, CustomCategory = "OnTransactionCommitted")]
         private void ValidateName(ValidationContext context)
         {
             if (!EscherAttributeContentValidator.IsValidCsdlAssociationName(Name))

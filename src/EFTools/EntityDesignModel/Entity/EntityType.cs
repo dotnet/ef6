@@ -283,7 +283,7 @@ namespace Microsoft.Data.Entity.Design.Model.Entity
         ///     Normally we will just the general implementation for this.  The exception is when we
         ///     are trying to bind to this from the TypeName attribute of an EntityTypeMapping.  In this
         ///     case, we need to return IsTypeOf(typeName) if the ETM needs it that way.
-        ///     Simillary we need to return "Collection(typeName)" string for the ReturnType attribute of a FunctionImport.
+        ///     Similarly, we need to return "Collection(typeName)" string for the ReturnType attribute of a FunctionImport.
         /// </summary>
         /// <param name="binding"></param>
         /// <returns></returns>

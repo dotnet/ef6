@@ -120,7 +120,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 }
                 else
                 {
-                    // The provider was previously discovered from a preceeding SSDL file; it is an error
+                    // The provider was previously discovered from a preceding SSDL file; it is an error
                     // if the 'Provider' attributes in all SSDL files are not identical.
                     if (_provider == provider)
                     {

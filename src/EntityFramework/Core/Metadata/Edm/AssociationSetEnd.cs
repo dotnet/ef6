@@ -10,7 +10,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     public sealed class AssociationSetEnd : MetadataItem
     {
         // <summary>
-        // Initializes a new instance of AssocationSetEnd
+        // Initializes a new instance of AssociationSetEnd
         // </summary>
         // <param name="entitySet"> Entity set that this end refers to </param>
         // <param name="parentSet"> The association set which this belongs to </param>

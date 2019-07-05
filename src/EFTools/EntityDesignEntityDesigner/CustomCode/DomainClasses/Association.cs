@@ -35,7 +35,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.ViewModel
                     yield return SourceEntityType;
                 }
 
-                // Return TargeEntityType if it is available and not deleted and not same as SourceEntityType (SelfAssociation scenario).
+                // Return TargetEntityType if it is available and not deleted and not same as SourceEntityType (SelfAssociation scenario).
                 if (TargetEntityType != null
                     && TargetEntityType.IsDeleted == false
                     && SourceEntityType != TargetEntityType)

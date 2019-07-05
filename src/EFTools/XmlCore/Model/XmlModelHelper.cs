@@ -55,7 +55,7 @@ namespace Microsoft.Data.Entity.Design.Model
                     }
 
                     Debug.Assert(
-                        ib.Parent.State == EFElementState.Normalized, "Unexpected state of elmenet.  Expected state to be normalized.");
+                        ib.Parent.State == EFElementState.Normalized, "Unexpected state of element.  Expected state to be normalized.");
                 }
             }
 

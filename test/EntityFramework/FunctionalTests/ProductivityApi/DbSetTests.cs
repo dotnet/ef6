@@ -552,7 +552,7 @@ namespace ProductivityApiTests
                 Assert.Equal(EntityState.Added, GetStateEntry(context, category).State);
                 Assert.Equal(EntityState.Added, GetStateEntry(context, product).State);
 
-                // Assert fixup, refernce fixup happens for principal in Added, but not FK fixup.
+                // Assert fixup, reference fixup happens for principal in Added, but not FK fixup.
                 Assert.Equal(product.Category, context.Categories.Find("Beverages"));
                 Assert.Equal(null, product.CategoryId);
             }
@@ -560,7 +560,7 @@ namespace ProductivityApiTests
 
         #endregion
 
-        #region Conficts at root level for FK graph
+        #region Conflicts at root level for FK graph
 
         [Fact]
         public void Add_is_a_noop_if_FK_graph_is_already_Added_Principal_and_Dependent_Added()
@@ -579,7 +579,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Add_is_a_noop_if_FK_graph_is_already_Added_Prinicipal_and_Dependent_Modified()
+        public void Add_is_a_noop_if_FK_graph_is_already_Added_Principal_and_Dependent_Modified()
         {
             Add_moves_root_to_Added_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(
                 EntityState.Added,
@@ -587,7 +587,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Add_is_a_noop_if_FK_graph_is_already_Added_Prinicipal_and_Dependent_Deleted()
+        public void Add_is_a_noop_if_FK_graph_is_already_Added_Principal_and_Dependent_Deleted()
         {
             Add_moves_root_to_Added_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(
                 EntityState.Added,
@@ -3232,11 +3232,11 @@ namespace ProductivityApiTests
         {
             using (var context = new SpecialCharacters())
             {
-                var countriesOrRegions = context.Länder.ToList();
+                var countriesOrRegions = context.LÃ¤nder.ToList();
 
                 Assert.Equal(2, countriesOrRegions.Count);
-                Assert.Equal(1, countriesOrRegions.Count(l => l.Näme == "A"));
-                Assert.Equal(1, countriesOrRegions.Count(l => l.Näme == "B"));
+                Assert.Equal(1, countriesOrRegions.Count(l => l.NÃ¤me == "A"));
+                Assert.Equal(1, countriesOrRegions.Count(l => l.NÃ¤me == "B"));
             }
         }
 
@@ -3245,11 +3245,11 @@ namespace ProductivityApiTests
         {
             using (var context = new SpecialCharacters())
             {
-                context.Länder.Load();
+                context.LÃ¤nder.Load();
 
-                var lander = context.Länder.Find(1);
+                var lander = context.LÃ¤nder.Find(1);
                 Assert.NotNull(lander);
-                Assert.Equal("A", lander.Näme);
+                Assert.Equal("A", lander.NÃ¤me);
             }
         }
 
@@ -3258,9 +3258,9 @@ namespace ProductivityApiTests
         {
             using (var context = new SpecialCharacters())
             {
-                var lander = context.Länder.Find(1);
+                var lander = context.LÃ¤nder.Find(1);
                 Assert.NotNull(lander);
-                Assert.Equal("A", lander.Näme);
+                Assert.Equal("A", lander.NÃ¤me);
             }
         }
 
@@ -3269,11 +3269,11 @@ namespace ProductivityApiTests
         {
             using (var context = new SpecialCharacters())
             {
-                var lander = context.Länder.Add(
-                    new Länder
+                var lander = context.LÃ¤nder.Add(
+                    new LÃ¤nder
                         {
                             Id = 3,
-                            Näme = "C"
+                            NÃ¤me = "C"
                         });
 
                 Assert.Equal(EntityState.Added, context.Entry(lander).State);
@@ -3285,11 +3285,11 @@ namespace ProductivityApiTests
         {
             using (var context = new SpecialCharacters())
             {
-                var lander = context.Länder.Attach(
-                    new Länder
+                var lander = context.LÃ¤nder.Attach(
+                    new LÃ¤nder
                         {
                             Id = 3,
-                            Näme = "C"
+                            NÃ¤me = "C"
                         });
 
                 Assert.Equal(EntityState.Unchanged, context.Entry(lander).State);
@@ -3301,11 +3301,11 @@ namespace ProductivityApiTests
         {
             using (var context = new SpecialCharacters())
             {
-                var countriesOrRegions = context.Länder.SqlQuery("select * from Länder").ToList();
+                var countriesOrRegions = context.LÃ¤nder.SqlQuery("select * from LÃ¤nder").ToList();
 
                 Assert.Equal(2, countriesOrRegions.Count);
-                Assert.Equal(1, countriesOrRegions.Count(l => l.Näme == "A"));
-                Assert.Equal(1, countriesOrRegions.Count(l => l.Näme == "B"));
+                Assert.Equal(1, countriesOrRegions.Count(l => l.NÃ¤me == "A"));
+                Assert.Equal(1, countriesOrRegions.Count(l => l.NÃ¤me == "B"));
             }
         }
 
@@ -3316,32 +3316,32 @@ namespace ProductivityApiTests
                 Database.SetInitializer(new SpecialCharactersInitializer());
             }
 
-            public DbSet<Länder> Länder { get; set; }
+            public DbSet<LÃ¤nder> LÃ¤nder { get; set; }
         }
 
-        public class Länder
+        public class LÃ¤nder
         {
             [DatabaseGenerated(DatabaseGeneratedOption.None)]
             public int Id { get; set; }
 
-            public string Näme { get; set; }
+            public string NÃ¤me { get; set; }
         }
 
         public class SpecialCharactersInitializer : DropCreateDatabaseAlways<SpecialCharacters>
         {
             protected override void Seed(SpecialCharacters context)
             {
-                context.Länder.Add(
-                    new Länder
+                context.LÃ¤nder.Add(
+                    new LÃ¤nder
                         {
                             Id = 1,
-                            Näme = "A"
+                            NÃ¤me = "A"
                         });
-                context.Länder.Add(
-                    new Länder
+                context.LÃ¤nder.Add(
+                    new LÃ¤nder
                         {
                             Id = 2,
-                            Näme = "B"
+                            NÃ¤me = "B"
                         });
             }
         }

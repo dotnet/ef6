@@ -14,7 +14,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private static readonly object _assemblyCacheLock = new object();
 
-        internal static LockedAssemblyCache AquireLockedAssemblyCache()
+        internal static LockedAssemblyCache AcquireLockedAssemblyCache()
         {
             return new LockedAssemblyCache(_assemblyCacheLock, _globalAssemblyCache);
         }
@@ -38,7 +38,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             typesInLoading = null;
             errors = null;
 
-            using (var lockedAssemblyCache = AquireLockedAssemblyCache())
+            using (var lockedAssemblyCache = AcquireLockedAssemblyCache())
             {
                 var loadingData = new ObjectItemLoadingSessionData(
                     knownAssemblies, lockedAssemblyCache, edmItemCollection, logLoadMessage, loaderCookie);

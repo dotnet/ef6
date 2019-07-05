@@ -147,7 +147,7 @@ namespace Microsoft.Data.Entity.Design.Package
 		/// <summary>
 		/// Handles exceptions that occurred during binding.
 		/// </summary>
-		/// <param name="exception">The exception that occured</param>
+		/// <param name="exception">The exception that occurred</param>
 		/// <returns>A flag indicating whether the exception was handled or not.</returns>
 		/// <remarks>If the exception is not handled (i.e. the method returns false), it will be re-thrown
 		/// by the calling method.
@@ -277,7 +277,7 @@ namespace Microsoft.Data.Entity.Design.Package
 		partial void SetValidationExtensionRegistrar(DslValidation::ValidationController validationController);
 
 		/// <summary>
-		/// When the doc data is closed, make sure we reset the valiation messages 
+		/// When the doc data is closed, make sure we reset the validation messages 
 		/// (if there's any) from the ErrorList window.
 		/// </summary>
 		/// <param name="disposing"></param>
