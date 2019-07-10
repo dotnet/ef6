@@ -1,6 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-using System.Data.Entity.Utilities;
 using cqt = System.Data.Entity.Core.Common.CommandTrees;
 using md = System.Data.Entity.Core.Metadata.Edm;
 
@@ -45,7 +44,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         private static bool? _applyTransformationsRegardlessOfSize;
         // <summary>
-        // A boolean switch indicating whether we should apply transformation rules regardless of the size of the Iqt.
+        // A boolean value indicating whether we should apply transformation rules regardless of the size of the Iqt.
         // By default, the Enabled property of a boolean switch is set using the value specified in the configuration file.
         // Configuring the switch with a value of 0 sets the Enabled property to false; configuring the switch with a nonzero
         // value to set the Enabled property to true. If the BooleanSwitch constructor cannot find initial switch settings
@@ -67,7 +66,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         private static bool? _disableTransformationsRegardlessOfSize;
         // <summary>
-        // A boolean switch indicating whether we should not apply transformation rules regardless of the size of the Iqt.
+        // A boolean value indicating whether we should not apply transformation rules regardless of the size of the Iqt.
         // By default, the Enabled property of a boolean switch is set using the value specified in the configuration file.
         // Configuring the switch with a value of 0 sets the Enabled property to false; configuring the switch with a nonzero
         // value to set the Enabled property to true. If the BooleanSwitch constructor cannot find initial switch settings
