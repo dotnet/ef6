@@ -7,6 +7,7 @@ using md = System.Data.Entity.Core.Metadata.Edm;
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
     using System.Collections.Generic;
+    using System.Configuration;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Diagnostics;
@@ -42,6 +43,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     {
         #region private state
 
+        private static bool? _applyTransformationsRegardlessOfSize;
         // <summary>
         // A boolean switch indicating whether we should apply transformation rules regardless of the size of the Iqt.
         // By default, the Enabled property of a boolean switch is set using the value specified in the configuration file.
@@ -49,11 +51,21 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // value to set the Enabled property to true. If the BooleanSwitch constructor cannot find initial switch settings
         // in the configuration file, the Enabled property of the new switch is set to false by default.
         // </summary>
-        private static readonly BooleanSwitch _applyTransformationsRegardlessOfSize =
-            new BooleanSwitch(
-                "System.Data.Entity.Core.EntityClient.IgnoreOptimizationLimit",
-                "The Entity Framework should try to optimize the query regardless of its size");
+        private static bool applyTransformationsRegardlessOfSize
+        {
+            get
+            {
+                if (!_applyTransformationsRegardlessOfSize.HasValue)
+                {
+                    var appSetting = ConfigurationManager.AppSettings["EntityFramework_EntityClient_IgnoreOptimizationLimit"];
+                    _applyTransformationsRegardlessOfSize = Boolean.TryParse(appSetting, out var value) && value;
+                }
 
+                return _applyTransformationsRegardlessOfSize.Value;
+            }
+        }
+
+        private static bool? _disableTransformationsRegardlessOfSize;
         // <summary>
         // A boolean switch indicating whether we should not apply transformation rules regardless of the size of the Iqt.
         // By default, the Enabled property of a boolean switch is set using the value specified in the configuration file.
@@ -61,20 +73,38 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // value to set the Enabled property to true. If the BooleanSwitch constructor cannot find initial switch settings
         // in the configuration file, the Enabled property of the new switch is set to false by default.
         // </summary>
-        private static readonly BooleanSwitch _disableTransformationsRegardlessOfSize =
-            new BooleanSwitch(
-                "System.Data.Entity.Core.EntityClient.DisableOptimization",
-                "The Entity Framework should not try to optimize the query regardless of its size");
+        private static bool disableTransformationsRegardlessOfSize
+        {
+            get
+            {
+                if (!_disableTransformationsRegardlessOfSize.HasValue)
+                {
+                    var appSetting = ConfigurationManager.AppSettings["EntityFramework_EntityClient_DisableOptimization"];
+                    _disableTransformationsRegardlessOfSize = Boolean.TryParse(appSetting, out var value) && value;
+                }
 
+                return _disableTransformationsRegardlessOfSize.Value;
+            }
+        }
+
+        private static int? _maxNodeCountForTransformations;
         // <summary>
         // An integer switch specifying the maximum size of the query in terms of Iqt nodes for which we attempt to do transformation rules.
         // This number is ignored if applyTransformationsRegardlessOfSize or disableTransformationsRegardlessOfSize is enabled.
         // </summary>
-        private static readonly IntegerSwitch _maxNodeCountForTransformations =
-            new IntegerSwitch(
-                "System.Data.Entity.Core.EntityClient.MaxNodeCountForTransformations",
-                "The Entity Framework should not try to optimize the query if the Iqt size is larger than the specified value",
-                "10000");
+        private static int maxNodeCountForTransformations
+        {
+            get
+            {
+                if (!_maxNodeCountForTransformations.HasValue)
+                {
+                    var appSetting = ConfigurationManager.AppSettings["EntityFramework_EntityClient_MaxNodeCountForTransformations"];
+                    _maxNodeCountForTransformations = Int32.TryParse(appSetting, out var value) ? value : 10000;
+                }
+
+                return _maxNodeCountForTransformations.Value;
+            }
+        }
 
         // <summary>
         // The CTree we're compiling a plan for.
@@ -505,7 +535,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             // No check needed if optimizations are disabled
             //
-            if (_disableTransformationsRegardlessOfSize.Enabled)
+            if (disableTransformationsRegardlessOfSize)
             {
                 return false;
             }
@@ -514,15 +544,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // If the nextNodeId is less than MaxNodeCountForTransformations then we don't need to
             // calculate the actual node count, it must be less than  MaxNodeCountForTransformations
             //
-            if (_applyTransformationsRegardlessOfSize.Enabled
-                || m_command.NextNodeId < _maxNodeCountForTransformations.CurrentValue)
+            if (applyTransformationsRegardlessOfSize
+                || m_command.NextNodeId < maxNodeCountForTransformations)
             {
                 return true;
             }
 
             //Compute the actual node count
             var actualCount = NodeCounter.Count(m_command.Root);
-            return (actualCount < _maxNodeCountForTransformations.CurrentValue);
+            return (actualCount < maxNodeCountForTransformations);
         }
 
         // <summary>
