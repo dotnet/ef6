@@ -83,8 +83,8 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.ModelChanges
                         && modelInheritanceConnector.ConnectorPoints.Count > 0)
                     {
                         var points = new List<KeyValuePair<double, double>>();
-                        var setConnectorPointscmd = new SetConnectorPointsCommand(modelInheritanceConnector, points);
-                        CommandProcessor.InvokeSingleCommand(cpc, setConnectorPointscmd);
+                        var setConnectorPointsCmd = new SetConnectorPointsCommand(modelInheritanceConnector, points);
+                        CommandProcessor.InvokeSingleCommand(cpc, setConnectorPointsCmd);
                     }
 
                     var cmd = new UpdateDefaultableValueCommand<bool>(

@@ -333,7 +333,7 @@
   <data name="hdrPrincipal.Width" type="System.Int32, mscorlib">
     <value>125</value>
   </data>
-  <data name="hdrDepedent.Width" type="System.Int32, mscorlib">
+  <data name="hdrDependent.Width" type="System.Int32, mscorlib">
     <value>125</value>
   </data>
   <data name="label2.AutoSize" type="System.Boolean, mscorlib">
@@ -531,10 +531,10 @@
   <data name="&gt;&gt;hdrPrincipal.Type" xml:space="preserve">
     <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;hdrDepedent.Name" xml:space="preserve">
-    <value>hdrDepedent</value>
+  <data name="&gt;&gt;hdrDependent.Name" xml:space="preserve">
+    <value>hdrDependent</value>
   </data>
-  <data name="&gt;&gt;hdrDepedent.Type" xml:space="preserve">
+  <data name="&gt;&gt;hdrDependent.Type" xml:space="preserve">
     <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">

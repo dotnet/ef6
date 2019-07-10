@@ -263,7 +263,7 @@ namespace Microsoft.Data.Entity.Design.Model
         //        private Guid _domainId = Guid.NewGuid();
         //
         //        /// <summary>
-        //        /// This is the unique ID for this particual in-memory instance of this EFObject.  This
+        //        /// This is the unique ID for this particular in-memory instance of this EFObject.  This
         //        /// is mainly useful for debugging purposes.
         //        /// </summary>
         //        /// 

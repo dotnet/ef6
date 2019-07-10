@@ -147,7 +147,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Model
 
                 Debug.Assert(targetSchemaVersion != null, "should not get here for a Misc project");
 
-                // get the extension of the file being loaded (might not be EDMX); this API will include the preceeding "."
+                // get the extension of the file being loaded (might not be EDMX); this API will include the preceding "."
                 var filePath = projectItem.get_FileNames(1);
                 var fileExtension = Path.GetExtension(filePath);
                 XDocument originalDocument = null;

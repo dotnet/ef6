@@ -185,7 +185,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
 
             // Check if the foreign key in the child table corresponds to the primary key, i.e., if
             // the foreign key (e.g., pid, pid2) is a superset of the actual key members (e.g., pid), it means
-            // that the foreign key is also the primary key for this table -- so we can propagate the queries upto C-Space
+            // that the foreign key is also the primary key for this table -- so we can propagate the queries up to C-Space
             // rather than doing the cell check
 
             var initialErrorLogSize = errorLog.Count;
@@ -200,7 +200,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
 
             if (initialErrorLogSize == errorLog.Count)
             {
-                // Check if the order of columns in foreign key correponds to the
+                // Check if the order of columns in foreign key corresponds to the
                 // mappings in m_cellGroup, e.g., if <pid1, pid2> in SAddress is
                 // a foreign key into <pid1, pid2> of the SPerson table, make
                 // sure that this order is preserved through the mappings in m_cellGroup
@@ -251,7 +251,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             var primaryKeyFields = primaryKey.KeyFields;
             var foundCell = false;
 
-            var foundValidParentColumnsForForeignKey = false; //we need to find only one, dont error on any one check being false
+            var foundValidParentColumnsForForeignKey = false; //we need to find only one, don't error on any one check being false
             List<ErrorLog.Record> errorListForInvalidParentColumnsForForeignKey = null;
             foreach (var cell in cells)
             {
@@ -373,7 +373,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                     //We need to check to see if the dependent properties that were mapped from S side are present as
                     //dependant properties of this ref constraint on the Edm side. We need to do the same for principal side but
                     //we can not enforce equality since the order of the properties participating in the constraint on the S side and
-                    //C side could be different. This is OK as long as they are mapped appropriately. We also can not use Existance as a sufficient
+                    //C side could be different. This is OK as long as they are mapped appropriately. We also can not use Existence as a sufficient
                     //condition since it will allow invalid mapping where FK columns could have been flipped when mapping to the Edm side. So
                     //we make sure that the index of the properties in the principal and dependant are same on the Edm side even if they are in
                     //different order for ref constraints for Edm and store side.

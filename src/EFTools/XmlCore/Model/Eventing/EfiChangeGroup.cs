@@ -52,7 +52,7 @@ namespace Microsoft.Data.Entity.Design.Model.Eventing
         }
 
         /// <summary>
-        ///     Sorts the change group using stable sort algorithm (i.e. one that preservs order of equal values).
+        ///     Sorts the change group using stable sort algorithm (i.e. one that preserves order of equal values).
         /// </summary>
         internal ICollection<EfiChange> SortChangesForProcessing(EfiChangeComparer changeComparer)
         {

@@ -149,7 +149,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         }
 
         [Fact]
-        public void Map_should_set_clr_property_info_on_assocation_source_end()
+        public void Map_should_set_clr_property_info_on_association_source_end()
         {
             var modelConfiguration = new ModelConfiguration();
             var model = new EdmModel(DataSpace.CSpace);

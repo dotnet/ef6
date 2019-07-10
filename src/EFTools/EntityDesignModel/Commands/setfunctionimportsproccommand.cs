@@ -9,7 +9,7 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
     using Microsoft.Data.Entity.Design.Model.Mapping;
 
     /// <summary>
-    ///     Use this command to set a function assocated with a function import
+    ///     Use this command to set a function associated with a function import
     ///     Example Function, corresponding FunctionImport, and the FunctionImportMapping:
     ///     &lt;Function Name=&quot;GetOrderDetails&quot; Aggregate=&quot;false&quot;
     ///     BuiltIn=&quot;false&quot; NiladicFunction=&quot;false&quot;

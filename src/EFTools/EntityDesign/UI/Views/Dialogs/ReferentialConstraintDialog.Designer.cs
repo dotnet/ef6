@@ -39,7 +39,7 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
             this.cmbDependentKey = new System.Windows.Forms.ComboBox();
             this.listMappings = new Microsoft.Data.Entity.Design.UI.Views.Dialogs.ReferentialConstraintListView();
             this.hdrPrincipal = new System.Windows.Forms.ColumnHeader();
-            this.hdrDepedent = new System.Windows.Forms.ColumnHeader();
+            this.hdrDependent = new System.Windows.Forms.ColumnHeader();
             this.label2 = new System.Windows.Forms.Label();
             this.txtDependentRole = new System.Windows.Forms.TextBox();
             this.mainTableLayout = new System.Windows.Forms.TableLayoutPanel();
@@ -111,7 +111,7 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
             resources.ApplyResources(this.listMappings, "listMappings");
             this.listMappings.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.hdrPrincipal,
-            this.hdrDepedent});
+            this.hdrDependent});
             this.listMappings.FullRowSelect = true;
             this.listMappings.GridLines = true;
             this.listMappings.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
@@ -130,10 +130,10 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
             this.hdrPrincipal.Text = global::Microsoft.Data.Entity.Design.UI.Views.Dialogs.DialogsResource.RefConstraintDialog_PrincipalKeyHeader;
             resources.ApplyResources(this.hdrPrincipal, "hdrPrincipal");
             // 
-            // hdrDepedent
+            // hdrDependent
             // 
-            this.hdrDepedent.Text = global::Microsoft.Data.Entity.Design.UI.Views.Dialogs.DialogsResource.RefConstraintDialog_DependentKeyHeader;
-            resources.ApplyResources(this.hdrDepedent, "hdrDepedent");
+            this.hdrDependent.Text = global::Microsoft.Data.Entity.Design.UI.Views.Dialogs.DialogsResource.RefConstraintDialog_DependentKeyHeader;
+            resources.ApplyResources(this.hdrDependent, "hdrDependent");
             // 
             // label2
             // 
@@ -209,7 +209,7 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
         private System.Windows.Forms.ComboBox cmdPrincipalRole;
         private System.Windows.Forms.ComboBox cmbDependentKey;
         private System.Windows.Forms.ColumnHeader hdrPrincipal;
-        private System.Windows.Forms.ColumnHeader hdrDepedent;
+        private System.Windows.Forms.ColumnHeader hdrDependent;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtDependentRole;
         private ReferentialConstraintListView listMappings;

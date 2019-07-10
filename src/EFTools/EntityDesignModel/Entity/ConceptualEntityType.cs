@@ -287,7 +287,7 @@ namespace Microsoft.Data.Entity.Design.Model.Entity
         }
 
         /// <summary>
-        ///     A bindable reference to the EntityType that is this type's base type (will be null if no inheritence)
+        ///     A bindable reference to the EntityType that is this type's base type (will be null if no inheritance)
         /// </summary>
         internal EntityTypeBaseType BaseType
         {
@@ -359,7 +359,7 @@ namespace Microsoft.Data.Entity.Design.Model.Entity
                         return null;
                     default:
                         var etbt = BaseType;
-                        Debug.Assert(etbt != null, "BaseType is not an EntiytTypeBaseType");
+                        Debug.Assert(etbt != null, "BaseType is not an EntityTypeBaseType");
                         ModelHelper.InvalidSchemaError(Resources.UnresolvedBaseType_1, etbt.RefName, NormalizedNameExternal);
                         return null;
                 }

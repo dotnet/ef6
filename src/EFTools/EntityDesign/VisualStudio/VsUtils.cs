@@ -1055,7 +1055,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
         }
 
         // <summary>
-        //     Gets the text from DocData if it's available, otherwise retreives it from disk.
+        //     Gets the text from DocData if it's available, otherwise retrieves it from disk.
         // </summary>
         internal static string GetFileContentsFromBufferOrDisk(string filePath)
         {

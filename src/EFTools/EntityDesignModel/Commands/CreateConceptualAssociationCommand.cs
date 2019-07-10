@@ -92,7 +92,7 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
             // the model that we want to add the association to
             var model = artifact.ConceptualModel();
 
-            // check for uniqueness of the assocation and association set names
+            // check for uniqueness of the association and association set names
             // if uniquifyNames is true then make them unique, otherwise throw
             // an exception if they're not (always uniquify associationSetName
             // regardless as we get bugs if not)

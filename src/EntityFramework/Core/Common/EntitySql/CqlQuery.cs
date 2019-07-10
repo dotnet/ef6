@@ -30,10 +30,10 @@ namespace System.Data.Entity.Core.Common.EntitySql
     //         s
     //     </item>
     // </list>
-    // Queries can be formulated in O-Space, C-Space and S-Space and the services exposed by this class are agnostic of the especific typespace or
+    // Queries can be formulated in O-Space, C-Space and S-Space and the services exposed by this class are agnostic of the specific typespace or
     // metadata instance passed as required parameter in the semantic analysis by the perspective parameter. It is assumed that the perspective and
     // metadata was properly initialized.
-    // Provided that the command is syntacticaly correct and meaningful within the given typespace, the result will be a valid
+    // Provided that the command is syntactically correct and meaningful within the given typespace, the result will be a valid
     // <see
     //     cref="DbCommandTree" />
     // or
@@ -63,7 +63,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // </param>
         // <param name="parameters"> ordinary parameters </param>
         // <returns> A parse result with the command tree produced by parsing the given command. </returns>
-        // <exception cref="System.Data.Entity.Core.EntityException">Thrown when Syntatic or Semantic rules are violated and the query cannot be accepted</exception>
+        // <exception cref="System.Data.Entity.Core.EntityException">Thrown when Syntactic or Semantic rules are violated and the query cannot be accepted</exception>
         // <exception cref="System.Data.Entity.Core.MetadataException">Thrown when metadata related service requests fail</exception>
         // <exception cref="System.Data.Entity.Core.MappingException">Thrown when mapping related service requests fail</exception>
         // <remarks>
@@ -106,7 +106,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // <param name="parameters"> ordinary command parameters </param>
         // <param name="variables"> command free variables </param>
         // <returns> The query expression tree produced by parsing the given query command. </returns>
-        // <exception cref="System.Data.Entity.Core.EntityException">Thrown when Syntatic or Semantic rules are violated and the query expression cannot be accepted</exception>
+        // <exception cref="System.Data.Entity.Core.EntityException">Thrown when Syntactic or Semantic rules are violated and the query expression cannot be accepted</exception>
         // <exception cref="System.Data.Entity.Core.MetadataException">Thrown when metadata related service requests fail</exception>
         // <exception cref="System.Data.Entity.Core.MappingException">Thrown when mapping related service requests fail</exception>
         // <remarks>
@@ -149,7 +149,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // parser options <seealso cref="ParserOptions" />
         // </param>
         // <returns> Ast </returns>
-        // <exception cref="System.Data.Entity.Core.EntityException">Thrown when Syntatic or Semantic rules are violated and the query cannot be accepted</exception>
+        // <exception cref="System.Data.Entity.Core.EntityException">Thrown when Syntactic or Semantic rules are violated and the query cannot be accepted</exception>
         // <remarks>
         // This method is not thread safe.
         // </remarks>
@@ -211,7 +211,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // <remarks>
         // Parameters name/types must be bound before invoking this method
         // </remarks>
-        // <exception cref="System.Data.Entity.Core.EntityException">Thrown when Syntatic or Semantic rules are violated and the query cannot be accepted.</exception>
+        // <exception cref="System.Data.Entity.Core.EntityException">Thrown when Syntactic or Semantic rules are violated and the query cannot be accepted.</exception>
         // <exception cref="System.Data.Entity.Core.MetadataException">Thrown as inner exception of a EntityException when metadata related service requests fail.</exception>
         // <exception cref="System.Data.Entity.Core.MappingException">Thrown as inner exception of a EntityException when mapping related service requests fail.</exception>
         // <remarks>
@@ -254,7 +254,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // <remarks>
         // Parameters name/types must be bound before invoking this method
         // </remarks>
-        // <exception cref="System.Data.Entity.Core.EntityException">Thrown when Syntatic or Semantic rules are violated and the query cannot be accepted.</exception>
+        // <exception cref="System.Data.Entity.Core.EntityException">Thrown when Syntactic or Semantic rules are violated and the query cannot be accepted.</exception>
         // <exception cref="System.Data.Entity.Core.MetadataException">Thrown as inner exception of a EntityException when metadata related service requests fail.</exception>
         // <exception cref="System.Data.Entity.Core.MappingException">Thrown as inner exception of a EntityException when mapping related service requests fail.</exception>
         // <remarks>

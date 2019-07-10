@@ -335,7 +335,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         // </summary>
         // <param name="reader"> the reader positioned at the int attribute </param>
         // <param name="field"> The int field to be given the value found </param>
-        // <returns> true if an int value was successfuly extracted from the attribute, false otherwise. </returns>
+        // <returns> true if an int value was successfully extracted from the attribute, false otherwise. </returns>
         internal bool HandleIntAttribute(XmlReader reader, ref int field)
         {
             int value;
@@ -353,7 +353,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         // </summary>
         // <param name="reader"> the reader positioned at the int attribute </param>
         // <param name="field"> The int field to be given the value found </param>
-        // <returns> true if an int value was successfuly extracted from the attribute, false otherwise. </returns>
+        // <returns> true if an int value was successfully extracted from the attribute, false otherwise. </returns>
         internal bool HandleByteAttribute(XmlReader reader, ref byte field)
         {
             byte value;

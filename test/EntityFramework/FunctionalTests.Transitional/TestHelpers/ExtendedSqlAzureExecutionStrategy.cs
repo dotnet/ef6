@@ -48,7 +48,7 @@ namespace System.Data.Entity.TestHelpers
                 {
                     switch (err.Number)
                     {
-                            // This exception can be thrown even if the operation completed succesfully, so it's safer to let the application fail.
+                            // This exception can be thrown even if the operation completed successfully, so it's safer to let the application fail.
                             // DBNETLIB Error Code: -2
                             // Timeout expired. The timeout period elapsed prior to completion of the operation or the server is not responding. The statement has been terminated. 
                         case -2:

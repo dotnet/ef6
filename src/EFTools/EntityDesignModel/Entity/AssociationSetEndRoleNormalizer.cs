@@ -6,7 +6,7 @@ namespace Microsoft.Data.Entity.Design.Model.Entity
 
     /// <summary>
     ///     The refName for these ends cannot be already normalized.  The Role attribute points to
-    ///     an End of the Assocation from the AssociationSet, so it already has its scope set in stone.
+    ///     an End of the Association from the AssociationSet, so it already has its scope set in stone.
     ///     The EntitySet attribute points to an EntitySet that must be in the current EntityContainer
     ///     and EntitySet names don't use the schema alias or namespace.
     /// </summary>
@@ -34,7 +34,7 @@ namespace Microsoft.Data.Entity.Design.Model.Entity
             // the "Role" attribute points to a "Role" attribute in an Association End.  The trick
             // is that this attribute is optional and defaults to the raw name of the Entity pointed
             // to by the "Type" attribute of the Association End, and that might not be fully resolved
-            // yet.  So, lets just get the Normalized Name for the assocation from the assocation set 
+            // yet.  So, lets just get the Normalized Name for the association from the association set 
             //and tack on the Role name.
             if (set.Association.Status == BindingStatus.Known)
             {

@@ -436,7 +436,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
             // If we are generating foreign keys, there is always a referential constraint. Otherwise, check
             // if the dependent end includes key properties. If so, this implies that there is a referential
             // constraint. Otherwise, it is assumed that the foreign key properties are not defined in the 
-            // entity (verified ealier).
+            // entity (verified earlier).
             if (!_generateForeignKeyProperties
                 && !RequiresReferentialConstraint(storeConstraint, toType))
             {

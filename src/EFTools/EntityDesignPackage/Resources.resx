@@ -156,7 +156,7 @@
   <data name="StatusBarValidationCompletedText" xml:space="preserve">
     <value>Validation Completed</value>
   </data>
-  <data name="SelectAssociationEndCommnadText" xml:space="preserve">
+  <data name="SelectAssociationEndCommandText" xml:space="preserve">
     <value>Entity: {0}</value>
   </data>
   <data name="SelectAssociationPropertyCommandText" xml:space="preserve">

@@ -33,7 +33,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VisualStudio.UI
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.descriptionTextBox = new System.Windows.Forms.TextBox();
             this.progressBar = new System.Windows.Forms.ProgressBar();
-            this.closeInterrruptButton = new System.Windows.Forms.Button();
+            this.closeInterruptButton = new System.Windows.Forms.Button();
             this.statusTextBox = new System.Windows.Forms.TextBox();
             this.statusLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
@@ -68,17 +68,17 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VisualStudio.UI
             this.progressBar.Size = new System.Drawing.Size(629, 23);
             this.progressBar.TabIndex = 2;
             // 
-            // closeInterrruptButton
+            // closeInterruptButton
             // 
-            this.closeInterrruptButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.closeInterrruptButton.Enabled = false;
-            this.closeInterrruptButton.Location = new System.Drawing.Point(569, 199);
-            this.closeInterrruptButton.Name = "closeInterrruptButton";
-            this.closeInterrruptButton.Size = new System.Drawing.Size(75, 23);
-            this.closeInterrruptButton.TabIndex = 0;
-            this.closeInterrruptButton.Text = string.Empty; // the text changes depending on the mode
-            this.closeInterrruptButton.UseVisualStyleBackColor = true;
-            this.closeInterrruptButton.Click += new System.EventHandler(this.closeInterrruptButton_Click);
+            this.closeInterruptButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.closeInterruptButton.Enabled = false;
+            this.closeInterruptButton.Location = new System.Drawing.Point(569, 199);
+            this.closeInterruptButton.Name = "closeInterruptButton";
+            this.closeInterruptButton.Size = new System.Drawing.Size(75, 23);
+            this.closeInterruptButton.TabIndex = 0;
+            this.closeInterruptButton.Text = string.Empty; // the text changes depending on the mode
+            this.closeInterruptButton.UseVisualStyleBackColor = true;
+            this.closeInterruptButton.Click += new System.EventHandler(this.closeInterruptButton_Click);
             // 
             // statusTextBox
             // 
@@ -110,7 +110,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VisualStudio.UI
             this.ControlBox = false;
             this.Controls.Add(this.statusLabel);
             this.Controls.Add(this.statusTextBox);
-            this.Controls.Add(this.closeInterrruptButton);
+            this.Controls.Add(this.closeInterruptButton);
             this.Controls.Add(this.progressBar);
             this.Controls.Add(this.descriptionTextBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -132,7 +132,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VisualStudio.UI
         private System.ComponentModel.BackgroundWorker backgroundWorker;
         private System.Windows.Forms.TextBox descriptionTextBox;
         private System.Windows.Forms.ProgressBar progressBar;
-        private System.Windows.Forms.Button closeInterrruptButton;
+        private System.Windows.Forms.Button closeInterruptButton;
         private System.Windows.Forms.TextBox statusTextBox;
         private System.Windows.Forms.Label statusLabel;
     }

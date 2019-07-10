@@ -30,7 +30,7 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
                 }
                 catch (XmlException)
                 {
-                    // ignore an XmlException.  There was probalby a problem parsing.
+                    // ignore an XmlException.  There was probably a problem parsing.
                 }
             }
         }

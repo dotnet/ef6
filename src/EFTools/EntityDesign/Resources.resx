@@ -362,7 +362,7 @@
   <data name="PropertyWindow_DisplayName_End2NavigationProperty" xml:space="preserve">
     <value>End2 Navigation Property</value>
   </data>
-  <data name="PropertyWindow_Descritpion_EndNavigationProperty" xml:space="preserve">
+  <data name="PropertyWindow_Description_EndNavigationProperty" xml:space="preserve">
     <value>Name of the entity property that returns the value at this end</value>
   </data>
   <data name="PropertyWindow_DisplayName_End1OnDelete" xml:space="preserve">
@@ -371,7 +371,7 @@
   <data name="PropertyWindow_DisplayName_End2OnDelete" xml:space="preserve">
     <value>End2 OnDelete</value>
   </data>
-  <data name="PropertyWindow_Descritpion_EndOnDelete" xml:space="preserve">
+  <data name="PropertyWindow_Description_EndOnDelete" xml:space="preserve">
     <value>Specifies the action to take when an entity on this end is deleted</value>
   </data>
   <data name="PropertyWindow_DisplayName_Setter" xml:space="preserve">
@@ -589,22 +589,22 @@
   <data name="PropertyWindow_Description_Type" xml:space="preserve">
     <value>The type of the scalar property.</value>
   </data>
-  <data name="PropertyWindow_Descritpion_AssociationName" xml:space="preserve">
+  <data name="PropertyWindow_Description_AssociationName" xml:space="preserve">
     <value>The name of the association.</value>
   </data>
-  <data name="PropertyWindow_Descritpion_AssociationSetName" xml:space="preserve">
+  <data name="PropertyWindow_Description_AssociationSetName" xml:space="preserve">
     <value>The name of the association set that contains the association.</value>
   </data>
-  <data name="PropertyWindow_Descritpion_EntityContainerName" xml:space="preserve">
+  <data name="PropertyWindow_Description_EntityContainerName" xml:space="preserve">
     <value>The name of the entity container, which contains all instances of entities for the Entity Data Model.</value>
   </data>
-  <data name="PropertyWindow_Descritpion_Multiplicity" xml:space="preserve">
+  <data name="PropertyWindow_Description_Multiplicity" xml:space="preserve">
     <value>The allowed number of entities at this end of the association</value>
   </data>
-  <data name="PropertyWindow_Descritpion_Namespace" xml:space="preserve">
+  <data name="PropertyWindow_Description_Namespace" xml:space="preserve">
     <value>The namespace for the Entity Data Model.</value>
   </data>
-  <data name="PropertyWindow_Descritpion_Role" xml:space="preserve">
+  <data name="PropertyWindow_Description_Role" xml:space="preserve">
     <value>Name of this end</value>
   </data>
   <data name="ConnectionManager_AddError" xml:space="preserve">
@@ -1012,7 +1012,7 @@
   </data>
   <data name="DatabaseCreation_ErrorTemplatePathNotValid" xml:space="preserve">
     <value>The 'TemplatePath' attribute value, '{{0}}', for the template activity '{0}' in this workflow either is not valid or does not exist.</value>
-    <comment>This is a string that is fomatted two times, hence the '{{0}}'</comment>
+    <comment>This is a string that is formatted two times, hence the '{{0}}'</comment>
   </data>
   <data name="DatabaseCreation_ErrorTextTemplatingServiceNotFound" xml:space="preserve">
     <value>The ITextTemplating service could not be found to process the template '{0}'. This service is only available within Visual Studio. Please make sure that this workflow is running within Visual Studio.</value>
@@ -1034,7 +1034,7 @@
   </data>
   <data name="DatabaseCreation_ErrorTemplatePathNonFile" xml:space="preserve">
     <value>The 'TemplatePath' input file, '{{0}}', for the template activity '{0}' in this workflow is not valid because non-file and UNC paths are not supported.</value>
-    <comment>This is a string that is fomatted two times, hence the '{{0}}'</comment>
+    <comment>This is a string that is formatted two times, hence the '{{0}}'</comment>
   </data>
   <data name="DatabaseCreation_ErrorWorkflowPathNotSet" xml:space="preserve">
     <value>The Database Generation Workflow path is not set in the EDMX file. Please make sure this is set before running the Generate Database wizard</value>
@@ -1230,7 +1230,7 @@ Click Cancel to stop the process.</value>
   <data name="DatabaseCreation_NoDDLTemplatePathSpecified" xml:space="preserve">
     <value>The TemplatePath argument was not specified for the '{0}' activity. It must either be specified on this activity in the workflow file or passed in at runtime through the 'DDLTemplatePath' parameter in the EdmParameterBag.</value>
   </data>
-  <data name="DbGenExtensibileListConverter_UserDir" xml:space="preserve">
+  <data name="DbGenExtensibleListConverter_UserDir" xml:space="preserve">
     <value>(User)</value>
   </data>
   <data name="DbGenExtensibleListConverter_VSDir" xml:space="preserve">

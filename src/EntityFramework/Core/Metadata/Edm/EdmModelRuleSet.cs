@@ -43,12 +43,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 AddRule(EdmModelSyntacticValidationRules.EdmAssociationSet_ElementTypeMustNotBeNull);
                 AddRule(EdmModelSyntacticValidationRules.EdmAssociationSet_SourceSetMustNotBeNull);
                 AddRule(EdmModelSyntacticValidationRules.EdmAssociationSet_TargetSetMustNotBeNull);
-                AddRule(EdmModelSyntacticValidationRules.EdmAssociationType_AssocationEndMustNotBeNull);
+                AddRule(EdmModelSyntacticValidationRules.EdmAssociationType_AssociationEndMustNotBeNull);
                 AddRule(EdmModelSyntacticValidationRules.EdmEntitySet_ElementTypeMustNotBeNull);
                 AddRule(EdmModelSyntacticValidationRules.EdmModel_NameMustNotBeEmptyOrWhiteSpace);
                 AddRule(EdmModelSyntacticValidationRules.EdmModel_NameIsTooLong);
                 AddRule(EdmModelSyntacticValidationRules.EdmModel_NameIsNotAllowed);
-                AddRule(EdmModelSyntacticValidationRules.EdmNavigationProperty_AssocationMustNotBeNull);
+                AddRule(EdmModelSyntacticValidationRules.EdmNavigationProperty_AssociationMustNotBeNull);
                 AddRule(EdmModelSyntacticValidationRules.EdmNavigationProperty_ResultEndMustNotBeNull);
                 AddRule(EdmModelSyntacticValidationRules.EdmTypeReference_TypeNotValid);
             }

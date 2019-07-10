@@ -151,7 +151,7 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
                 throw new InvalidOperationException("InvokeInternal is called when _property is null.");
             }
 
-            // if values are set to NoneValue then explictly remove the attribute,
+            // if values are set to NoneValue then explicitly remove the attribute,
             // if values are set to null then leave the attribute as is
             if (_theDefault != null)
             {

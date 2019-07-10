@@ -151,7 +151,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator
             catch (Exception)
             {
                 // It would be nice to add an error in the error list, but you need an IServiceProvider to do this
-                // We use our package usually for this, but here, our pacakge failed to load.  Raise a message box
+                // We use our package usually for this, but here, our package failed to load.  Raise a message box
                 VsUtils.ShowErrorDialog(Resources.LoadOurPackageError);
 
                 string commentString;

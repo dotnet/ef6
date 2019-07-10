@@ -97,7 +97,7 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.PropertyWindow.Descriptors
 
         [LocCategory("PropertyWindow_Category_Schema")]
         [LocDisplayName("PropertyWindow_DisplayName_Namespace")]
-        [LocDescription("PropertyWindow_Descritpion_Namespace")]
+        [LocDescription("PropertyWindow_Description_Namespace")]
         public string Namespace
         {
             get { return TypedEFElement.Namespace.Value; }
@@ -112,7 +112,7 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.PropertyWindow.Descriptors
 
         [LocCategory("PropertyWindow_Category_Schema")]
         [LocDisplayName("PropertyWindow_DisplayName_EntityContainerName")]
-        [LocDescription("PropertyWindow_Descritpion_EntityContainerName")]
+        [LocDescription("PropertyWindow_Description_EntityContainerName")]
         public string EntityContainerName
         {
             get

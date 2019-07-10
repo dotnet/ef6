@@ -131,7 +131,7 @@ namespace System.Data.Entity.Core.Objects
             }
             
             [Fact]
-            public void If_local_transaction_is_necessary_it_gets_created_commited()
+            public void If_local_transaction_is_necessary_it_gets_created_committed()
             {
                 If_local_transaction_is_necessary_it_gets_created(transactionNecessary: true);
             }
@@ -906,7 +906,7 @@ namespace System.Data.Entity.Core.Objects
                 try
                 {
                     // To simulate the retry, we will execute the query twice.
-                    // and we validate that in both ocassions the same exception is received
+                    // and we validate that in both occasions the same exception is received
                     // if parameter were not cleared, the second call would fail with the
                     // sql paramters contained in an another sql collection error.
                     Assert.Equal(
@@ -1294,7 +1294,7 @@ namespace System.Data.Entity.Core.Objects
                 try
                 {
                     // To simulate the retry, we will execute the query twice.
-                    // and we validate that in both ocassions the same exception is received
+                    // and we validate that in both occasions the same exception is received
                     // if parameter were not cleared, the second call would fail with the
                     // sql paramters contained in an another sql collection error.
                     Assert.Equal(
@@ -2020,7 +2020,7 @@ namespace System.Data.Entity.Core.Objects
 
 
             [Fact]
-            public void If_local_transaction_is_necessary_it_gets_created_commited()
+            public void If_local_transaction_is_necessary_it_gets_created_committed()
             {
                 If_local_transaction_is_necessary_it_gets_created(transactionNecessary: true);
             }
@@ -2840,7 +2840,7 @@ namespace System.Data.Entity.Core.Objects
                 try
                 {
                     // To simulate the retry, we will execute the query twice.
-                    // and we validate that in both ocassions the same exception is received
+                    // and we validate that in both occasions the same exception is received
                     // if parameter were not cleared, the second call would fail with the
                     // sql paramters contained in an another sql collection error.
                     Assert.Equal(
@@ -3287,7 +3287,7 @@ namespace System.Data.Entity.Core.Objects
                 try
                 {
                     // To simulate the retry, we will execute the query twice.
-                    // and we validate that in both ocassions the same exception is received
+                    // and we validate that in both occasions the same exception is received
                     // if parameter were not cleared, the second call would fail with the
                     // sql paramters contained in an another sql collection error.
                     Assert.Equal(

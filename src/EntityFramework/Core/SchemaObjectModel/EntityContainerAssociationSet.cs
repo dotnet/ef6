@@ -32,7 +32,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         // <summary>
-        // The ends defined and infered for this AssociationSet
+        // The ends defined and inferred for this AssociationSet
         // </summary>
         internal override IEnumerable<EntityContainerRelationshipSetEnd> Ends
         {

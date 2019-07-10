@@ -276,7 +276,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
                     "Edm.Ceiling"
                 };
 
-        // topElementExpression is used to detect the any occurance of element expression which 
+        // topElementExpression is used to detect the any occurrence of element expression which 
         // is not a child of the top level projectExpression
         private bool topElementExpression;
         // stores the list of all the scalar subquery tables names
@@ -308,7 +308,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         }
 
         // <summary>
-        // Initalizes the mapping from names of canonical function for date/time addition
+        // Initializes the mapping from names of canonical function for date/time addition
         // to corresponding dateparts
         // </summary>
         private static Dictionary<string, string> InitializeDateAddFunctionNameToDatepartDictionary()
@@ -325,7 +325,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         }
 
         // <summary>
-        // Initalizes the mapping from names of canonical function for date/time difference
+        // Initializes the mapping from names of canonical function for date/time difference
         // to corresponding dateparts
         // </summary>
         private static Dictionary<string, string> InitializeDateDiffFunctionNameToDatepartDictionary()
@@ -454,7 +454,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         }
 
         // <summary>
-        // Initalizes the mapping from functions to TSql operators
+        // Initializes the mapping from functions to TSql operators
         // for all functions that translate to TSql operators
         // </summary>
         private static Dictionary<string, string> InitializeFunctionNameToOperatorDictionary()
@@ -559,7 +559,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             if (TypeSemantics.IsCollectionType(targetTree.Query.ResultType))
             {
                 var sqlStatement = VisitExpressionEnsureSqlStatement(targetTree.Query);
-                Debug.Assert(sqlStatement != null, "The outer most sql statment is null");
+                Debug.Assert(sqlStatement != null, "The outer most sql statement is null");
                 sqlStatement.IsTopMost = true;
                 result = sqlStatement;
             }
@@ -1192,7 +1192,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         // aggf1(aexpr1) AS agg1, .. aggfn(aexprn) AS aggn
         // FROM input AS a
         // GROUP BY kexp1, kexp2, .. kexpn
-        // When we inject an innner query, the equivalent translation is:
+        // When we inject an inner query, the equivalent translation is:
         // SELECT
         // key1 AS key1, key2 AS key2, .. keyn AS keys,
         // aggf1(agg1) AS agg1, aggfn(aggn) AS aggn
@@ -1310,33 +1310,42 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
                     var member = members.Current;
                     var alias = QuoteIdentifier(member.Name);
 
-                    Debug.Assert(aggregate.Arguments.Count == 1);
-                    var translatedAggregateArgument = aggregate.Arguments[0].Accept(this);
+                    var finalArgs = new List<object>();
 
-                    object aggregateArgument;
-
-                    if (needsInnerQuery)
+                    for (var childIndex = 0; childIndex < aggregate.Arguments.Count; childIndex++)
                     {
-                        //In this case the argument to the aggratete is reference to the one projected out by the
-                        // inner query
-                        var wrappingAggregateArgument = new SqlBuilder();
-                        wrappingAggregateArgument.Append(fromSymbol);
-                        wrappingAggregateArgument.Append(".");
-                        wrappingAggregateArgument.Append(alias);
-                        aggregateArgument = wrappingAggregateArgument;
+                        var argument = aggregate.Arguments[childIndex];
+                        var translatedAggregateArgument = argument.Accept(this);
 
-                        innerQuery.Select.Append(separator);
-                        innerQuery.Select.AppendLine();
-                        innerQuery.Select.Append(translatedAggregateArgument);
-                        innerQuery.Select.Append(" AS ");
-                        innerQuery.Select.Append(alias);
-                    }
-                    else
-                    {
-                        aggregateArgument = translatedAggregateArgument;
+                        object aggregateArgument;
+
+                        if (needsInnerQuery)
+                        {
+                            var argAlias = QuoteIdentifier(member.Name + "_" + childIndex);
+
+                            //In this case the argument to the aggratete is reference to the one projected out by the
+                            // inner query
+                            var wrappingAggregateArgument = new SqlBuilder();
+                            wrappingAggregateArgument.Append(fromSymbol);
+                            wrappingAggregateArgument.Append(".");
+                            wrappingAggregateArgument.Append(argAlias);
+                            aggregateArgument = wrappingAggregateArgument;
+
+                            innerQuery.Select.Append(separator);
+                            innerQuery.Select.AppendLine();
+                            innerQuery.Select.Append(translatedAggregateArgument);
+                            innerQuery.Select.Append(" AS ");
+                            innerQuery.Select.Append(argAlias);
+                        }
+                        else
+                        {
+                            aggregateArgument = translatedAggregateArgument;
+                        }
+
+                        finalArgs.Add(aggregateArgument);
                     }
 
-                    ISqlFragment aggregateResult = VisitAggregate(aggregate, aggregateArgument);
+                    ISqlFragment aggregateResult = VisitAggregate(aggregate, finalArgs);
 
                     result.Select.Append(separator);
                     result.Select.AppendLine();
@@ -1981,7 +1990,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             Symbol fromSymbol;
             var result = VisitInputExpression(e.Input.Expression, e.Input.VariableName, e.Input.VariableType, out fromSymbol);
 
-            // Check compatiblity.
+            // Check compatibility.
             // If the operators are not compatible, a new sql statement must be generated.
             // 
             if (!IsCompatible(result, e.ExpressionKind))
@@ -2103,8 +2112,8 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         // Aggregates are not visited by the normal visitor walk.
         // </summary>
         // <param name="aggregate"> The aggreate go be translated </param>
-        // <param name="aggregateArgument"> The translated aggregate argument </param>
-        private static SqlBuilder VisitAggregate(DbAggregate aggregate, object aggregateArgument)
+        // <param name="aggregateArguments"> The translated aggregate arguments </param>
+        private static SqlBuilder VisitAggregate(DbAggregate aggregate, IList<object> aggregateArguments)
         {
             var aggregateFunction = new SqlBuilder();
             var aggregateResult = new SqlBuilder();
@@ -2134,7 +2143,13 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
                 throw ADP1.NotSupported(EntityRes.GetString(EntityRes.DistinctAggregatesNotSupported));
             }
 
-            aggregateResult.Append(aggregateArgument);
+            string separator = String.Empty;
+            foreach (var arg in aggregateArguments)
+            {
+                aggregateResult.Append(separator);
+                aggregateResult.Append(arg);
+                separator = ", ";
+            }
 
             aggregateResult.Append(")");
 
@@ -2149,7 +2164,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         // <summary>
         // Dump out an expression - optionally wrap it with parantheses if possible
         // </summary>
-        private void ParanthesizeExpressionIfNeeded(DbExpression e, SqlBuilder result)
+        private void ParenthesizeExpressionIfNeeded(DbExpression e, SqlBuilder result)
         {
             if (IsComplexExpression(e))
             {
@@ -2184,7 +2199,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
                 {
                     result.Append(op);
                 }
-                ParanthesizeExpressionIfNeeded(argument, result);
+                ParenthesizeExpressionIfNeeded(argument, result);
             }
             return result;
         }
@@ -2208,7 +2223,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             }
             else
             {
-                ParanthesizeExpressionIfNeeded(left, result);
+                ParenthesizeExpressionIfNeeded(left, result);
             }
 
             result.Append(op);
@@ -2220,7 +2235,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             }
             else
             {
-                ParanthesizeExpressionIfNeeded(right, result);
+                ParenthesizeExpressionIfNeeded(right, result);
             }
 
             return result;
@@ -2366,7 +2381,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         {
             // Codeplex workitem #287: SqlCeProviderServices.CreateSqlCeParameter does not supply 
             // the parameter type for strings and blobs if the parameter size is not available, 
-            // thus letting the QP to infer the type at execution time. That happpens because the 
+            // thus letting the QP to infer the type at execution time. That happens because the 
             // default types, ntext and image, are not comparable, so a simple predicate like 
             // WHERE table.Column = @parameter would fail. However the inference is not possible
             // when there is an IS NULL comparison, in which case we explicitly cast to ntext 
@@ -2850,7 +2865,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
 
         // <summary>
         // Default handling on function arguments.
-        // Appends the list of arguemnts to the given result
+        // Appends the list of arguments to the given result
         // If the function is niladic it does not append anything,
         // otherwise it appends (arg1, arg2, .., argn)
         // </summary>
@@ -2921,26 +2936,26 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         // <summary>
         // Handles functions that are translated into TSQL operators.
         // The given function should have one or two arguments.
-        // Functions with one arguemnt are translated into
+        // Functions with one argument are translated into
         // op arg
         // Functions with two arguments are translated into
         // arg0 op arg1
-        // Also, the arguments can be optionaly enclosed in parethesis
+        // Also, the arguments can be optionally enclosed in parethesis
         // </summary>
-        // <param name="parenthesiseArguments"> Whether the arguments should be enclosed in parethesis </param>
-        private ISqlFragment HandleSpecialFunctionToOperator(DbFunctionExpression e, bool parenthesiseArguments)
+        // <param name="parenthesizeArguments"> Whether the arguments should be enclosed in parethesis </param>
+        private ISqlFragment HandleSpecialFunctionToOperator(DbFunctionExpression e, bool parenthesizeArguments)
         {
             var result = new SqlBuilder();
             Debug.Assert(e.Arguments.Count > 0 && e.Arguments.Count <= 2, "There should be 1 or 2 arguments for operator");
 
             if (e.Arguments.Count > 1)
             {
-                if (parenthesiseArguments)
+                if (parenthesizeArguments)
                 {
                     result.Append("(");
                 }
                 result.Append(e.Arguments[0].Accept(this));
-                if (parenthesiseArguments)
+                if (parenthesizeArguments)
                 {
                     result.Append(")");
                 }
@@ -2950,12 +2965,12 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             result.Append(_functionNameToOperatorDictionary[e.Function.Name]);
             result.Append(" ");
 
-            if (parenthesiseArguments)
+            if (parenthesizeArguments)
             {
                 result.Append("(");
             }
             result.Append(e.Arguments[e.Arguments.Count - 1].Accept(this));
-            if (parenthesiseArguments)
+            if (parenthesizeArguments)
             {
                 result.Append(")");
             }
@@ -3021,7 +3036,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             }
 
             //
-            // finaly, expand the function name
+            // finally, expand the function name
             //
             WriteFunctionName(result, e.Function);
             result.Append("(");
@@ -3043,7 +3058,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         }
 
         // <summary>
-        // Handler for canonical funcitons for extracting date parts.
+        // Handler for canonical functions for extracting date parts.
         // For example:
         // Year(date) -> DATEPART( year, date)
         // </summary>
@@ -3951,7 +3966,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             {
                 var columns = AddDefaultColumns(oldStatement);
 
-                // Thid could not have been called from a join node.
+                // This could not have been called from a join node.
                 Debug.Assert(oldStatement.FromExtents.Count == 1);
 
                 // if the oldStatement has a join as its input, ...
@@ -4089,7 +4104,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
                 == DbExpressionKind.Constant)
             {
                 //For constant expression we should not cast the value, 
-                // thus we don't go throught the default DbConstantExpression handling
+                // thus we don't go through the default DbConstantExpression handling
                 var sqlBuilder = new SqlBuilder();
                 sqlBuilder.Append(((DbConstantExpression)e).Value.ToString());
                 result = sqlBuilder;
@@ -4502,13 +4517,13 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         //         an aggregate or a subquery. (SQLBUDT #504600)
         //     </item>
         // </list>
-        // Potentially, we could furhter optimize this.
+        // Potentially, we could further optimize this.
         // </summary>
         private static bool GroupByAggregatesNeedInnerQuery(IList<DbAggregate> aggregates, string inputVarRefName)
         {
             foreach (var aggregate in aggregates)
             {
-                Debug.Assert(aggregate.Arguments.Count == 1);
+                Debug.Assert(aggregate.Arguments.Count >= 1);
                 if (GroupByAggregateNeedsInnerQuery(aggregate.Arguments[0], inputVarRefName))
                 {
                     return true;
@@ -4604,7 +4619,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         }
 
         // <summary>
-        // determines if the function requires the return type be enforeced by use of a cast expression
+        // determines if the function requires the return type be enforced by use of a cast expression
         // </summary>
         private static bool CastReturnTypeToInt32(DbFunctionExpression e)
         {
@@ -4625,7 +4640,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         }
 
         // <summary>
-        // determines if the function requires the return type be enforeced by use of a cast expression
+        // determines if the function requires the return type be enforced by use of a cast expression
         // </summary>
         internal static bool CastReturnTypeToSingle(DbFunctionExpression e)
         {

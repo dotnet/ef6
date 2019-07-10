@@ -156,7 +156,7 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails
                 watermarkLabel.Visible = value;
                 _mainControl.Visible = !value;
 
-                // Set top child when watermark visibility change to favorite accessbility tool
+                // Set top child when watermark visibility change to favorite accessibility tool
                 if (value)
                 {
                     contentsPanel.Controls.SetChildIndex(watermarkLabel, 0);

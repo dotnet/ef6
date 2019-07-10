@@ -141,7 +141,7 @@
     <Compile Include="Designer\DiagramElementNameCommittedArgs.cs" />
     <Compile Include="FeatureState.cs" />
     <Compile Include="SchemaQualifiedName.cs" />
-    <Compile Include="SchemaValidatioErrorCollector.cs" />
+    <Compile Include="SchemaValidationErrorCollector.cs" />
     <Compile Include="Mapping\FunctionImportPropertyMappingNameNormalizer.cs" />
     <Compile Include="Mapping\FunctionPropertyMappingNameNormalizer.cs" />
     <Compile Include="HostContext.cs" />
@@ -350,7 +350,7 @@
     <Compile Include="Mapping\ResultBinding.cs" />
     <Compile Include="Mapping\UpdateFunction.cs" />
     <Compile Include="ModelConstants.cs" />
-    <Compile Include="Integrity\InferReferentialContraints.cs" />
+    <Compile Include="Integrity\InferReferentialConstraints.cs" />
     <Compile Include="ModelHelper.cs" />
     <Compile Include="MultiItemBinding.cs" />
     <Compile Include="Resources.Designer.cs">

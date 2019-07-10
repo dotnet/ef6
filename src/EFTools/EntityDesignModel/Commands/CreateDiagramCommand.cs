@@ -50,7 +50,7 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
         /// <summary>
         ///     This helper function will create a Diagram using default name.
         ///     NOTE: If the cpc already has an active transaction, these changes will be in that transaction
-        ///     and the caller of this helper method must commit it to see these changes commited
+        ///     and the caller of this helper method must commit it to see these changes committed
         ///     otherwise the diagram will never be created.
         /// </summary>
         /// <param name="cpc"></param>

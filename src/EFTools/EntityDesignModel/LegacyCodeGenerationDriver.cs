@@ -39,7 +39,7 @@ namespace Microsoft.Data.Entity.Design.Model
             {
                 var codeGenerator = CreateCodeGenerator(_language, _targetEntityFrameworkVersion);
 
-                Debug.Assert(artifact.ConceptualModel() != null, "Artifact ConceptuaModel is null");
+                Debug.Assert(artifact.ConceptualModel() != null, "Artifact ConceptualModel is null");
 
                 if (defaultNamespace != null && artifact.ConceptualModel() != null)
                 {

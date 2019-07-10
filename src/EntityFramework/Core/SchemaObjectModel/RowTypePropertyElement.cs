@@ -221,7 +221,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
                             else
                             {
                                 _typeUsageBuilder.ValidateAndSetTypeUsage(edmType, false);
-                                //use typeusagebuilder so dont lose facet information
+                                //use typeusagebuilder so don't lose facet information
                                 _typeUsage = _typeUsageBuilder.TypeUsage;
                             }
                         }

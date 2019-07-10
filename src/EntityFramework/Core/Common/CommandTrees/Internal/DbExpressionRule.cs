@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 {
     // <summary>
-    // Enacapsulates the logic that defines an expression 'rule' which is capable of transforming a candidate
+    // Encapsulates the logic that defines an expression 'rule' which is capable of transforming a candidate
     // <see
     //     cref="DbExpression" />
     // into a result DbExpression, and indicating what action should be taken on that result expression by the rule application logic.

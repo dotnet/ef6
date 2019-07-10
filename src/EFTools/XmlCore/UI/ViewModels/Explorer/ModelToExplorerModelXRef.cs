@@ -13,7 +13,7 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.Explorer
     internal abstract class ModelToExplorerModelXRef : ContextItem
     {
         /// <summary>
-        ///     Maps ModelManager types to ModelToExlporerModelXRef types.  This way the base ModelToExplorerModelXRef class can
+        ///     Maps ModelManager types to ModelToExplorerModelXRef types.  This way the base ModelToExplorerModelXRef class can
         ///     get the correct ModelToExplorerModelXRef instance from the EditingContext.
         /// </summary>
         private static readonly Dictionary<Type, Type> _modelManagerType2XRefType = new Dictionary<Type, Type>();
@@ -101,7 +101,7 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.Explorer
                             Resources.BadInsertChildAlreadyExists, efElement.GetType().FullName, parent.GetType().FullName));
                     return null;
                     // TODO: we need to provide a general exception-handling mechanism and replace the above Assert()
-                    // by e.g. the excepiton below
+                    // by e.g. the exception below
                     // throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Resources.BadInsertChildAlreadyExists, efElement.GetType().FullName, parent.GetType().FullName));
                 }
                 else
@@ -152,17 +152,17 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.Explorer
             return explorerParentItem;
         }
 
-        internal static Type GetViewModelTypeForEFlement(EditingContext context, EFElement efElement)
+        internal static Type GetViewModelTypeForEFElement(EditingContext context, EFElement efElement)
         {
             var xref = GetModelToBrowserModelXRef(context);
-            return xref.GetViewModelTypeForEFlement(efElement);
+            return xref.GetViewModelTypeForEFElement(efElement);
         }
 
         private readonly Dictionary<EFElement, ExplorerEFElement> _dict = new Dictionary<EFElement, ExplorerEFElement>();
 
         protected abstract bool IsDisplayedInExplorerProtected(EFElement efElement);
 
-        protected abstract Type GetViewModelTypeForEFlement(EFElement efElement);
+        protected abstract Type GetViewModelTypeForEFElement(EFElement efElement);
 
         private void Add(EFElement efElement, ExplorerEFElement explorerEFElement)
         {

@@ -202,7 +202,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             get { return _designTimeProviderInvariantName; }
         }
 
-        internal TimeSpan LoadingDBMetatdataTime { get; set; }
+        internal TimeSpan LoadingDBMetadataTime { get; set; }
 
         internal EFArtifact Artifact
         {
@@ -262,7 +262,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
         public string ModelName { get; set; }
 
         // Path to the file containing model - note that the file may not exist yet (e.g. when reverse
-        // engineering db we calculate the path at the begining but save the model when the wizard completes)
+        // engineering db we calculate the path at the beginning but save the model when the wizard completes)
         public string ModelPath { get; set; }
 
         public string VsTemplatePath { get; set; }

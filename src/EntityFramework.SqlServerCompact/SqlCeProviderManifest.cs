@@ -93,7 +93,7 @@ namespace System.Data.Entity.SqlServerCompact
         // This method should never return null.
         // </summary>
         // <param name="informationType"> The name of the information to be retrieved. </param>
-        // <returns> An XmlReader at the begining of the information requested. </returns>
+        // <returns> An XmlReader at the beginning of the information requested. </returns>
         protected override XmlReader GetDbInformation(string informationType)
         {
             if (informationType == ProviderManifest.StoreSchemaDefinition)

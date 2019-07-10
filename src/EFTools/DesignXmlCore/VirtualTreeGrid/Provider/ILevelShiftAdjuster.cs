@@ -132,7 +132,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
 
         /// <summary>
         ///     Includes behavior of ReattachChildren. The child branches and
-        ///     tracking objects are detached and the item count of the branch is requeried.
+        ///     tracking objects are detached and the item count of the branch is required.
         ///     This is very similar to a realign on the branch,
         ///     except that the existing child branches can potentially end up
         ///     reattached to other branches, with is not possible with an ITree.Realign call.

@@ -11,7 +11,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.Refactoring
     internal class TextChangeProposal : ChangeProposal
     {
         /// <summary>
-        ///     Contructor of ChangeProposal.
+        ///     Constructor of ChangeProposal.
         /// </summary>
         /// <param name="projectName">The project name with full path that this file belongs to.</param>
         /// <param name="fileName">The file name with full path which file this change is from.</param>

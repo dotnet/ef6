@@ -55,7 +55,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                 == matcher.m_originalErrorCount)
             {
                 //this will generate redundant errors if one of the above routine finds an error
-                // so execute it only when we dont have any other errors
+                // so execute it only when we don't have any other errors
                 matcher.MatchPartitionErrors();
             }
 
@@ -181,7 +181,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         {
             var leftCellWrappers = m_viewgenContext.AllWrappersForExtent;
 
-            //Stores violating Discriminator (condition member) so that we dont repeat the same error
+            //Stores violating Discriminator (condition member) so that we don't repeat the same error
             var mappedConditionMembers = new Set<MemberPath>();
 
             //Both of these data-structs help in finding duplicate conditions

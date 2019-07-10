@@ -260,7 +260,7 @@ namespace Microsoft.Data.Entity.Design.Base.Shell
         }
 
         /// <summary>
-        ///     Disbles event handlers for all columns in the tree
+        ///     Disables event handlers for all columns in the tree
         /// </summary>
         internal void RemoveColumnEventHandlers()
         {
@@ -272,7 +272,7 @@ namespace Microsoft.Data.Entity.Design.Base.Shell
         }
 
         /// <summary>
-        ///     Populates the tree via attributes specifed on th root object.  This object usually corresponds to
+        ///     Populates the tree via attributes specified on the root object.  This object usually corresponds to
         ///     the selection made in a designer.
         /// </summary>
         /// <returns>True if the tree was populated.  False if the object passed in doesn't specify any branches.</returns>
@@ -435,7 +435,7 @@ namespace Microsoft.Data.Entity.Design.Base.Shell
         }
 
         /// <summary>
-        ///     Overriden to preprocess key messages.
+        ///     Overridden to preprocess key messages.
         /// </summary>
         protected override bool ProcessDialogKey(Keys keyData)
         {
@@ -474,7 +474,7 @@ namespace Microsoft.Data.Entity.Design.Base.Shell
         }
 
         /// <summary>
-        ///     Overriden to preprocess key messages.
+        ///     Overridden to preprocess key messages.
         /// </summary>
         protected override bool ProcessDialogChar(char c)
         {
@@ -527,7 +527,7 @@ namespace Microsoft.Data.Entity.Design.Base.Shell
         }
 
         /// <summary>
-        ///     Overriden to run the default action specified by the currently selected branch.
+        ///     Overridden to run the default action specified by the currently selected branch.
         /// </summary>
         /// <param name="e"></param>
         protected override void OnDoubleClick(DoubleClickEventArgs e)
@@ -785,7 +785,7 @@ namespace Microsoft.Data.Entity.Design.Base.Shell
                         return false;
                     }
 
-                    // expand branch first, if necesary
+                    // expand branch first, if necessary
                     if (result.ExpandBranch)
                     {
                         // using column = 0 because TreeGrid designer
@@ -985,7 +985,7 @@ namespace Microsoft.Data.Entity.Design.Base.Shell
 
         /// <summary>
         ///     If BatchDrawItem == true, store the index of the item to be drawn,
-        ///     but dont actually do the drawing until BatchDrawItem is set to false.
+        ///     but don't actually do the drawing until BatchDrawItem is set to false.
         /// </summary>
         protected override void OnDrawItem(DrawItemEventArgs e)
         {

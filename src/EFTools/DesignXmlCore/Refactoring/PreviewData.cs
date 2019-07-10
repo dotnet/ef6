@@ -13,7 +13,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.Refactoring
     ///     This class contains all preview data for an RefactorOperation.
     ///     Preview dialog will use all information in this class to populate the dialog.
     ///     Information contains the top level preview tree nodes, help context for this
-    ///     RefactorOperaiton, confirm button text, etc.
+    ///     RefactorOperation, confirm button text, etc.
     /// </summary>
     internal sealed class PreviewData
     {
@@ -64,7 +64,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.Refactoring
         public string ConfirmButtonText { get; set; }
 
         /// <summary>
-        ///     Discription of this RefactorOperation.
+        ///     Description of this RefactorOperation.
         /// </summary>
         public string Description { get; set; }
 
@@ -74,7 +74,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.Refactoring
         public string HelpContext { get; set; }
 
         /// <summary>
-        ///     The text view discription, that appears on the header of the
+        ///     The text view description, that appears on the header of the
         ///     text view in preview dialog.
         /// </summary>
         public string TextViewDescription { get; set; }
@@ -90,7 +90,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.Refactoring
         public string Warning { get; set; }
 
         /// <summary>
-        ///     Warning level for this RefactorOperaiton.
+        ///     Warning level for this RefactorOperation.
         /// </summary>
         public __PREVIEWCHANGESWARNINGLEVEL WarningLevel { get; set; }
 

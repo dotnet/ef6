@@ -365,7 +365,7 @@
     </xs:restriction>
   </xs:simpleType>
 
-  <!-- Type fopr Space or Type Attribute -->
+  <!-- Type for Space or Type Attribute -->
   <xs:simpleType name="TSpace">
     <xs:restriction base="xs:token">
       <xs:enumeration value="C-S" />

@@ -348,7 +348,7 @@ Public Class CodeGenerationTools
 
     ''' <summary>
     ''' If the value parameter is null or empty an empty string is returned,
-    ''' otherwise it retuns value with a single space concatenated on the end.
+    ''' otherwise it returns value with a single space concatenated on the end.
     ''' </summary>
     Public Function SpaceAfter(ByVal value As String) As String
         Return StringAfter(value, " ")
@@ -356,7 +356,7 @@ Public Class CodeGenerationTools
 
     ''' <summary>
     ''' If the value parameter is null or empty an empty string is returned,
-    ''' otherwise it retuns value with a single space concatenated on the end.
+    ''' otherwise it returns value with a single space concatenated on the end.
     ''' </summary>
     Public Function SpaceBefore(ByVal value As String) As String
         Return StringBefore(" ", value)
@@ -364,7 +364,7 @@ Public Class CodeGenerationTools
 
     ''' <summary>
     ''' If the value parameter is null or empty an empty string is returned,
-    ''' otherwise it retuns value with append concatenated on the end.
+    ''' otherwise it returns value with append concatenated on the end.
     ''' </summary>
     Public Function StringAfter(ByVal value As String, ByVal append As String) As String
         If String.IsNullOrEmpty(value) Then
@@ -376,7 +376,7 @@ Public Class CodeGenerationTools
 
     ''' <summary>
     ''' If the value parameter is null or empty an empty string is returned,
-    ''' otherwise it retuns value with prepend concatenated on the front.
+    ''' otherwise it returns value with prepend concatenated on the front.
     ''' </summary>
     Public Function StringBefore(ByVal prepend As String, ByVal value As String) As String
         If String.IsNullOrEmpty(value) Then
@@ -456,9 +456,9 @@ Public Class CodeGenerationTools
         Dim entity As EntityType = TryCast(edmType, EntityType)
         If Not entity Is Nothing Then
             Dim declaredMembers As IEnumerable(Of EdmMember) = entity.Members.Where(Function(m) m.DeclaringType Is entity)
-            Dim decalredNavigationProperties As IEnumerable(Of NavigationProperty) = entity.NavigationProperties.Where(Function(n) n.DeclaringType Is entity)
+            Dim declaredNavigationProperties As IEnumerable(Of NavigationProperty) = entity.NavigationProperties.Where(Function(n) n.DeclaringType Is entity)
 
-            Return declaredMembers.Union(decalredNavigationProperties.Cast(Of EdmMember)()).Select(Function(m) m.Name)
+            Return declaredMembers.Union(declaredNavigationProperties.Cast(Of EdmMember)()).Select(Function(m) m.Name)
         End If
 
         Dim structural As StructuralType = TryCast(edmType, StructuralType)
@@ -475,7 +475,7 @@ Public Class CodeGenerationTools
     End Function
 
     ''' <summary>
-    ''' Retuns as full of a name as possible, if a namespace is provided
+    ''' Returns as full of a name as possible, if a namespace is provided
     ''' the namespace and name are combined with a period, otherwise just
     ''' the name is returned.
     ''' </summary>
@@ -488,7 +488,7 @@ Public Class CodeGenerationTools
     End Function
 
     ''' <summary>
-    ''' Retuns a literal representing the supplied value.
+    ''' Returns a literal representing the supplied value.
     ''' </summary>
     Public Function CreateLiteral(ByVal value As Object) As String
         If value Is Nothing Then
@@ -1591,7 +1591,7 @@ Public Class CodeRegion
     End Sub
 
     ''' <summary>
-    ''' Starts the begining of a region
+    ''' Starts the beginning of a region
     ''' </summary>
     Public Sub Begin(ByVal regionName As String)
         If regionName Is Nothing Then
@@ -1602,7 +1602,7 @@ Public Class CodeRegion
     End Sub
 
     ''' <summary>
-    ''' Start the begining of a region, indented
+    ''' Start the beginning of a region, indented
     ''' the numbers of levels specified
     ''' </summary>
     Public Sub Begin(ByVal regionName As String, ByVal levelsToIncreaseIndent As Integer)
@@ -1618,16 +1618,16 @@ Public Class CodeRegion
     End Sub
 
     ''' <summary>
-    ''' Ends a region, or totaly removes it if nothing
-    ''' was generted since the begining of the region.
+    ''' Ends a region, or totally removes it if nothing
+    ''' was generated since the beginning of the region.
     ''' </summary>
     Public Sub [End]()
         [End](1)
     End Sub
 
     ''' <summary>
-    ''' Ends a region, or totaly removes it if nothing
-    ''' was generted since the begining of the region, also outdents
+    ''' Ends a region, or totally removes it if nothing
+    ''' was generated since the beginning of the region, also outdents
     ''' the number of levels specified.
     ''' </summary>
     Public Sub [End](ByVal levelsToDecrease As Integer)
@@ -1655,7 +1655,7 @@ Public Class CodeRegion
     End Property
 
     ''' <summary>
-    ''' Get a string of spaces equivelent to the number of indents
+    ''' Get a string of spaces equivalent to the number of indents
     ''' desired.
     ''' </summary>
     Public Shared Function GetIndent(ByVal indentLevel As Integer) As String
@@ -2095,7 +2095,7 @@ Public Class DynamicTextTransformation
 
     ''' <summary>
     ''' Creates an instance of the DynamicTextTransformation class around the passed in
-    ''' TextTransformation shapped instance passed in, or if the passed in instance
+    ''' TextTransformation shaped instance passed in, or if the passed in instance
     ''' already is a DynamicTextTransformation, it casts it and sends it back.
     ''' </summary>
     Public Shared Function Create(ByVal instance As Object) As DynamicTextTransformation
@@ -2122,7 +2122,7 @@ Public Class DynamicTextTransformation
     End Sub
 
     ''' <summary>
-    ''' Gets the value of the wrapped TextTranformation instance's GenerationEnvironment property
+    ''' Gets the value of the wrapped TextTransformation instance's GenerationEnvironment property
     ''' </summary>
     Public ReadOnly Property GenerationEnvironment() As StringBuilder
         Get
@@ -2131,7 +2131,7 @@ Public Class DynamicTextTransformation
     End Property
 
     ''' <summary>
-    ''' Gets the value of the wrapped TextTranformation instance's Errors property
+    ''' Gets the value of the wrapped TextTransformation instance's Errors property
     ''' </summary>
     Public ReadOnly Property Errors() As System.CodeDom.Compiler.CompilerErrorCollection
         Get
@@ -2140,21 +2140,21 @@ Public Class DynamicTextTransformation
     End Property
 
     ''' <summary>
-    ''' Calls the wrapped TextTranformation instance's Write method.
+    ''' Calls the wrapped TextTransformation instance's Write method.
     ''' </summary>
     Public Sub Write(ByVal text As String)
         _write.Invoke(_instance, New Object() {text})
     End Sub
 
     ''' <summary>
-    ''' Calls the wrapped TextTranformation instance's WriteLine method.
+    ''' Calls the wrapped TextTransformation instance's WriteLine method.
     ''' </summary>
     Public Sub WriteLine(ByVal text As String)
         _writeLine.Invoke(_instance, New Object() {text})
     End Sub
 
     ''' <summary>
-    ''' Gets the value of the wrapped TextTranformation instance's Host property
+    ''' Gets the value of the wrapped TextTransformation instance's Host property
     ''' if available (shows up when hostspecific is set to true in the template directive) and returns
     ''' the appropriate implementation of IDynamicHost
     ''' </summary>
@@ -2174,7 +2174,7 @@ End Class
 
 
 ''' <summary>
-''' Reponsible for abstracting the use of Host between times
+''' Responsible for abstracting the use of Host between times
 ''' when it is available and not
 ''' </summary>
 Public Interface IDynamicHost
@@ -2200,7 +2200,7 @@ Public Interface IDynamicHost
 End Interface
 
 ''' <summary>
-''' Reponsible for implementing the IDynamicHost as a dynamic
+''' Responsible for implementing the IDynamicHost as a dynamic
 ''' shape wrapper over the Microsoft.VisualStudio.TextTemplating.ITextTemplatingEngineHost interface
 ''' rather than type dependent wrapper. We don't use the
 ''' interface type so that the code can be run in preprocessed mode
@@ -2215,7 +2215,7 @@ Public Class DynamicHost
 
     ''' <summary>
     ''' Creates an instance of the DynamicHost class around the passed in
-    ''' Microsoft.VisualStudio.TextTemplating.ITextTemplatingEngineHost shapped instance passed in.
+    ''' Microsoft.VisualStudio.TextTemplating.ITextTemplatingEngineHost shaped instance passed in.
     ''' </summary>
     Public Sub New(ByVal instance As Object)
         _instance = instance
@@ -2258,7 +2258,7 @@ Public Class DynamicHost
 End Class
 
 ''' <summary>
-''' Reponsible for implementing the IDynamicHost when the
+''' Responsible for implementing the IDynamicHost when the
 ''' Host property is not available on the TextTemplating type. The Host
 ''' property only exists when the hostspecific attribute of the template
 ''' directive is set to true.
@@ -2267,7 +2267,7 @@ Public Class NullHost
     Implements IDynamicHost
     ''' <summary>
     ''' An abstraction of the call to Microsoft.VisualStudio.TextTemplating.ITextTemplatingEngineHost ResolveParameterValue
-    ''' that simply retuns null.
+    ''' that simply returns null.
     ''' </summary>
     Public Function ResolveParameterValue(ByVal id As String, ByVal name As String, ByVal otherName As String) As String Implements IDynamicHost.ResolveParameterValue
         Return Nothing
@@ -2275,7 +2275,7 @@ Public Class NullHost
 
     ''' <summary>
     ''' An abstraction of the call to Microsoft.VisualStudio.TextTemplating.ITextTemplatingEngineHost ResolvePath
-    ''' that simply retuns the path passed in.
+    ''' that simply returns the path passed in.
     ''' </summary>
     Public Function ResolvePath(ByVal path As String) As String Implements IDynamicHost.ResolvePath
         Return path

@@ -712,7 +712,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return m_boolExprs[varNum];
         }
 
-        // effects: Initalizes the booleans of this cell query to be
+        // effects: Initializes the booleans of this cell query to be
         // true. Creates numBoolVars booleans and sets the cellNum boolean to true
         internal void InitializeBoolExpressions(int numBoolVars, int cellNum)
         {

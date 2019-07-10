@@ -10,10 +10,10 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
         private const int ProcSchemaIndex = 0;
         private const int ProcNameIndex = 1;
         private const int ProcRetTypeIndex = 2;
-        private const int ProcIsaggregateIndex = 3;
-        private const int ProcIscomposableIndex = 4;
-        private const int ProcIsbuiltinIndex = 5;
-        private const int ProcIsniladicIndex = 6;
+        private const int ProcIsAggregateIndex = 3;
+        private const int ProcIsComposableIndex = 4;
+        private const int ProcIsBuiltinIndex = 5;
+        private const int ProcIsNiladicIndex = 6;
         private const int ParamNameIndex = 7;
         private const int ParamTypeIndex = 8;
         private const int ParamDirectionIndex = 9;
@@ -46,22 +46,22 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
 
         public override bool IsIsAggregate
         {
-            get { return ConvertDBNull<bool>(Values[ProcIsaggregateIndex]); }
+            get { return ConvertDBNull<bool>(Values[ProcIsAggregateIndex]); }
         }
 
         public override bool IsBuiltIn
         {
-            get { return ConvertDBNull<bool>(Values[ProcIsbuiltinIndex]); }
+            get { return ConvertDBNull<bool>(Values[ProcIsBuiltinIndex]); }
         }
 
         public override bool IsComposable
         {
-            get { return ConvertDBNull<bool>(Values[ProcIscomposableIndex]); }
+            get { return ConvertDBNull<bool>(Values[ProcIsComposableIndex]); }
         }
 
         public override bool IsNiladic
         {
-            get { return ConvertDBNull<bool>(Values[ProcIsniladicIndex]); }
+            get { return ConvertDBNull<bool>(Values[ProcIsNiladicIndex]); }
         }
 
         public override bool IsTvf

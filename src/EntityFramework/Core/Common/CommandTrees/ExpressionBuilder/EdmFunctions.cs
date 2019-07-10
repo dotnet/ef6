@@ -197,7 +197,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Contains' function with the specified arguments, which must each have a string result type. The result type of the expression is Boolean.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a Boolean value indicating whether or not searchedForString occurs within searchedString.</returns>
-        /// <param name="searchedString">An expression that specifies the string to search for any occurence of searchedForString.</param>
+        /// <param name="searchedString">An expression that specifies the string to search for any occurrence of searchedForString.</param>
         /// <param name="searchedForString">An expression that specifies the string to search for in searchedString.</param>
         public static DbExpression Contains(this DbExpression searchedString, DbExpression searchedForString)
         {
@@ -259,7 +259,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <summary>
         /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Replace' function with the specified arguments, which must each have a string result type. The result type of the expression is also string.
         /// </summary>
-        /// <returns>A new DbFunctionExpression than returns a new string based on stringArgument where every occurence of toReplace is replaced by replacement.</returns>
+        /// <returns>A new DbFunctionExpression than returns a new string based on stringArgument where every occurrence of toReplace is replaced by replacement.</returns>
         /// <param name="stringArgument">An expression that specifies the string in which to perform the replacement operation.</param>
         /// <param name="toReplace">An expression that specifies the string that is replaced.</param>
         /// <param name="replacement">An expression that specifies the replacement string.</param>
