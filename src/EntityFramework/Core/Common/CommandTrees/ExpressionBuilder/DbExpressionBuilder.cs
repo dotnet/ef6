@@ -240,6 +240,55 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionAggregate" />.
+        /// </summary>
+        /// <returns>A new function aggregate with a reference to the given function and argument. The function aggregate's Distinct property will have the value false.</returns>
+        /// <param name="function">The function that defines the aggregate operation.</param>
+        /// <param name="arguments">The argument over which the aggregate function should be calculated.</param>
+        /// <exception cref="T:System.ArgumentNullException">function or argument null.</exception>
+        /// <exception cref="T:System.ArgumentException">function is not an aggregate function or has more than one argument, or the result type of argument is not equal or promotable to the parameter type of function.</exception>
+        public static DbFunctionAggregate Aggregate(this EdmFunction function, IEnumerable<DbExpression> arguments)
+        {
+            Check.NotNull(function, "function");
+            Check.NotNull(arguments, "argument");
+
+            if (arguments.Any() == false)
+            {
+                throw new ArgumentNullException("arguments");
+            }
+
+            return CreateFunctionAggregate(function, arguments, false);
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionAggregate" /> that is applied in a distinct fashion.
+        /// </summary>
+        /// <returns>A new function aggregate with a reference to the given function and argument. The function aggregate's Distinct property will have the value true.</returns>
+        /// <param name="function">The function that defines the aggregate operation.</param>
+        /// <param name="arguments">The arguments over which the aggregate function should be calculated.</param>
+        /// <exception cref="T:System.ArgumentNullException">function or argument is null.</exception>
+        /// <exception cref="T:System.ArgumentException">function is not an aggregate function, or the result type of argument is not equal or promotable to the parameter type of function.</exception>
+        public static DbFunctionAggregate AggregateDistinct(this EdmFunction function, IEnumerable<DbExpression> arguments)
+        {
+            Check.NotNull(function, "function");
+            Check.NotNull(arguments, "argument");
+
+            if (arguments.Any() == false)
+            {
+                throw new ArgumentNullException("arguments");
+            }
+
+            return CreateFunctionAggregate(function, arguments, true);
+        }
+
+        private static DbFunctionAggregate CreateFunctionAggregate(EdmFunction function, IEnumerable<DbExpression> arguments, bool isDistinct)
+        {
+            var funcArgs = ArgumentValidation.ValidateFunctionAggregate(function, arguments);
+            var resultType = function.ReturnParameter.TypeUsage;
+            return new DbFunctionAggregate(resultType, funcArgs, function, isDistinct);
+        }
+
+        /// <summary>
         /// Creates a new <see cref="DbGroupAggregate" /> over the specified argument
         /// </summary>
         /// <param name="argument"> The argument over which to perform the nest operation </param>
@@ -1521,7 +1570,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbEntityRefExpression" /> that retrieves the ref of the specifed entity in structural form.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbEntityRefExpression" /> that retrieves the ref of the specified entity in structural form.
         /// </summary>
         /// <returns>A new DbEntityRefExpression that retrieves a reference to the specified entity.</returns>
         /// <param name="argument">The expression that provides the entity. This expression must have an entity result type.</param>
@@ -1677,7 +1726,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRefKeyExpression" /> that retrieves the key values of the specifed reference in structural form.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRefKeyExpression" /> that retrieves the key values of the specified reference in structural form.
         /// </summary>
         /// <returns>A new DbRefKeyExpression that retrieves the key values of the specified reference.</returns>
         /// <param name="argument">The expression that provides the reference. This expression must have a reference Type with an Entity element type.</param>
@@ -1754,7 +1803,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbDistinctExpression" /> that removes duplicates from the given set argument.
         /// </summary>
         /// <returns>A new DbDistinctExpression that represents the distinct operation applied to the specified set argument.</returns>
-        /// <param name="argument">An expression that defines the set over which to perfom the distinct operation.</param>
+        /// <param name="argument">An expression that defines the set over which to perform the distinct operation.</param>
         /// <exception cref="T:System.ArgumentNullException">argument is null.</exception>
         /// <exception cref="T:System.ArgumentException">argument does not have a collection result type.</exception>
         public static DbDistinctExpression Distinct(this DbExpression argument)

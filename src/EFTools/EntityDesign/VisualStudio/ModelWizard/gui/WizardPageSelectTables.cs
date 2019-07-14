@@ -243,7 +243,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         {
             Wizard.ModelBuilderSettings.DatabaseObjectFilters = GetSelectedFilterEntriesFromTreeView();
             Wizard.ModelBuilderSettings.ModelNamespace = modelNamespaceTextBox.Text;
-            Wizard.ModelBuilderSettings.LoadingDBMetatdataTime = _stopwatch.Elapsed;
+            Wizard.ModelBuilderSettings.LoadingDBMetadataTime = _stopwatch.Elapsed;
             Wizard.ModelBuilderSettings.UsePluralizationService = chkPluralize.Checked;
             Wizard.ModelBuilderSettings.IncludeForeignKeysInModel = chkIncludeForeignKeys.Checked;
         }
@@ -398,7 +398,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         // <summary>
         //     RunWorkerCompleted event handler: Populate Treeview here.
         //     This method is called by background worker component on the same thread as the UI thread.
-        //     ModelBuilderEngine gaves us table names to display so we add them to the TreeView
+        //     ModelBuilderEngine gives us table names to display so we add them to the TreeView
         // </summary>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         protected void bgWorkerPopulateTree_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs args)

@@ -19,7 +19,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // list of errors encountered during loading
         private readonly List<EdmItemError> _errors;
 
-        // keep the list of new assemblies that got loaded in this load assembly call. The reason why we need to keep a seperate
+        // keep the list of new assemblies that got loaded in this load assembly call. The reason why we need to keep a separate
         // list of assemblies is that we keep track of errors, and if there are no errors, only then do we add the list of assemblies
         // to the global cache. Hence global cache is never polluted with invalid assemblies
         private readonly Dictionary<Assembly, MutableAssemblyCacheEntry> _listOfAssembliesLoaded =

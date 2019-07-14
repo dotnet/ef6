@@ -117,13 +117,13 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.PropertyWindow.Descriptors
         protected virtual void SetEFElementValue(object value)
         {
             Debug.Fail(
-                "EFPropertyDescriptor.SetEFElementValue should never be invoked. Either it should be overriden in the derived class, or IsReadOnly should return true.");
+                "EFPropertyDescriptor.SetEFElementValue should never be invoked. Either it should be overridden in the derived class, or IsReadOnly should return true.");
         }
 
         protected virtual void ResetEFElementValue()
         {
             Debug.Fail(
-                "EFPropertyDescriptor.ResetEFElementValue should never be invoked. Either it should be overriden in the derived class, or CanResetValue should return false.");
+                "EFPropertyDescriptor.ResetEFElementValue should never be invoked. Either it should be overridden in the derived class, or CanResetValue should return false.");
         }
     }
 

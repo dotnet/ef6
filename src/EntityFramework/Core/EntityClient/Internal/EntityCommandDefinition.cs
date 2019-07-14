@@ -191,7 +191,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
                 // we should not be wrapping all exceptions
                 if (e.IsCatchableExceptionType())
                 {
-                    // we don't wan't folks to have to know all the various types of exceptions that can 
+                    // we don't want folks to have to know all the various types of exceptions that can 
                     // occur, so we just rethrow a CommandDefinitionException and make whatever we caught  
                     // the inner exception of it.
                     throw new EntityCommandCompilationException(Strings.EntityClient_CommandDefinitionPreparationFailed, e);
@@ -334,7 +334,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
 
         // <summary>
         // Property to expose the known parameters for the query, so the Command objects
-        // constructor can poplulate it's parameter collection from.
+        // constructor can populate it's parameter collection from.
         // </summary>
         internal virtual IEnumerable<EntityParameter> Parameters
         {
@@ -548,7 +548,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
                 // we should not be wrapping all exceptions
                 if (e.IsCatchableExceptionType())
                 {
-                    // we don't wan't folks to have to know all the various types of exceptions that can 
+                    // we don't want folks to have to know all the various types of exceptions that can 
                     // occur, so we just rethrow a CommandDefinitionException and make whatever we caught  
                     // the inner exception of it.
                     throw new EntityCommandExecutionException(Strings.EntityClient_CommandDefinitionExecutionFailed, e);
@@ -584,7 +584,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
                 // we should not be wrapping all exceptions
                 if (e.IsCatchableExceptionType())
                 {
-                    // we don't wan't folks to have to know all the various types of exceptions that can 
+                    // we don't want folks to have to know all the various types of exceptions that can 
                     // occur, so we just rethrow a CommandDefinitionException and make whatever we caught  
                     // the inner exception of it.
                     throw new EntityCommandExecutionException(Strings.EntityClient_CommandDefinitionExecutionFailed, e);
@@ -621,7 +621,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
             // by the store provider, but it might work if we don't reorder/reuse
             // parameters.
             //
-            // Note also that the store provider may choose to add parameters to thier
+            // Note also that the store provider may choose to add parameters to their
             // command object for some things; we'll only copy over the values for
             // parameters that we find in the EntityCommands parameters collection, so 
             // we won't damage anything the store provider did.
@@ -633,7 +633,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
                 foreach (DbParameter storeParameter in storeProviderCommand.Parameters)
                 {
                     // I could just use the string indexer, but then if I didn't find it the
-                    // consumer would get some ParameterNotFound exeception message and that
+                    // consumer would get some ParameterNotFound exception message and that
                     // wouldn't be very meaningful.  Instead, I use the IndexOf method and
                     // if I don't find it, it's not a big deal (The store provider must
                     // have added it).

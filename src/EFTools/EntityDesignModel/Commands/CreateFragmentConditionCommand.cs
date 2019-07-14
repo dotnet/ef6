@@ -137,7 +137,7 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
             get
             {
                 // we store the return from the create call in _condition, but there is a chance that
-                // post-processing in an integry check will have moved this condition to another ETM,
+                // post-processing in an integrity check will have moved this condition to another ETM,
                 // if this is case, go find the new one
                 if (_condition != null
                     && _condition.XObject == null)

@@ -160,7 +160,7 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
             }
 
             // foreach table/view in entityTypesToBeUpdatedDatabaseObjects find
-            // the EntityTypes in the ExistingModel which need to be udpated
+            // the EntityTypes in the ExistingModel which need to be updated
             foreach (var dbObj in entityTypesToBeUpdatedDatabaseObjects)
             {
                 // find list of new S-side properties for this DatabaseObject
@@ -1531,11 +1531,11 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
                     isFirst = false;
                 }
 
-                var prinicpalEntityTypeName = principalEntityType.LocalName.Value;
+                var principalEntityTypeName = principalEntityType.LocalName.Value;
                 var dependentEntityTypeName = dependentEntityType.LocalName.Value;
                 var s = String.Format(
                     CultureInfo.CurrentCulture, Resources.UpdateFromDatabaseUnableToBringRefConstraint, associationName,
-                    prinicpalEntityTypeName, dependentEntityTypeName, propertyList);
+                    principalEntityTypeName, dependentEntityTypeName, propertyList);
                 var errorMessageTarget = unfoundPrincipalProperties.Count > 0 ? principalEntityType : dependentEntityType;
                 var errorInfo = new ErrorInfo(
                     ErrorInfo.Severity.WARNING, s, errorMessageTarget, ErrorCodes.UPDATE_MODEL_FROM_DB_CANT_INCLUDE_REF_CONSTRAINT,
@@ -1591,8 +1591,8 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
                             sp.ToPrettyString()));
                 }
 
-                var spCSideEntityTypeinTempArtifact = sp.Name.Target.EntityType as ConceptualEntityType;
-                if (null == spCSideEntityTypeinTempArtifact)
+                var spCSideEntityTypeInTempArtifact = sp.Name.Target.EntityType as ConceptualEntityType;
+                if (null == spCSideEntityTypeInTempArtifact)
                 {
                     throw new UpdateModelFromDatabaseException(
                         string.Format(
@@ -1601,8 +1601,8 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
                             sp.Name.Target.ToPrettyString()));
                 }
 
-                var spSSideEntityTypeinTempArtifact = sp.ColumnName.Target.EntityType as StorageEntityType;
-                if (null == spSSideEntityTypeinTempArtifact)
+                var spSSideEntityTypeInTempArtifact = sp.ColumnName.Target.EntityType as StorageEntityType;
+                if (null == spSSideEntityTypeInTempArtifact)
                 {
                     throw new UpdateModelFromDatabaseException(
                         string.Format(
@@ -1613,7 +1613,7 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
 
                 var csdlEntityTypeInExistingArtifact =
                     FindMatchingConceptualEntityTypeInExistingArtifact(
-                        spCSideEntityTypeinTempArtifact,
+                        spCSideEntityTypeInTempArtifact,
                         tempArtifactCEntityTypeToNewCEntityTypeInExistingArtifact);
                 if (null == csdlEntityTypeInExistingArtifact)
                 {
@@ -1622,11 +1622,11 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
                             CultureInfo.CurrentCulture,
                             Resources.UpdateFromDatabaseAssociationSetMappingCannotFindMatchingEntityType,
                             sp.ToPrettyString(),
-                            spCSideEntityTypeinTempArtifact.ToPrettyString()));
+                            spCSideEntityTypeInTempArtifact.ToPrettyString()));
                 }
 
                 var ssdlEntityTypeInExistingArtifact =
-                    FindMatchingStorageEntityTypeInExistingArtifact(spSSideEntityTypeinTempArtifact);
+                    FindMatchingStorageEntityTypeInExistingArtifact(spSSideEntityTypeInTempArtifact);
                 if (null == ssdlEntityTypeInExistingArtifact)
                 {
                     throw new UpdateModelFromDatabaseException(
@@ -1634,7 +1634,7 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
                             CultureInfo.CurrentCulture,
                             Resources.UpdateFromDatabaseAssociationSetMappingCannotFindMatchingEntityType,
                             sp.ToPrettyString(),
-                            spSSideEntityTypeinTempArtifact.ToPrettyString()));
+                            spSSideEntityTypeInTempArtifact.ToPrettyString()));
                 }
 
                 var entityProperty = FindMatchingPropertyInExistingArtifactEntityType(sp.Name.Target, csdlEntityTypeInExistingArtifact);

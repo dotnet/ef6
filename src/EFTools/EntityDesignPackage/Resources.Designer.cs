@@ -298,9 +298,9 @@ namespace Microsoft.Data.Entity.Design.Package {
         /// <summary>
         ///   Looks up a localized string similar to Entity: {0}.
         /// </summary>
-        internal static string SelectAssociationEndCommnadText {
+        internal static string SelectAssociationEndCommandText {
             get {
-                return ResourceManager.GetString("SelectAssociationEndCommnadText", resourceCulture);
+                return ResourceManager.GetString("SelectAssociationEndCommandText", resourceCulture);
             }
         }
         

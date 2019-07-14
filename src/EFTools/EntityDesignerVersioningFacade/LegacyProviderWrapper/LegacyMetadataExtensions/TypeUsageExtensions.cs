@@ -14,7 +14,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.LegacyProviderWrapper.Le
 
     internal static class TypeUsageExtensions
     {
-        private static readonly ConstructorInfo LegacyEdmProperyCtor =
+        private static readonly ConstructorInfo LegacyEdmPropertyCtor =
             typeof(LegacyMetadata.EdmProperty)
                 .GetConstructor(
                     BindingFlags.Instance | BindingFlags.NonPublic,
@@ -262,7 +262,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.LegacyProviderWrapper.Le
 
             var properties =
                 rowType.Properties.Select(
-                    p => (LegacyMetadata.EdmProperty)LegacyEdmProperyCtor.Invoke(
+                    p => (LegacyMetadata.EdmProperty)LegacyEdmPropertyCtor.Invoke(
                         BindingFlags.CreateInstance,
                         null,
                         new object[]

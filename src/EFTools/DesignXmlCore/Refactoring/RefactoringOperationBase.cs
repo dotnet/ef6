@@ -397,7 +397,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.Refactoring
         }
 
         /// <summary>
-        ///     Apply changes to one file and possiblely create markers
+        ///     Apply changes to one file and possibly create markers
         /// </summary>
         /// <param name="file">FileChange that contains list of ChangeProposals.</param>
         /// <param name="textLines">IVsTextLines of the file content.</param>

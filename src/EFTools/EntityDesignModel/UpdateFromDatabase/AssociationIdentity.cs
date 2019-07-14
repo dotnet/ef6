@@ -16,7 +16,7 @@ namespace Microsoft.Data.Entity.Design.Model.UpdateFromDatabase
 
         /// <summary>
         ///     For an association mapped with an AssociationSetMapping, this will return the table that the ASM is mapped to
-        ///     For an association mapped with a ReferentialConstraing, this will return the Dependent end tables of the RC.
+        ///     For an association mapped with a ReferentialConstraining, this will return the Dependent end tables of the RC.
         /// </summary>
         internal abstract IEnumerable<DatabaseObject> AssociationTables { get; }
 

@@ -68,7 +68,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
         }
 
         /// <summary>
-        ///     The indendation level for this branch
+        ///     The indentation level for this branch
         /// </summary>
         public int Level
         {

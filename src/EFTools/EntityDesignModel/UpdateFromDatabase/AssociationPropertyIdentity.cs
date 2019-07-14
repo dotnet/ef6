@@ -12,7 +12,7 @@ namespace Microsoft.Data.Entity.Design.Model.UpdateFromDatabase
 
     /// <summary>
     ///     This class defines the "Identity" of a property that participates in an association.
-    ///     This can be either through an AssociationSetMapping, or through a C-side ReferentialConstratint.
+    ///     This can be either through an AssociationSetMapping, or through a C-side ReferentialConstraint.
     ///     Since a ReferentialConstraint on the c-side can be defined over properties that are mapped to multiple
     ///     columns in the database (eg, in TPC scenarios), we define the "principal" & "dependent" ends of the
     ///     Association property via a list of columns.
@@ -236,7 +236,7 @@ namespace Microsoft.Data.Entity.Design.Model.UpdateFromDatabase
             var compVal = SortedListAllowDupes<DatabaseColumn>.CompareListContents(x.PrincipalColumns, y.PrincipalColumns);
             if (compVal == 0)
             {
-                // left columns are equal, compare right columsn
+                // left columns are equal, compare right columns
                 compVal = SortedListAllowDupes<DatabaseColumn>.CompareListContents(x.DependentColumns, y.DependentColumns);
             }
             return compVal;

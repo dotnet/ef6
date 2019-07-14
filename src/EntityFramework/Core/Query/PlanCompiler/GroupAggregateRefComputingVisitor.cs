@@ -141,7 +141,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region ScalarOps Visitors
 
         // <summary>
-        // If the op is a collection aggregate function it checks whether its arguement can be translated over
+        // If the op is a collection aggregate function it checks whether its argument can be translated over
         // a single group aggregate var. If so, it is tracked as a candidate to be pushed into that
         // group by into node.
         // </summary>
@@ -154,7 +154,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 return;
             }
-            PlanCompiler.Assert(n.Children.Count == 1, "Aggregate Function must have one argument");
+
+            if (n.Children.Count > 1)
+            {
+                return;
+            }
+
+            var argumentNode = n.Child0;
 
             GroupAggregateVarInfo referencedGroupAggregateVarInfo;
             Node templateNode;
@@ -164,8 +170,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 out isUnnested)
                 &&
                 (isUnnested || AggregatePushdownUtil.IsVarRefOverGivenVar(templateNode, referencedGroupAggregateVarInfo.GroupAggregateVar)))
-            {
-                referencedGroupAggregateVarInfo.CandidateAggregateNodes.Add(new KeyValuePair<Node, Node>(n, templateNode));
+                {
+                referencedGroupAggregateVarInfo.CandidateAggregateNodes.Add(new KeyValuePair<Node, List<Node>>(n, new List<Node> { templateNode }));
             }
         }
 

@@ -362,7 +362,7 @@ namespace Microsoft.Data.Entity.Design.Model.Integrity
                 else
                 {
                     // default value for C-side facet is different from the default value for the S-side facet
-                    // so need to explictly set the C-side. Only reason for not updating is if the value is
+                    // so need to explicitly set the C-side. Only reason for not updating is if the value is
                     // already what we would set it to.
                     if (false == cSideDefaultableValue.IsDefaulted
                         && sSideDefaultableValueDefaultValue.Equals(preExistingCSideValue))

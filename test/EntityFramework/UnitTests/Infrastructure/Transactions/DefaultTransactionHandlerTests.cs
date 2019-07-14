@@ -17,7 +17,7 @@ namespace System.Data.Entity.Infrastructure.Transactions
         }
 
         [Fact]
-        public void Commited_wraps_exceptions_for_known_transactions()
+        public void Committed_wraps_exceptions_for_known_transactions()
         {
             var context = Core.Objects.MockHelper.CreateMockObjectContext<object>();
             var handler = new DefaultTransactionHandler();

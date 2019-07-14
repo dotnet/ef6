@@ -11,7 +11,7 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
     // <summary>
     //     Displays a dialog that allows the user to choose to never see it again via a checkbox.
     // </summary>
-    internal partial class DismissableWarningDialog : Form
+    internal partial class DismissibleWarningDialog : Form
     {
         internal enum ButtonMode
         {
@@ -19,7 +19,7 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
             YesNo
         }
 
-        internal DismissableWarningDialog(string formattedTitle, string formattedMessage, ButtonMode buttonMode)
+        internal DismissibleWarningDialog(string formattedTitle, string formattedMessage, ButtonMode buttonMode)
         {
             InitializeComponent();
 
@@ -42,7 +42,7 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
         }
 
         // <summary>
-        //     Static method to instantiate a DismissableWarningDialog and persist the user setting to dismiss the dialog.
+        //     Static method to instantiate a DismissibleWarningDialog and persist the user setting to dismiss the dialog.
         //     Returns a boolean indicating whether the dialog was cancelled or not.
         // </summary>
         // <param name="buttonMode">Either 'OKCancel' or 'YesNo'. If 'YesNo', 'Yes' will be associated with DialogResult.OK</param>
@@ -56,7 +56,7 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
             Debug.Assert(service != null, "service should not be null");
             if (service != null)
             {
-                using (var dialog = new DismissableWarningDialog(formattedTitle, formattedMessage, buttonMode))
+                using (var dialog = new DismissibleWarningDialog(formattedTitle, formattedMessage, buttonMode))
                 {
                     if (service.ShowDialog(dialog) == DialogResult.OK)
                     {

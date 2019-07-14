@@ -96,14 +96,14 @@ namespace CmdLine
         #region Methods
 
         private static void AppendLines(
-            StringBuilder sb, int maxParameterWidth, IList<string> firstColum, IList<string> secondColumn)
+            StringBuilder sb, int maxParameterWidth, IList<string> firstColumn, IList<string> secondColumn)
         {
             var format = string.Format("{{0,-{0}}}{{1}}", maxParameterWidth + 1);
-            for (var i = 0; i < firstColum.Count || i < secondColumn.Count; i++)
+            for (var i = 0; i < firstColumn.Count || i < secondColumn.Count; i++)
             {
                 sb.AppendLine(
                     string.Format(
-                        format, i < firstColum.Count ? firstColum[i] : string.Empty,
+                        format, i < firstColumn.Count ? firstColumn[i] : string.Empty,
                         i < secondColumn.Count ? secondColumn[i] : string.Empty));
             }
         }

@@ -66,7 +66,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner
 		private const string defaultProvidesModelParameter = providesModelParameter;
 	
 		/// <summary>
-		/// The directive name that is supported by this direcive processor. This defaults
+		/// The directive name that is supported by this directive processor. This defaults
 		/// to the name of the model. 
 		/// </summary>
 		private const string supportedDirectiveName = "EntityFramework";
@@ -133,7 +133,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner
 		}
 	
 		/// <summary>
-		/// Override to initialize provides dictinoary
+		/// Override to initialize provides dictionary
 		/// </summary>
 		/// <param name="directiveName"></param>
 		/// <param name="providesDictionary"></param>

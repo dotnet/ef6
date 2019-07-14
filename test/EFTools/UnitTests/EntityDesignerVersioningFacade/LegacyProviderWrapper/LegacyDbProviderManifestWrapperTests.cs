@@ -95,7 +95,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.LegacyProviderWrapper
 
             var providerManifestWrapper = new LegacyDbProviderManifestWrapper(mockLegacyManifest.Object);
 
-            // need an SSpace type as the arguemnt
+            // need an SSpace type as the argument
             var edmType = new LegacyDbProviderManifestWrapper(LegacyProviderManifest).GetStoreTypes().First();
 
             var exception =

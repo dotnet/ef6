@@ -128,7 +128,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
         private void SetColorTheme()
         {
             ClassStyleSet.OverridePenColor(DiagramPens.EmphasisOutline, EmphasisShapeOutlineColor);
-            // We shouldn't need to do this again uless the user changes the theme.
+            // We shouldn't need to do this again unless the user changes the theme.
             IsColorThemeSet = true;
         }
 
@@ -196,7 +196,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
         {
             // If the shape is very dark, we make the title text white, and viceversa.
             StyleSet.OverrideBrushColor(DiagramBrushes.ShapeText, CachedFillColorAppearance(FillColor).TextColor);
-            // We draw a thin outline of a sligtly different color to improve distinguishability when shape color looks like background (and because it looks good).
+            // We draw a thin outline of a slightly different color to improve distinguishability when shape color looks like background (and because it looks good).
             StyleSet.OverridePenColor(OutlinePenId, CachedFillColorAppearance(FillColor).OutlineColor);
             // We shouldn't need to do this again unless the user changes the color for this shape.
             _isAdjustedForFillColor = true;
@@ -308,7 +308,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
         }
 
         /// <summary>
-        ///     This method is used to cache the results of a function so the funcion is ever at most invoked
+        ///     This method is used to cache the results of a function so the function is ever at most invoked
         ///     once for each possible value of the argument and only one copy of the result for every value
         ///     of the argument is ever allocated in memory
         /// </summary>

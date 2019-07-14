@@ -14,7 +14,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.ViewModel
         /// <summary>
         ///     Validate property name
         /// </summary>
-        [ValidationMethod(ValidationCategories.Open | ValidationCategories.Save, CustomCategory = "OnTransactionCommited")]
+        [ValidationMethod(ValidationCategories.Open | ValidationCategories.Save, CustomCategory = "OnTransactionCommitted")]
         private void ValidateName(ValidationContext context)
         {
             if (!EscherAttributeContentValidator.IsValidCsdlPropertyName(Name))

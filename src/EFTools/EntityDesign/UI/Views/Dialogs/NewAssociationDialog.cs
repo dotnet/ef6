@@ -53,7 +53,7 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
         {
             Debug.Assert(entity1 != null && entity2 != null, "both entity1 and entity2 should be non-null");
 
-            // Ensure _foreignKeysSupported is intialized before we initialize UI components.
+            // Ensure _foreignKeysSupported is initialized before we initialize UI components.
             _foreignKeysSupported =
                 EdmFeatureManager.GetForeignKeysInModelFeatureState(entity1.Artifact.SchemaVersion)
                     .IsEnabled();
@@ -423,7 +423,7 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
             var supported = false;
 
 #if DEBUG
-            // verify that values are what we expexct
+            // verify that values are what we expect
             string[] values =
                 {
                     Resources.PropertyWindow_Value_MultiplicityMany, Resources.PropertyWindow_Value_MultiplicityOne,

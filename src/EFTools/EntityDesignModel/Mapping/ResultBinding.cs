@@ -46,7 +46,7 @@ namespace Microsoft.Data.Entity.Design.Model.Mapping
                     _property = new SingleItemBinding<Property>(
                         this,
                         AttributeName,
-                        ProperyMappingNameNormalizer.NameNormalizer
+                        PropertyMappingNameNormalizer.NameNormalizer
                         );
                 }
                 return _property;

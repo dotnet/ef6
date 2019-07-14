@@ -167,7 +167,7 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Model\VisualStudio\IXmlDesignePackage.cs" />
+    <Compile Include="Model\VisualStudio\IXmlDesignerPackage.cs" />
     <Compile Include="Model\VisualStudio\VSXmlModel.cs" />
     <Compile Include="Model\VisualStudio\VSXmlModelProvider.cs" />
     <Compile Include="Model\VisualStudio\VSXmlTransactionProvider.cs" />

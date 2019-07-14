@@ -105,7 +105,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.Refactoring
         public ChangeProposal ChangeProposal { get; internal set; }
 
         /// <summary>
-        ///     Language service will be used on the text buffter in preview window
+        ///     Language service will be used on the text buffer in preview window
         ///     when clicking this node.
         /// </summary>
         public Guid LanguageServiceID

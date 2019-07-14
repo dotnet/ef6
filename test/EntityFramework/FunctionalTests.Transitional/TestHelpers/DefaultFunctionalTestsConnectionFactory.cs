@@ -15,7 +15,7 @@ namespace System.Data.Entity.TestHelpers
         public DbConnection CreateConnection(string nameOrConnectionString)
         {
             throw new NotImplementedException(
-                "This connection factory should never be used because it is overriden in the Loaded event.");
+                "This connection factory should never be used because it is overridden in the Loaded event.");
         }
     }
 }

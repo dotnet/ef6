@@ -12,7 +12,7 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
     using Microsoft.Data.Entity.Design.Model.Mapping;
 
     /// <summary>
-    ///     This class updates either the ReferencialConstraint or the AssociationSetMapping depending on whether or not we're including
+    ///     This class updates either the ReferentialConstraint or the AssociationSetMapping depending on whether or not we're including
     ///     foreign keys. The reason why we need a command that can pivot between these two behaviors is because the Hydration Translator
     ///     does not have the context of the artifact at the time commands are created.
     /// </summary>

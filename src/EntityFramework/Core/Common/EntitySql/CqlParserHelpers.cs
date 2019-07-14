@@ -41,7 +41,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // Main entry point for parsing cql.
         // </summary>
         // <param name="query"> query text </param>
-        // <exception cref="System.Data.Entity.Core.EntityException">Thrown when Syntatic rules are violated and the query cannot be accepted</exception>
+        // <exception cref="System.Data.Entity.Core.EntityException">Thrown when Syntactic rules are violated and the query cannot be accepted</exception>
         // <returns> Abstract Syntax Tree </returns>
         internal Node Parse(string query)
         {

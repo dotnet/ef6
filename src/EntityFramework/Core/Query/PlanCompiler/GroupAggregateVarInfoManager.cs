@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Core.Query.InternalTrees;
 
     // <summary>
-    // Manages refereces to groupAggregate variables.
+    // Manages references to groupAggregate variables.
     // </summary>
     internal class GroupAggregateVarInfoManager
     {

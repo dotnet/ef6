@@ -13,7 +13,7 @@ namespace Microsoft.Data.Entity.Design.Model.Visitor
     // 1. each object X is not disposed
     // 2. each object is "resolved" or "resolveAttempted"
     // 3. each object has an XOwner
-    // 4. the XOwner has a ModelItemAnnotaton
+    // 4. the XOwner has a ModelItemAnnotation
     // 5. the ModelItemAnnotation is the same EFObject as X
     // 6. each ItemBinding's target is not disposed.
     internal class VerifyModelIntegrityVisitor : Visitor

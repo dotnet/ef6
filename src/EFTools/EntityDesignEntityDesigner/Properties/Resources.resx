@@ -387,7 +387,7 @@ Add existing entities and relationships to this diagram by dragging them from th
   </data>
   <data name="CompClassName_NavigationProperty" xml:space="preserve">
     <value>Navigation Property</value>
-    <comment>The class name part of the component name in Navigation Windows. For NavigationProperty generated for entity assocations.</comment>
+    <comment>The class name part of the component name in Navigation Windows. For NavigationProperty generated for entity associations.</comment>
   </data>
   <data name="Acc_Unnamed" xml:space="preserve">
     <value>Unnamed</value>

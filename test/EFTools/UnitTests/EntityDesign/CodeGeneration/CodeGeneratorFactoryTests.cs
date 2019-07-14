@@ -26,7 +26,7 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
         }
 
         [Fact]
-        public void GetContextGenerator_returns_correct_non_customized_context_generator_if_model_not_emtpy()
+        public void GetContextGenerator_returns_correct_non_customized_context_generator_if_model_not_empty()
         {
             var generatorFactory = new CodeGeneratorFactory(Mock.Of<Project>());
 
@@ -37,7 +37,7 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
         }
 
         [Fact]
-        public void GetContextGenerator_returns_correct_customized__context_generator_if_model_not_emtpy_CS()
+        public void GetContextGenerator_returns_correct_customized__context_generator_if_model_not_empty_CS()
         {
             var mockDte = SetupMockProjectWithCustomizedTemplate(@"CodeTemplates\EFModelFromDatabase\Context.cs.t4");
 
@@ -47,7 +47,7 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
         }
 
         [Fact]
-        public void GetContextGenerator_returns_correct_customized_context_generator_if_model_not_emtpy_VB()
+        public void GetContextGenerator_returns_correct_customized_context_generator_if_model_not_empty_VB()
         {
             var mockDte = SetupMockProjectWithCustomizedTemplate(@"CodeTemplates\EFModelFromDatabase\Context.vb.t4");
 

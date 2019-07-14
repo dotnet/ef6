@@ -94,7 +94,7 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
         }
 
         /// <summary>
-        ///     Method useful for intializing the Command when using its parameterless constructor
+        ///     Method useful for initializing the Command when using its parameterless constructor
         /// </summary>
         /// <param name="id"></param>
         /// <param name="bindingAction"></param>

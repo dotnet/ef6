@@ -134,14 +134,14 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
             // Validate Number of ends is correct
             //    What we know:
-            //      No ends are missing, becuase we infered all missing ends
+            //      No ends are missing, because we inferred all missing ends
             //      No extra ends are there because the names have been matched, and an extra name will have caused an error
             //
             //    looks like no count validation needs to be done
         }
 
         // <summary>
-        // Adds any ends that need to be infered
+        // Adds any ends that need to be inferred
         // </summary>
         private void InferEnds()
         {
@@ -185,14 +185,14 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
             else if (possibleExtents.Count == 0)
             {
-                // no matchs
+                // no matches
                 AddError(
                     ErrorCode.MissingExtentEntityContainerEnd, EdmSchemaErrorSeverity.Error,
                     Strings.MissingEntityContainerEnd(relationshipEnd.Name, FQName));
             }
             else
             {
-                // abmigous
+                // ambigous
                 AddError(
                     ErrorCode.AmbiguousEntityContainerEnd, EdmSchemaErrorSeverity.Error,
                     Strings.AmbiguousEntityContainerEnd(relationshipEnd.Name, FQName));

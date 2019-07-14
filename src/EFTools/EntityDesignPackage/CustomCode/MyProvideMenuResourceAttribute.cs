@@ -55,7 +55,7 @@ namespace Microsoft.VisualStudio.Shell
         /// <include file='doc\ProvideMenuResourceAttribute.uex' path='docs/doc[@for="Register"]' />
         /// <devdoc>
         ///     Called to register this attribute with the given context.  The context
-        ///     contains the location where the registration inforomation should be placed.
+        ///     contains the location where the registration information should be placed.
         ///     it also contains such as the type being registered, and path information.
         ///     This method is called both for registration and unregistration.  The difference is
         ///     that unregistering just uses a hive that reverses the changes applied to it.
@@ -73,8 +73,8 @@ namespace Microsoft.VisualStudio.Shell
         ///     Called to unregister this attribute with the given context.
         /// </summary>
         /// <param name="context">
-        ///     Contains the location where the registration inforomation should be placed.
-        ///     It also contains other informations as the type being registered and path information.
+        ///     Contains the location where the registration information should be placed.
+        ///     It also contains other information as the type being registered and path information.
         /// </param>
         public override void Unregister(RegistrationContext context)
         {

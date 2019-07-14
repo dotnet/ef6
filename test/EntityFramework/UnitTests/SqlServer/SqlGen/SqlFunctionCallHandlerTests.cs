@@ -224,6 +224,46 @@ namespace System.Data.Entity.SqlServer.SqlGen
             Assert.Equal(expectedSql, BuildSqlForDateTimeOffset(dateTimeOffset, SqlVersion.Sql11));
         }
 
+
+        [Fact]
+        public void GenerateFunctionCallSql_generates_expected_sql_for_TruncateTime_DateTime()
+        {
+            var dateTime = new DateTime(2012, 2, 29, 6, 12, 37);
+
+            const string expectedSqlPreKatmai =
+"dateadd(d, datediff(d, 0, convert(datetime, '2012-02-29 06:12:37.000', 121)), 0)";
+            const string expectedSqlKatmai =
+"cast(cast(convert(datetime2, '2012-02-29 06:12:37.0000000', 121) as date) as datetime2)";
+
+            Assert.Equal(expectedSqlPreKatmai, BuildSqlForTruncateTime(dateTime, SqlVersion.Sql8));
+            Assert.Equal(expectedSqlPreKatmai, BuildSqlForTruncateTime(dateTime, SqlVersion.Sql9));
+            Assert.Equal(expectedSqlKatmai, BuildSqlForTruncateTime(dateTime, SqlVersion.Sql10));
+            Assert.Equal(expectedSqlKatmai, BuildSqlForTruncateTime(dateTime, SqlVersion.Sql11));
+        }
+
+        [Fact]
+        public void GenerateFunctionCallSql_generates_expected_sql_for_TruncateTime_DateTimeOffset()
+        {
+            var dateTimeOffset = new DateTimeOffset(2012, 2, 29, 6, 12, 37, TimeSpan.FromHours(3));
+
+            const string expectedSql =
+"todatetimeoffset(cast(convert(DateTimeOffset, '2012-02-29 06:12:37.0000000 +03:00', 121) as date), datepart(tz, convert(DateTimeOffset, '2012-02-29 06:12:37.0000000 +03:00', 121)))";
+
+            Assert.Equal(Strings.SqlGen_CanonicalFunctionNotSupportedPriorSql10("TruncateTime"),
+                Assert.Throws<NotSupportedException>(
+                    () => 
+                        BuildSqlForTruncateTime(dateTimeOffset, SqlVersion.Sql8)).Message);
+
+            Assert.Equal(Strings.SqlGen_CanonicalFunctionNotSupportedPriorSql10("TruncateTime"),
+                Assert.Throws<NotSupportedException>(
+                    () =>
+                        BuildSqlForTruncateTime(dateTimeOffset, SqlVersion.Sql9)).Message);
+
+            Assert.Equal(expectedSql, BuildSqlForTruncateTime(dateTimeOffset, SqlVersion.Sql10));
+            Assert.Equal(expectedSql, BuildSqlForTruncateTime(dateTimeOffset, SqlVersion.Sql11));
+        }
+
+
         private static string BuildSqlForDateTime(DateTime dateTime, SqlVersion sqlVersion)
         {
             var builder = new StringBuilder();
@@ -274,6 +314,48 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
             return builder.ToString();
         }
+
+
+        private static string BuildSqlForTruncateTime(DateTime dateTime, SqlVersion sqlVersion)
+        {
+            var builder = new StringBuilder();
+
+            var sqlGenerator = new SqlGenerator(sqlVersion);
+
+            var functionExpression = EdmFunctions.TruncateTime(
+                DbExpression.FromDateTime(dateTime));
+
+            var sqlFragment = SqlFunctionCallHandler.GenerateFunctionCallSql(
+                sqlGenerator, functionExpression);
+
+            using (var sqlWriter = new SqlWriter(builder))
+            {
+                sqlFragment.WriteSql(sqlWriter, sqlGenerator);
+            }
+
+            return builder.ToString();
+        }
+
+        private static string BuildSqlForTruncateTime(DateTimeOffset dateTimeOffset, SqlVersion sqlVersion)
+        {
+            var builder = new StringBuilder();
+
+            var sqlGenerator = new SqlGenerator(sqlVersion);
+
+            var functionExpression = EdmFunctions.TruncateTime(
+                DbExpression.FromDateTimeOffset(dateTimeOffset));
+
+            var sqlFragment = SqlFunctionCallHandler.GenerateFunctionCallSql(
+                sqlGenerator, functionExpression);
+
+            using (var sqlWriter = new SqlWriter(builder))
+            {
+                sqlFragment.WriteSql(sqlWriter, sqlGenerator);
+            }
+
+            return builder.ToString();
+        }
+
 
         private static Mock<SqlGenerator> CreateMockSqlGenerator(string storeType)
         {

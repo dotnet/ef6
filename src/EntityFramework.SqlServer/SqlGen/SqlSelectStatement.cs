@@ -39,7 +39,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
     internal sealed class SqlSelectStatement : ISqlFragment
     {
         // <summary>
-        // Whether the columns ouput by this sql statement were renamed from what given in the command tree.
+        // Whether the columns output by this sql statement were renamed from what given in the command tree.
         // </summary>
         internal bool OutputColumnsRenamed { get; set; }
 

@@ -767,7 +767,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         // <summary>
         // Determines whether each of the given joinEdges can be turned into an inner join
-        // NOTE: Due to how we create join edges, currenlty there can only be one join edge in this group
+        // NOTE: Due to how we create join edges, currently there can only be one join edge in this group
         // See <see cref="CanJoinEdgeBeTurnedIntoInnerJoin" /> for details.
         // </summary>
         private bool CanAllJoinEdgesBeTurnedIntoInnerJoins(AugmentedNode rightNode, IEnumerable<JoinEdge> joinEdges)
@@ -936,7 +936,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             while (currentParent != null
                    && currentNode != leastCommonAncestor)
             {
-                //If the current node is a rigth child of a left outer join return or participates in a inner join
+                //If the current node is a right child of a left outer join return or participates in a inner join
                 if (currentParent.Node != joinEdge.JoinNode.Node
                     &&
                     (disallowAnyJoin || currentParent.Node.Op.OpType != OpType.LeftOuterJoin || currentParent.Children[0] != currentNode)
@@ -988,22 +988,22 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             AugmentedNode currentParent;
-            AugmentedNode rigthNode;
+            AugmentedNode rightNode;
 
             if (node1.Id
                 < node2.Id)
             {
                 currentParent = node1;
-                rigthNode = node2;
+                rightNode = node2;
             }
             else
             {
                 currentParent = node2;
-                rigthNode = node1;
+                rightNode = node1;
             }
 
             while (currentParent.Id
-                   < rigthNode.Id)
+                   < rightNode.Id)
             {
                 currentParent = currentParent.Parent;
             }
@@ -1172,7 +1172,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 }
 
                 // If the join edge could not be part of any of the existing groups,
-                // see whether it quailifes for leading a new group
+                // see whether it qualifies for leading a new group
                 if (!matched
                     && QualifiesForStarSelfJoinGroup(joinEdge))
                 {
@@ -1217,7 +1217,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // </summary>
         private static bool AreMatchingForStarSelfJoinElimination(JoinEdge edge1, JoinEdge edge2)
         {
-            // In order for the join edges to be compatible thay have to  
+            // In order for the join edges to be compatible they have to  
             // represent joins on the same number of columns and of the same join kinds.
             if (edge2.LeftVars.Count != edge1.LeftVars.Count
                 ||
@@ -2038,7 +2038,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         // <summary>
-        // Rebuilds the predicate for a join node and caculates the minimum location id at which it can be specified.
+        // Rebuilds the predicate for a join node and calculates the minimum location id at which it can be specified.
         // The predicate is an AND of the equijoin conditions and the "otherPredicate".
         // We first remap all columns in the equijoin predicates - if a column pair
         // resolves to the same column, then we skip that pair.
@@ -2053,7 +2053,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private Node RebuildPredicate(AugmentedJoinNode joinNode, out int minLocationId)
         {
             //
-            // It is safe to initilaze the output location id to the location id of the joinNode. The nodes at lower 
+            // It is safe to initialize the output location id to the location id of the joinNode. The nodes at lower 
             // location ids have already been processed, thus even if the least common ancestor of all participating 
             // vars is lower than the location id of the joinNode, the rebuilt predicate would not be propagated 
             // to nodes at lower location ids.
@@ -2337,7 +2337,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // <param name="leftPredicates"> A dictionary of predicates and the minimum location id at which they can be specified </param>
         // <param name="rightPredicates"> A dictionary of predicates and the minimum location id at which they can be specified </param>
         // <param name="outPredicates"> An output dictionary of predicates and the minimum location id at which they can be specified that includes all input predicates with minimum location id greater then targetNodeId </param>
-        // <returns> A single predicate "AND"-ing all input predicates with a minimum location id that is less or equal to the tiven targetNodeId. </returns>
+        // <returns> A single predicate "AND"-ing all input predicates with a minimum location id that is less or equal to the given targetNodeId. </returns>
         private Node CombinePredicateNodes(
             int targetNodeId, Node localPredicateNode, int localPredicateMinLocationId, Dictionary<Node, int> leftPredicates,
             Dictionary<Node, int> rightPredicates, out Dictionary<Node, int> outPredicates)
@@ -2371,7 +2371,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         // <summary>
         // Helper method for <see cref="CombinePredicateNodes" />
-        // If the predicateMinimuLocationId is less or equal to the target location id of the current result, it is AND-ed with the
+        // If the predicateMinimumLocationId is less or equal to the target location id of the current result, it is AND-ed with the
         // current result, otherwise it is included in the list of predicates that need to be propagated up (outPredicates)
         // </summary>
         private Node ClassifyPredicate(
@@ -2454,7 +2454,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         // <summary>
         // Helper method for <see cref="GetLeastCommonAncestor(int, int)" />
-        // Given a root node pick its immediate child to which the node identifed with the given nodeId bellongs.
+        // Given a root node pick its immediate child to which the node identified with the given nodeId bellongs.
         // </summary>
         // <returns> The immediate child of the given root that is root of the subree that contains the node with the given nodeId. </returns>
         private static AugmentedNode PickSubtree(int nodeId, AugmentedNode root)

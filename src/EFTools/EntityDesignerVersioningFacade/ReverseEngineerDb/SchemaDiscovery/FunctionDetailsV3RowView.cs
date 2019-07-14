@@ -11,11 +11,11 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
         private const int ProcSchemaIndex = 1;
         private const int ProcNameIndex = 2;
         private const int ProcRetTypeIndex = 3;
-        private const int ProcIsaggregateIndex = 4;
-        private const int ProcIscomposableIndex = 5;
-        private const int ProcIsbuiltinIndex = 6;
-        private const int ProcIsniladicIndex = 7;
-        private const int ProcIstvfIndex = 8;
+        private const int ProcIsAggregateIndex = 4;
+        private const int ProcIsComposableIndex = 5;
+        private const int ProcIsBuiltinIndex = 6;
+        private const int ProcIsNiladicIndex = 7;
+        private const int ProcIsTvfIndex = 8;
         private const int ParamNameIndex = 9;
         private const int ParamTypeIndex = 10;
         private const int ParamDirectionIndex = 11;
@@ -48,27 +48,27 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
 
         public override bool IsIsAggregate
         {
-            get { return ConvertDBNull<bool>(Values[ProcIsaggregateIndex]); }
+            get { return ConvertDBNull<bool>(Values[ProcIsAggregateIndex]); }
         }
 
         public override bool IsBuiltIn
         {
-            get { return ConvertDBNull<bool>(Values[ProcIsbuiltinIndex]); }
+            get { return ConvertDBNull<bool>(Values[ProcIsBuiltinIndex]); }
         }
 
         public override bool IsComposable
         {
-            get { return ConvertDBNull<bool>(Values[ProcIscomposableIndex]); }
+            get { return ConvertDBNull<bool>(Values[ProcIsComposableIndex]); }
         }
 
         public override bool IsNiladic
         {
-            get { return ConvertDBNull<bool>(Values[ProcIsniladicIndex]); }
+            get { return ConvertDBNull<bool>(Values[ProcIsNiladicIndex]); }
         }
 
         public override bool IsTvf
         {
-            get { return ConvertDBNull<bool>(Values[ProcIstvfIndex]); }
+            get { return ConvertDBNull<bool>(Values[ProcIsTvfIndex]); }
         }
 
         public override string ParameterName

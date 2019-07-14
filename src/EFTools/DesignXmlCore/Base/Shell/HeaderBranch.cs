@@ -119,7 +119,7 @@ namespace Microsoft.Data.Entity.Design.Base.Shell
         /// </summary>
         /// <param name="row">Target row</param>
         /// <param name="column">Target column</param>
-        /// <returns>Populated VirtualTreeAccessibilityData structue, or VirtualTreeAccessibilityData.Empty</returns>
+        /// <returns>Populated VirtualTreeAccessibilityData structure, or VirtualTreeAccessibilityData.Empty</returns>
         protected virtual VirtualTreeAccessibilityData GetAccessibilityData(int row, int column)
         {
             // initial header column - {display text} {row} {child count}

@@ -608,7 +608,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         // Gets extents for which this translator has identified changes to be handled
         // by function mappings.
         // </summary>
-        // <returns> Enumreation of modified C-Space extents. </returns>
+        // <returns> Enumeration of modified C-Space extents. </returns>
         private IEnumerable<EntitySetBase> GetFunctionModifiedExtents()
         {
             return _functionChanges.Keys;
@@ -631,7 +631,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 var affectedTables = ViewLoader.GetAffectedTables(extent, MetadataWorkspace);
                 //Since these extents don't have Functions defined for update operations,
                 //the affected tables should be provided via MSL.
-                //If we dont find any throw an exception
+                //If we don't find any throw an exception
                 if (affectedTables.Count == 0)
                 {
                     throw EntityUtil.Update(Strings.Update_MappingNotFound(extent.Name), null /*stateEntries*/);
@@ -689,7 +689,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 var functionParams = functionMapping.Function.Parameters.Select(
                     paramInfo => new KeyValuePair<string, TypeUsage>(paramInfo.Name, paramInfo.TypeUsage));
 
-                // construct DbFunctionCommandTree including implict return type
+                // construct DbFunctionCommandTree including implicit return type
                 var tree = new DbFunctionCommandTree(
                     MetadataWorkspace, DataSpace.SSpace,
                     functionMapping.Function, resultType, functionParams);
@@ -782,7 +782,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 // we should not be wrapping all exceptions
                 if (e.RequiresContext())
                 {
-                    // we don't wan't folks to have to know all the various types of exceptions that can 
+                    // we don't want folks to have to know all the various types of exceptions that can 
                     // occur, so we just rethrow a CommandDefinitionException and make whatever we caught  
                     // the inner exception of it.
                     throw new EntityCommandCompilationException(Strings.EntityClient_CommandDefinitionPreparationFailed, e);
@@ -1189,7 +1189,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                                          : GetEntityType(stateEntry.OriginalValues);
 
                     // figure out relationship set ends that are associated with this entity set
-                    foreach (var associationSet in GetReferencingAssocationSets(entitySet))
+                    foreach (var associationSet in GetReferencingAssociationSets(entitySet))
                     {
                         // describe unidirectional relationships in which the added entity is the "destination"
                         var ends = associationSet.AssociationSetEnds;
@@ -1440,7 +1440,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             // </summary>
             // <param name="entitySet"> Entity set for which to identify relationships </param>
             // <returns> Relationship sets referencing the given entity set </returns>
-            private IEnumerable<AssociationSet> GetReferencingAssocationSets(EntitySet entitySet)
+            private IEnumerable<AssociationSet> GetReferencingAssociationSets(EntitySet entitySet)
             {
                 List<AssociationSet> relationshipSets;
 

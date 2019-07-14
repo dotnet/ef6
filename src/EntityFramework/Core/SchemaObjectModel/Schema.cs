@@ -30,8 +30,8 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         private const int RootDepth = 2;
         // if adding properties also add to InitializeObject()!
         private List<EdmSchemaError> _errors = new List<EdmSchemaError>();
-        // We need to keep track of functions seperately, since we can't deduce the strong name of the function, 
-        // until we have resolved the parameter names. Hence we keep track of functions seperately and add them
+        // We need to keep track of functions separately, since we can't deduce the strong name of the function, 
+        // until we have resolved the parameter names. Hence we keep track of functions separately and add them
         // to the schema types list, in the validate phase
         private List<Function> _functions;
 
@@ -302,7 +302,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
                 && !IsValidateableXmlNamespace(reader.NamespaceURI, reader.NodeType == XmlNodeType.Attribute))
             {
                 //For V1 Schemas, we never returned errors for elements in custom namespaces.
-                //But the behavior is not totally correct since the error might have occured inside a known namespace
+                //But the behavior is not totally correct since the error might have occurred inside a known namespace
                 //even though the element that the reader pointing to is in a custom namespace. But if we fix that, it would
                 //cause lot of breaking changes for V1 customers since we can not change the xsd for them.
                 //For attributes, we can ignore the errors always since attributes are unordered and custom attributes should always be allowed.
@@ -434,7 +434,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         // <summary>
-        // Vaidate the schema.
+        // Validate the schema.
         // </summary>
         internal override void Validate()
         {

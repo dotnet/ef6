@@ -198,7 +198,7 @@ namespace Microsoft.Data.Entity.Design.Model.Integrity
         }
 
         /// <summary>
-        ///     This method will add an InferReferentialContraints IntegrityCheck for the passed in
+        ///     This method will add an InferReferentialConstraints IntegrityCheck for the passed in
         ///     association.
         /// </summary>
         /// <param name="cpc"></param>

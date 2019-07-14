@@ -96,7 +96,7 @@ namespace Microsoft.Data.Entity.Design.Core.Context
         ///     that supports delayed activation of design editor managers through the
         ///     declaration of a SubscribeService attribute on the design editor manager.
         /// </summary>
-        /// <returns>Returns an implemetation of the ServiceCollection class.</returns>
+        /// <returns>Returns an implementation of the ServiceCollection class.</returns>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         protected virtual ServiceCollection CreateServiceCollection()
         {
@@ -676,7 +676,7 @@ namespace Microsoft.Data.Entity.Design.Core.Context
             /// <summary>
             ///     Calls back on the provided callback when someone has published the requested service.
             ///     If the service was already available, this method invokes the callback immediately.
-            ///     A generic version of this method is provided for convience, and calls the non-generic
+            ///     A generic version of this method is provided for convenience, and calls the non-generic
             ///     method with appropriate casts.
             /// </summary>
             /// <param name="serviceType"></param>
@@ -715,7 +715,7 @@ namespace Microsoft.Data.Entity.Design.Core.Context
             /// <summary>
             ///     Calls back on the provided callback when someone has published the requested service.
             ///     If the service was already available, this method invokes the callback immediately.
-            ///     A generic version of this method is provided for convience, and calls the non-generic
+            ///     A generic version of this method is provided for convenience, and calls the non-generic
             ///     method with appropriate casts.
             /// </summary>
             /// <param name="serviceType"></param>

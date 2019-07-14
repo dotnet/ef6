@@ -446,7 +446,7 @@ namespace Microsoft.Data.Entity.Design.Core.Controls
                         bd.UpdateTarget();
                     }
                 }
-                // ensure that if it does not need to be commited, there should not be an error
+                // ensure that if it does not need to be committed, there should not be an error
                 Debug.Assert(
                     (_shouldCommit)
                     || (!_shouldCommit && (EditResult == PerformEditResult.Success || EditResult == PerformEditResult.NotAttempted)),

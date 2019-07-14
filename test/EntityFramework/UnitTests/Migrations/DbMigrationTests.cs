@@ -922,7 +922,7 @@ namespace System.Data.Entity.Migrations
         }
 
         [Fact]
-        public void Explictly_calling_IDbMigration_should_add_operation()
+        public void Explicitly_calling_IDbMigration_should_add_operation()
         {
             var migration = new TestMigration();
             var operation = new Mock<MigrationOperation>(null).Object;

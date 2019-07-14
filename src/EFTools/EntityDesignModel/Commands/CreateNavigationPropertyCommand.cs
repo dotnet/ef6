@@ -8,7 +8,7 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
 
     internal class CreateNavigationPropertyCommand : Command
     {
-        internal static readonly string PrereqId = "CreateNagivationPropertyCommand";
+        internal static readonly string PrereqId = "CreateNavigationPropertyCommand";
 
         internal string Name { get; set; }
         internal ConceptualEntityType Entity { get; set; }

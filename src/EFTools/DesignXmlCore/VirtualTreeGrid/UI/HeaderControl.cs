@@ -1160,7 +1160,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
 
         /// <summary>
         ///     Start tracking a column. TrackSplitter and FinishTrackingSplitter
-        ///     should also be overriden if an override for this function does
+        ///     should also be overridden if an override for this function does
         ///     not call the base implementation.
         /// </summary>
         /// <param name="displayColumn">The column being adjusted</param>

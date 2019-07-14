@@ -778,7 +778,7 @@ namespace System.Data.Entity.Infrastructure.Interception
         /// <summary>
         /// Does not write to log unless overridden.
         /// </summary>
-        /// <param name="transaction">The transaction being commited.</param>
+        /// <param name="transaction">The transaction being committed.</param>
         /// <param name="interceptionContext">Contextual information associated with the call.</param>
         public virtual void Committing(DbTransaction transaction, DbTransactionInterceptionContext interceptionContext)
         {
@@ -789,7 +789,7 @@ namespace System.Data.Entity.Infrastructure.Interception
         /// The default implementation of this method filters by <see cref="DbContext" /> set into
         /// <see cref="Context" />, if any, and then logs the event.
         /// </summary>
-        /// <param name="transaction">The transaction that was commited.</param>
+        /// <param name="transaction">The transaction that was committed.</param>
         /// <param name="interceptionContext">Contextual information associated with the call.</param>
         public virtual void Committed(DbTransaction transaction, DbTransactionInterceptionContext interceptionContext)
         {

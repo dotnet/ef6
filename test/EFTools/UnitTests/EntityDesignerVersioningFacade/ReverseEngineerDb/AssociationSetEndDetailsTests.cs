@@ -15,9 +15,9 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
             var endMember = AssociationEndMember.Create(
                 "aem1", entity.GetReferenceType(), RelationshipMultiplicity.One, OperationAction.None, null);
             var associationType = AssociationType.Create("at1", "ns", false, DataSpace.CSpace, endMember, null, null, null);
-            var assocationSet = AssociationSet.Create("as1", associationType, entitySet, null, null);
+            var associationSet = AssociationSet.Create("as1", associationType, entitySet, null, null);
 
-            var associationSetEnd = assocationSet.AssociationSetEnds[0];
+            var associationSetEnd = associationSet.AssociationSetEnds[0];
 
             var associationSetEndDetails =
                 new AssociationSetEndDetails(

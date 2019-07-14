@@ -81,7 +81,7 @@ namespace System.Data.Entity.Core.Mapping
         // <summary>
         // Returns the Identity of ObjectTypeMapping.
         // The identity for an Object Type Map is the concatenation of
-        // CLR Type Idntity + ':' + CDM Type Identity
+        // CLR Type Identity + ':' + CDM Type Identity
         // </summary>
         internal override string Identity
         {
@@ -124,7 +124,7 @@ namespace System.Data.Entity.Core.Mapping
             Debug.Assert(!m_memberMapping.ContainsKey(memberMapping.EdmMember.Name));
             Debug.Assert(
                 !ReferenceEquals(m_memberMapping, EmptyMemberMapping),
-                "Make sure you don't add anything to the static emtpy member mapping");
+                "Make sure you don't add anything to the static empty member mapping");
             m_memberMapping.Add(memberMapping.EdmMember.Name, memberMapping);
         }
 
@@ -146,7 +146,7 @@ namespace System.Data.Entity.Core.Mapping
 
             if (!ignoreCase)
             {
-                //First get the index of the member map from the clr indexs
+                //First get the index of the member map from the clr indexes
                 m_memberMapping.TryGetValue(propertyName, out memberMapping);
             }
             else

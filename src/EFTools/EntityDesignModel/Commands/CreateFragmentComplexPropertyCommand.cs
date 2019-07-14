@@ -190,7 +190,7 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
             get
             {
                 // we store the return from the create call in _createdProperty, but there is a chance that
-                // post-processing in an integry check will have moved this complex property to another ETM,
+                // post-processing in an integrity check will have moved this complex property to another ETM,
                 // if this is case, go find the new one
                 if (_createdProperty != null
                     && _createdProperty.XObject == null)

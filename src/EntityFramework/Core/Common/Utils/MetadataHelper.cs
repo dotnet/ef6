@@ -228,7 +228,7 @@ namespace System.Data.Entity.Core.Common.Utils
             return (AssociationEndMember)members[1];
         }
 
-        // effects: Returns true iff every end other than "endPropery" has a lower
+        // effects: Returns true iff every end other than "endProperty" has a lower
         // multiplicity of at least one
         internal static bool IsEveryOtherEndAtLeastOne(
             AssociationSet associationSet,
