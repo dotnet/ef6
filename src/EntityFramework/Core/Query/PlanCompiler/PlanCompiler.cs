@@ -42,6 +42,20 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     {
         #region private state
 
+        // <summary>
+        // A boolean switch indicating whether we should apply transformation rules regardless of the size of the Iqt.
+        // A boolean value indicating whether we should apply transformation rules regardless of the size of the Iqt.
+        // By default, the Enabled property of a boolean switch is set using the value specified in the configuration file.
+        // Configuring the switch with a value of 0 sets the Enabled property to false; configuring the switch with a nonzero
+        // value to set the Enabled property to true. If the BooleanSwitch constructor cannot find initial switch settings
+        // in the configuration file, the Enabled property of the new switch is set to false by default.
+        // </summary>
+        // <remarks>This switch is still in place for backwards-compability. Prefer using the AppSettings value.</remarks>
+        private static readonly BooleanSwitch _legacyApplyTransformationsRegardlessOfSize
+            = new BooleanSwitch(
+            "System.Data.Entity.Core.EntityClient.IgnoreOptimizationLimit",
+            "The Entity Framework should try to optimize the query regardless of its size");
+
         private static bool? _applyTransformationsRegardlessOfSize;
         // <summary>
         // A boolean value indicating whether we should apply transformation rules regardless of the size of the Iqt.
@@ -88,7 +102,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         private static int? _maxNodeCountForTransformations;
         // <summary>
-        // An integer switch specifying the maximum size of the query in terms of Iqt nodes for which we attempt to do transformation rules.
+        // An integer value specifying the maximum size of the query in terms of Iqt nodes for which we attempt to do transformation rules.
         // This number is ignored if applyTransformationsRegardlessOfSize or disableTransformationsRegardlessOfSize is enabled.
         // </summary>
         private static int maxNodeCountForTransformations
@@ -543,7 +557,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // If the nextNodeId is less than MaxNodeCountForTransformations then we don't need to
             // calculate the actual node count, it must be less than  MaxNodeCountForTransformations
             //
-            if (applyTransformationsRegardlessOfSize
+            if (applyTransformationsRegardlessOfSize || _legacyApplyTransformationsRegardlessOfSize.Enabled
                 || m_command.NextNodeId < maxNodeCountForTransformations)
             {
                 return true;
