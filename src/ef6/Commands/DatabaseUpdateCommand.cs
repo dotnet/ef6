@@ -41,10 +41,7 @@ namespace System.Data.Entity.Tools.Commands
             }
             else
             {
-                if (!Reporter.IsVerbose)
-                {
-                    Reporter.WriteInformation(MyResources.UpdateDatabaseCommand_VerboseInstructions);
-                }
+                Reporter.WriteInformation(MyResources.UpdateDatabaseCommand_VerboseInstructions);
 
                 try
                 {

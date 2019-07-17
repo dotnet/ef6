@@ -291,8 +291,14 @@ function Enable-Migrations
     if ($result.migration)
     {
         $project.ProjectItems.AddFromFile($result.migration) | Out-Null
-        $project.ProjectItems.AddFromFile($result.migrationResources) | Out-Null
+        $resourcesProperties = $project.ProjectItems.AddFromFile($result.migrationResources).Properties
         $project.ProjectItems.AddFromFile($result.migrationDesigner) | Out-Null
+
+        # HACK: Work around microsoft/msbuild#4488
+        if ($resourcesProperties | where Name -eq 'DependentUpon')
+        {
+            $resourcesProperties.Item('DependentUpon').Value = [IO.Path]::GetFileName($result.migration)
+        }
     }
 }
 
@@ -409,8 +415,14 @@ function Add-Migration
 
     $project.ProjectItems.AddFromFile($result.migration) | Out-Null
     $DTE.ItemOperations.OpenFile($result.migration) | Out-Null
-    $project.ProjectItems.AddFromFile($result.migrationResources) | Out-Null
+    $resourcesProperties = $project.ProjectItems.AddFromFile($result.migrationResources).Properties
     $project.ProjectItems.AddFromFile($result.migrationDesigner) | Out-Null
+
+    # HACK: Work around microsoft/msbuild#4488
+    if ($resourcesProperties | where Name -eq 'DependentUpon')
+    {
+        $resourcesProperties.Item('DependentUpon').Value = [IO.Path]::GetFileName($result.migration)
+    }
 }
 
 <#
@@ -548,7 +560,7 @@ function Update-Database
 
     $params += GetParams $ConnectionStringName $ConnectionString $ConnectionProviderName
 
-    $result = EF6 $project $startupProject $AppDomainBaseDirectory $params
+    $result = (EF6 $project $startupProject $AppDomainBaseDirectory $params) -join "`n"
     if ($result)
     {
         try
@@ -1195,3 +1207,5 @@ function GetConfigPath($project)
 
     return GetProperty $project.ProjectItems.Item($configFileName).Properties 'FullPath'
 }
+
+Export-ModuleMember -Variable 'InitialDatabase'

@@ -28,11 +28,10 @@ namespace System.Data.Entity.Tools.Utilities
                 match =>
                 {
                     var tokenName = match.Groups["tokenName"].Value;
-                    var value = string.Empty;
 
-                    tokens.TryGetValue(tokenName, out value);
+                    tokens.TryGetValue(tokenName, out var value);
 
-                    return value;
+                    return value ?? string.Empty;
                 });
         }
     }
