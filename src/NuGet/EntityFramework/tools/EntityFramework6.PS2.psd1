@@ -75,7 +75,7 @@ FunctionsToExport = (
 CmdletsToExport = @()
 
 # Variables to export from this module
-VariablesToExport = @('InitialDatabase')
+VariablesToExport = '*'
 
 # Aliases to export from this module
 AliasesToExport = @()

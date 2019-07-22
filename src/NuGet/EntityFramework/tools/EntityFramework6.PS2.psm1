@@ -534,3 +534,5 @@ function WarnIfOtherEFs($cmdlet)
         Write-Warning "A version of Entity Framework older than 6.3 is also installed. The newer tools are running. Use 'EntityFramework\$cmdlet' for the older version."
     }
 }
+
+Export-ModuleMember -Variable 'InitialDatabase'
