@@ -26,11 +26,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\EntityFramework.SqlServer\EntityFramework.SqlServer.csproj" />
+    <ProjectReference Include="..\..\..\src\EntityFramework.SqlServer\EntityFramework.SqlServer.InternalsVisibleTo.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net452'">
-    <ProjectReference Include="..\..\..\src\EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.csproj" />
+    <ProjectReference Include="..\..\..\src\EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.InternalsVisibleTo.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net452'">

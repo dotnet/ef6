@@ -1,22 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <AssemblyName>EntityFramework.SqlServerCompact</AssemblyName>
     <RootNamespace>System.Data.Entity.SqlServerCompact</RootNamespace>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <TargetFrameworks>net45;net40</TargetFrameworks>
-    <Description>Allows SQL Server Compact 4.0 to be used with Entity Framework.</Description>
+    <TargetFrameworks>net45</TargetFrameworks>
     <AssemblyVersion>6.0.0.0</AssemblyVersion>
-    <DefineConstants>$(DefineConstants);SQLSERVERCOMPACT;INTERNALS_INVISIBLE</DefineConstants>
-    <IsPackable>True</IsPackable>
-    <PackageTags>$(PackageTags);SQL Compact;CE</PackageTags>
-    <NuspecFile>$(MSBuildThisFileDirectory)$(MSBuildProjectName).nuspec</NuspecFile>
+    <DefineConstants>$(DefineConstants);SQLSERVERCOMPACT</DefineConstants>
   </PropertyGroup>
-
-  <ItemGroup>
-    <NuspecProperty Include="Configuration=$(Configuration)" />
-    <NuSpecProperty Include="MicrosoftSqlServerCompactVersion=$(MicrosoftSqlServerCompactVersion)" />
-    <NuspecProperty Include="NeutralLanguage=$(NeutralLanguage)" />
-  </ItemGroup>
 
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -99,7 +89,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EntityFramework\EntityFramework.csproj" />
+    <ProjectReference Include="..\EntityFramework\EntityFramework.InternalsVisibleTo.csproj" />
   </ItemGroup>
 
 </Project>
