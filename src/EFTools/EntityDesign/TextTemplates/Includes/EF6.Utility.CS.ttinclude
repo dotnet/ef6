@@ -1810,7 +1810,7 @@ public class EntityFrameworkTemplateFileManager
 
             var generatedFileNames = base.Process(split);
 
-            projectSyncAction.EndInvoke(projectSyncAction.BeginInvoke(generatedFileNames, null, null));
+            projectSyncAction.Invoke(generatedFileNames);
 
             return generatedFileNames;
         }
@@ -1864,8 +1864,7 @@ public class EntityFrameworkTemplateFileManager
                 return;
             }
 
-            // run on worker thread to prevent T4 calling back into VS
-            checkOutAction.EndInvoke(checkOutAction.BeginInvoke(fileName, null, null));
+            checkOutAction.Invoke(fileName);
         }
     }
 #endif

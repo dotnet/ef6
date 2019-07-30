@@ -2025,7 +2025,7 @@ Public Class EntityFrameworkTemplateFileManager
 
             Dim generatedFileNames As IEnumerable(Of String) = MyBase.Process(split)
 
-            projectSyncAction.EndInvoke(projectSyncAction.BeginInvoke(generatedFileNames, Nothing, Nothing))
+            projectSyncAction.Invoke(generatedFileNames)
 
             Return generatedFileNames
         End Function
@@ -2067,8 +2067,7 @@ Public Class EntityFrameworkTemplateFileManager
                 Exit Sub
             End If
 
-            ' run on worker thread to prevent T4 calling back into VS
-            checkOutAction.EndInvoke(checkOutAction.BeginInvoke(fileName, Nothing, Nothing))
+            checkOutAction.Invoke(fileName)
         End Sub
     End Class
     #End If
