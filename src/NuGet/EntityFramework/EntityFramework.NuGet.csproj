@@ -13,6 +13,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <GeneratedContent Include="*.in" />
+  </ItemGroup>
+
+  <ItemGroup>
     <NuspecProperty Include="Configuration=$(Configuration)" />
     <NuspecProperty Include="NeutralLanguage=$(NeutralLanguage)" />
     <NuspecProperty Include="MicrosoftCSharpVersion=$(MicrosoftCSharpVersion)" />
@@ -20,6 +24,7 @@
     <NuspecProperty Include="SystemComponentModelAnnotationsVersion=$(SystemComponentModelAnnotationsVersion)" />
     <NuspecProperty Include="SystemConfigurationConfigurationManagerVersion=$(SystemConfigurationConfigurationManagerVersion)" />
     <NuspecProperty Include="SystemDataSqlClientVersion=$(SystemDataSqlClientVersion)" />
+    <NuspecProperty Include="IntermediateOutputPath=$(IntermediateOutputPath)" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
@@ -30,6 +35,16 @@
     <ProjectReference Include="..\..\EntityFramework.SqlServer\EntityFramework.SqlServer.csproj" />
     <ProjectReference Include="..\..\ef6\ef6.csproj" />
   </ItemGroup>
+  
+  <!-- TODO: Use dotnet/arcade#204 when available -->
+  <Target Name="GenerateContent"
+          BeforeTargets="GenerateNuspec"
+          Inputs="@(GeneratedContent)"
+          Outputs="@(GeneratedContent->'$(IntermediateOutputPath)%(FileName)'">
+    <WriteLinesToFile File="$(IntermediateOutputPath)%(FileName)"
+                      Overwrite="True"
+                      Lines="$([System.IO.File]::ReadAllText(%(GeneratedContent.Identity)).Replace('$VersionPrefix$', $(VersionPrefix)))" />
+  </Target>
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 
