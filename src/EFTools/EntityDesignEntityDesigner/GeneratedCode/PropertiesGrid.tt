@@ -1,2 +1,0 @@
-<#@ Dsl processor="DslDirectiveProcessor" requires="fileName='..\..\Microsoft.Data.Entity.Design.EntityDesigner\DslDefinition.dsl'" #>
-<#@ include file="%DslTemplatesSrc%\Dsl\PropertiesGrid.tt" #>

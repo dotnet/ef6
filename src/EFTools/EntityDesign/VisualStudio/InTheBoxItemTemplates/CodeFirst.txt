@@ -1,4 +1,0 @@
-﻿
-
-This text template is used at design-time to generate the matrix of item
-templates that get installed as part of the Entity Framework Tools.

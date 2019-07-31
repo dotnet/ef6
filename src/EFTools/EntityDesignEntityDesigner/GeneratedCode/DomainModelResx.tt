@@ -1,2 +1,0 @@
-<#@ include file="%DslTemplatesSrc%\Dsl\DslResxGenerator.tt" #>
-<#@ Dsl processor="DslDirectiveProcessor" requires="fileName='..\..\Microsoft.Data.Entity.Design.EntityDesigner\DslDefinition.dsl'" #>
