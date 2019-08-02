@@ -18,7 +18,7 @@ namespace ProductivityApiTests
     /// </summary>
     public class FindTests : FunctionalTestBase
     {
-#if NETCOREAPP3_0
+#if NETCOREAPP
         // (Parameter '{parameter name}')
         private const string ParameterSeparator = " (";
 #else
