@@ -27,9 +27,9 @@
     <file src="../../../artifacts/bin/ef6/$Configuration$/net40/ef6.pdb" target="tools/net40/any/" />
     <file src="../../../artifacts/bin/ef6/$Configuration$/net45/ef6.exe" target="tools/net45/any/" />
     <file src="../../../artifacts/bin/ef6/$Configuration$/net45/ef6.pdb" target="tools/net45/any/" />
-    <file src="../../../artifacts/bin/ef6/$Configuration$/netcoreapp3.0/ef6.dll" target="tools/netcoreapp3.0/any/" />
-    <file src="../../../artifacts/bin/ef6/$Configuration$/netcoreapp3.0/ef6.pdb" target="tools/netcoreapp3.0/any/" />
-    <file src="../../../artifacts/bin/ef6/$Configuration$/netcoreapp3.0/ef6.runtimeconfig.json" target="tools/netcoreapp3.0/any/" />
+    <file src="../../../artifacts/bin/ef6/$Configuration$/netcoreapp5.0/ef6.dll" target="tools/netcoreapp5.0/any/" />
+    <file src="../../../artifacts/bin/ef6/$Configuration$/netcoreapp5.0/ef6.pdb" target="tools/netcoreapp5.0/any/" />
+    <file src="../../../artifacts/bin/ef6/$Configuration$/netcoreapp5.0/ef6.runtimeconfig.json" target="tools/netcoreapp5.0/any/" />
     <file src="../../../artifacts/bin/ef6/x86/$Configuration$/net40/ef6.exe" target="tools/net40/win-x86/" />
     <file src="../../../artifacts/bin/ef6/x86/$Configuration$/net40/ef6.pdb" target="tools/net40/win-x86/" />
     <file src="../../../artifacts/bin/ef6/x86/$Configuration$/net45/ef6.exe" target="tools/net45/win-x86/" />
