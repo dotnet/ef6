@@ -2,11 +2,24 @@
   <Import Project="Sdk.targets" Sdk="Microsoft.DotNet.Arcade.Sdk" />
 
   <ItemGroup>
-    <!-- HACK: Use the latest version instead of the one bundled with the SDK -->
-    <KnownFrameworkReference Update="Microsoft.NETCore.App">
-      <LatestRuntimeFrameworkVersion Condition="'%(TargetFramework)' == 'netcoreapp3.0'">$(MicrosoftNETCoreAppRuntimeVersion)</LatestRuntimeFrameworkVersion>
-      <DefaultRuntimeFrameworkVersion Condition="'%(TargetFramework)' == 'netcoreapp3.0'">$(MicrosoftNETCoreAppRuntimeVersion)</DefaultRuntimeFrameworkVersion>
-      <TargetingPackVersion Condition="'%(TargetFramework)' == 'netcoreapp3.0'">$(MicrosoftNETCoreAppRefPackageVersion)</TargetingPackVersion>
-    </KnownFrameworkReference>
+    <!-- Workaround while there is no 5.0 SDK available, copy known apphost/framework reference info from 3.0 -->
+    <KnownAppHostPack 
+      Include="@(KnownAppHostPack->WithMetadataValue('TargetFramework', 'netcoreapp3.0'))"
+      TargetFramework="netcoreapp5.0"
+      />
+    <KnownFrameworkReference
+      Include="@(KnownFrameworkReference->WithMetadataValue('TargetFramework', 'netcoreapp3.0'))"
+      TargetFramework="netcoreapp5.0"
+      />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Reference base shared framework at incoming dependency flow version, not bundled sdk version. -->
+    <FrameworkReference 
+      Update="Microsoft.NETCore.App"
+      Condition="'$(TargetFramework)' == 'netcoreapp5.0'"
+      RuntimeFrameworkVersion="$(MicrosoftNETCoreAppRuntimeVersion)"
+      TargetingPackVersion="$(MicrosoftNETCoreAppRefPackageVersion)"
+      />
   </ItemGroup>
 </Project>
