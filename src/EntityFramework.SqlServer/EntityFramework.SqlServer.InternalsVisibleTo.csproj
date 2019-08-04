@@ -1,12 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <AssemblyName>EntityFramework.SqlServer</AssemblyName>
     <RootNamespace>System.Data.Entity.SqlServer</RootNamespace>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <TargetFrameworks>net45;net40;netstandard2.1</TargetFrameworks>
-    <Description>EntityFramework.SqlServer.dll</Description>
+    <TargetFrameworks>net45;netstandard2.1</TargetFrameworks>
     <AssemblyVersion>6.0.0.0</AssemblyVersion>
-    <DefineConstants>$(DefineConstants);SQLSERVER;INTERNALS_INVISIBLE</DefineConstants>
+    <DefineConstants>$(DefineConstants);SQLSERVER</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
@@ -104,7 +103,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EntityFramework\EntityFramework.csproj" />
+    <ProjectReference Include="..\EntityFramework\EntityFramework.InternalsVisibleTo.csproj" />
   </ItemGroup>
 
 </Project>

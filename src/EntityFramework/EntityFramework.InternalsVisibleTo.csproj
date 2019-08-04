@@ -1,12 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <AssemblyName>EntityFramework</AssemblyName>
     <RootNamespace>System.Data.Entity</RootNamespace>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <TargetFrameworks>net45;net40;netstandard2.1</TargetFrameworks>
-    <Description>EntityFramework.dll</Description>
+    <TargetFrameworks>net45;netstandard2.1</TargetFrameworks>
     <AssemblyVersion>6.0.0.0</AssemblyVersion>
-    <DefineConstants>$(DefineConstants);INTERNALS_INVISIBLE</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">

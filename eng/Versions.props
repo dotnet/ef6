@@ -17,7 +17,6 @@
   </PropertyGroup>
   <PropertyGroup Label="Dependencies from dotnet/corefx">
     <MicrosoftCSharpVersion>5.0.0-alpha1.19381.2</MicrosoftCSharpVersion>
-    <MicrosoftNETCorePlatformsPackageVersion>5.0.0-alpha1.19381.2</MicrosoftNETCorePlatformsPackageVersion>
     <SystemCodeDomVersion>5.0.0-alpha1.19381.2</SystemCodeDomVersion>
     <SystemComponentModelAnnotationsVersion>5.0.0-alpha1.19381.2</SystemComponentModelAnnotationsVersion>
     <SystemConfigurationConfigurationManagerVersion>5.0.0-alpha1.19381.2</SystemConfigurationConfigurationManagerVersion>
@@ -33,12 +32,5 @@
       All Runtime.$rid packages should have the same version.
     -->
     <MicrosoftNETCoreAppRuntimeVersion>$(MicrosoftNETCoreAppRuntimewinx64PackageVersion)</MicrosoftNETCoreAppRuntimeVersion>
-  </PropertyGroup>
-  <!-- Restore feeds -->
-  <PropertyGroup Label="Restore feeds">
-    <RestoreSources Condition=" '$(DotNetBuildOffline)' != 'true' ">
-      $(RestoreSources);
-      https://dotnetfeed.blob.core.windows.net/dotnet-core/index.json;
-    </RestoreSources>
   </PropertyGroup>
 </Project>

@@ -12597,7 +12597,7 @@ namespace ProductivityApiTests
             }
             catch (XunitException ex)
             {
-                Assert.Equal("Assert.Equal() Failure\r\nExpected: 5\r\nActual:   4", ex.Message);
+                Assert.Equal("Assert.Equal() Failure\r\nExpected: 5\r\nActual:   4", ex.Message, ignoreLineEndingDifferences: true);
             }
         }
 

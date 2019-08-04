@@ -17,6 +17,8 @@
     </dependencies>
   </metadata>
   <files>
+    <file src="$IntermediateOutputPath$EntityFramework6.psd1" target="tools/"/>
+    <file src="$IntermediateOutputPath$EntityFramework6.PS2.psd1" target="tools/"/>
     <file src="../../../artifacts/bin/EntityFramework/$Configuration$/net40/EntityFramework.dll" target="lib/net40/" />
     <file src="../../../artifacts/bin/EntityFramework/$Configuration$/net40/EntityFramework.xml" target="lib/net40/" />
     <file src="../../../artifacts/bin/EntityFramework/$Configuration$/net45/EntityFramework.dll" target="lib/net45/" />
