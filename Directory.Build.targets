@@ -1,6 +1,11 @@
 <Project>
   <Import Project="Sdk.targets" Sdk="Microsoft.DotNet.Arcade.Sdk" />
 
+  <!-- Workaround while there is no 5.0 SDK available, suppress unsupported version error -->
+  <PropertyGroup>
+    <NETCoreAppMaximumVersion>5.0</NETCoreAppMaximumVersion>
+  </PropertyGroup>
+
   <ItemGroup>
     <!-- Workaround while there is no 5.0 SDK available, copy known apphost/framework reference info from 3.0 -->
     <KnownAppHostPack 
