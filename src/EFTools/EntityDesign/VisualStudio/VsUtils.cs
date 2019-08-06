@@ -2224,7 +2224,15 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
                 new ExeConfigurationFileMap { ExeConfigFilename = configurationFile },
                 ConfigurationUserLevel.None);
 
-            return new AppConfigReader(configuration).GetProviderServices(invariantName);
+            //TODO - correct the runtime to no longer throw this - see https://github.com/aspnet/EntityFramework6/issues/1121
+            try
+            {
+                return new AppConfigReader(configuration).GetProviderServices(invariantName);
+            }
+            catch (NullReferenceException)
+            {
+                return null;
+            }
         }
 
         internal static string GetProviderManifestTokenConnected(
