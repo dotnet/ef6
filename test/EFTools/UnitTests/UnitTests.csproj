@@ -13,7 +13,7 @@
     <TargetFrameworkVersion>$(ToolingDotNetFrameworkVersion)</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <RestorePackages>true</RestorePackages>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\</SolutionDir>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..</SolutionDir>
     <!-- See Issue 1132: removing the EmbedInteropTypes settings below results in test failures so suppressing warning 1762 instead -->
     <NoWarn>1762</NoWarn>
   </PropertyGroup>
