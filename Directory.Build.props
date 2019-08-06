@@ -14,9 +14,4 @@
     <PackageProjectUrl>http://go.microsoft.com/fwlink/?LinkID=263480</PackageProjectUrl>
     <DebugType>portable</DebugType>
   </PropertyGroup>
-
-  <!-- HACK: Work around dotnet/arcade#1373 -->
-  <PropertyGroup>
-    <NoWarn>$(NoWarn);NU5125</NoWarn>
-  </PropertyGroup>
 </Project>

@@ -1,0 +1,109 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>EntityFramework.SqlServer</AssemblyName>
+    <RootNamespace>System.Data.Entity.SqlServer</RootNamespace>
+    <TargetFrameworks>net45;netstandard2.1</TargetFrameworks>
+    <AssemblyVersion>6.0.0.0</AssemblyVersion>
+    <DefineConstants>$(DefineConstants);SQLSERVER</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\EntityFramework\Utilities\TaskExtensions.cs">
+      <Link>Utilities\TaskExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\SharedAssemblyVersionInfo.cs">
+      <Link>Properties\SharedAssemblyVersionInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\ByteExtensions.cs">
+      <Link>Utilities\ByteExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\TypeExtensions.cs">
+      <Link>Utilities\TypeExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\PropertyInfoExtensions.cs">
+      <Link>Utilities\PropertyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Check.cs">
+      <Link>Utilities\Check.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\DatabaseName.cs">
+      <Link>Utilities\DatabaseName.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\DebugCheck.cs">
+      <Link>Utilities\DebugCheck.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\IEnumerableExtensions.cs">
+      <Link>Utilities\IEnumerableExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\StringExtensions.cs">
+      <Link>Utilities\StringExtensions.cs</Link>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.SqlServer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.SqlServer.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Resources.SqlServer.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Resources.SqlServer.cs</LastGenOutput>
+      <CustomToolNamespace>System.Data.Entity.SqlServer</CustomToolNamespace>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\System\Data\SqlClient\System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaDefinition.ssdl" />
+    <None Remove="Resources\System\Data\SqlClient\System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaDefinitionVersion3.ssdl" />
+    <None Remove="Resources\System\Data\SqlClient\System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaDefinitionVersion3_Sql8.ssdl" />
+    <None Remove="Resources\System\Data\SqlClient\System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaDefinition_Sql8.ssdl" />
+    <None Remove="Resources\System\Data\SqlClient\System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaMapping.msl" />
+    <None Remove="Resources\System\Data\SqlClient\System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaMappingVersion3.msl" />
+    <None Remove="Resources\System\Data\SqlClient\System.Data.Resources.SqlClient.SqlProviderServices.ProviderManifest.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\System\Data\SqlClient\System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaDefinition.ssdl">
+      <LogicalName>System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaDefinition.ssdl</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\System\Data\SqlClient\System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaDefinitionVersion3.ssdl">
+      <LogicalName>System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaDefinitionVersion3.ssdl</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\System\Data\SqlClient\System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaDefinitionVersion3_Sql8.ssdl">
+      <LogicalName>System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaDefinitionVersion3_Sql8.ssdl</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\System\Data\SqlClient\System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaDefinition_Sql8.ssdl">
+      <LogicalName>System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaDefinition_Sql8.ssdl</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\System\Data\SqlClient\System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaMapping.msl">
+      <LogicalName>System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaMapping.msl</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\System\Data\SqlClient\System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaMappingVersion3.msl">
+      <LogicalName>System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaMappingVersion3.msl</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\System\Data\SqlClient\System.Data.Resources.SqlClient.SqlProviderServices.ProviderManifest.xml">
+      <LogicalName>System.Data.Resources.SqlClient.SqlProviderServices.ProviderManifest.xml</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EntityFramework\EntityFramework.InternalsVisibleTo.csproj" />
+  </ItemGroup>
+
+</Project>

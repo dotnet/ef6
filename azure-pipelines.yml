@@ -97,19 +97,3 @@ jobs:
                 artifactName: packages
                 artifactType: Container
                 parallel: true
-
-        # UNDONE: Blocked by NuGet/Home#7341
-        #- job: macOS
-        #  pool:
-        #    vmImage: macOS-10.13
-        #  steps:
-        #    - script: eng/common/cibuild.sh --configuration $(_BuildConfig) --prepareMachine
-        #      name: Build
-
-        # UNDONE: Blocked by dsplaisted/ReferenceAssemblyPackages#2
-        #- job: Linux
-        #  pool:
-        #    vmImage: ubuntu-16.04
-        #  steps:
-        #    - script: eng/common/cibuild.sh --configuration $(_BuildConfig) --prepareMachine
-        #      name: Build

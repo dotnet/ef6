@@ -8,7 +8,7 @@
 ModuleToProcess = 'EntityFramework6.PS2.psm1'
 
 # Version number of this module.
-ModuleVersion = '6.3.0' # TODO: Use $(VersionPrefix)
+ModuleVersion = '$VersionPrefix$'
 
 # ID used to uniquely identify this module
 GUID = 'a0032654-4b7b-4934-ae70-4036796a7318'

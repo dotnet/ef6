@@ -6,7 +6,7 @@
     <TargetFrameworks>net45;net40;netstandard2.1</TargetFrameworks>
     <Description>EntityFramework.SqlServer.dll</Description>
     <AssemblyVersion>6.0.0.0</AssemblyVersion>
-    <DefineConstants>$(DefineConstants);SQLSERVER</DefineConstants>
+    <DefineConstants>$(DefineConstants);SQLSERVER;INTERNALS_INVISIBLE</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">

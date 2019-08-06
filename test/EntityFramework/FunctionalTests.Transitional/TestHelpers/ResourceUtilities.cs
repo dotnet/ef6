@@ -79,11 +79,10 @@ namespace System.Data.Entity
                 {
                     Debug.Assert(sourceStream != null, "Could not create stream for embedded resource " + prefix + name);
 
-                    var destinationPath = Path.Combine(@".\", name);
-                    if (!File.Exists(destinationPath) || overwrite)
+                    if (!File.Exists(name) || overwrite)
                     {
                         using (
-                            var destinationStream = new FileStream(destinationPath, FileMode.Create, FileAccess.Write))
+                            var destinationStream = new FileStream(name, FileMode.Create, FileAccess.Write))
                         {
                             var sourceBuffer = new byte[sourceStream.Length];
                             sourceStream.Read(sourceBuffer, 0, sourceBuffer.Length);

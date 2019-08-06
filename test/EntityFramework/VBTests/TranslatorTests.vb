@@ -30,7 +30,8 @@ Public Class TranslatorTests
 "    [Extent1].[Id] AS [Id]" & vbCrLf &
 "    FROM [dbo].[Entities] AS [Extent1]" & vbCrLf &
 "    WHERE (POWER( CAST( [Extent1].[Id] AS float), cast(2 as float(53)))) < cast(30 as float(53))",
-                query.ToString())
+                query.ToString(),
+                ignoreLineEndingDifferences:=True)
         End Using
     End Sub
 
@@ -44,7 +45,8 @@ Public Class TranslatorTests
 "    [Extent1].[Id] AS [Id]" & vbCrLf &
 "    FROM [dbo].[Entities] AS [Extent1]" & vbCrLf &
 "    WHERE (POWER( CAST( [Extent1].[Id] AS float), cast(2 as float(53)))) < cast(30 as float(53))",
-                query.ToString())
+                query.ToString(),
+                ignoreLineEndingDifferences:=True)
         End Using
     End Sub
 
