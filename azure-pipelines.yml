@@ -9,8 +9,6 @@ variables:
     value: true
   - name: _DotNetArtifactsCategory
     value: ASPNETENTITYFRAMEWORK6
-  - name: _DotNetValidationArtifactsCategory
-    value: ASPNETENTITYFRAMEWORK6
 
 trigger:
   - master
