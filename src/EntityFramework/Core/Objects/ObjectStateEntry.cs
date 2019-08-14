@@ -179,7 +179,7 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="InvalidOperationException"> If State is not Modified or Unchanged </exception>
         public abstract void SetModifiedProperty(string propertyName);
 
-        /// <summary>Rejects any changes made to the property with the given name since the property was last loaded, attached, saved, or changes were accepted. The orginal value of the property is stored and the property will no longer be marked as modified.</summary>
+        /// <summary>Rejects any changes made to the property with the given name since the property was last loaded, attached, saved, or changes were accepted. The original value of the property is stored and the property will no longer be marked as modified.</summary>
         /// <param name="propertyName">The name of the property to change.</param>
         public abstract void RejectPropertyChanges(string propertyName);
 

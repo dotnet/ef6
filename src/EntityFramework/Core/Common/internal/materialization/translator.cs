@@ -68,7 +68,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 "translating the root of the query must populate RootCoordinatorScratchpad");
 
             // We're good. Go ahead and recursively compile the CoordinatorScratchpads we
-            // created in the vistor into CoordinatorFactories which contain compiled
+            // created in the visitor into CoordinatorFactories which contain compiled
             // delegates for the expressions we generated.
             var coordinatorFactory = (CoordinatorFactory<T>)translatorVisitor.RootCoordinatorScratchpad.Compile();
 
@@ -896,7 +896,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
 
             // <summary>
-            // Common code for both Simple and Discrminated Column Maps.
+            // Common code for both Simple and Discriminated Column Maps.
             // </summary>
             private TranslatorResult ProcessCollectionColumnMap(CollectionColumnMap columnMap, TranslatorArg arg)
             {
@@ -1104,7 +1104,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 var stateSlotNumber = AllocateStateSlot();
                 coordinatorScratchpad.StateSlotNumber = stateSlotNumber;
 
-                // Ensure that the element type of the collec element translator
+                // Ensure that the element type of the collection element translator
                 coordinatorScratchpad.Element = element;
 
                 // Build expressions to set the key values into their state slots, and

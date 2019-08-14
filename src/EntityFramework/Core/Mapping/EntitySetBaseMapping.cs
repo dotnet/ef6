@@ -114,7 +114,7 @@ namespace System.Data.Entity.Core.Mapping
             return _typeSpecificQueryViews.ContainsKey(key);
         }
 
-        // Stores a type-specific user-defiend QueryView so that it can be loaded
+        // Stores a type-specific user-defined QueryView so that it can be loaded
         // into StorageMappingItemCollection's view cache.
         internal void AddTypeSpecificQueryView(Triple key, string viewString)
         {

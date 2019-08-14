@@ -220,7 +220,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         // <summary>
         // Build the entityColumnMap from a store datareader, a type and an entitySet and
-        // a list ofproperties.
+        // a list of properties.
         // </summary>
         private static EntityColumnMap CreateEntityTypeElementColumnMap(
             DbDataReader storeDataReader, EdmType edmType, EntitySet entitySet,

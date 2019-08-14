@@ -258,7 +258,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
             else if (CanHandleElement(reader, XmlConstants.CommandText))
             {
-                HandleCommandTextFunctionElment(reader);
+                HandleCommandTextFunctionElement(reader);
                 return true;
             }
             else if (CanHandleElement(reader, XmlConstants.Parameter))
@@ -496,7 +496,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             {
                 foreach (var returnType in _returnTypeList)
                 {
-                    // FunctiomImportElement has additional validation for return types.
+                    // FunctionImportElement has additional validation for return types.
                     returnType.Validate();
                 }
             }
@@ -638,7 +638,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             IsComposable = isComposable;
         }
 
-        private void HandleCommandTextFunctionElment(XmlReader reader)
+        private void HandleCommandTextFunctionElement(XmlReader reader)
         {
             DebugCheck.NotNull(reader);
 

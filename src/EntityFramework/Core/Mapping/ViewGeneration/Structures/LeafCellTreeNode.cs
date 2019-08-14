@@ -174,7 +174,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 projectedSlots[slotIndex] = slotInfo;
             }
 
-            // See if we are generating a query view and whether there are any colocated foreign keys for which
+            // See if we are generating a query view and whether there are any collocated foreign keys for which
             // we have to add With statements.
             IEnumerable<SlotInfo> totalProjectedSlots = projectedSlots;
             if ((cellQuery.Extent.EntityContainer.DataSpace == DataSpace.SSpace)
@@ -183,11 +183,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 var associationSetMaps =
                     ViewgenContext.EntityContainerMapping.GetRelationshipSetMappingsFor(m_cellWrapper.LeftExtent, cellQuery.Extent);
                 var foreignKeySlots = new List<SlotInfo>();
-                foreach (var colocatedAssociationSetMap in associationSetMaps)
+                foreach (var collocatedAssociationSetMap in associationSetMaps)
                 {
                     WithRelationship withRelationship;
                     if (TryGetWithRelationship(
-                        colocatedAssociationSetMap, m_cellWrapper.LeftExtent, cellQuery.SourceExtentMemberPath, ref foreignKeySlots,
+                        collocatedAssociationSetMap, m_cellWrapper.LeftExtent, cellQuery.SourceExtentMemberPath, ref foreignKeySlots,
                         out withRelationship))
                     {
                         withRelationships.Add(withRelationship);
@@ -202,7 +202,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         private static bool TryGetWithRelationship(
-            AssociationSetMapping colocatedAssociationSetMap,
+            AssociationSetMapping collocatedAssociationSetMap,
             EntitySetBase thisExtent,
             MemberPath sRootNode,
             ref List<SlotInfo> foreignKeySlots,
@@ -212,7 +212,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             withRelationship = null;
 
             //Get the map for foreign key end
-            var foreignKeyEndMap = GetForeignKeyEndMapFromAssocitionMap(colocatedAssociationSetMap);
+            var foreignKeyEndMap = GetForeignKeyEndMapFromAssociationMap(collocatedAssociationSetMap);
             if (foreignKeyEndMap == null
                 || foreignKeyEndMap.AssociationEnd.RelationshipMultiplicity == RelationshipMultiplicity.Many)
             {
@@ -225,7 +225,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             var fromEndEntityType = (EntityType)(((RefType)fromEnd.TypeUsage.EdmType).ElementType);
 
             // Get the member path for AssociationSet
-            var associationSet = (AssociationSet)colocatedAssociationSetMap.Set;
+            var associationSet = (AssociationSet)collocatedAssociationSetMap.Set;
             var prefix = new MemberPath(associationSet, toEnd);
 
             // Collect the member paths for edm scalar properties that belong to the target entity key.
@@ -239,7 +239,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 Debug.Assert(scalarPropertyMaps.Count() == 1, "Can't Map the same column multiple times in the same end");
                 var scalarPropertyMap = scalarPropertyMaps.First();
 
-                // Create SlotInfo for Freign Key member that needs to be projected.
+                // Create SlotInfo for Foreign Key member that needs to be projected.
                 var sSlot = new MemberProjectedSlot(new MemberPath(sRootNode, scalarPropertyMap.Column));
                 var endMemberKeyPath = new MemberPath(prefix, edmProperty);
                 toEndEntityKeyMemberPaths.Add(endMemberKeyPath);
@@ -261,11 +261,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         //Gets the end that is not mapped to the primary key of the table
-        private static EndPropertyMapping GetForeignKeyEndMapFromAssocitionMap(
-            AssociationSetMapping colocatedAssociationSetMap)
+        private static EndPropertyMapping GetForeignKeyEndMapFromAssociationMap(
+            AssociationSetMapping collocatedAssociationSetMap)
         {
-            var mapFragment = colocatedAssociationSetMap.TypeMappings.First().MappingFragments.First();
-            var storeEntitySet = (colocatedAssociationSetMap.StoreEntitySet);
+            var mapFragment = collocatedAssociationSetMap.TypeMappings.First().MappingFragments.First();
+            var storeEntitySet = (collocatedAssociationSetMap.StoreEntitySet);
             IEnumerable<EdmMember> keyProperties = storeEntitySet.ElementType.KeyMembers;
             //Find the end that's mapped to primary key
             foreach (EndPropertyMapping endMap in mapFragment.PropertyMappings)
@@ -280,7 +280,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 }
             }
             //This is probably defensive, but there should be no problem in falling back on the 
-            //AssociationSetMap if colocated foreign key is not found for some reason.
+            //AssociationSetMap if collocated foreign key is not found for some reason.
             return null;
         }
 

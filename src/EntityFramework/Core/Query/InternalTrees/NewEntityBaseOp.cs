@@ -25,7 +25,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         internal NewEntityBaseOp(OpType opType, TypeUsage type, bool scoped, EntitySet entitySet, List<RelProperty> relProperties)
             : base(opType, type)
         {
-            Debug.Assert(scoped || entitySet == null, "entitySet cann't be set of constructor isn't scoped");
+            Debug.Assert(scoped || entitySet == null, "entitySet can't be set of constructor isn't scoped");
             DebugCheck.NotNull(relProperties);
             m_scoped = scoped;
             m_entitySet = entitySet;

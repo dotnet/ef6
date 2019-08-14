@@ -350,7 +350,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         // <summary>
-        // Walks the expression tree and replaces client-evaluable expressions with constants
+        // Walks the expression tree and replaces client-evaluatable expressions with constants
         // or QueryParameterExpressions.
         // </summary>
         private sealed class FuncletizingVisitor : EntityExpressionVisitor

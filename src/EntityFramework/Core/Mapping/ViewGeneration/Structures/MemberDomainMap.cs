@@ -22,7 +22,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     internal class MemberDomainMap : InternalBase
     {
         // Keep track of the actual domain for each member on which we have conditions
-        // Note: some subtleties: For QueryDomainMap it holds just C-side condition members. For UpdateDominMap
+        // Note: some subtleties: For QueryDomainMap it holds just C-side condition members. For UpdateDomainMap
         // it now holds S-side condition members as well as members with no s-side condition but C-side condition
         // such that C-side condition restricts the domain of the member(column).
         private readonly Dictionary<MemberPath, CellConstantSet> m_conditionDomainMap;

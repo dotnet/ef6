@@ -33,7 +33,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Utils
         // The partitions (from multiconstants) cannot be differentiated
         AmbiguousMultiConstants = Value + 5,
         //Unused: 6
-        // Non-key projected multiple times (denormalzed)
+        // Non-key projected multiple times (denormalized)
         NonKeyProjectedWithOverlappingPartitions = Value + 7,
         // New concurrency tokens defined in derived class
         ConcurrencyDerivedClass = Value + 8,
@@ -56,7 +56,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Utils
         // Foreign key mapped to relationship - but parent table not mapped
         // to any end of relationship
         ForeignKeyParentTableNotMappedToEnd = Value + 18,
-        // Foreign key mapping to C-space does not preserve colum order
+        // Foreign key mapping to C-space does not preserve column order
         ForeignKeyColumnOrderIncorrect = Value + 19,
         // Disjointness constraint violated in C-space
         DisjointConstraintViolation = Value + 20,
@@ -77,10 +77,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Utils
         //Unused: 28
         //Unused: 29
         // Mapping condition that is not possible according to S-side constraints
-        ImpopssibleCondition = Value + 30,
+        ImpossibleCondition = Value + 30,
         // NonNullable S-Side member is mapped to nullable C-Side member
         NullableMappingForNonNullableColumn = Value + 31,
-        //Error specifiying Conditions, caught during Error Pattern Matching
+        //Error specifying Conditions, caught during Error Pattern Matching
         ErrorPatternConditionError = Value + 32,
         //Invalid ways of splitting Extents, caught during Error Pattern Matching
         ErrorPatternSplittingError = Value + 33,
@@ -90,7 +90,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Utils
         ErrorPatternMissingMappingError = Value + 35,
         //Mapping fragments don't overlap on a key or foreign key under read-only scenario
         NoJoinKeyOrFKProvidedInMapping = Value + 36,
-        //If there is a fragment with distinct flag, there should be no othe fragment between that C and S extent
+        //If there is a fragment with distinct flag, there should be no other fragment between that C and S extent
         MultipleFragmentsBetweenCandSExtentWithDistinct = Value + 37,
     }
 }

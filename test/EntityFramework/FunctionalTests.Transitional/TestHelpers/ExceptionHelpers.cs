@@ -80,8 +80,8 @@ namespace System.Data.Entity
         /// <param name="messageArguments"> The format arguments (if any) for the exception message. </param>
         public static void CheckStringNotNullOrEmpty(string value, string exceptionMessageFormatText, params object[] messageArguments)
         {
-            Assert(exceptionMessageFormatText != null, "message cannnot be null");
-            Assert(messageArguments != null, "messageArguments cannnot be null");
+            Assert(exceptionMessageFormatText != null, "message cannot be null");
+            Assert(messageArguments != null, "messageArguments cannot be null");
 
             if (String.IsNullOrEmpty(value))
             {
@@ -98,8 +98,8 @@ namespace System.Data.Entity
         /// <param name="messageArguments"> The format arguments (if any) for the exception message. </param>
         public static void CheckObjectNotNull(object value, string exceptionMessageFormatText, params object[] messageArguments)
         {
-            Assert(exceptionMessageFormatText != null, "message cannnot be null");
-            Assert(messageArguments != null, "messageArguments cannnot be null");
+            Assert(exceptionMessageFormatText != null, "message cannot be null");
+            Assert(messageArguments != null, "messageArguments cannot be null");
 
             if (value == null)
             {

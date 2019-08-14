@@ -409,7 +409,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // <param name="n"> current node </param>
         public override Node Visit(FilterOp op, Node n)
         {
-            // visit the predicate first, and then teh relop input
+            // visit the predicate first, and then the relop input
             VisitChildrenReverse(n);
             return n;
         }

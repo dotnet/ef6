@@ -38,7 +38,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         // <summary>
-        // Remap the given subree using the current remapper
+        // Remap the given subtree using the current remapper
         // </summary>
         internal void RemapSubtree(Node subTree)
         {

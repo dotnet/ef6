@@ -373,8 +373,8 @@ namespace System.Data.Entity.Core.Mapping
                 foreach (var column in rowType.Properties)
                 {
                     var cdmPropertyType = ConvertOSpaceToCSpaceType(column.TypeUsage.EdmType);
-                    var cdmPorperty = new EdmProperty(column.Name, TypeUsage.Create(cdmPropertyType));
-                    cdmProperties.Add(cdmPorperty);
+                    var cdmProperty = new EdmProperty(column.Name, TypeUsage.Create(cdmPropertyType));
+                    cdmProperties.Add(cdmProperty);
                 }
                 cdmType = new RowType(cdmProperties, rowType.InitializerMetadata);
             }
@@ -547,7 +547,7 @@ namespace System.Data.Entity.Core.Mapping
             {
                 var memberType = Helper.GetSpatialNormalizedPrimitiveType(edmMember.TypeUsage.EdmType);
 
-                // We expect the CLR prmitive type and their corresponding EDM primitive types to have the same primitive type kind (at least for now)
+                // We expect the CLR primitive type and their corresponding EDM primitive types to have the same primitive type kind (at least for now)
                 if (memberType.PrimitiveTypeKind
                     != ((PrimitiveType)objectMember.TypeUsage.EdmType).PrimitiveTypeKind)
                 {

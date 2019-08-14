@@ -10,7 +10,7 @@ namespace System.Data.Entity.Core.Mapping
     internal class ObjectPropertyMapping : ObjectMemberMapping
     {
         // <summary>
-        // Constrcut a new member mapping metadata object
+        // Construct a new member mapping metadata object
         // </summary>
         internal ObjectPropertyMapping(EdmProperty edmProperty, EdmProperty clrProperty)
             :

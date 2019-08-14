@@ -47,7 +47,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
         private readonly ReadOnlyCollection<CqlBlock> m_children;
 
         // <summary>
-        // WHERER.
+        // WHERE clause.
         // </summary>
         private readonly BoolExpression m_whereClause;
 

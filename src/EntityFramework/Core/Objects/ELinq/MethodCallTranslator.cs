@@ -646,9 +646,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
                 // <summary>
                 // Recursively rewrite the argument expression to unwrap any "structured" set sources
-                // using ExpressionCoverter.NormalizeSetSource(). This is currently required for IGrouping
+                // using ExpressionConverter.NormalizeSetSource(). This is currently required for IGrouping
                 // and EntityCollection as argument types to functions.
-                // NOTE: Changes made to this function might have to be applied to ExpressionCoverter.NormalizeSetSource() too.
+                // NOTE: Changes made to this function might have to be applied to ExpressionConverter.NormalizeSetSource() too.
                 // </summary>
                 private CqtExpression NormalizeAllSetSources(ExpressionConverter parent, CqtExpression argumentExpr)
                 {
@@ -1332,7 +1332,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     //Concat(result, Substring(this, (arg1 + arg2) +1, Length(this) - (arg1 + arg2))) 
                     if (call.Arguments.Count == 2)
                     {
-                        //If there are two arguemtns, we only support cases when the second one translates to a non-negative constant
+                        //If there are two arguments, we only support cases when the second one translates to a non-negative constant
                         var arg2 = parent.TranslateExpression(call.Arguments[1]);
                         if (!IsNonNegativeIntegerConstant(arg2))
                         {
@@ -1350,7 +1350,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                             parent.CreateCanonicalFunction(Length, call, thisString)
                                   .Minus(arg1.Plus(arg2));
 
-                        // Substring(this, substringStartIndex, substringLenght)
+                        // Substring(this, substringStartIndex, substringLength)
                         CqtExpression secondSubstring =
                             parent.CreateCanonicalFunction(
                                 Substring, call,
@@ -1762,7 +1762,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
 
                 // Translator for static method calls into canonical functions when only the name of the canonical function
-                // is different from the name of the method, but the argumens match.
+                // is different from the name of the method, but the arguments match.
                 // Translation:
                 //      MethodName(arg1, arg2, .., argn) -> CanonicalFunctionName(arg1, arg2, .., argn)
                 internal override CqtExpression Translate(ExpressionConverter parent, MethodCallExpression call)

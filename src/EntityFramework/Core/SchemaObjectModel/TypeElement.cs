@@ -289,7 +289,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         {
             var baseType = _primitiveType.BaseType as PrimitiveType;
             // the base type will be an edm type
-            // the edm type is the athority for which facets are required
+            // the edm type is the authority for which facets are required
             if (baseType == null)
             {
                 // an error will already have been added for this

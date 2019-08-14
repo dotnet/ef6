@@ -78,7 +78,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             rootNode = IsolateUnions(rootNode);
 
             // The isolation with Union is different from IsolateUnions --
-            // the above isolation finds collections of chidren in a
+            // the above isolation finds collections of children in a
             // node and connects them by union. The below one only considers
             // two children at a time
             rootNode = IsolateByOperator(rootNode, CellTreeOpType.Union);
@@ -169,7 +169,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             }
 
             // Different children groups are connected by a Union
-            // node -- the secltion domain of one group is disjoint from
+            // node -- the selection domain of one group is disjoint from
             // another group's selection domain, i.e., group A1 contributes
             // tuples to the extent which are disjoint from the tuples by
             // A2. So we can connect these groups by union alls.
@@ -177,7 +177,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             // group using FOJ
             var unionNode = new OpCellTreeNode(m_viewgenContext, CellTreeOpType.Union);
 
-            // childrenSet keeps track of the children that need to be procesed/partitioned
+            // childrenSet keeps track of the children that need to be processed/partitioned
             var childrenSet = new ModifiableIteratorCollection<CellTreeNode>(rootNode.Children);
 
             while (false == childrenSet.IsEmpty)
@@ -520,7 +520,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             // determine if any of the remaining children should be in the
             // same group as X.
 
-            // childrenSet keeps track of the children that need to be procesed/partitioned
+            // childrenSet keeps track of the children that need to be processed/partitioned
             var childrenSet = new ModifiableIteratorCollection<CellTreeNode>(children);
 
             // Find groups with same or subsumed constants and create a join

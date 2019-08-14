@@ -254,10 +254,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             var associationTypes = new List<AssociationType>();
             var count = 0;
 
-            foreach (var associatonType in itemCollection.GetItems<AssociationType>())
+            foreach (var associationType in itemCollection.GetItems<AssociationType>())
             {
-                associationTypes.Add(associatonType);
-                associatonType.Index = count++;
+                associationTypes.Add(associationType);
+                associationType.Index = count++;
             }
 
             return associationTypes.ToArray();

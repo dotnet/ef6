@@ -33,7 +33,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         // any particular extent unless the tree has nodes of the same extent
         // embedded two leaves below LASJ or LOJ, e.g., if we have a tree
         // (where Ni indicates a node for extent i - one Ni can be different
-        // from anohter Ni: 
+        // from another Ni: 
         // [N0 IJ N1] LASJ N0 --> This will not be simplified
         // canBooleansOverlap indicates whether an original input cell
         // contributes to multiple nodes in this tree, e.g., V1 IJ V2 UNION V2 IJ V3
@@ -84,7 +84,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                 children = GroupNonAssociativeLeafChildren(children);
             }
 
-            // childrenSet keeps track of the children that need to be procesed/partitioned
+            // childrenSet keeps track of the children that need to be processed/partitioned
             var newNode = new OpCellTreeNode(m_viewgenContext, rootNode.OpType);
             CellTreeNode lastChild = null;
             var skipRest = false;
@@ -450,7 +450,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             {
                 case CellTreeOpType.IJ:
                     // Project[D1, D2, A, B, C] Select[cond1 and cond2] (T)
-                    // We simply merge the two lists of booleans -- no conjuct is added
+                    // We simply merge the two lists of booleans -- no conjunct is added
                     // conjunct1 and conjunct2 don't change
 
                     // query1.WhereCaluse AND query2.WhereCaluse
@@ -522,7 +522,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             return true;
         }
 
-        // effects: Given two duplicate eliination choices, returns an OR of them
+        // effects: Given two duplicate elimination choices, returns an OR of them
         private static CellQuery.SelectDistinct MergeDupl(CellQuery.SelectDistinct d1, CellQuery.SelectDistinct d2)
         {
             if (d1 == CellQuery.SelectDistinct.Yes

@@ -1157,7 +1157,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         // <summary>
-        // Clears the transaction the user elinsted in using EnlistTransaction() method.
+        // Clears the transaction the user enlisted in using EnlistTransaction() method.
         // </summary>
         private void ClearEnlistedTransaction()
         {

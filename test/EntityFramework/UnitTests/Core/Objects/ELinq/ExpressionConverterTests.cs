@@ -353,7 +353,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         [Fact]
-        public void RemoveConvert_returns_epxression_if_no_casts()
+        public void RemoveConvert_returns_expression_if_no_casts()
         {
             var expression = Expression.Constant(42);
 

@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Collections.Generic;
 
     // <summary>
-    // Represents a pair of types to avoid uncessary enumerations to split kvp elements
+    // Represents a pair of types to avoid unnecessary enumerations to split kvp elements
     // </summary>
     internal sealed class Pair<L, R>
     {

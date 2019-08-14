@@ -117,7 +117,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
         #endregion
 
-        #region Constructors and static initializors
+        #region Constructors and static initializers
 
         internal ExpressionConverter(Funcletizer funcletizer, Expression expression)
         {

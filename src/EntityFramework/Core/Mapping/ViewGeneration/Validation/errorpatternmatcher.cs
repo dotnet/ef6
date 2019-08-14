@@ -77,7 +77,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                 == ViewTarget.QueryView)
             {
                 //Find all types for the given EntitySet
-                var unmapepdTypesInExtent =
+                var unmappedTypesInExtent =
                     new Set<EdmType>(
                         MetadataHelper.GetTypeAndSubtypesOf(
                             m_viewgenContext.Extent.ElementType, m_viewgenContext.EdmItemCollection, false /*isAbstract*/));
@@ -95,7 +95,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                                 var typeConst = cellConst as TypeConstant;
                                 if (typeConst != null)
                                 {
-                                    unmapepdTypesInExtent.Remove(typeConst.EdmType);
+                                    unmappedTypesInExtent.Remove(typeConst.EdmType);
                                 }
                             }
                         }
@@ -103,13 +103,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                 }
 
                 //We are left with a type that has no mapping
-                if (unmapepdTypesInExtent.Count > 0)
+                if (unmappedTypesInExtent.Count > 0)
                 {
                     //error unmapped type
                     m_errorLog.AddEntry(
                         new ErrorLog.Record(
                             ViewGenErrorCode.ErrorPatternMissingMappingError,
-                            Strings.ViewGen_Missing_Type_Mapping(BuildCommaSeparatedErrorString(unmapepdTypesInExtent)),
+                            Strings.ViewGen_Missing_Type_Mapping(BuildCommaSeparatedErrorString(unmappedTypesInExtent)),
                             m_viewgenContext.AllWrappersForExtent, ""));
                 }
             }
@@ -185,7 +185,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             var mappedConditionMembers = new Set<MemberPath>();
 
             //Both of these data-structs help in finding duplicate conditions
-            var setOfconditions = new Set<CompositeCondition>(new ConditionComparer());
+            var setOfConditions = new Set<CompositeCondition>(new ConditionComparer());
             var firstLCWForCondition = new Dictionary<CompositeCondition, LeftCellWrapper>(new ConditionComparer());
 
             foreach (var leftCellWrapper in leftCellWrappers)
@@ -263,7 +263,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                 if (condMembersValues.Count > 0) //it is possible that there are no condition members
                 {
                     //Check if the composite condition has been encountered before
-                    if (setOfconditions.Contains(condMembersValues))
+                    if (setOfConditions.Contains(condMembersValues))
                     {
                         //Extents may be Equal on right side (e.g: by some form of Refconstraint)
                         if (!RightSideEqual(firstLCWForCondition[condMembersValues], leftCellWrapper))
@@ -280,7 +280,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                     }
                     else
                     {
-                        setOfconditions.Add(condMembersValues);
+                        setOfConditions.Add(condMembersValues);
 
                         //Remember which cell the condition came from.. used for error reporting
                         firstLCWForCondition.Add(condMembersValues, leftCellWrapper);
@@ -553,7 +553,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                                 else
                                 {
                                     //MSG:  These two fragments are equal on the S-side but not so on the C-side. 
-                                    //      Try adding an Association with Referntial Integrity constraint if they are
+                                    //      Try adding an Association with Referential Integrity constraint if they are
                                     //      mapped to different EntitySets in order to make theme equal on the C-side.
                                     //TestCase (no need, Table mapped to multiple ES tests cover this scenario)
                                     errorString.Append(Strings.Viewgen_ErrorPattern_Partition_Eq_Unk);
@@ -588,7 +588,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                             if (isCDisjoint)
                             {
                                 //MSG:  One of the fragments is a subset of the other on the S-side but they are disjoint on the C-side.
-                                //      If you intended overlap on the S-side ensure they have similar relationship on teh C-side.
+                                //      If you intended overlap on the S-side ensure they have similar relationship on the C-side.
                                 //      You may need to use IsTypeOf() quantifier or loosen conditions in one of the fragments.
                                 //TestCase (9, 10)
                                 errorString.Append(Strings.Viewgen_ErrorPattern_Partition_Sub_Disj);
@@ -596,7 +596,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                             else if (isCEqual) //equal
                             {
                                 //MSG:  One of the fragments is a subset of the other on the S-side but they are equal on the C-side.
-                                //      If you intended overlap on the S-side ensure they have similar relationship on teh C-side.
+                                //      If you intended overlap on the S-side ensure they have similar relationship on the C-side.
                                 //TestCase (10)
 
                                 if (CSideHasDifferentEntitySets(fragment1, fragment2))
@@ -617,7 +617,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                             {
                                 //unknown
                                 //MSG:  One of the fragments is a subset of the other on the S-side but they are disjoint on the C-side.
-                                //      If you intended overlap on the S-side ensure they have similar relationship on teh C-side.
+                                //      If you intended overlap on the S-side ensure they have similar relationship on the C-side.
                                 //TestCase (no need, Table mapped to multiple ES tests cover this scenario)
                                 errorString.Append(Strings.Viewgen_ErrorPattern_Partition_Sub_Unk);
                             }
@@ -688,7 +688,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                     if (anotherCellQuery.GetProjectedMembers().Contains(conditionMember))
                     {
                         mappedConditionMembers.Add(conditionMember);
-                        //error condition memer is projected somewhere
+                        //error condition member is projected somewhere
                         m_errorLog.AddEntry(
                             new ErrorLog.Record(
                                 ViewGenErrorCode.ErrorPatternConditionError,

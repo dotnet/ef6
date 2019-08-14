@@ -126,7 +126,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                 }
             }
 
-            // Expand cells that project members collected earlier with T/F conditiions
+            // Expand cells that project members collected earlier with T/F conditions
             foreach (var cell in cells.ToArray())
             {
                 //Each member gets its own expansion. Including multiple condition candidates in one SQuery
@@ -139,7 +139,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                     //Check if member is projected in this cell.
                     if (cell.SQuery.GetProjectedMembers().Contains(memberToExpand))
                     {
-                        // Creationg additional cel can fail when the condition to be appended contradicts existing condition in the CellQuery
+                        // Creating additional cel can fail when the condition to be appended contradicts existing condition in the CellQuery
                         // We don't add contradictions because they seem to cause unrelated problems in subsequent validation routines
                         Cell resultCell = null;
                         if (TryCreateAdditionalCellWithCondition(
@@ -204,7 +204,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             var leftSlots = new List<ProjectedSlot>();
             var rightSlots = new List<ProjectedSlot>();
 
-            //Check for impossible conditions (otehrwise we get inaccurate pre-validation errors)
+            //Check for impossible conditions (otherwise we get inaccurate pre-validation errors)
             var negatedCondition = new ScalarConstant(!conditionValue);
 
             if (originalCell.GetLeftQuery(viewTarget).Conditions
@@ -298,7 +298,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
 
                     var extent = extentMap.Set;
                     Debug.Assert(
-                        extent != null, "Extent map for a null extent or type of extentMap.Exent " +
+                        extent != null, "Extent map for a null extent or type of extentMap.Extent " +
                                         "is not Extent");
 
                     // For each table mapping for the type mapping, we create cells
@@ -376,13 +376,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             {
                 var scalarPropMap = propMap as ScalarPropertyMapping;
                 var complexPropMap = propMap as ComplexPropertyMapping;
-                var associationEndPropertypMap = propMap as EndPropertyMapping;
+                var associationEndPropertyMap = propMap as EndPropertyMapping;
                 var conditionMap = propMap as ConditionPropertyMapping;
 
                 Debug.Assert(
                     scalarPropMap != null ||
                     complexPropMap != null ||
-                    associationEndPropertypMap != null ||
+                    associationEndPropertyMap != null ||
                     conditionMap != null, "Unimplemented property mapping");
 
                 if (scalarPropMap != null)
@@ -433,14 +433,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                     }
                 }
 
-                // Check if the property mapping is for an associaion
-                if (associationEndPropertypMap != null)
+                // Check if the property mapping is for an association
+                if (associationEndPropertyMap != null)
                 {
                     // create join tree node representing this relation end
-                    var associationEndNode = new MemberPath(cNode, associationEndPropertypMap.AssociationEnd);
+                    var associationEndNode = new MemberPath(cNode, associationEndPropertyMap.AssociationEnd);
                     // call recursively
                     ExtractProperties(
-                        associationEndPropertypMap.PropertyMappings, associationEndNode, cSlots,
+                        associationEndPropertyMap.PropertyMappings, associationEndNode, cSlots,
                         ref cQueryWhereClause, sRootExtent, sSlots, ref sQueryWhereClause);
                 }
 
@@ -451,7 +451,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                     {
                         //Produce a Condition Expression for the Condition Map.
                         var conditionExpression = GetConditionExpression(sRootExtent, conditionMap);
-                        //Add the condition expression to the exisiting S side Where clause using an "And"
+                        //Add the condition expression to the existing S side Where clause using an "And"
                         sQueryWhereClause = BoolExpression.CreateAnd(sQueryWhereClause, conditionExpression);
                     }
                     else
@@ -459,7 +459,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                         Debug.Assert(conditionMap.Property != null);
                         //Produce a Condition Expression for the Condition Map.
                         var conditionExpression = GetConditionExpression(cNode, conditionMap);
-                        //Add the condition expression to the exisiting C side Where clause using an "And"
+                        //Add the condition expression to the existing C side Where clause using an "And"
                         cQueryWhereClause = BoolExpression.CreateAnd(cQueryWhereClause, conditionExpression);
                     }
                 }

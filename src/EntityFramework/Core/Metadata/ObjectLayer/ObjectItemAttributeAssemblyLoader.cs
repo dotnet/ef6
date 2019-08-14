@@ -52,7 +52,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         // <summary>
-        // Loads the given assembly and all the other referencd assemblies in the cache. If the assembly was already present
+        // Loads the given assembly and all the other referenced assemblies in the cache. If the assembly was already present
         // then it loads from the cache
         // </summary>
         internal override void Load()

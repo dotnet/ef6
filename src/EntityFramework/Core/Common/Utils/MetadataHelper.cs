@@ -180,7 +180,7 @@ namespace System.Data.Entity.Core.Common.Utils
                    member.TypeUsage.EdmType.BuiltInTypeKind == BuiltInTypeKind.EnumType;
         }
 
-        // effects: Returns true if member's type has a discrete domain (i.e. is bolean type)
+        // effects: Returns true if member's type has a discrete domain (i.e. is boolean type)
         // Note: enums don't have discrete domains as we allow domain of the underlying type.
         internal static bool HasDiscreteDomain(EdmType edmType)
         {
@@ -738,7 +738,7 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         // <summary>
-        // Check if all the SchemaErrors have the serverity of SchemaErrorSeverity.Warning
+        // Check if all the SchemaErrors have the severity of SchemaErrorSeverity.Warning
         // </summary>
         internal static bool CheckIfAllErrorsAreWarnings(IList<EdmSchemaError> schemaErrors)
         {
@@ -779,20 +779,20 @@ namespace System.Data.Entity.Core.Common.Utils
 
         internal static SHA256 CreateSHA256HashAlgorithm()
         {
-            SHA256 sha256HashAlgorith;
+            SHA256 sha256HashAlgorithm;
             try
             {
                 // use the FIPS compliant SHA256 implementation
-                sha256HashAlgorith = new SHA256CryptoServiceProvider();
+                sha256HashAlgorithm = new SHA256CryptoServiceProvider();
             }
             catch (PlatformNotSupportedException)
             {
-                // the FIPS compliant (and faster) algorith was not available, create the managed version
+                // the FIPS compliant (and faster) algorithm was not available, create the managed version
                 // this will throw if FIPS only is enforced
-                sha256HashAlgorith = new SHA256Managed();
+                sha256HashAlgorithm = new SHA256Managed();
             }
 
-            return sha256HashAlgorith;
+            return sha256HashAlgorithm;
         }
 
         internal static TypeUsage ConvertStoreTypeUsageToEdmTypeUsage(TypeUsage storeTypeUsage)

@@ -2560,7 +2560,7 @@ namespace ProductivityApiTests
                        };
         }
 
-        private void TestComplexCurentValue(
+        private void TestComplexCurrentValue(
             DbEntityEntry<Building> entityEntry,
             DbComplexPropertyEntry<Building, Address> propertyEntry,
             Func<Address> getter)
@@ -2663,7 +2663,7 @@ namespace ProductivityApiTests
             }
         }
 
-        private void TestComplexCurentValue(
+        private void TestComplexCurrentValue(
             DbEntityEntry<Building> entityEntry,
             DbComplexPropertyEntry<Building, SiteInfo> propertyEntry,
             Func<SiteInfo> getter)
@@ -2877,7 +2877,7 @@ namespace ProductivityApiTests
             DbPropertyEntryTest(
                 EntityState.Added,
                 e =>
-                TestComplexCurentValue(e, e.ComplexProperty(b => b.Address), () => e.Entity.Address));
+                TestComplexCurrentValue(e, e.ComplexProperty(b => b.Address), () => e.Entity.Address));
         }
 
         [Fact]
@@ -2995,7 +2995,7 @@ namespace ProductivityApiTests
             DbPropertyEntryTest(
                 EntityState.Added,
                 e =>
-                TestComplexCurentValue(
+                TestComplexCurrentValue(
                     e,
                     e.ComplexProperty(b => b.Address).ComplexProperty(a => a.SiteInfo),
                     () => e.Entity.Address.SiteInfo));
@@ -3189,7 +3189,7 @@ namespace ProductivityApiTests
             DbPropertyEntryTest(
                 EntityState.Unchanged,
                 e =>
-                TestComplexCurentValue(e, e.ComplexProperty(b => b.Address), () => e.Entity.Address));
+                TestComplexCurrentValue(e, e.ComplexProperty(b => b.Address), () => e.Entity.Address));
         }
 
         [Fact]
@@ -3310,7 +3310,7 @@ namespace ProductivityApiTests
         {
             DbPropertyEntryTest(
                 EntityState.Unchanged,
-                e => TestComplexCurentValue(
+                e => TestComplexCurrentValue(
                     e, e.ComplexProperty(b => b.Address.SiteInfo),
                     () => e.Entity.Address.SiteInfo));
         }
@@ -3486,7 +3486,7 @@ namespace ProductivityApiTests
             DbPropertyEntryTest(
                 EntityState.Modified,
                 e =>
-                TestComplexCurentValue(e, e.ComplexProperty(b => b.Address), () => e.Entity.Address));
+                TestComplexCurrentValue(e, e.ComplexProperty(b => b.Address), () => e.Entity.Address));
         }
 
         [Fact]
@@ -3609,7 +3609,7 @@ namespace ProductivityApiTests
             DbPropertyEntryTest(
                 EntityState.Modified,
                 e =>
-                TestComplexCurentValue(
+                TestComplexCurrentValue(
                     e,
                     e.ComplexProperty(b => b.Address).ComplexProperty(a => a.SiteInfo),
                     () => e.Entity.Address.SiteInfo));
@@ -3808,7 +3808,7 @@ namespace ProductivityApiTests
             DbPropertyEntryTest(
                 EntityState.Deleted,
                 e =>
-                TestComplexCurentValue(e, e.ComplexProperty(b => b.Address), () => e.Entity.Address));
+                TestComplexCurrentValue(e, e.ComplexProperty(b => b.Address), () => e.Entity.Address));
         }
 
         [Fact]
@@ -3933,7 +3933,7 @@ namespace ProductivityApiTests
             DbPropertyEntryTest(
                 EntityState.Deleted,
                 e =>
-                TestComplexCurentValue(
+                TestComplexCurrentValue(
                     e,
                     e.ComplexProperty(b => b.Address).ComplexProperty(a => a.SiteInfo),
                     () => e.Entity.Address.SiteInfo));
@@ -4139,7 +4139,7 @@ namespace ProductivityApiTests
             DbPropertyEntryTest(
                 EntityState.Detached,
                 e =>
-                TestComplexCurentValue(e, e.ComplexProperty(b => b.Address), () => e.Entity.Address));
+                TestComplexCurrentValue(e, e.ComplexProperty(b => b.Address), () => e.Entity.Address));
         }
 
         [Fact]
@@ -4260,7 +4260,7 @@ namespace ProductivityApiTests
             DbPropertyEntryTest(
                 EntityState.Detached,
                 e =>
-                TestComplexCurentValue(
+                TestComplexCurrentValue(
                     e,
                     e.ComplexProperty(b => b.Address).ComplexProperty(a => a.SiteInfo),
                     () => e.Entity.Address.SiteInfo));
@@ -4436,7 +4436,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Name_can_be_obtained_for_exposed_reference_nav_property_on_detatched_entity()
+        public void Name_can_be_obtained_for_exposed_reference_nav_property_on_detached_entity()
         {
             Name_can_be_obtained_for_exposed_reference_nav_property_implementation(detached: true);
         }

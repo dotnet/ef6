@@ -171,7 +171,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal const string ItemAttributes = "MetadataProperties";
         internal const string Type = "Type";
 
-        // Name of SSDL specifc attributes for SQL Gen
+        // Name of SSDL specific attributes for SQL Gen
         internal const string Schema = "Schema";
         internal const string Table = "Table";
 

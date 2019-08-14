@@ -149,7 +149,7 @@ namespace System.Data.Entity.SqlServerCompact
 
         // Executes the specified commandTexts in the default transaction
         // of command object, and returns any exception to the caller.
-        // Assumption: Atmost 2 commandTexts are supported as of now.
+        // Assumption: At most 2 commandTexts are supported as of now.
         [SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
         [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
         public new SqlCeDataReader ExecuteReader(CommandBehavior behavior)
@@ -209,7 +209,7 @@ namespace System.Data.Entity.SqlServerCompact
 
         // Executes the specified commandTexts in the default transaction
         // of command object, and returns any exception to the caller.
-        // Assumption: Atmost 2 commandTexts are supported as of now.
+        // Assumption: At most 2 commandTexts are supported as of now.
         [SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
         [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
         public SqlCeResultSet ExecuteResultSet(ResultSetOptions options, SqlCeResultSet resultSet)
@@ -264,7 +264,7 @@ namespace System.Data.Entity.SqlServerCompact
 
         // Executes the specified commandTexts in the default transaction
         // of command object, and returns any exception to the caller.
-        // Assumption: Atmost 2 commandTexts are supported as of now.
+        // Assumption: At most 2 commandTexts are supported as of now.
         [SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
         [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
         public override int ExecuteNonQuery()
@@ -321,7 +321,7 @@ namespace System.Data.Entity.SqlServerCompact
 
         // Executes the specified commandTexts in the default transaction
         // of command object, and returns any exception to the caller.
-        // Assumption: Atmost 2 commandTexts are supported as of now.
+        // Assumption: At most 2 commandTexts are supported as of now.
         [SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
         [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
         public override object ExecuteScalar()

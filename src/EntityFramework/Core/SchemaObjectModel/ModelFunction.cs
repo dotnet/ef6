@@ -73,7 +73,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
             else if (CanHandleElement(reader, XmlConstants.DefiningExpression))
             {
-                HandleDefiningExpressionElment(reader);
+                HandleDefiningExpressionElement(reader);
                 return true;
             }
             else if (CanHandleElement(reader, XmlConstants.Parameter))
@@ -134,7 +134,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #endregion
 
-        private void HandleDefiningExpressionElment(XmlReader reader)
+        private void HandleDefiningExpressionElement(XmlReader reader)
         {
             DebugCheck.NotNull(reader);
 

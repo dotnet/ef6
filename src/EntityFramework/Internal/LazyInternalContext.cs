@@ -83,7 +83,7 @@ namespace System.Data.Entity.Internal
         private int? _commandTimeout;
 
         // Set when database initialization is in-progress to prevent attempts to recursively initialize from
-        // the initalizer.
+        // the initializer.
         private bool _inDatabaseInitialization;
 
         private Action<DbModelBuilder> _onModelCreating;

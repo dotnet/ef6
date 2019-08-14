@@ -10,7 +10,7 @@ namespace System.Data.Entity.Core.Mapping
     internal class ObjectNavigationPropertyMapping : ObjectMemberMapping
     {
         // <summary>
-        // Constrcut a new member mapping metadata object
+        // Construct a new member mapping metadata object
         // </summary>
         internal ObjectNavigationPropertyMapping(NavigationProperty edmNavigationProperty, NavigationProperty clrNavigationProperty)
             :

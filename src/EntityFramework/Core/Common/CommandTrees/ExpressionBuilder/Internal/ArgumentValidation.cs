@@ -575,7 +575,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
                     primitiveType.PrimitiveTypeKind != valueKind)
                 {
                     // there are only two O-space types for the 16 C-space spatial types.   Allow constants of any geography type to be represented as DbGeography, and
-                    // any geometric type to be represented by Dbgeometry.
+                    // any geometric type to be represented by DbGeometry.
                     if (!(Helper.IsGeographicType(primitiveType) && valueKind == PrimitiveTypeKind.Geography)
                         && !(Helper.IsGeometricType(primitiveType) && valueKind == PrimitiveTypeKind.Geometry))
                     {

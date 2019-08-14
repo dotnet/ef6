@@ -282,7 +282,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         // </summary>
         // <returns> Enumerable of the current set of CLR proxy types. This value will never be null. </returns>
         // <remarks>
-        // The enumerable is based on a shapshot of the current list of types.
+        // The enumerable is based on a snapshot of the current list of types.
         // </remarks>
         internal static IEnumerable<Type> GetKnownProxyTypes()
         {
@@ -406,7 +406,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 proxyTypeInfo = new EntityProxyTypeInfo(
                     proxyType,
                     ospaceEntityType,
-                    proxyTypeBuilder.CreateInitalizeCollectionMethod(proxyType),
+                    proxyTypeBuilder.CreateInitializeCollectionMethod(proxyType),
                     proxyTypeBuilder.BaseGetters,
                     proxyTypeBuilder.BaseSetters,
                     workspace);
@@ -513,7 +513,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         // <summary>
         // Called in the finally clause of each overridden property setter to ensure that the flag
         // indicating that we are in an FK setter is cleared.  Note that the wrapped entity is passed as
-        // an obejct becayse IEntityWrapper is an internal type and is therefore not accessable to
+        // an object because IEntityWrapper is an internal type and is therefore not accessable to
         // the proxy type.  Once we're in the framework it is cast back to an IEntityWrapper.
         // </summary>
         private static void ResetFKSetterFlag(object wrappedEntityAsObject)
@@ -627,9 +627,9 @@ namespace System.Data.Entity.Core.Objects.Internal
                 get { return _ospaceEntityType.ClrType; }
             }
 
-            public DynamicMethod CreateInitalizeCollectionMethod(Type proxyType)
+            public DynamicMethod CreateInitializeCollectionMethod(Type proxyType)
             {
-                return _ipocoImplementor.CreateInitalizeCollectionMethod(proxyType);
+                return _ipocoImplementor.CreateInitializeCollectionMethod(proxyType);
             }
 
             public List<PropertyInfo> BaseGetters

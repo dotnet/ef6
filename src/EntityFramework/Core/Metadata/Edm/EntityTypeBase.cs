@@ -202,7 +202,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // and then adds it to the KeyMembers collection.
         // Throw if the key member is not already in the members
         // collection. Cannot do much other than that as the
-        // Key members is just an Ienumerable of the names
+        // Key members is just an IEnumerable of the names
         // of the members.
         // </summary>
         // <param name="keyMembers"> the list of keys (member names) to be added for the given type </param>

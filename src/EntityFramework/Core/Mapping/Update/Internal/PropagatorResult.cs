@@ -31,7 +31,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     // contain the key) has enough context to recover the state entry.
     // </summary>
     // <remarks>
-    // Not all memebers of a PropagatorResult are available for all specializations. For instance, GetSimpleValue
+    // Not all members of a PropagatorResult are available for all specializations. For instance, GetSimpleValue
     // is available only on simple types
     // </remarks>
     internal abstract class PropagatorResult

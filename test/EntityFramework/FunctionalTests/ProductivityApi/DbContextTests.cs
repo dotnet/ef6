@@ -3614,7 +3614,7 @@ namespace ProductivityApiTests
 
         [Fact]
         [UseDefaultExecutionStrategy]
-        public void DbContext_can_be_initialized_without_promotion_to_distributed_transaction_inside_user_transaction_if_the_context_type_has_been_previously_initalized_outside()
+        public void DbContext_can_be_initialized_without_promotion_to_distributed_transaction_inside_user_transaction_if_the_context_type_has_been_previously_initialized_outside()
         {
             var connectionString = default(string);
             using (var context = new TransactionTestsContext())

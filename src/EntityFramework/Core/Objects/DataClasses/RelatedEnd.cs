@@ -742,7 +742,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// </exception>
         public void Load()
         {
-            // CheckOwnerNull is called in the impementation
+            // CheckOwnerNull is called in the implementation
             Load(DefaultMergeOption);
         }
 
@@ -899,7 +899,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 foreach (var entity in collection)
                 {
                     var wrapper = EntityWrapperFactory.WrapEntityUsingContext(entity, ObjectContext);
-                    // When the MergeOption is NoTraking, we need to make sure the wrapper reflects the current context and
+                    // When the MergeOption is NoTracking, we need to make sure the wrapper reflects the current context and
                     // has an EntityKey
                     if (mergeOption == MergeOption.NoTracking)
                     {

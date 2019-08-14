@@ -520,7 +520,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         // <summary>
         // Applies a IsNotNull(sentinelVar) filter to the given node.
-        // The filter is pushed below all MultiStremNest-s, because this part of the tree has
+        // The filter is pushed below all MultiStreamNest-s, because this part of the tree has
         // already been visited and it is expected that the MultiStreamNests have bubbled up
         // above the filters.
         // </summary>
@@ -742,7 +742,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             Node newNode;
 
             // If the ProjectOp's input is a SortOp, swap the ProjectOp and the SortOp, 
-            // to allow the SortOp to buble up and be honored. This may only occur if the original input to the  
+            // to allow the SortOp to bubble up and be honored. This may only occur if the original input to the  
             // ProjectOp was an UnnestOp (or a Project over a Unnest Op). 
             if (n.Child0.Op.OpType
                 == OpType.Sort)
@@ -1728,7 +1728,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // Copies the given defining node for a collection var, but also makes sure to 'register' all newly
         // created collection vars (i.e. copied).
         // SQLBUDT #557427: The defining node that is being copied may itself contain definitions to other
-        // collection vars. These defintions would be present in m_definingNodeMap. However, after we make a copy
+        // collection vars. These definitions would be present in m_definingNodeMap. However, after we make a copy
         // of the defining node, we need to make sure to also put 'matching' definitions of these other collection
         // vars into m_definingNodeMap.
         // The dictionary collectionVarDefinitions (below) contains the copied definitions of such collection vars.
@@ -1925,7 +1925,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // - The keys of the nest operation
         // - The discriminator column for the nest operation
         // - the list of postfix sort keys (used to represent nested collections)
-        // Note that we only add the first occurrance of a var to the list; further
+        // Note that we only add the first occurrence of a var to the list; further
         // references to the same variable would be trumped by the first one.
         // </summary>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",

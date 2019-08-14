@@ -281,7 +281,7 @@ namespace System.Data.Entity.Core.Mapping
 
             #region Inner data visit
 
-            // Name is coverd by Identity
+            // Name is covered by Identity
             AddObjectContentToHashBuilder(associationSet.Identity);
             AddObjectContentToHashBuilder(associationSet.Schema);
             AddObjectContentToHashBuilder(associationSet.Table);
@@ -373,7 +373,7 @@ namespace System.Data.Entity.Core.Mapping
 
             #region Inner data visit
 
-            // since the delaring type is fixed and referenced to the upper type, 
+            // since the declaring type is fixed and referenced to the upper type, 
             // there is no need to hash this
             //this.AddObjectContentToHashBuilder(edmProperty.DeclaringType);
             AddObjectContentToHashBuilder(edmProperty.DefaultValue);

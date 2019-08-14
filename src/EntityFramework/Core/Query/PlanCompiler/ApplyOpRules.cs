@@ -273,7 +273,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // <param name="context"> RuleProcessing context </param>
         // <param name="applyNode"> The ApplyOp subtree </param>
         // <param name="newNode"> transformed subtree </param>
-        // <returns> Transfomation status </returns>
+        // <returns> Transformation status </returns>
         private static bool ProcessCrossApplyOverProject(RuleProcessingContext context, Node applyNode, out Node newNode)
         {
             newNode = applyNode;
@@ -338,7 +338,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // <param name="context"> RuleProcessing context </param>
         // <param name="applyNode"> The ApplyOp subtree </param>
         // <param name="newNode"> transformed subtree </param>
-        // <returns> Transfomation status </returns>
+        // <returns> Transformation status </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "VarDefOp")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -664,7 +664,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         // <summary>
-        // A visitor that calculates the number of output columns for a subree
+        // A visitor that calculates the number of output columns for a subtree
         // with a given root
         // </summary>
         internal class OutputCountVisitor : BasicOpVisitorOfT<int>
@@ -676,7 +676,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             #region Public Methods
 
             // <summary>
-            // Calculates the number of output columns for the subree
+            // Calculates the number of output columns for the subtree
             // rooted at the given node
             // </summary>
             internal static int CountOutputs(Node node)
@@ -814,7 +814,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             // <summary>
             // Public entry point.
-            // Remaps the subree rooted at the given tree
+            // Remaps the subtree rooted at the given tree
             // </summary>
             internal static void RemapSubtree(Node root, Command command, Var oldVar)
             {

@@ -261,13 +261,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                     var sExtent = cell.SQuery.Extent;
 
                     //There should be no other fragments mapping cExtent to sExtent
-                    var mapepdFragments = m_cells.Where(otherCell => otherCell != cell)
+                    var mappedFragments = m_cells.Where(otherCell => otherCell != cell)
                                                  .Where(
                                                      otherCell => otherCell.CQuery.Extent == cExtent && otherCell.SQuery.Extent == sExtent);
 
-                    if (mapepdFragments.Any())
+                    if (mappedFragments.Any())
                     {
-                        var cellsToReport = Enumerable.Repeat(cell, 1).Union(mapepdFragments);
+                        var cellsToReport = Enumerable.Repeat(cell, 1).Union(mappedFragments);
                         var record = new ErrorLog.Record(
                             ViewGenErrorCode.MultipleFragmentsBetweenCandSExtentWithDistinct,
                             Strings.Viewgen_MultipleFragmentsBetweenCandSExtentWithDistinct(cExtent.Name, sExtent.Name), cellsToReport,
@@ -283,7 +283,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         // effects: Check for problems in each cell that are not detected by the
         // "C-constraints-imply-S-constraints" principle. If the check fails,
         // adds relevant error info to m_errorLog and returns false. Else
-        // retrns true
+        // returns true
         private bool PerformSingleCellChecks()
         {
             var errorLogSize = m_errorLog.Count;

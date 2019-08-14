@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     public class DbExpressionRebinderTests
     {
         [Fact]
-        public void Vistor_methods_validate_expression_is_non_null()
+        public void Visitor_methods_validate_expression_is_non_null()
         {
             TestVisitNull(v => v.Visit((DbExpression)null));
             TestVisitNull(v => v.Visit((DbAndExpression)null));

@@ -51,7 +51,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         // The keys of the table (if any) are those specified in the "keyProperties" parameter
         // The table may correspond to an entity set (if the entityset parameter was non-null)
         // </summary>
-        // <param name="properties"> prperties corresponding to columns of the table </param>
+        // <param name="properties"> properties corresponding to columns of the table </param>
         // <param name="extent"> entityset corresponding to the table (if any) </param>
         internal TableMD(
             IEnumerable<EdmProperty> properties, IEnumerable<EdmMember> keyProperties,

@@ -191,7 +191,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
         // <summary>
         // Allocates a new RecordStateScratchpad and adds it to the list of the ones we're
-        // responsible for; will create the list if it hasn't alread been created.
+        // responsible for; will create the list if it hasn't already been created.
         // </summary>
         internal RecordStateScratchpad CreateRecordStateScratchpad()
         {

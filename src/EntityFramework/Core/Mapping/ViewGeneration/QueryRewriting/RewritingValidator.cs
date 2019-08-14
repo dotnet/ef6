@@ -316,7 +316,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         }
 
         // <summary>
-        // Given a LeftCellWrapper for the S-side fragment and a non-nullable colum m, return a CQuery with nullability condition
+        // Given a LeftCellWrapper for the S-side fragment and a non-nullable column m, return a CQuery with nullability condition
         // appended to Cquery of c-side member that column m is mapped to
         // </summary>
         private static FragmentQuery AddNullConditionOnCSideFragment(LeftCellWrapper wrapper, MemberPath member, MemberMaps memberMaps)

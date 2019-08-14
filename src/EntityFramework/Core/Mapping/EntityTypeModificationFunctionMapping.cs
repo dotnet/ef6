@@ -64,7 +64,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        /// Gets hte update function mapping.
+        /// Gets the update function mapping.
         /// </summary>
         public ModificationFunctionMapping UpdateFunctionMapping
         {

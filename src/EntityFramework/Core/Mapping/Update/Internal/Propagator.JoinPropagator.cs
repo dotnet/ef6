@@ -58,7 +58,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
                 Debug.Assert(
                     DbExpressionKind.LeftOuterJoin == node.ExpressionKind || DbExpressionKind.InnerJoin == node.ExpressionKind,
-                    "(Update/JoinPropagagtor/JoinEvaluator) " +
+                    "(Update/JoinPropagator/JoinEvaluator) " +
                     "caller must ensure only left outer and inner joins are requested");
                 // Retrieve propagation rules for the join type of the expression.
                 if (DbExpressionKind.InnerJoin

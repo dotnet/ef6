@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
     // <summary>
-    // Represents the Seached Case Expression - CASE WHEN THEN [ELSE] END.
+    // Represents the Searched Case Expression - CASE WHEN THEN [ELSE] END.
     // </summary>
     internal sealed class CaseExpr : Node
     {

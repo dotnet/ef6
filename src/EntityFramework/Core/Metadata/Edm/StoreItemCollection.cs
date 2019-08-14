@@ -233,7 +233,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             providerManifestToken = loader.ProviderManifestToken;
             providerInvariantName = loader.ProviderInvariantName;
 
-            // load the items into the colleciton
+            // load the items into the collection
             if (!loader.HasNonWarningErrors)
             {
                 LoadProviderManifest(loader.ProviderManifest /* check for system namespace */);
@@ -349,7 +349,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // <param name="functionName"> The full name of the function </param>
         // <param name="ignoreCase"> true for case-insensitive lookup </param>
         // <returns> A collection of all the functions with the given name in the given data space </returns>
-        // <exception cref="System.ArgumentNullException">Thrown if functionaName argument passed in is null</exception>
+        // <exception cref="System.ArgumentNullException">Thrown if functionName argument passed in is null</exception>
         internal ReadOnlyCollection<EdmFunction> GetCTypeFunctions(string functionName, bool ignoreCase)
         {
             ReadOnlyCollection<EdmFunction> functionOverloads;

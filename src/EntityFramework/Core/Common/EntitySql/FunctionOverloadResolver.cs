@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // <summary>
         // Resolves <paramref name="argTypes" /> against the list of function signatures.
         // </summary>
-        // <returns> Funciton metadata </returns>
+        // <returns> Function metadata </returns>
         internal static EdmFunction ResolveFunctionOverloads(
             IList<EdmFunction> functionsMetadata,
             IList<TypeUsage> argTypes,
@@ -42,7 +42,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // <summary>
         // Resolves <paramref name="argTypes" /> against the list of function signatures.
         // </summary>
-        // <returns> Funciton metadata </returns>
+        // <returns> Function metadata </returns>
         internal static EdmFunction ResolveFunctionOverloads(
             IList<EdmFunction> functionsMetadata,
             IList<TypeUsage> argTypes,
@@ -73,7 +73,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // <param name="getSignatureParams"> function formal signature getter </param>
         // <param name="getParameterTypeUsage"> TypeUsage getter for a signature param </param>
         // <param name="getParameterMode"> ParameterMode getter for a signature param </param>
-        // <returns> Funciton metadata </returns>
+        // <returns> Function metadata </returns>
         internal static TFunctionMetadata ResolveFunctionOverloads<TFunctionMetadata, TFunctionParameterMetadata>(
             IList<TFunctionMetadata> functionsMetadata,
             IList<TypeUsage> argTypes,
@@ -158,10 +158,10 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     {
                         Debug.Assert(rank.Length == bestCandidateRank.Length, "composite ranks have different number of elements");
 
-                        if (!ReferenceEquals(bestCandidateRank, rank)) // do not compare best cadnidate against itself
+                        if (!ReferenceEquals(bestCandidateRank, rank)) // do not compare best candidate against itself
                         {
                             // All individual ranks of the best candidate must equal or better than the ranks of all other candidates,
-                            // otherwise we consider it ambigous, even though it has an unambigously best total rank.
+                            // otherwise we consider it ambigous, even though it has an unambiguously best total rank.
                             for (var i = 0; i < rank.Length; ++i)
                             {
                                 if (bestCandidateRank[i]
@@ -305,7 +305,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             //
             // In the case of eSQL untyped null will float up to the point of isStructurallyEqual(...) above.
-            // Below it eveything should be normal.
+            // Below it everything should be normal.
             //
             Debug.Assert(fromType != null, "fromType != null");
             Debug.Assert(toType != null, "toType != null");
