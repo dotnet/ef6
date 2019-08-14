@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Infrastructure.Design
 {
+    using System.Collections.Generic;
     using System.Configuration;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Internal.ConfigFile;
@@ -32,14 +33,10 @@ namespace System.Data.Entity.Infrastructure.Design
         /// <param name="invariantName">The invariant name of the provider services.</param>
         /// <returns>The provider services type name, or null if not found.</returns>
         public string GetProviderServices(string invariantName)
-        {
-            var providers = ((EntityFrameworkSection)_configuration.GetSection(AppConfig.EFSectionName))
-                .Providers.Cast<ProviderElement>();
-
-            return (from p in providers
-                    where p.InvariantName == invariantName
-                    select p.ProviderTypeName)
-                    .FirstOrDefault();
-        }
+            => ((EntityFrameworkSection)_configuration.GetSection(AppConfig.EFSectionName))?.Providers
+                .Cast<ProviderElement>()
+                .Where(p => p.InvariantName == invariantName)
+                .Select(p => p.ProviderTypeName)
+                .FirstOrDefault();
     }
 }
