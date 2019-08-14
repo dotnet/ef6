@@ -80,7 +80,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
             _currentIsNull = _pendingIsNull;
 
-            // CONSIDER: If additional perforamnce is needed, here's something 
+            // CONSIDER: If additional performance is needed, here's something 
             // we could probably optimize by building an expression and compiling it.
             if (RecordStateFactory.HasNestedColumns)
             {

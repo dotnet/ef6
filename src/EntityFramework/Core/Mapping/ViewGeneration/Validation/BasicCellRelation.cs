@@ -22,7 +22,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         {
             m_cellQuery = cellQuery;
             m_slots = new List<MemberProjectedSlot>(slots);
-            Debug.Assert(m_slots.Count > 0, "Cell relation with not even an exent?");
+            Debug.Assert(m_slots.Count > 0, "Cell relation with not even an extent?");
             m_viewCellRelation = viewCellRelation;
         }
 

@@ -102,7 +102,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // </summary>
         // <param name="node"> The node to check </param>
         // <param name="vars"> The list of vars to check for </param>
-        // <param name="childIndex"> The index of the node's subree from which this var is coming. This is used for SetOp-s, to be able to locate the appropriate var map that will give the vars corresponding to the given once </param>
+        // <param name="childIndex"> The index of the node's subtree from which this var is coming. This is used for SetOp-s, to be able to locate the appropriate var map that will give the vars corresponding to the given once </param>
         // <param name="continueUp"> If the OpType of the node's Op is such that it 'hides' the input, i.e. the decision of whether the given vars are referenced can be made on this level, it returns true, false otherwise </param>
         // <returns> True if the given node has references to any of the vars in the given VarVec, false otherwise </returns>
         private static bool HasVarReferencesShallow(Node node, VarVec vars, int childIndex, out bool continueUp)

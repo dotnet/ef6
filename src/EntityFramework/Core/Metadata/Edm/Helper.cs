@@ -512,7 +512,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // Verifies whether the given <paramref name="typeKind" /> is a valid underlying type for an enumeration type.
         // </summary>
         // <param name="typeKind">
-        // <see cref="PrimitiveTypeKind" /> to verifiy.
+        // <see cref="PrimitiveTypeKind" /> to verify.
         // </param>
         // <returns>
         // <c>true</c> if the <paramref name="typeKind" /> is a valid underlying type for an enumeration type. Otherwise <c>false</c> .

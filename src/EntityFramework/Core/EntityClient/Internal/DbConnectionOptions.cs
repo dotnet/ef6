@@ -96,7 +96,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
             return buffer.ToString(index, count - index);
         }
 
-        // transistion states used for parsing
+        // transition states used for parsing
         private enum ParserState
         {
             NothingYet = 1, //start point

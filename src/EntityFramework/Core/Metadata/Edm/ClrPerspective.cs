@@ -26,7 +26,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         // <summary>
         // Given a clrType attempt to return the corresponding target type from
-        // the worksapce
+        // the workspace
         // </summary>
         // <param name="clrType"> The clr type to resolve </param>
         // <param name="outTypeUsage"> an out param for the typeUsage to be resolved to </param>

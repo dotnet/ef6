@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.Objects
     public sealed class CompiledQuery
     {
         // NOTE: make sure all changes to this object keep it immutable
-        //       so it won't have any thread saftey concerns
+        //       so it won't have any thread safety concerns
         private readonly LambdaExpression _query;
         private readonly Guid _cacheToken = Guid.NewGuid();
 

@@ -354,7 +354,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         // <summary>
-        // Converts query inline function defintions. Returns empty list in case of no definitions.
+        // Converts query inline function definitions. Returns empty list in case of no definitions.
         // </summary>
         private static List<FunctionDefinition> ConvertInlineFunctionDefinitions(
             NodeList<AST.FunctionDefinition> functionDefList, SemanticResolver sr)
@@ -391,7 +391,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 Debug.Assert(functionDefList.Count == inlineFunctionInfos.Count);
 
                 //
-                // Convert function defintions.
+                // Convert function definitions.
                 //
                 foreach (var functionInfo in inlineFunctionInfos)
                 {
@@ -4533,7 +4533,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             //
             // Process SELECT DISTINCT ... ORDER BY case:
-            //      - create projection expression: new Row(SELECT clause item defintions) or just the single SELECT clause item defintion;
+            //      - create projection expression: new Row(SELECT clause item definitions) or just the single SELECT clause item defintion;
             //      - create DbDistinctExpression over the projection expression;
             //      - set source expression to the binding to the distinct.
             //

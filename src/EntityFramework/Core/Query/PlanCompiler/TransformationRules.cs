@@ -34,7 +34,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         // <summary>
         // A lookup table built only from rules that rely on nullability of vars and other rules
-        // that may be able to perform simplificatios if these have been applied.
+        // that may be able to perform simplifications if these have been applied.
         // The lookup table is an array indexed by OpType and each entry has a list of rules.
         // </summary>
         internal static readonly ReadOnlyCollection<ReadOnlyCollection<Rule>> NullabilityRulesTable =

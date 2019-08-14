@@ -33,7 +33,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>Gets current state of a tracked object.</summary>
         /// <returns>
-        /// An <see cref="T:System.Data.Entity.EntityState" /> that is the state of the tracked object.For more information, see Identity Resolution, State Managment, and Change Tracking and Tracking Changes in POCO Entities.
+        /// An <see cref="T:System.Data.Entity.EntityState" /> that is the state of the tracked object.For more information, see Identity Resolution, State Management, and Change Tracking and Tracking Changes in POCO Entities.
         /// </returns>
         EntityState EntityState { get; }
     }

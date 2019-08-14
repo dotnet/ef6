@@ -10,7 +10,7 @@ namespace System.Data.Entity.Core.Mapping
     internal class ObjectAssociationEndMapping : ObjectMemberMapping
     {
         // <summary>
-        // Constrcut a new AssociationEnd member mapping metadata object
+        // Construct a new AssociationEnd member mapping metadata object
         // </summary>
         internal ObjectAssociationEndMapping(AssociationEndMember edmAssociationEnd, AssociationEndMember clrAssociationEnd)
             : base(edmAssociationEnd, clrAssociationEnd)

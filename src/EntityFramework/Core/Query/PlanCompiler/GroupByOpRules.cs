@@ -387,7 +387,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             // <summary>
             // Public entry point. Returns true if at least one of the given vars occurs more than
-            // once in the subree rooted at the given root.
+            // once in the subtree rooted at the given root.
             // </summary>
             internal static bool AnyVarUsedMoreThanOnce(VarVec varVec, Node root, Command command)
             {

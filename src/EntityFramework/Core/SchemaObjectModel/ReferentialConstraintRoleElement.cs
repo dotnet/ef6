@@ -100,8 +100,8 @@ namespace System.Data.Entity.Core.SchemaObjectModel
                 return;
             }
 
-            // we are gauranteed that the _end has gone through ResolveNames, but 
-            // we are not gauranteed that it was successful
+            // we are guaranteed that the _end has gone through ResolveNames, but 
+            // we are not guaranteed that it was successful
             if (_end.Type == null)
             {
                 // an error has already been added for this

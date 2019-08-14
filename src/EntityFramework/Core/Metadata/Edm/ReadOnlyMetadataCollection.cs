@@ -81,7 +81,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             /// <returns>
             /// true if the enumerator is moved in the collection of type
             /// <see
-            ///     cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1.EnumeratortaCollection" />
+            ///     cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1.EnumeratorCollection" />
             /// ; otherwise, false.
             /// </returns>
             public bool MoveNext()

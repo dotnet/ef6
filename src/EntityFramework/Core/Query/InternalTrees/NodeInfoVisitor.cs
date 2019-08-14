@@ -119,7 +119,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         #endregion
 
-        #region AncillarOps
+        #region AncillaryOps
 
         #endregion
 
@@ -761,7 +761,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
                     // You might be tempted to ask: "Don't we need to add the branch discriminator 
                     // to the keys as well?"  The reason we don't is that we wouldn't be here unless 
                     // we have a branch discriminator variable, which implies we've pulled up keys on
-                    // the inputs, and they'll already have the branch descriminator set in the keys
+                    // the inputs, and they'll already have the branch discriminator set in the keys
                     // of each input, so we don't need to add that...
                     if (nodeKeys.IsEmpty)
                     {

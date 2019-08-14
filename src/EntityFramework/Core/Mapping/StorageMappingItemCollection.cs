@@ -872,7 +872,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         // <summary>
-        // Finds members participating in the assocciation and adds them to the <paramref name="interestingMembers" />.
+        // Finds members participating in the association and adds them to the <paramref name="interestingMembers" />.
         // </summary>
         // <param name="associationTypeMapping"> Association type mapping. Must not be null. </param>
         // <param name="interestingMembers"> The list the interesting members (if any) will be added to. Must not be null. </param>
@@ -964,7 +964,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         // <summary>
-        // Recurses down the complex property to find whether any of the nseted properties has concurrency mode set to "Fixed"
+        // Recurses down the complex property to find whether any of the nested properties has concurrency mode set to "Fixed"
         // </summary>
         // <param name="complexMapping"> Complex property mapping. Must not be null. </param>
         // <returns>
@@ -1044,7 +1044,7 @@ namespace System.Data.Entity.Core.Mapping
 
             // for partial update scenarios (e.g. EntityDataSourceControl) all members are interesting otherwise the data may be corrupt. 
             // See bugs #272992 and #124460 in DevDiv database for more details. For full update scenarios and the obsolete 
-            // MetadataWorkspace.GetRequiredOriginalValueMembers() metod we return only members with Version set to "Original".
+            // MetadataWorkspace.GetRequiredOriginalValueMembers() method we return only members with Version set to "Original".
             if (interestingMembersKind == InterestingMembersKind.PartialUpdate)
             {
                 // (5) Members included in Update ModificationFunction

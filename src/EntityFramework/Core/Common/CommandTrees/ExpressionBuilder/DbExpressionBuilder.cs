@@ -1778,7 +1778,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <param name="type">Metadata for the relation type that represents the relationship.</param>
         /// <param name="fromEndName">The name of the property of the relation type that represents the end of the relationship from which navigation should occur.</param>
         /// <param name="toEndName">The name of the property of the relation type that represents the end of the relationship to which navigation should occur.</param>
-        /// <param name="navigateFrom">An expression the specifies the instance from which naviagtion should occur.</param>
+        /// <param name="navigateFrom">An expression the specifies the instance from which navigation should occur.</param>
         /// <exception cref="T:System.ArgumentNullException">type, fromEndName, toEndName or navigateFrom is null.</exception>
         /// <exception cref="T:System.ArgumentException">type is not associated with this command tree's metadata workspace or navigateFrom is associated with a different command tree, or type does not declare a relation end property with name toEndName or fromEndName, or navigateFrom has a result type that is not compatible with the property type of the relation end property with name fromEndName.</exception>
         public static DbRelationshipNavigationExpression Navigate(
@@ -3299,7 +3299,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         // Creates a new <see cref="DbRelatedEntityRef" /> that describes how to satisfy the relationship
         // navigation operation from <paramref name="sourceEnd" /> to <paramref name="targetEnd" />, which
         // must be declared by the same relationship type.
-        // DbRelatedEntityRefs are used in conjuction with <see cref="DbNewInstanceExpression" />
+        // DbRelatedEntityRefs are used in conjunction with <see cref="DbNewInstanceExpression" />
         // to construct Entity instances that are capable of resolving relationship navigation operations based on
         // the provided DbRelatedEntityRefs without the need for additional navigation operations.
         // Note also that this factory method is not intended to be part of the public Command Tree API
@@ -3307,7 +3307,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         // related Entities using the 'WITH RELATIONSHIP' clause in eSQL.
         // </summary>
         // <param name="sourceEnd"> The relationship end from which navigation takes place </param>
-        // <param name="targetEnd"> The relationship end to which navigation may be satisifed using the target entity ref </param>
+        // <param name="targetEnd"> The relationship end to which navigation may be satisfied using the target entity ref </param>
         // <param name="targetEntity"> An expression that produces a reference to the target entity (and must therefore have a Ref result type) </param>
         internal static DbRelatedEntityRef CreateRelatedEntityRef(
             RelationshipEndMember sourceEnd, RelationshipEndMember targetEnd, DbExpression targetEntity)

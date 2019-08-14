@@ -15,9 +15,9 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         // <summary>
         // Initializes a single name import.
         // </summary>
-        internal NamespaceImport(Identifier idenitifier)
+        internal NamespaceImport(Identifier identifier)
         {
-            _namespaceName = idenitifier;
+            _namespaceName = identifier;
         }
 
         // <summary>

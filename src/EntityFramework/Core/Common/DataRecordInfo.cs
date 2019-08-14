@@ -47,7 +47,7 @@ namespace System.Data.Entity.Core.Common
                     if ((null != member)
                         && (0 <= members.IndexOf(member))
                         && ((BuiltInTypeKind.EdmProperty == member.BuiltInTypeKind)
-                            || // for ComplexType, EntityType; BuiltTypeKind.NaviationProperty not allowed
+                            || // for ComplexType, EntityType; BuiltTypeKind.NavigationProperty not allowed
                             (BuiltInTypeKind.AssociationEndMember == member.BuiltInTypeKind))) // for AssociationType
                     {
                         // each memberInfo must be non-null and be part of Properties or AssociationEndMembers

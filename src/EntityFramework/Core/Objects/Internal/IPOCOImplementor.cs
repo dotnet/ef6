@@ -177,7 +177,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             return new DynamicMethod(name, returnType, parameterTypes, true);
         }
 
-        public DynamicMethod CreateInitalizeCollectionMethod(Type proxyType)
+        public DynamicMethod CreateInitializeCollectionMethod(Type proxyType)
         {
             if (_collectionProperties.Count > 0)
             {

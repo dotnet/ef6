@@ -23,7 +23,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     // comparing the Vars themselves.  I don't believe we're making that guarantee
     // anywhere else, so I've removed that for now because I don't want the added
     // complexity that the caching adds.  If performance analysis indicates there is
-    // a problem, we can considier addding the cache back in.
+    // a problem, we can consider addding the cache back in.
     // </summary>
     internal class ColumnMapCopier : ColumnMapVisitorWithResults<ColumnMap, VarMap>
     {

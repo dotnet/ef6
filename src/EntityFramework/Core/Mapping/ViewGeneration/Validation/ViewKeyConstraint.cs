@@ -155,7 +155,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             else
             {
                 //For a 1:* or 0..1:* association, the * side has to be mapped to the
-                //key properties of the table. Fior this specific case, we give out a specific message
+                //key properties of the table. For this specific case, we give out a specific message
                 //that is specific for this case.
                 var associationSet = (AssociationSet)cSet;
                 var endMember = Helper.GetEndThatShouldBeMappedToKey(associationSet.ElementType);

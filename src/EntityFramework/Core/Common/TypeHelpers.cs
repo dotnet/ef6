@@ -105,7 +105,7 @@ namespace System.Data.Entity.Core.Common
         }
 
         // <summary>
-        // Determine wheter a given typeusage is valid for Distinct operator
+        // Determine whether a given typeusage is valid for Distinct operator
         // </summary>
         internal static bool IsValidDistinctOpType(TypeUsage typeUsage)
         {
@@ -113,7 +113,7 @@ namespace System.Data.Entity.Core.Common
         }
 
         // <summary>
-        // Determine wheter a given typeusage is valid for set comparison operator such as UNION, INTERSECT and EXCEPT
+        // Determine whether a given typeusage is valid for set comparison operator such as UNION, INTERSECT and EXCEPT
         // </summary>
         internal static bool IsSetComparableOpType(TypeUsage typeUsage)
         {
@@ -593,7 +593,7 @@ namespace System.Data.Entity.Core.Common
         }
 
         // <summary>
-        // If the type refered to by the TypeUsage is a RefType, extracts the EntityType and returns true,
+        // If the type referred to by the TypeUsage is a RefType, extracts the EntityType and returns true,
         // otherwise returns false.
         // </summary>
         // <param name="type"> TypeUsage that may or may not refer to a RefType </param>

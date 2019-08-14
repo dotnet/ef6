@@ -580,7 +580,7 @@ namespace System.Data.Entity.SqlServer.Utilities
             }
 
             [Fact]
-            public void IsSpatialType_returns_false_for_prmitive_but_non_spatial_type()
+            public void IsSpatialType_returns_false_for_primitive_but_non_spatial_type()
             {
                 Assert.False(TypeUsage.Create(CreateMockPrimitiveType(PrimitiveTypeKind.DateTime).Object).IsSpatialType());
             }
@@ -602,7 +602,7 @@ namespace System.Data.Entity.SqlServer.Utilities
             }
 
             [Fact]
-            public void IsSpatialType_with_out_returns_false_for_prmitive_but_non_spatial_type()
+            public void IsSpatialType_with_out_returns_false_for_primitive_but_non_spatial_type()
             {
                 PrimitiveTypeKind _;
                 Assert.False(TypeUsage.Create(CreateMockPrimitiveType(PrimitiveTypeKind.DateTime).Object).IsSpatialType(out _));

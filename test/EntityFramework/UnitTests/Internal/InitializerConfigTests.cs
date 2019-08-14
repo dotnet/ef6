@@ -68,7 +68,7 @@ namespace System.Data.Entity.Internal
                     typeof(FakeContext).AssemblyQualifiedName,
                     typeof(FakeInitializer<FakeContext>).AssemblyQualifiedName,
                     initializerDisabled: false,
-                    initalizerParams: new object[] { "Wiggo", 1 }),
+                    initializerParams: new object[] { "Wiggo", 1 }),
                 new KeyValueConfigurationCollection()).TryGetInitializer(typeof(FakeContext));
 
             Assert.IsType<FakeInitializer<FakeContext>>(initializer);
@@ -230,10 +230,10 @@ namespace System.Data.Entity.Internal
         }
 
         private static EntityFrameworkSection CreateEfSection(
-            string contextTypeName, string initializerTypeName, bool initializerDisabled, object[] initalizerParams = null)
+            string contextTypeName, string initializerTypeName, bool initializerDisabled, object[] initializerParams = null)
         {
             var mockParameterCollection = new Mock<ParameterCollection>();
-            mockParameterCollection.Setup(m => m.GetTypedParameterValues()).Returns(initalizerParams);
+            mockParameterCollection.Setup(m => m.GetTypedParameterValues()).Returns(initializerParams);
 
             var mockDatabaseInitializerElement = new Mock<DatabaseInitializerElement>();
             mockDatabaseInitializerElement.Setup(m => m.InitializerTypeName).Returns(initializerTypeName);

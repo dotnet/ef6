@@ -165,7 +165,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
         // effect: returns the default value for the member
         // if the member is nullable and has no default, changes default value to CellConstant.NULL and returns true
-        // if the mebmer is not nullable and has no default, returns false
+        // if the member is not nullable and has no default, returns false
         // CHANGE_ADYA_FEATURE_DEFAULT_VALUES: return the right default once metadata supports it
         internal static bool TryGetDefaultValueForMemberPath(MemberPath memberPath, out Constant defaultConstant)
         {

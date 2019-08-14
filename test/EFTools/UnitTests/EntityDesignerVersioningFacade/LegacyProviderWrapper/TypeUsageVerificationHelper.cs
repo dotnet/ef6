@@ -31,19 +31,19 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.LegacyProviderWrapper
 
             if (edmType.BuiltInTypeKind == BuiltInTypeKind.PrimitiveTypeKind)
             {
-                var prmitiveEdmType = (PrimitiveType)edmType;
-                var legacyPrmitiveEdmType = (LegacyMetadata.PrimitiveType)legacyEdmType;
+                var primitiveEdmType = (PrimitiveType)edmType;
+                var legacyPrimitiveEdmType = (LegacyMetadata.PrimitiveType)legacyEdmType;
 
                 // EF5 geospatial types should be converted to EF6 spatial types
                 var expectedClrEquivalentType =
-                    legacyPrmitiveEdmType.ClrEquivalentType == typeof(LegacySpatial.DbGeography)
+                    legacyPrimitiveEdmType.ClrEquivalentType == typeof(LegacySpatial.DbGeography)
                         ? typeof(DbGeography)
-                        : legacyPrmitiveEdmType.ClrEquivalentType == typeof(LegacySpatial.DbGeometry)
+                        : legacyPrimitiveEdmType.ClrEquivalentType == typeof(LegacySpatial.DbGeometry)
                               ? typeof(DbGeometry)
-                              : legacyPrmitiveEdmType.ClrEquivalentType;
+                              : legacyPrimitiveEdmType.ClrEquivalentType;
 
-                Assert.Equal(expectedClrEquivalentType, prmitiveEdmType.ClrEquivalentType);
-                Assert.Equal(legacyPrmitiveEdmType.GetEdmPrimitiveType().FullName, prmitiveEdmType.GetEdmPrimitiveType().FullName);
+                Assert.Equal(expectedClrEquivalentType, primitiveEdmType.ClrEquivalentType);
+                Assert.Equal(legacyPrimitiveEdmType.GetEdmPrimitiveType().FullName, primitiveEdmType.GetEdmPrimitiveType().FullName);
             }
         }
 

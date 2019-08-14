@@ -69,14 +69,14 @@ namespace System.Data.Entity.Core.Objects
             get { return _isPartOfKey; }
         }
 
-        public virtual object GetValue(object userObject) // wrapp it in cacheentry
+        public virtual object GetValue(object userObject) // wrap it in cacheentry
         {
             Debug.Assert(null != _clrProperty);
             var dataObject = DelegateFactory.GetValue(_clrProperty, userObject);
             return dataObject;
         }
 
-        public void SetValue(object userObject, object value) // if record , unwrapp to object, use materializer in cacheentry
+        public void SetValue(object userObject, object value) // if record , unwrap to object, use materializer in cacheentry
         {
             Debug.Assert(null != _clrProperty);
             if (DBNull.Value == value)

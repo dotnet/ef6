@@ -971,7 +971,7 @@ namespace System.Data.Entity.Core.Mapping
             entityTypes = new Set<EntityType>();
 
             // get components of type declaration
-            var entityTypeNames = entityTypeAttribute.Split(MslConstructs.TypeNameSperator).Select(s => s.Trim());
+            var entityTypeNames = entityTypeAttribute.Split(MslConstructs.TypeNameSeperator).Select(s => s.Trim());
 
             // figure out each component
             foreach (var name in entityTypeNames)
@@ -2755,7 +2755,7 @@ namespace System.Data.Entity.Core.Mapping
             {
                 Debug.Assert(nav.LocalName == MslConstructs.ComplexTypeMappingElement);
                 var typeName = GetAliasResolvedAttributeValue(nav.Clone(), MslConstructs.ComplexTypeMappingTypeNameAttribute);
-                var index = typeName.IndexOf(MslConstructs.TypeNameSperator);
+                var index = typeName.IndexOf(MslConstructs.TypeNameSeperator);
                 string currentTypeName = null;
                 do
                 {
@@ -2788,7 +2788,7 @@ namespace System.Data.Entity.Core.Mapping
                         AddToSchemaErrorsWithMemberInfo(
                             Strings.Mapping_InvalidContent_Complex_Type, currentTypeName,
                             MappingErrorCode.InvalidComplexType, m_sourceLocation, (IXmlLineInfo)nav, m_parsingErrors);
-                        index = typeName.IndexOf(MslConstructs.TypeNameSperator);
+                        index = typeName.IndexOf(MslConstructs.TypeNameSeperator);
                         continue;
                     }
                     if (isTypeOfIndex == 0)
@@ -2799,7 +2799,7 @@ namespace System.Data.Entity.Core.Mapping
                     {
                         typeMapping.AddType(complexType);
                     }
-                    index = typeName.IndexOf(MslConstructs.TypeNameSperator);
+                    index = typeName.IndexOf(MslConstructs.TypeNameSeperator);
                 }
                 while (typeName.Length != 0);
             }

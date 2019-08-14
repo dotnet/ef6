@@ -62,7 +62,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             // values from the S-side as well -- this is needed for domain
             // constraint propagation, i.e., values from the S-side get
             // propagated to te oneOfConst on the C-side. So we better get
-            // the "possiblveValues" stuff to contain those constants as well
+            // the "possibleValues" stuff to contain those constants as well
             MemberDomainMap.PropagateUpdateDomainToQueryDomain(cellGroup, m_queryDomainMap, m_updateDomainMap);
 
             UpdateWhereClauseForEachCell(cellGroup, m_queryDomainMap, m_updateDomainMap, m_config);
@@ -108,7 +108,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
 
             m_config.SetTimeForFinishedActivity(PerfType.CellCreation);
             // Check if the cellgroup is consistent and all known S constraints are
-            // satisified by the known C constraints
+            // satisfied by the known C constraints
             var validator = new CellGroupValidator(m_cellGroup, m_config);
             var errorLog = validator.Validate();
 
@@ -168,7 +168,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             }
 
             // Check if the cellgroup is consistent and all known S constraints are
-            // satisified by the known C constraints
+            // satisfied by the known C constraints
             var validator = new CellGroupValidator(m_cellGroup, m_config);
             var errorLog = validator.Validate();
             if (errorLog.Count > 0)
@@ -330,7 +330,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
 
         // effects: Generates a view for an extent "extent" that belongs to
         // schema "schema". extentCells are the cells for this extent.
-        // Adds the view corrsponding to the extent to "views"
+        // Adds the view corresponding to the extent to "views"
         private QueryRewriter GenerateDirectionalViewsForExtent(
             ViewTarget viewTarget, EntitySetBase extent, CqlIdentifiers identifiers, ViewSet views)
         {

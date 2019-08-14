@@ -492,7 +492,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         public class GetRelationshipManger : TestBase
         {
             [Fact]
-            public void GetRelationshipManger_throws_for_detatched_POCO_entity()
+            public void GetRelationshipManger_throws_for_detached_POCO_entity()
             {
                 using (var context = new DummyContext())
                 {
@@ -508,7 +508,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
 
             [Fact]
-            public void GetRelationshipManger_throws_for_detatched_lazy_loading_proxy()
+            public void GetRelationshipManger_throws_for_detached_lazy_loading_proxy()
             {
                 using (var context = new DummyContext())
                 {
@@ -524,20 +524,20 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
 
             [Fact]
-            public void GetRelationshipManger_does_not_throw_for_attached_and_then_detatched_change_tracking_proxy()
+            public void GetRelationshipManger_does_not_throw_for_attached_and_then_detached_change_tracking_proxy()
             {
-                GetRelationshipManger_does_not_throw_for_detatched_change_tracking_proxy(
+                GetRelationshipManger_does_not_throw_for_detached_change_tracking_proxy(
                     c => c.Dependents.Attach(c.Dependents.Create()));
             }
 
             [Fact]
             public void GetRelationshipManger_does_not_throw_for_never_attached_change_tracking_proxy()
             {
-                GetRelationshipManger_does_not_throw_for_detatched_change_tracking_proxy(
+                GetRelationshipManger_does_not_throw_for_detached_change_tracking_proxy(
                     c => c.Dependents.Create());
             }
 
-            private void GetRelationshipManger_does_not_throw_for_detatched_change_tracking_proxy(
+            private void GetRelationshipManger_does_not_throw_for_detached_change_tracking_proxy(
                 Func<DummyContext, FullyVirtualDep> createEntity)
             {
                 using (var context = new DummyContext())

@@ -16,7 +16,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             NormalMode,
 
             // <summary>
-            // View generation mode: optimizes compilation process to ignore uncessary eSQL constructs:
+            // View generation mode: optimizes compilation process to ignore unnecessary eSQL constructs:
             // - GROUP BY, HAVING and ORDER BY clauses are ignored.
             // - WITH RELATIONSHIP clause is allowed in type constructors.
             // - Name resolution is case-sensitive.

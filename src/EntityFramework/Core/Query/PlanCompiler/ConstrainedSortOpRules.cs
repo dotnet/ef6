@@ -15,7 +15,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             OpType.ConstrainedSort, ProcessConstrainedSortOpOverEmptySet);
 
         // <summary>
-        // If the ConstrainedSortOp's input is guaranteed to produce no rows, remove the ConstrainedSortOp completly:
+        // If the ConstrainedSortOp's input is guaranteed to produce no rows, remove the ConstrainedSortOp completely:
         // CSort(EmptySet) => EmptySet
         // </summary>
         // <param name="context"> Rule processing context </param>
@@ -26,7 +26,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             var nodeInfo = (context).Command.GetExtendedNodeInfo(n.Child0);
 
-            //If the input has no rows, remove the ConstraintSortOp node completly
+            //If the input has no rows, remove the ConstraintSortOp node completely
             if (nodeInfo.MaxRows
                 == RowCount.Zero)
             {

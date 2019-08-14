@@ -1323,7 +1323,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
                         {
                             var argAlias = QuoteIdentifier(member.Name + "_" + childIndex);
 
-                            //In this case the argument to the aggratete is reference to the one projected out by the
+                            //In this case the argument to the aggregate is reference to the one projected out by the
                             // inner query
                             var wrappingAggregateArgument = new SqlBuilder();
                             wrappingAggregateArgument.Append(fromSymbol);
@@ -2111,7 +2111,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         // <summary>
         // Aggregates are not visited by the normal visitor walk.
         // </summary>
-        // <param name="aggregate"> The aggreate go be translated </param>
+        // <param name="aggregate"> The aggregate go be translated </param>
         // <param name="aggregateArguments"> The translated aggregate arguments </param>
         private static SqlBuilder VisitAggregate(DbAggregate aggregate, IList<object> aggregateArguments)
         {
@@ -3262,7 +3262,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         }
 
         // <summary>
-        // Right(string, length) -> SUBSTRING(string, DATALENGHT(CAST(string as NTEXT))/2 + 1 - length, length)
+        // Right(string, length) -> SUBSTRING(string, DATALENGTH(CAST(string as NTEXT))/2 + 1 - length, length)
         // </summary>
         private static ISqlFragment HandleCanonicalFunctionRight(SqlGenerator sqlgen, DbFunctionExpression e)
         {

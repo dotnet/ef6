@@ -741,7 +741,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'IsEmptySpatial' function with the specified argument, which must have an Edm.Geography or Edm.Geometry result type. The result type of the expression is Edm.Boolean.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a Boolean value indicating whether spatialValue is empty.</returns>
-        /// <param name="spatialValue">An expression that specifies the spatial value from which the IsEmptySptiaal value should be retrieved.</param>
+        /// <param name="spatialValue">An expression that specifies the spatial value from which the IsEmptySpatial value should be retrieved.</param>
         public static DbFunctionExpression IsEmptySpatial(this DbExpression spatialValue)
         {
             Check.NotNull(spatialValue, "spatialValue");

@@ -60,7 +60,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         ObjectContext Context { get; set; }
 
         // <summary>
-        // The merge option assoicated with the wrapped entity.
+        // The merge option associated with the wrapped entity.
         // </summary>
         MergeOption MergeOption { get; }
 

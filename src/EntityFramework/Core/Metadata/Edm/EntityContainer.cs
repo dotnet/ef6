@@ -109,8 +109,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get
             {
                 // PERF: this code written this way since it's part of a hotpath, consider its performance when refactoring
-                var assiationSets = _associationSetsCache;
-                if (assiationSets == null)
+                var associationSets = _associationSetsCache;
+                if (associationSets == null)
                 {
                     lock (_baseEntitySetsLock)
                     {
@@ -120,10 +120,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
                             _associationSetsCache = new FilteredReadOnlyMetadataCollection<AssociationSet, EntitySetBase>(
                                 _baseEntitySets, Helper.IsAssociationSet);
                         }
-                        assiationSets = _associationSetsCache;
+                        associationSets = _associationSetsCache;
                     }
                 }
-                return assiationSets;
+                return associationSets;
             }
         }
 

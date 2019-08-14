@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Diagnostics;
 
     // <summary>
-    // Defines all the string constrcuts defined in CS MSL specification
+    // Defines all the string constructs defined in CS MSL specification
     // </summary>
     internal static class MslConstructs
     {
@@ -107,7 +107,7 @@ namespace System.Data.Entity.Core.Mapping
         internal const string ResultBindingElement = "ResultBinding";
         internal const string ResultBindingPropertyNameAttribute = "Name";
         internal const string ResultBindingColumnNameAttribute = "ColumnName";
-        internal const char TypeNameSperator = ';';
+        internal const char TypeNameSeperator = ';';
         internal const char IdentitySeperator = ':';
         internal const string EntityViewGenerationTypeName = "Edm_EntityMappingGeneratedViews.ViewsForBaseEntitySets";
         internal const string FunctionImportMappingResultMapping = "ResultMapping";

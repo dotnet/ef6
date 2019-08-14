@@ -234,7 +234,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
         // <summary>
         // Returns a new ObjectQueryState instance with the specified navigation property path specified as an Include span.
-        // For eLINQ queries the Include operation is modelled as a method call expression applied to the source ObectQuery,
+        // For eLINQ queries the Include operation is modelled as a method call expression applied to the source ObjectQuery,
         // so the <see cref="Span" /> property is always <c>null</c> on the returned instance.
         // </summary>
         // <typeparam name="TElementType"> The element type of the resulting query </typeparam>

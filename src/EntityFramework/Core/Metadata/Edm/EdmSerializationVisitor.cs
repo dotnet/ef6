@@ -220,11 +220,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             if (properties.Any())
             {
-                _schemaWriter.WriteDelaredKeyPropertiesElementHeader();
+                _schemaWriter.WriteDeclaredKeyPropertiesElementHeader();
 
                 foreach (var keyProperty in properties)
                 {
-                    _schemaWriter.WriteDelaredKeyPropertyRefElement(keyProperty);
+                    _schemaWriter.WriteDeclaredKeyPropertyRefElement(keyProperty);
                 }
 
                 _schemaWriter.WriteEndElement();

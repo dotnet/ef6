@@ -475,7 +475,7 @@ namespace System.Data.Entity.Core
             if (minimumCount == 1
                 && (minimumCountString == maximumCountString))
             {
-                // Just one acceptable value and itis value is 1
+                // Just one acceptable value and its value is 1
                 return Update(
                     Strings.Update_RelationshipCardinalityConstraintViolationSingleValue(
                         entitySetName, relationshipSetName, actualCountString, otherEndPluralName,

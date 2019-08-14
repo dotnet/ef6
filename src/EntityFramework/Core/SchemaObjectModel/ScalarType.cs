@@ -25,7 +25,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         // Construct an internal (not from schema) CDM scalar type
         // </summary>
         // <param name="parentElement"> the owning schema </param>
-        // <param name="typeName"> the naem of the type </param>
+        // <param name="typeName"> the name of the type </param>
         // <param name="primitiveType"> the PrimitiveTypeKind of the type </param>
         internal ScalarType(Schema parentElement, string typeName, PrimitiveType primitiveType)
             : base(parentElement)
