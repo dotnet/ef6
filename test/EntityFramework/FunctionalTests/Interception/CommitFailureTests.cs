@@ -178,7 +178,7 @@ namespace System.Data.Entity.Interception
                         });
 
                     failingTransactionInterceptor.ShouldFailTimes = 1;
-                    context.Blogs.Add(new BlogContext.Blog());
+                    context.Blogs.Add(new BlogContext.Blog { TimeDilation = new DateTime(1905, 6, 30) });
                     verifySaveChanges(() => context.SaveChanges());
 
                     var expectedCommitCount = useTransactionHandler
@@ -329,7 +329,7 @@ namespace System.Data.Entity.Interception
                     failingCommandInterceptor.FailAfter = 1;
                     failingCommandInterceptor.ShouldFailTimes = queryFailures;
 
-                    context.Blogs.Add(new BlogContext.Blog());
+                    context.Blogs.Add(new BlogContext.Blog { TimeDilation = new DateTime(1905, 6, 30) });
 
                     runAndVerify(context);
 
@@ -428,7 +428,7 @@ namespace System.Data.Entity.Interception
 
                     for (var i = 0; i < transactionHandler.PruningLimit; i++)
                     {
-                        context.Blogs.Add(new BlogContext.Blog());
+                        context.Blogs.Add(new BlogContext.Blog { TimeDilation = new DateTime(1905, 6, 30) });
                         context.SaveChanges();
                     }
 
@@ -440,10 +440,10 @@ namespace System.Data.Entity.Interception
                         failingTransactionInterceptor.ShouldRollBack = false;
                     }
 
-                    context.Blogs.Add(new BlogContext.Blog());
+                    context.Blogs.Add(new BlogContext.Blog { TimeDilation = new DateTime(1905, 6, 30) });
                     context.SaveChanges();
 
-                    context.Blogs.Add(new BlogContext.Blog());
+                    context.Blogs.Add(new BlogContext.Blog { TimeDilation = new DateTime(1905, 6, 30) });
                     context.SaveChanges();
 
                     AssertTransactionHistoryCount(context, 1);
@@ -679,7 +679,7 @@ namespace System.Data.Entity.Interception
                     context.Database.Delete();
                     Assert.Equal(1, context.Blogs.Count());
 
-                    context.Blogs.Add(new BlogContext.Blog());
+                    context.Blogs.Add(new BlogContext.Blog { TimeDilation = new DateTime(1905, 6, 30) });
 
                     context.SaveChanges();
 
@@ -790,7 +790,7 @@ namespace System.Data.Entity.Interception
                             Assert.Equal(1, context.Blogs.Count());
                         });
 
-                    context.Blogs.Add(new BlogContext.Blog());
+                    context.Blogs.Add(new BlogContext.Blog { TimeDilation = new DateTime(1905, 6, 30) });
 
                     ExtendedSqlAzureExecutionStrategy.ExecuteNew(
                         () =>
@@ -802,7 +802,7 @@ namespace System.Data.Entity.Interception
                                     using (var innerTransaction = innerContext.Database.BeginTransaction())
                                     {
                                         Assert.Equal(1, innerContext.Blogs.Count());
-                                        innerContext.Blogs.Add(new BlogContext.Blog());
+                                        innerContext.Blogs.Add(new BlogContext.Blog { TimeDilation = new DateTime(1905, 6, 30) });
                                         innerContext.SaveChanges();
                                         innerTransaction.Commit();
                                     }
@@ -853,7 +853,7 @@ namespace System.Data.Entity.Interception
 
                 using (var context = new BlogContextCommit())
                 {
-                    context.Blogs.Add(new BlogContext.Blog());
+                    context.Blogs.Add(new BlogContext.Blog { TimeDilation = new DateTime(1905, 6, 30) });
 
                     Assert.Throws<EntityException>(() => context.SaveChanges());
 

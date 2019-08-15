@@ -29,7 +29,8 @@ namespace System.Data.Entity.Interception
             blog.Posts.Add(
                 new Post
                 {
-                    Title = "Throw it away..."
+                    Title = "Throw it away...",
+                    Spacetime = new DateTime(1915, 11, 25)
                 });
 
             ExtendedSqlAzureExecutionStrategy.ExecuteNew(
@@ -75,6 +76,8 @@ namespace System.Data.Entity.Interception
             public string Title { get; set; }
 
             public virtual ICollection<Post> Posts { get; set; }
+
+            public DateTime TimeDilation { get; set; }
         }
 
         public class Post
@@ -84,6 +87,8 @@ namespace System.Data.Entity.Interception
 
             public int BlogId { get; set; }
             public virtual Blog Blog { get; set; }
+            
+            public DateTime Spacetime { get; set; }
         }
 
         public class BlogInitializer : DropCreateDatabaseAlways<BlogContext>
@@ -94,9 +99,11 @@ namespace System.Data.Entity.Interception
                     new Post
                         {
                             Title = "Wrap it up...",
+                            Spacetime = new DateTime(1915, 11, 25),
                             Blog = new Blog
                                 {
-                                    Title = "Half a Unicorn"
+                                    Title = "Half a Unicorn",
+                                    TimeDilation = new DateTime(1905, 6, 30)
                                 }
                         });
             }

@@ -30,6 +30,7 @@ namespace System.Data.Entity.Infrastructure.Interception
         private readonly IList<DbContext> _dbContexts;
         private readonly IList<ObjectContext> _objectContexts;
         private bool _isAsync;
+        private DbType? _forcedDateTimeType;
 
         /// <summary>
         /// Constructs a new <see cref="DbInterceptionContext" /> with no state.
@@ -52,6 +53,7 @@ namespace System.Data.Entity.Infrastructure.Interception
             _dbContexts = copyFrom.DbContexts.Where(c => c.InternalContext == null || !c.InternalContext.IsDisposed).ToList();
             _objectContexts = copyFrom.ObjectContexts.Where(c => !c.IsDisposed).ToList();
             _isAsync = copyFrom._isAsync;
+            _forcedDateTimeType = copyFrom._forcedDateTimeType;
         }
 
         private DbInterceptionContext(IEnumerable<DbInterceptionContext> copyFrom)
@@ -69,6 +71,20 @@ namespace System.Data.Entity.Infrastructure.Interception
                 .Where(c => !c.IsDisposed).ToList();
 
             _isAsync = copyFrom.Any(c => c.IsAsync);
+
+            foreach (var context in _dbContexts)
+            {
+                var forcedDateTimeType = context.ForcedDateTimeType;
+                if (forcedDateTimeType.HasValue)
+                {
+                    _forcedDateTimeType = forcedDateTimeType;
+                }
+            }
+        }
+
+        internal DbType? ForcedDateTimeType
+        {
+            get { return _forcedDateTimeType; }
         }
 
         /// <summary>
@@ -98,6 +114,12 @@ namespace System.Data.Entity.Infrastructure.Interception
             if (!copy._dbContexts.Contains(context, ObjectReferenceEqualityComparer.Default))
             {
                 copy._dbContexts.Add(context);
+
+                var forcedDateTimeType = context.ForcedDateTimeType;
+                if (forcedDateTimeType.HasValue)
+                {
+                    copy._forcedDateTimeType = forcedDateTimeType;
+                }
             }
             return copy;
         }

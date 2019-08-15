@@ -13,6 +13,7 @@ namespace System.Data.Entity
     using System.Data.Entity.Utilities;
     using System.Data.Entity.Validation;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -63,7 +64,8 @@ namespace System.Data.Entity
 
         private Database _database;
 
-        
+        private ForceDateTimeTypeAttribute _forcedDateTimeTypeAttribute;
+
         /// <summary>
         /// Constructs a new context instance using conventions to create the name of the database to
         /// which a connection will be made.  The by-convention name is the full name (namespace + class name)
@@ -76,7 +78,7 @@ namespace System.Data.Entity
         {
             InitializeLazyInternalContext(new LazyInternalConnection(this, GetType().DatabaseName()));
         }
-
+        
         /// <summary>
         /// Constructs a new context instance using conventions to create the name of the database to
         /// which a connection will be made, and initializes it from the given model.
@@ -203,6 +205,20 @@ namespace System.Data.Entity
         private void DiscoverAndInitializeSets()
         {
             new DbSetDiscoveryService(this).InitializeSets();
+        }
+
+        internal DbType? ForcedDateTimeType
+        {
+            get
+            {
+                if (_forcedDateTimeTypeAttribute == null)
+                {
+                    _forcedDateTimeTypeAttribute 
+                        = GetType().GetCustomAttributes(inherit: false).OfType<ForceDateTimeTypeAttribute>().FirstOrDefault();
+                }
+                
+                return _forcedDateTimeTypeAttribute?.DateTimeType;
+            }
         }
 
         #endregion

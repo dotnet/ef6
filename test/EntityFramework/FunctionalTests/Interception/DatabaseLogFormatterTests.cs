@@ -63,7 +63,7 @@ namespace System.Data.Entity.Interception
             const int selectCount = 5;
             const int updateCount = 1;
             const int asyncCount = 2;
-            const int paramCount = 4;
+            const int paramCount = 5;
             const int imALoggerCount = 1;
             const int transactionCount = 2;
             const int connectionCount = 4;
@@ -187,7 +187,7 @@ namespace System.Data.Entity.Interception
             Assert.Equal(3, logLines.Length);
 
             Assert.Equal(
-                "Context 'BlogContextNoInit' is executing command 'SELECT TOP (2) [c].[Id] AS [Id], [c].[Title] AS [Title] FROM [dbo].[Blogs] AS [c]'",
+                "Context 'BlogContextNoInit' is executing command 'SELECT TOP (2) [c].[Id] AS [Id], [c].[Title] AS [Title], [c].[TimeDilation] AS [TimeDilation] FROM [dbo].[Blogs] AS [c]'",
                 logLines[0]);
 
             Assert.Equal(

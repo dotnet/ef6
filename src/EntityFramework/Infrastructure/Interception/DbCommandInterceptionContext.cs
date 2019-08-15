@@ -46,7 +46,7 @@ namespace System.Data.Entity.Infrastructure.Interception
                 _commandBehavior = asThisType._commandBehavior;
             }
         }
-
+        
         /// <summary>
         /// The <see cref="CommandBehavior" /> that will be used or has been used to execute the command with a
         /// <see cref="DbDataReader" />. This property is only used for <see cref="DbCommand.ExecuteReader(System.Data.CommandBehavior)" />

@@ -5,6 +5,7 @@ namespace System.Data.Entity.Interception
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Data.Common;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.TestHelpers;
     using System.Data.SqlClient;
@@ -26,12 +27,20 @@ namespace System.Data.Entity.Interception
         [UseDefaultExecutionStrategy]
         public void Initialization_and_simple_query_and_update_commands_can_be_logged()
         {
+            CommandInterceptionTest<BlogContextLogAll>();
+            CommandInterceptionTest<BlogContextDateTime2LogAll>();
+            CommandInterceptionTest<BlogContextDateTimeLogAll>();
+        }
+
+        private void CommandInterceptionTest<TContextType>()
+            where TContextType : BlogContext, new()
+        {
             var logger = new CommandLogger();
             DbInterception.Add(logger);
 
             try
             {
-                using (var context = new BlogContextLogAll())
+                using (var context = new TContextType())
                 {
                     BlogContext.DoStuff(context);
                 }
@@ -52,6 +61,20 @@ namespace System.Data.Entity.Interception
                 {
                     Assert.Equal(method + 1, logger.Log[i + 1].Method);
                     Assert.Same(logger.Log[i].Command, logger.Log[i + 1].Command);
+                    
+                    var parameters = logger.Log[i].Command.Parameters;
+
+                    var expectedDbType = typeof(TContextType) == typeof(BlogContextDateTimeLogAll)
+                        ? DbType.DateTime
+                        : DbType.DateTime2;
+                    
+                    foreach (DbParameter parameter in parameters)
+                    {
+                        if (parameter.Value is DateTime)
+                        {
+                            Assert.Equal(expectedDbType, parameter.DbType);
+                        }
+                    }
                 }
             }
 
@@ -76,6 +99,23 @@ namespace System.Data.Entity.Interception
             static BlogContextLogAll()
             {
                 Database.SetInitializer<BlogContextLogAll>(new BlogInitializer());
+            }
+        }
+        [ForceDateTimeType(DbType.DateTime)]
+        public class BlogContextDateTimeLogAll : BlogContext
+        {
+            static BlogContextDateTimeLogAll()
+            {
+                Database.SetInitializer<BlogContextDateTimeLogAll>(new BlogInitializer());
+            }
+        }
+        
+        [ForceDateTimeType(DbType.DateTime2)]
+        public class BlogContextDateTime2LogAll : BlogContext
+        {
+            static BlogContextDateTime2LogAll()
+            {
+                Database.SetInitializer<BlogContextDateTime2LogAll>(new BlogInitializer());
             }
         }
 

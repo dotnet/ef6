@@ -6,6 +6,7 @@ namespace System.Data.Entity.Infrastructure.Interception
     using System.Data.Common;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -53,12 +54,30 @@ namespace System.Data.Entity.Infrastructure.Interception
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
 
+            ForceDateTimeTypes(command, interceptionContext);
+
             return _internalDispatcher.Dispatch(
                 command,
                 (t, c) => t.ExecuteNonQuery(),
                 new DbCommandInterceptionContext<int>(interceptionContext),
                 (i, t, c) => i.NonQueryExecuting(t, c),
                 (i, t, c) => i.NonQueryExecuted(t, c));
+        }
+
+        private static void ForceDateTimeTypes(DbCommand command, DbCommandInterceptionContext interceptionContext)
+        {
+            var forcedDateTimeType = interceptionContext.ForcedDateTimeType;
+            if (forcedDateTimeType.HasValue)
+            {
+                foreach (DbParameter parameter in command.Parameters)
+                {
+                    if (parameter.DbType == DbType.DateTime
+                        || parameter.DbType == DbType.DateTime2)
+                    {
+                        parameter.DbType = forcedDateTimeType.Value;
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -79,6 +98,8 @@ namespace System.Data.Entity.Infrastructure.Interception
         {
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
+
+            ForceDateTimeTypes(command, interceptionContext);
 
             return _internalDispatcher.Dispatch(
                 command,
@@ -107,6 +128,8 @@ namespace System.Data.Entity.Infrastructure.Interception
         {
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
+
+            ForceDateTimeTypes(command, interceptionContext);
 
             return _internalDispatcher.Dispatch(
                 command,
@@ -138,6 +161,8 @@ namespace System.Data.Entity.Infrastructure.Interception
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
 
+            ForceDateTimeTypes(command, interceptionContext);
+
             return _internalDispatcher.DispatchAsync(
                 command,
                 (t, c, ct) => t.ExecuteNonQueryAsync(ct),
@@ -168,6 +193,8 @@ namespace System.Data.Entity.Infrastructure.Interception
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
 
+            ForceDateTimeTypes(command, interceptionContext);
+
             return _internalDispatcher.DispatchAsync(
                 command,
                 (t, c, ct) => t.ExecuteScalarAsync(ct),
@@ -197,6 +224,8 @@ namespace System.Data.Entity.Infrastructure.Interception
         {
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
+
+            ForceDateTimeTypes(command, interceptionContext);
 
             return _internalDispatcher.DispatchAsync(
                 command,
