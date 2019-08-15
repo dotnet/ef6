@@ -97,6 +97,10 @@ namespace System.Data.Entity.Hierarchy
             {
                 return new HierarchyId(null);
             }
+            else if (GetLevel() == n)
+            {
+                return new HierarchyId(PathSeparator);
+            }
             string hierarchyStr = PathSeparator +
                                   string.Join(PathSeparator, _nodes.Take(GetLevel() - n).Select(IntArrayToStirng))
                                   + PathSeparator;
