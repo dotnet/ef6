@@ -38,22 +38,40 @@ namespace System.Data.Entity.Infrastructure.Design
             Assert.Null(provider);
         }
 
+        [Fact]
+        public void GetProviderServices_returns_null_when_no_config_section()
+        {
+            var reader = new AppConfigReader(CreateConfig(null));
+
+            var provider = reader.GetProviderServices("My.Invariant2");
+
+            Assert.Null(provider);
+        }
+
         private static Configuration CreateConfig(string providers)
         {
             var file = Path.GetTempFileName();
             File.WriteAllText(
                 file,
                 @"<?xml version='1.0' encoding='utf-8'?>
-                <configuration>
-                  <configSections>
+                <configuration>");
+
+            if (providers != null)
+            {
+                File.AppendAllText(
+                    file,
+                    @"<configSections>
                     <section name='entityFramework' type='System.Data.Entity.Internal.ConfigFile.EntityFrameworkSection, EntityFramework' />
                   </configSections>
                   <entityFramework>
                     <providers>
                 " + providers + @"
                     </providers>
-                  </entityFramework>
-                </configuration>");
+                  </entityFramework>");
+            }
+            File.AppendAllText(
+                    file,
+                    @"</configuration>");
 
             return ConfigurationManager.OpenMappedExeConfiguration(
                 new ExeConfigurationFileMap { ExeConfigFilename = file },
