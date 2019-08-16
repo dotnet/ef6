@@ -2,11 +2,14 @@
 
 namespace System.Data.Entity.Migrations
 {
+    using System.Data.Common;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Design;
     using System.Data.SqlClient;
     using System.Linq;
+    using System.Reflection;
     using System.Threading.Tasks;
+    using SimpleModel;
     using Xunit;
 
     public class NoTestInfraScenarios : TestBase
@@ -31,6 +34,41 @@ namespace System.Data.Entity.Migrations
             Assert.False(string.IsNullOrWhiteSpace(migration.MigrationId));
             Assert.False(string.IsNullOrWhiteSpace(migration.UserCode));
             Assert.False(string.IsNullOrWhiteSpace(migration.Directory));
+        }
+
+        [Fact]
+        public void Can_generate_migration_from_user_code_without_cloning_connection()
+        {
+            var connectionString = SimpleConnectionString("Db471a");
+
+            using (var context = new EmptyContext(connectionString))
+            {
+                context.Database.Delete();
+            }
+
+            using (var context = new Context471(connectionString))
+            {
+                var migrationConfiguration = new Configuration471(connectionString);
+                var migrator = new DbMigrator(migrationConfiguration, context);
+
+                var connectionField = migrator.GetType().GetField(
+                    "_connection", 
+                    BindingFlags.Instance | BindingFlags.NonPublic);
+                
+                Assert.Same(context.Database.Connection, connectionField.GetValue(migrator));
+                
+                migrator.Update();
+
+                Assert.Same(context.Database.Connection, connectionField.GetValue(migrator));
+                
+                migrator = new DbMigrator(migrationConfiguration, context);
+                
+                Assert.Same(context.Database.Connection, connectionField.GetValue(migrator));
+                
+                migrator.Update();
+
+                Assert.Same(context.Database.Connection, connectionField.GetValue(migrator));
+            }
         }
 
         [Fact] // CodePlex #2579
@@ -95,6 +133,49 @@ namespace System.Data.Entity.Migrations
             }
 
             public DbSet<Entity2579> Entities { get; set; }
+        }
+
+        public class Context471 : DbContext
+        {
+            static Context471()
+            {
+                Database.SetInitializer<Context471>(null);
+            }
+
+            public Context471()
+            {
+            }
+            
+            public Context471(string nameOrConnectionString)
+                : base(CreateConnection(nameOrConnectionString), true)
+            {
+            }
+
+            private static DbConnection CreateConnection(string connectionString)
+            {
+                return new SqlConnection(connectionString);
+            }
+
+            public DbSet<Entity471> Entities { get; set; }
+        }
+
+        public class Entity471
+        {
+            public int Id { get; set; }
+        }
+
+        internal sealed class Configuration471 : DbMigrationsConfiguration<Context471>
+        {
+            public Configuration471()
+            {
+                AutomaticMigrationsEnabled = true;
+            }
+
+            public Configuration471(string connectionString)
+            {
+                AutomaticMigrationsEnabled = true;
+                TargetDatabase = new DbConnectionInfo(connectionString, "System.Data.SqlClient");
+            }
         }
 
         public class Context2579I : DbContext
