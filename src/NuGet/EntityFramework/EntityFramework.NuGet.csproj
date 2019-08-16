@@ -2,7 +2,7 @@
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
   <PropertyGroup>
-    <TargetFrameworks>net45;net40;netcoreapp3.0</TargetFrameworks>
+    <TargetFrameworks>net45;net40;netcoreapp5.0</TargetFrameworks>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <IncludeSource>false</IncludeSource>
     <IsPackable>True</IsPackable>
@@ -27,7 +27,7 @@
     <NuspecProperty Include="IntermediateOutputPath=$(IntermediateOutputPath)" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp5.0'">
     <ProjectReference Include="..\..\Microsoft.Data.Entity.Build.Tasks\Microsoft.Data.Entity.Build.Tasks.csproj" />
   </ItemGroup>
 
