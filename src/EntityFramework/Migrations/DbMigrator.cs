@@ -94,10 +94,17 @@ namespace System.Data.Entity.Migrations
             Check.NotNull(configuration.ContextType, "configuration.ContextType");
         }
 
+        /// <summary>
+        /// Initializes a new instance of the DbMigrator class using the supplied context.
+        /// Use this constructor when applying migrations from code to avoid having migrations attempt
+        /// to create a context/connection for you.
+        /// </summary>
+        /// <param name="configuration"> Configuration to be used for the migration process. </param>
+        /// <param name="context"> The <see cref="DbContext"/> to use. </param>
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        internal DbMigrator(DbMigrationsConfiguration configuration, DbContext usersContext)
-            : this(configuration, usersContext, DatabaseExistenceState.Unknown, calledByCreateDatabase: false)
+        public DbMigrator(DbMigrationsConfiguration configuration, DbContext context)
+            : this(configuration, context, DatabaseExistenceState.Unknown, calledByCreateDatabase: false)
         {
         }
 
