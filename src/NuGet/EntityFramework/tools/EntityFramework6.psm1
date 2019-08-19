@@ -47,7 +47,7 @@ function Add-EFProvider
         [parameter(Position = 2, Mandatory = $true)]
         [string] $TypeName)
 
-    $configPath = GetConfigPath($Project)
+    $configPath = GetConfigPath $Project
     if (!$configPath)
     {
         return
@@ -110,7 +110,7 @@ function Add-EFDefaultConnectionFactory
         [string] $TypeName,
         [string[]] $ConstructorArguments)
 
-    $configPath = GetConfigPath($Project)
+    $configPath = GetConfigPath $Project
     if (!$configPath)
     {
         return
@@ -1205,7 +1205,11 @@ function GetConfigPath($project)
         $configFileName = 'app.config'
     }
 
-    return GetProperty $project.ProjectItems.Item($configFileName).Properties 'FullPath'
+    $item = $project.ProjectItems |
+        where Name -eq $configFileName |
+        select -First 1
+
+    return GetProperty $item.Properties 'FullPath'
 }
 
 Export-ModuleMember -Variable 'InitialDatabase'
