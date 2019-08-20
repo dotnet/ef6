@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     $CommonMetadataElements$
     <language>$NeutralLanguage$</language>
     <frameworkAssemblies>
-      <frameworkAssembly assemblyName="System.ComponentModel.DataAnnotations" targetFramework=".NETFramework4.0" />
+      <frameworkAssembly assemblyName="System.ComponentModel.DataAnnotations" targetFramework=".NETFramework4.0, .NETFramework4.5" />
     </frameworkAssemblies>
     <dependencies>
+      <group targetFramework=".NETFramework4.0" />
+      <group targetFramework=".NETFramework4.5" />
       <group targetFramework=".NETStandard2.1">
-        <dependency id="Microsoft.CSharp" version="$MicrosoftCSharpVersion$" />
-        <dependency id="System.CodeDom" version="$SystemCodeDomVersion$" />
-        <dependency id="System.ComponentModel.Annotations" version="$SystemComponentModelAnnotationsVersion$" />
-        <dependency id="System.Configuration.ConfigurationManager" version="$SystemConfigurationConfigurationManagerVersion$" />
-        <dependency id="System.Data.SqlClient" version="$SystemDataSqlClientVersion$" />
+        <dependency id="Microsoft.CSharp" version="$MicrosoftCSharpVersion$" exclude="Build,Analyzers" />
+        <dependency id="System.CodeDom" version="$SystemCodeDomVersion$" exclude="Build,Analyzers" />
+        <dependency id="System.ComponentModel.Annotations" version="$SystemComponentModelAnnotationsVersion$" exclude="Build,Analyzers" />
+        <dependency id="System.Configuration.ConfigurationManager" version="$SystemConfigurationConfigurationManagerVersion$" exclude="Build,Analyzers" />
+        <dependency id="System.Data.SqlClient" version="$SystemDataSqlClientVersion$" exclude="Build,Analyzers" />
       </group>
     </dependencies>
   </metadata>
