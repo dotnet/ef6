@@ -81,7 +81,7 @@ namespace System.Data.Entity.Tools.Commands
                     Config.Value(),
                     RootNamespace.Value(),
                     Language.Value());
-#elif NETCOREAPP3_0
+#elif NETCOREAPP
                 return new ReflectionExecutor(
                 Assembly.Value(),
                 DataDir.Value(),
