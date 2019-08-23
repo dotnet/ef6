@@ -68,7 +68,7 @@ namespace System.Data.Entity.TestModels.FantasyModel
             modelBuilder.Entity<Landmark>().Property(p => p.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
             modelBuilder.Entity<Tower>().Property(p => p.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
 
-#if NETCOREAPP3_0
+#if NETCOREAPP
             modelBuilder.Entity<Province>().Ignore(x => x.Shape);
 #endif
         }
