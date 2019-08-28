@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <VersionPrefix>6.4.0</VersionPrefix>
+    <VersionPrefix>6.5.0</VersionPrefix>
     <PreReleaseVersionLabel>alpha1</PreReleaseVersionLabel>
     <SemanticVersioningV1>True</SemanticVersioningV1>
     <IncludeSourceRevisionInInformationalVersion>False</IncludeSourceRevisionInInformationalVersion>
