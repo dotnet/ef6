@@ -71,7 +71,7 @@ namespace System.Data.Entity.TestModels.GearsOfWarModel
                 .Property(c => c.AmmoPerClip)
                 .HasColumnAnnotation("Annotation_AmmoPerClip", "Let It Be");
 
-#if NETCOREAPP3_0
+#if NETCOREAPP
             modelBuilder.Entity<City>().Ignore(x => x.Location);
 #endif
         }

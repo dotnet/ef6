@@ -30,7 +30,7 @@ namespace System.Data.Entity.TestModels.ArubaModel
                 .MapToStoredProcedures(
                     m => m.Insert(d => d.LeftKeyParameter(l => l.Id, "Left_id").RightKeyParameter(r => r.Id, "Right_Id")));
 
-#if NETCOREAPP3_0
+#if NETCOREAPP
             modelBuilder.Entity<ArubaAllTypes>().Ignore(x => x.c31_geography);
             modelBuilder.Entity<ArubaAllTypes>().Ignore(x => x.c32_geometry);
             modelBuilder.Entity<ArubaAllTypes>().Ignore(x => x.c36_geometry_linestring);
