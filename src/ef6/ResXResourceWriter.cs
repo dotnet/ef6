@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-#if NETCOREAPP3_0
+#if NETCOREAPP
 
 using System.IO;
 using System.Text;
