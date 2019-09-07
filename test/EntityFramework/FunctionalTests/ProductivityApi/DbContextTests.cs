@@ -175,7 +175,7 @@ namespace ProductivityApiTests
         private void Database_Name_is_from_App_Config_if_convention_name_matches_named_connection_string(
             DbCompiledModel model = null)
         {
-            // Act 
+            // Act
             using (var context = model == null ? new AllTypeKeysContext() : new AllTypeKeysContext(model))
             {
                 // Assert that name of database is taken from app config rather than the convention way,
@@ -379,7 +379,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void DbContext_construction_using_named_connection_string_and_model_Ctor_where_model_defines_a_subset_of_entities_on_context(
-            
+
             )
         {
             DbContext_construction_using_connection_string_and_model_Ctor(
@@ -710,8 +710,8 @@ namespace ProductivityApiTests
 
         private void SaveChanges_performs_DetectChanges_implementation(Func<DbContext, int> saveChanges)
         {
-            // NOTE: This is split out into a separate test from the above test because 
-            //       it is important no other APIs are called between the modification 
+            // NOTE: This is split out into a separate test from the above test because
+            //       it is important no other APIs are called between the modification
             //       and calling SaveChanges due to other APIs calling DetectChanges implicitly
 
             ExtendedSqlAzureExecutionStrategy.ExecuteNew(
@@ -900,7 +900,7 @@ namespace ProductivityApiTests
 #if !NET40
 
         [Fact(
-#if NETCOREAPP3_0
+#if NETCOREAPP
             Skip = "Deadlocks on .Result"
 #endif
             )]
@@ -2406,7 +2406,7 @@ namespace ProductivityApiTests
         [Fact]
         public void
             Changing_lazy_loading_flag_after_ObjectContext_is_initialized_causes_lazy_loading_flag_in_DbContext_and_ObjectContext_to_change(
-            
+
             )
         {
             using (var context = new F1Context())
@@ -3434,7 +3434,7 @@ namespace ProductivityApiTests
         #endregion
 
         #region Test EntityConnection-Store Connection state correlation when opening EntityConnection implicitly through context
-        
+
         [ExtendedFact(SkipForSqlAzure = true, Justification = "Streaming queries are not reliable on SQL Azure")]
         public void Implicit_EntityConnection_throws_if_close_underlying_StoreConnection()
         {
