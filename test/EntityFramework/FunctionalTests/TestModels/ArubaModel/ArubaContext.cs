@@ -80,7 +80,7 @@ namespace System.Data.Entity.TestModels.ArubaModel
 
             modelBuilder.Entity<ArubaOwner>().Property(o => o.FirstName).HasMaxLength(30);
 
-#if NETCOREAPP3_0
+#if NETCOREAPP
             modelBuilder.Entity<ArubaAllTypes>().Ignore(x => x.c31_geography);
             modelBuilder.Entity<ArubaAllTypes>().Ignore(x => x.c32_geometry);
             modelBuilder.Entity<ArubaAllTypes>().Ignore(x => x.c36_geometry_linestring);

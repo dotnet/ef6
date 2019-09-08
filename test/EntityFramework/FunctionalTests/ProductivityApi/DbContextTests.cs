@@ -900,7 +900,7 @@ namespace ProductivityApiTests
 #if !NET40
 
         [Fact(
-#if NETCOREAPP3_0
+#if NETCOREAPP
             Skip = "Deadlocks on .Result"
 #endif
             )]

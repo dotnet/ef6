@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <VersionPrefix>6.4.0</VersionPrefix>
+    <VersionPrefix>6.5.0</VersionPrefix>
     <PreReleaseVersionLabel>alpha1</PreReleaseVersionLabel>
     <SemanticVersioningV1>True</SemanticVersioningV1>
     <IncludeSourceRevisionInInformationalVersion>False</IncludeSourceRevisionInInformationalVersion>
@@ -16,15 +16,15 @@
     <MySqlDataEntityVersion>6.7.2-beta-ef6</MySqlDataEntityVersion>
   </PropertyGroup>
   <PropertyGroup Label="Dependencies from dotnet/corefx">
-    <MicrosoftCSharpVersion>4.6.0-rc2.19456.18</MicrosoftCSharpVersion>
-    <SystemCodeDomVersion>4.6.0-rc2.19456.18</SystemCodeDomVersion>
-    <SystemComponentModelAnnotationsVersion>4.6.0-rc2.19456.18</SystemComponentModelAnnotationsVersion>
-    <SystemConfigurationConfigurationManagerVersion>4.6.0-rc2.19456.18</SystemConfigurationConfigurationManagerVersion>
-    <SystemDataSqlClientVersion>4.7.0-rc2.19456.18</SystemDataSqlClientVersion>
+    <MicrosoftCSharpVersion>5.0.0-alpha1.19451.2</MicrosoftCSharpVersion>
+    <SystemCodeDomVersion>5.0.0-alpha1.19451.2</SystemCodeDomVersion>
+    <SystemComponentModelAnnotationsVersion>5.0.0-alpha1.19451.2</SystemComponentModelAnnotationsVersion>
+    <SystemConfigurationConfigurationManagerVersion>5.0.0-alpha1.19451.2</SystemConfigurationConfigurationManagerVersion>
+    <SystemDataSqlClientVersion>5.0.0-alpha1.19451.2</SystemDataSqlClientVersion>
   </PropertyGroup>
   <PropertyGroup Label="Dependencies from dotnet/core-setup">
-    <MicrosoftNETCoreAppRefPackageVersion>3.0.0-rc2-19457-02</MicrosoftNETCoreAppRefPackageVersion>
-    <MicrosoftNETCoreAppRuntimewinx64PackageVersion>3.0.0-rc2-19457-02</MicrosoftNETCoreAppRuntimewinx64PackageVersion>
+    <MicrosoftNETCoreAppRefPackageVersion>5.0.0-alpha1.19452.1</MicrosoftNETCoreAppRefPackageVersion>
+    <MicrosoftNETCoreAppRuntimewinx64PackageVersion>5.0.0-alpha1.19452.1</MicrosoftNETCoreAppRuntimewinx64PackageVersion>
   </PropertyGroup>
   <PropertyGroup Label="Dependency version settings">
     <!--
