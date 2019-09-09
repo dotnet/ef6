@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <VersionPrefix>6.3.0</VersionPrefix>
-    <PreReleaseVersionLabel>rc1</PreReleaseVersionLabel>
+    <PreReleaseVersionLabel>rc2</PreReleaseVersionLabel>
     <SemanticVersioningV1>True</SemanticVersioningV1>
     <IncludeSourceRevisionInInformationalVersion>False</IncludeSourceRevisionInInformationalVersion>
     <UsingToolNetFrameworkReferenceAssemblies>True</UsingToolNetFrameworkReferenceAssemblies>
@@ -16,15 +16,15 @@
     <MySqlDataEntityVersion>6.7.2-beta-ef6</MySqlDataEntityVersion>
   </PropertyGroup>
   <PropertyGroup Label="Dependencies from dotnet/corefx">
-    <MicrosoftCSharpVersion>4.6.0-rc1.19456.4</MicrosoftCSharpVersion>
-    <SystemCodeDomVersion>4.6.0-rc1.19456.4</SystemCodeDomVersion>
-    <SystemComponentModelAnnotationsVersion>4.6.0-rc1.19456.4</SystemComponentModelAnnotationsVersion>
-    <SystemConfigurationConfigurationManagerVersion>4.6.0-rc1.19456.4</SystemConfigurationConfigurationManagerVersion>
-    <SystemDataSqlClientVersion>4.7.0-rc1.19456.4</SystemDataSqlClientVersion>
+    <MicrosoftCSharpVersion>4.6.0-rc2.19457.8</MicrosoftCSharpVersion>
+    <SystemCodeDomVersion>4.6.0-rc2.19457.8</SystemCodeDomVersion>
+    <SystemComponentModelAnnotationsVersion>4.6.0-rc2.19457.8</SystemComponentModelAnnotationsVersion>
+    <SystemConfigurationConfigurationManagerVersion>4.6.0-rc2.19457.8</SystemConfigurationConfigurationManagerVersion>
+    <SystemDataSqlClientVersion>4.7.0-rc2.19457.8</SystemDataSqlClientVersion>
   </PropertyGroup>
   <PropertyGroup Label="Dependencies from dotnet/core-setup">
-    <MicrosoftNETCoreAppRefPackageVersion>3.0.0-rc1-19456-20</MicrosoftNETCoreAppRefPackageVersion>
-    <MicrosoftNETCoreAppRuntimewinx64PackageVersion>3.0.0-rc1-19456-20</MicrosoftNETCoreAppRuntimewinx64PackageVersion>
+    <MicrosoftNETCoreAppRefPackageVersion>3.0.0-rc2-19457-15</MicrosoftNETCoreAppRefPackageVersion>
+    <MicrosoftNETCoreAppRuntimewinx64PackageVersion>3.0.0-rc2-19457-15</MicrosoftNETCoreAppRuntimewinx64PackageVersion>
   </PropertyGroup>
   <PropertyGroup Label="Dependency version settings">
     <!--
