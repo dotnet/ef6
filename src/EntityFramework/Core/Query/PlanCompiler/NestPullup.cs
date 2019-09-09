@@ -2533,7 +2533,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private static VarList GetUnionOutputs(UnionAllOp unionOp, VarList leftVars)
         {
             var varMap = unionOp.VarMap[0];
-            IDictionary<Var, Var> reverseVarMap = varMap.GetReverseMap();
+            Dictionary<Var, Var> reverseVarMap = varMap.GetReverseMap();
 
             var unionAllVars = Command.CreateVarList();
             foreach (var v in leftVars)
