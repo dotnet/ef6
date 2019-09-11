@@ -1,7 +1,7 @@
 <Project>
   <Import Project="Sdk.targets" Sdk="Microsoft.DotNet.Arcade.Sdk" />
   <PropertyGroup>
-    <DefaultNetCoreTargetFramework>netcoreapp3.1`</DefaultNetCoreTargetFramework>
+    <DefaultNetCoreTargetFramework>netcoreapp3.1</DefaultNetCoreTargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
