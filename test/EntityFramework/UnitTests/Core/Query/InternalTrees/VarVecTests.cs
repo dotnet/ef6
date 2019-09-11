@@ -11,8 +11,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         [Fact]
         public void MoveNext_returns_true_for_true_bits_and_false_when_end_is_reached()
         {
-            var enumerator = new VarVec.VarVecEnumerator(CreateVarVec(1, 0, 1));
-            Assert.True(enumerator.MoveNext());
+            var enumerator = new VarVec.VarVecEnumerator(CreateVarVec(1));
             Assert.True(enumerator.MoveNext());
             Assert.False(enumerator.MoveNext());
         }
