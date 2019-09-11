@@ -1,9 +1,5 @@
 <Project>
   <Import Project="Sdk.targets" Sdk="Microsoft.DotNet.Arcade.Sdk" />
-  <PropertyGroup>
-    <DefaultNetCoreTargetFramework>netcoreapp3.1</DefaultNetCoreTargetFramework>
-  </PropertyGroup>
-
   <ItemGroup>
     <!-- Use the latest version instead of the one bundled with the SDK. -->
     <KnownFrameworkReference Update="Microsoft.NETCore.App"
