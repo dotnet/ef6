@@ -10,10 +10,10 @@
 // macros and environment variables into account (e.g. $(ProjectDir), VERSIONED_VSCOMNTOOLS_ENV_VAR etc.)
 #>
 <#@ assembly name="System.Core" #>
-<#@ assembly name="$(VSAPPIDDIR)Microsoft.Data.Entity.Design.DatabaseGeneration.dll"#>
-<#@ assembly name="$(VSAPPIDDIR)EntityFramework.dll"#>
-<#@ assembly name="$(VSAPPIDDIR)EntityFramework.SqlServer.dll" #>
-<#@ assembly name="$(VSAPPIDDIR)EntityFramework.SqlServerCompact.dll" #>
+<#@ assembly name="%VSAPPIDDIR%Microsoft.Data.Entity.Design.DatabaseGeneration.dll"#>
+<#@ assembly name="%VSAPPIDDIR%EntityFramework.dll"#>
+<#@ assembly name="%VSAPPIDDIR%EntityFramework.SqlServer.dll" #>
+<#@ assembly name="%VSAPPIDDIR%EntityFramework.SqlServerCompact.dll" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
