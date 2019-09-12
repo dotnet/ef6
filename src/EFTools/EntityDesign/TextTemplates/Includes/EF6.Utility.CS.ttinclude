@@ -4,8 +4,8 @@
 <#@ assembly name="System.Xml" #>
 <#@ assembly name="System.Xml.Linq"#>
 <#@ assembly name="EnvDTE"#>
-<#@ assembly name="$(VSAPPIDDIR)EntityFramework.dll" #>
-<#@ assembly name="$(VSAPPIDDIR)Microsoft.Data.Entity.Design.dll" #>
+<#@ assembly name="%VSAPPIDDIR%EntityFramework.dll" #>
+<#@ assembly name="%VSAPPIDDIR%Microsoft.Data.Entity.Design.dll" #>
 <#@ import namespace="System" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.IO" #>
