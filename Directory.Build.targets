@@ -1,6 +1,5 @@
 <Project>
   <Import Project="Sdk.targets" Sdk="Microsoft.DotNet.Arcade.Sdk" />
-  <ItemGroup>
 
   <!-- Workaround while there is no 5.0 SDK available, suppress unsupported version error -->
   <PropertyGroup>
