@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
-    <VersionPrefix>6.4.0</VersionPrefix>
-    <PreReleaseVersionLabel>preview1</PreReleaseVersionLabel>
+    <VersionPrefix>6.5.0</VersionPrefix>
+    <PreReleaseVersionLabel>alpha1</PreReleaseVersionLabel>
     <SemanticVersioningV1>True</SemanticVersioningV1>
     <IncludeSourceRevisionInInformationalVersion>False</IncludeSourceRevisionInInformationalVersion>
     <UsingToolNetFrameworkReferenceAssemblies>True</UsingToolNetFrameworkReferenceAssemblies>
@@ -21,15 +21,15 @@
     <MySqlDataEntityVersion>6.7.2-beta-ef6</MySqlDataEntityVersion>
   </PropertyGroup>
   <PropertyGroup Label="Dependencies from dotnet/corefx">
-    <MicrosoftCSharpVersion>4.7.0-preview1.19463.3</MicrosoftCSharpVersion>
-    <SystemCodeDomVersion>4.7.0-preview1.19463.3</SystemCodeDomVersion>
-    <SystemComponentModelAnnotationsVersion>4.7.0-preview1.19463.3</SystemComponentModelAnnotationsVersion>
-    <SystemConfigurationConfigurationManagerVersion>4.7.0-preview1.19463.3</SystemConfigurationConfigurationManagerVersion>
-    <SystemDataSqlClientVersion>4.8.0-preview1.19463.3</SystemDataSqlClientVersion>
+    <MicrosoftCSharpVersion>5.0.0-alpha1.19462.7</MicrosoftCSharpVersion>
+    <SystemCodeDomVersion>5.0.0-alpha1.19462.7</SystemCodeDomVersion>
+    <SystemComponentModelAnnotationsVersion>5.0.0-alpha1.19462.7</SystemComponentModelAnnotationsVersion>
+    <SystemConfigurationConfigurationManagerVersion>5.0.0-alpha1.19462.7</SystemConfigurationConfigurationManagerVersion>
+    <SystemDataSqlClientVersion>5.0.0-alpha1.19462.7</SystemDataSqlClientVersion>
   </PropertyGroup>
   <PropertyGroup Label="Dependencies from dotnet/core-setup">
-    <MicrosoftNETCoreAppRefPackageVersion>3.1.0-preview1.19467.7</MicrosoftNETCoreAppRefPackageVersion>
-    <MicrosoftNETCoreAppRuntimewinx64PackageVersion>3.1.0-preview1.19467.7</MicrosoftNETCoreAppRuntimewinx64PackageVersion>
+    <MicrosoftNETCoreAppRefPackageVersion>5.0.0-alpha1.19465.2</MicrosoftNETCoreAppRefPackageVersion>
+    <MicrosoftNETCoreAppRuntimewinx64PackageVersion>5.0.0-alpha1.19465.2</MicrosoftNETCoreAppRuntimewinx64PackageVersion>
   </PropertyGroup>
   <PropertyGroup Label="Dependency version settings">
     <!--
