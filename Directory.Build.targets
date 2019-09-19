@@ -16,7 +16,7 @@
     <KnownFrameworkReference
       Include="@(KnownFrameworkReference->WithMetadataValue('TargetFramework', 'netcoreapp3.0'))"
       TargetFramework="$(DefaultNetCoreTargetFramework)"
-      Condition="!(@(KnownAppHostPack->AnyHaveMetadataValue('TargetFramework', '$(DefaultNetCoreTargetFramework)')))">
+      Condition="!(@(KnownFrameworkReference->AnyHaveMetadataValue('TargetFramework', '$(DefaultNetCoreTargetFramework)')))">
       />
   </ItemGroup>
 
