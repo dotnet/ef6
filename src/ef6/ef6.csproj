@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>netcoreapp5.0;net40;net45</TargetFrameworks>
+    <TargetFrameworks>$(DefaultNetCoreTargetFramework);net40;net45</TargetFrameworks>
     <RootNamespace>System.Data.Entity.Tools</RootNamespace>
   </PropertyGroup>
 

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <RootNamespace />
     <AssemblyName>EntityFramework.VBTests</AssemblyName>
-    <TargetFrameworks>net452;netcoreapp5.0</TargetFrameworks>
+    <TargetFrameworks>net452;$(DefaultNetCoreTargetFramework)</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net452'">

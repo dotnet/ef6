@@ -163,7 +163,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "OpCopier")]
             [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
                 MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
-            private void MapCopiedNodeVars(IList<Node> sources, IList<Node> copies, IDictionary<Var, Var> varMappings)
+            private void MapCopiedNodeVars(IList<Node> sources, IList<Node> copies, Dictionary<Var, Var> varMappings)
             {
                 PlanCompiler.Assert(sources.Count == copies.Count, "Source/Copy Node count mismatch");
 
