@@ -3,7 +3,7 @@
   <PropertyGroup>
     <RootNamespace>System.Data.Entity</RootNamespace>
     <AssemblyName>EntityFramework.FunctionalTests.ProviderAgnostic</AssemblyName>
-    <TargetFrameworks>net452;netcoreapp5.0</TargetFrameworks>
+    <TargetFrameworks>net452;$(DefaultNetCoreTargetFramework)</TargetFrameworks>
     <DefineConstants>$(DefineConstants);EF_FUNCTIONALS</DefineConstants>
     <NoWarn>$(NoWarn);CS8002</NoWarn>
   </PropertyGroup>
@@ -38,7 +38,7 @@
     <ProjectReference Include="..\FunctionalTests.Transitional\FunctionalTests.Transitional.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp5.0'">
+  <ItemGroup Condition="'$(TargetFramework)' == '$(DefaultNetCoreTargetFramework)'">
     <None Update="App.config">
       <Link>xunit.console.dll.config</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
