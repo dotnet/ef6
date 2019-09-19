@@ -28,17 +28,17 @@ namespace System.Data.Entity.TestModels.ArubaModel
             modelBuilder.Entity<ArubaFailure>().ToTable("ArubaFailures");
             modelBuilder.Entity<ArubaBaseline>().ToTable("ArubaBaselines");
             modelBuilder.Entity<ArubaTestFailure>().ToTable("ArubaTestFailures");
-            
+
             // composite key, non-integer key
             modelBuilder.Entity<ArubaTask>().HasKey(k => new { k.Id, k.Name });
-            
+
             // need to map key explicitly, otherwise we get into invalid state
             modelBuilder.Entity<ArubaRun>().HasMany(r => r.Tasks).WithRequired().Map(m => { });
-            
+
             // non-generated key
             modelBuilder.Entity<ArubaOwner>().Property(p => p.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
             modelBuilder.Entity<ArubaRun>().Property(p => p.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
-            
+
             modelBuilder.Entity<ArubaRun>().HasRequired(r => r.RunOwner).WithRequiredDependent(o => o.OwnedRun);
             modelBuilder.Entity<ArubaAllTypes>().Property(p => p.c6_smalldatetime).HasColumnType("smalldatetime");
             modelBuilder.Entity<ArubaAllTypes>().Property(p => p.c7_decimal_28_4).HasColumnType("decimal").HasPrecision(28, 4);

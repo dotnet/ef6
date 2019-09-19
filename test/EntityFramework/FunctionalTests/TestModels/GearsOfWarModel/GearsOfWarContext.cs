@@ -33,7 +33,7 @@ namespace System.Data.Entity.TestModels.GearsOfWarModel
             modelBuilder.Entity<Gear>().HasOptional(g => g.CityOfBirth).WithMany();
             modelBuilder.Entity<Gear>().HasRequired(g => g.Squad).WithMany(g => g.Members);
             modelBuilder.Entity<Gear>().HasTableAnnotation("Annotation_Gear", "Step to West 17");
-            
+
             modelBuilder.Entity<Gear>()
                 .Property(g => g.Rank)
                 .HasColumnAnnotation("Annotation_Rank", "Love not war!")

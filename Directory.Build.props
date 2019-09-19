@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <DefaultNetCoreTargetFramework>netcoreapp5.0</DefaultNetCoreTargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <PackageTags>Microsoft;EntityFramework;EF;Database;Data;O/RM;ADO.NET</PackageTags>
     <Product>Microsoft Entity Framework</Product>
     <PackageLicenseUrl Condition="'$(PackageLicenseExpression)' == ''">http://go.microsoft.com/fwlink/?LinkID=262998</PackageLicenseUrl>

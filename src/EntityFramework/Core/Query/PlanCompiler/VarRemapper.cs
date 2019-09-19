@@ -13,7 +13,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     {
         #region Private state
 
-        private readonly IDictionary<Var, Var> m_varMap;
+        private readonly Dictionary<Var, Var> m_varMap;
         protected readonly Command m_command;
 
         #endregion
@@ -34,7 +34,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // </summary>
         // <param name="command"> Current iqt command </param>
         // <param name="varMap"> Var map to be used </param>
-        internal VarRemapper(Command command, IDictionary<Var, Var> varMap)
+        internal VarRemapper(Command command, Dictionary<Var, Var> varMap)
         {
             m_command = command;
             m_varMap = varMap;
@@ -102,7 +102,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // <summary>
         // Remap the given varList using the given varMap
         // </summary>
-        internal static VarList RemapVarList(Command command, IDictionary<Var, Var> varMap, VarList varList)
+        internal static VarList RemapVarList(Command command, Dictionary<Var, Var> varMap, VarList varList)
         {
             var varRemapper = new VarRemapper(command, varMap);
             return varRemapper.RemapVarList(varList);
