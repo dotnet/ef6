@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Workaround while there is no 5.0 SDK available, copy known apphost/framework reference info from 3.0 -->
+    <!-- Workaround when there is no vNext SDK available, copy known apphost/framework reference info from 3.0 -->
     <KnownAppHostPack 
       Include="@(KnownAppHostPack->WithMetadataValue('TargetFramework', 'netcoreapp3.0'))"
       TargetFramework="$(DefaultNetCoreTargetFramework)"
