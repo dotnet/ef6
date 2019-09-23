@@ -26,6 +26,7 @@
     <NuspecProperty Include="SystemConfigurationConfigurationManagerVersion=$(SystemConfigurationConfigurationManagerVersion)" />
     <NuspecProperty Include="SystemDataSqlClientVersion=$(SystemDataSqlClientVersion)" />
     <NuspecProperty Include="IntermediateOutputPath=$(IntermediateOutputPath)" />
+    <NuspecProperty Include="PackageIcon=$(PackageIconFullPath)" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == '$(DefaultNetCoreTargetFramework)'">

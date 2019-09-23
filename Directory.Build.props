@@ -14,8 +14,14 @@
     <PackageTags>Microsoft;EntityFramework;EF;Database;Data;O/RM;ADO.NET</PackageTags>
     <Product>Microsoft Entity Framework</Product>
     <PackageLicenseUrl Condition="'$(PackageLicenseExpression)' == ''">http://go.microsoft.com/fwlink/?LinkID=262998</PackageLicenseUrl>
-    <PackageIconUrl>http://go.microsoft.com/fwlink/?LinkID=386613</PackageIconUrl>
+    <PackageIcon>packageIcon.png</PackageIcon>
+    <PackageIconFullPath>$(MSBuildThisFileDirectory)packageIcon.png</PackageIconFullPath>
     <PackageProjectUrl>http://go.microsoft.com/fwlink/?LinkID=263480</PackageProjectUrl>
     <DebugType>portable</DebugType>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(PackageIconFullPath)" Pack="true" PackagePath="\"/>
+  </ItemGroup>
+  
 </Project>

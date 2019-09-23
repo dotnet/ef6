@@ -4,7 +4,6 @@
     <id>EntityFramework.CodeTemplates.VisualBasic</id>
     <version>$NuGetPackageVersion$</version>
     <title>EntityFramework.CodeTemplates.VisualBasic</title>
-    <iconUrl>http://go.microsoft.com/fwlink/?LinkID=386613</iconUrl>
     <authors>Microsoft</authors>
     <owners>Microsoft</owners>
     <tags>Microsoft EF EntityFramework</tags>
@@ -18,5 +17,6 @@
   <files>
     <file src="Content\net40\CodeTemplates\EFModelFromDatabase\Context.vb.t4" target="Content\net40\CodeTemplates\EFModelFromDatabase" />
     <file src="Content\net40\CodeTemplates\EFModelFromDatabase\EntityType.vb.t4" target="Content\net40\CodeTemplates\EFModelFromDatabase" />
+    <file src="$PackageIcon$" target="" />
   </files>
 </package>
