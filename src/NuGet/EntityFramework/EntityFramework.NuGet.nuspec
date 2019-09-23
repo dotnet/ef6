@@ -49,5 +49,6 @@
     <file src="buildTransitive\**\*" target="buildTransitive/" />
     <file src="content\**\*" target="content/" />
     <file src="tools\**\*" target="tools/" />
+    <file src="$PackageIcon$" target="" />
   </files>
 </package>

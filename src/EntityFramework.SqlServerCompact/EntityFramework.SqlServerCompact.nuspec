@@ -16,5 +16,6 @@
     <file src="../../artifacts/bin/EntityFramework.SqlServerCompact/$Configuration$/net45/EntityFramework.SqlServerCompact.dll" target="lib/net45/" />
     <file src="../../artifacts/bin/EntityFramework.SqlServerCompact/$Configuration$/net45/EntityFramework.SqlServerCompact.xml" target="lib/net45/" />
     <file src="content\**\*" target="content/" />
+    <file src="$PackageIcon$" target="" />
   </files>
 </package>

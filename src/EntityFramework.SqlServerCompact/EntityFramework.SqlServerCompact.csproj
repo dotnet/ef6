@@ -16,6 +16,7 @@
     <NuspecProperty Include="Configuration=$(Configuration)" />
     <NuSpecProperty Include="MicrosoftSqlServerCompactVersion=$(MicrosoftSqlServerCompactVersion)" />
     <NuspecProperty Include="NeutralLanguage=$(NeutralLanguage)" />
+    <NuspecProperty Include="PackageIcon=$(PackageIconFullPath)" />
   </ItemGroup>
 
   <ItemGroup>
