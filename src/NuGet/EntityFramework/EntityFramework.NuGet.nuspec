@@ -17,6 +17,7 @@
         <dependency id="System.Data.SqlClient" version="$SystemDataSqlClientVersion$" exclude="Build,Analyzers" />
       </group>
     </dependencies>
+    <icon>packageIcon.png</icon>
   </metadata>
   <files>
     <file src="$IntermediateOutputPath$EntityFramework6.psd1" target="tools/"/>

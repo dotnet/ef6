@@ -9,6 +9,7 @@
         <dependency id="Microsoft.SqlServer.Compact" version="$MicrosoftSqlServerCompactVersion$" exclude="Build,Analyzers" />
       </group>
     </dependencies>
+    <icon>packageIcon.png</icon>
   </metadata>
   <files>
     <file src="../../artifacts/bin/EntityFramework.SqlServerCompact/$Configuration$/net40/EntityFramework.SqlServerCompact.dll" target="lib/net40/" />
