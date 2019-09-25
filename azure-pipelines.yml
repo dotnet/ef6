@@ -55,25 +55,15 @@ stages:
                                       /p:DotNetPublishUsingPipelines=$(_PublishUsingPipelines)
                                       /p:DotNetArtifactsCategory=$(_DotNetArtifactsCategory)
             steps:
+              - checkout: self
+                clean: true
               - powershell: |
-                  SqlLocalDB stop MSSQLLocalDB -i
-                  SqlLocalDB start MSSQLLocalDB
-                  & "$env:ProgramFiles\Microsoft SQL Server\110\Tools\Binn\SQLCMD.EXE" -S '(localdb)\MSSQLLocalDB' -b -Q @'
-                    DECLARE @name nvarchar(255);
-                    DECLARE db CURSOR FOR SELECT Name FROM sysdatabases WHERE Name NOT IN ('master', 'tempdb', 'model', 'msdb');
-                    OPEN db;
-                    FETCH NEXT FROM db INTO @name;
-                    WHILE @@FETCH_STATUS = 0
-                    BEGIN
-                      SET @name = REPLACE(@name, ']', ']]');
-                      PRINT 'Dropping database [' + @name + ']';
-                      SET @name = 'DROP DATABASE [' + @name + ']';
-                      EXEC (@name);
-                      FETCH NEXT FROM db INTO @name;
-                    END;
-                    CLOSE db;
-                    DEALLOCATE db;
-                  '@
+                  SqlLocalDB stop
+                  SqlLocalDB delete
+                  Remove-Item "$env:USERPROFILE\*.mdf"
+                  Remove-Item "$env:USERPROFILE\*.ldf"
+                  SqlLocalDB create
+                  SqlLocalDB start
                 displayName: Cleanup databases
               - task: NuGetCommand@2
                 displayName: 'Clear NuGet caches'
