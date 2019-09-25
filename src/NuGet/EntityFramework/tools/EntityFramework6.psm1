@@ -558,6 +558,11 @@ function Update-Database
         $params += '--force'
     }
 
+    if ($ConfigurationTypeName)
+    {
+        $params += '--migrations-config', $ConfigurationTypeName
+    }
+
     $params += GetParams $ConnectionStringName $ConnectionString $ConnectionProviderName
 
     $result = (EF6 $project $startupProject $AppDomainBaseDirectory $params) -join "`n"
