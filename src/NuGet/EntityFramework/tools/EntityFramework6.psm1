@@ -293,12 +293,6 @@ function Enable-Migrations
         $project.ProjectItems.AddFromFile($result.migration) | Out-Null
         $resourcesProperties = $project.ProjectItems.AddFromFile($result.migrationResources).Properties
         $project.ProjectItems.AddFromFile($result.migrationDesigner) | Out-Null
-
-        # HACK: Work around microsoft/msbuild#4488
-        if ($resourcesProperties | where Name -eq 'DependentUpon')
-        {
-            $resourcesProperties.Item('DependentUpon').Value = [IO.Path]::GetFileName($result.migration)
-        }
     }
 }
 
@@ -417,12 +411,6 @@ function Add-Migration
     $DTE.ItemOperations.OpenFile($result.migration) | Out-Null
     $resourcesProperties = $project.ProjectItems.AddFromFile($result.migrationResources).Properties
     $project.ProjectItems.AddFromFile($result.migrationDesigner) | Out-Null
-
-    # HACK: Work around microsoft/msbuild#4488
-    if ($resourcesProperties | where Name -eq 'DependentUpon')
-    {
-        $resourcesProperties.Item('DependentUpon').Value = [IO.Path]::GetFileName($result.migration)
-    }
 }
 
 <#
