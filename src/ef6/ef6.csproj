@@ -4,6 +4,9 @@
     <OutputType>Exe</OutputType>
     <TargetFrameworks>netcoreapp3.0;net40;net45</TargetFrameworks>
     <RootNamespace>System.Data.Entity.Tools</RootNamespace>
+
+    <!-- Work around https://github.com/microsoft/msbuild/issues/4740 -->
+    <EmbeddedResourceUseDependentUponConvention>false</EmbeddedResourceUseDependentUponConvention>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
