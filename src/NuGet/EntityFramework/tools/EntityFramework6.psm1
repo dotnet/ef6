@@ -558,6 +558,11 @@ function Update-Database
         $params += '--force'
     }
 
+    if ($ConfigurationTypeName)
+    {
+        $params += '--migrations-config', $ConfigurationTypeName
+    }
+
     $params += GetParams $ConnectionStringName $ConnectionString $ConnectionProviderName
 
     $result = (EF6 $project $startupProject $AppDomainBaseDirectory $params) -join "`n"
@@ -915,6 +920,7 @@ function EF6($project, $startupProject, $workingDir, $params)
 
     if (IsWeb $startupProject)
     {
+        $startupProjectDir = GetProperty $startupProject.Properties 'FullPath'
         $params += '--data-dir', (Join-Path $startupProjectDir 'App_Data')
     }
 
