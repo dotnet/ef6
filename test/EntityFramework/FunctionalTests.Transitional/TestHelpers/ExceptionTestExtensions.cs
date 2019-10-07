@@ -9,7 +9,7 @@ namespace System.Data.Entity
 
     public static class ExceptionTestExtensions
     {
-#if NETCOREAPP3_0
+#if NETCOREAPP
         // (Parameter '{parameter name}')
         private const string ParameterSeparator = " (";
 #else
