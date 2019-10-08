@@ -1,5 +1,7 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
+#if NET452
+
 namespace System.Data.Entity.Migrations
 {
     using Moq;
@@ -8,6 +10,11 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
     public class LoggingScenarios : DbTestCase
     {
+        public LoggingScenarios(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         private class WarningMigration : DbMigration
         {
             public override void Up()
@@ -47,3 +54,5 @@ namespace System.Data.Entity.Migrations
         }
     }
 }
+
+#endif

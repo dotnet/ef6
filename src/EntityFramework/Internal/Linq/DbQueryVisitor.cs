@@ -26,7 +26,7 @@ namespace System.Data.Entity.Internal.Linq
 
         #endregion
 
-        #region Overriden visitors
+        #region Overridden visitors
 
         // <summary>
         // Replaces calls to DbContext.Set() with an expression for the equivalent <see cref="ObjectQuery" />.

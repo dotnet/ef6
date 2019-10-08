@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     // <summary>
-    // Class representing a validtion error event args
+    // Class representing a validation error event args
     // </summary>
     internal class ValidationErrorEventArgs : EventArgs
     {

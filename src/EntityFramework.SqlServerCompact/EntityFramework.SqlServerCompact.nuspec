@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    $CommonMetadataElements$
+    <language>$NeutralLanguage$</language>
+    <dependencies>
+      <group targetFramework=".NETFramework4.0">
+        <dependency id="EntityFramework" version="$Version$" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.SqlServer.Compact" version="$MicrosoftSqlServerCompactVersion$" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETFramework4.5">
+        <dependency id="EntityFramework" version="$Version$" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.SqlServer.Compact" version="$MicrosoftSqlServerCompactVersion$" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="../../artifacts/bin/EntityFramework.SqlServerCompact/$Configuration$/net40/EntityFramework.SqlServerCompact.dll" target="lib/net40/" />
+    <file src="../../artifacts/bin/EntityFramework.SqlServerCompact/$Configuration$/net40/EntityFramework.SqlServerCompact.xml" target="lib/net40/" />
+    <file src="../../artifacts/bin/EntityFramework.SqlServerCompact/$Configuration$/net45/EntityFramework.SqlServerCompact.dll" target="lib/net45/" />
+    <file src="../../artifacts/bin/EntityFramework.SqlServerCompact/$Configuration$/net45/EntityFramework.SqlServerCompact.xml" target="lib/net45/" />
+    <file src="content\**\*" target="content/" />
+  </files>
+</package>

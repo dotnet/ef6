@@ -77,21 +77,24 @@ namespace System.Data.Entity.TestModels.GearsOfWarModel
 
             var jacinto = new City
             {
-                Location = DbGeography.FromText("POINT(1 1)", DbGeography.DefaultCoordinateSystemId),
                 Name = "Jacinto",
             };
 
             var ephyra = new City
             {
-                Location = DbGeography.FromText("POINT(2 2)", DbGeography.DefaultCoordinateSystemId),
                 Name = "Ephyra",
             };
 
             var hanover = new City
             {
-                Location = DbGeography.FromText("POINT(3 3)", DbGeography.DefaultCoordinateSystemId),
                 Name = "Hanover",
             };
+
+#if NET452
+            jacinto.Location = DbGeography.FromText("POINT(1 1)", DbGeography.DefaultCoordinateSystemId);
+            ephyra.Location = DbGeography.FromText("POINT(2 2)", DbGeography.DefaultCoordinateSystemId);
+            hanover.Location = DbGeography.FromText("POINT(3 3)", DbGeography.DefaultCoordinateSystemId);
+#endif
 
             context.Cities.AddRange(new[] { jacinto, ephyra, hanover });
 

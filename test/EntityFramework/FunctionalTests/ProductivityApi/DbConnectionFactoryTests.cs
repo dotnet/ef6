@@ -26,6 +26,7 @@ namespace ProductivityApiTests
 
         #region Positive SqlCeConnectionFactory tests
 
+#if NET452
         [Fact]
         public void SqlCeConnectionFactory_creates_a_SQL_CE_connection_from_a_database_name()
         {
@@ -55,11 +56,13 @@ namespace ProductivityApiTests
                     connection.ConnectionString);
             }
         }
+#endif
 
         #endregion
 
         #region Negative SqlCeConnectionFactory tests
 
+#if NET452
         [Fact]
         public void SqlCeConnectionFactory_throws_when_a_connection_with_bad_database_path_is_used()
         {
@@ -105,6 +108,7 @@ namespace ProductivityApiTests
             Assert.Throws<ArgumentException>(() => factory.CreateConnection("Something")).ValidateMessage(
                 _sqlCeAssembly.Value, "ADP_KeywordNotSupported", null, "whats on the end of the stick vic");
         }
+#endif
 
         #endregion
 

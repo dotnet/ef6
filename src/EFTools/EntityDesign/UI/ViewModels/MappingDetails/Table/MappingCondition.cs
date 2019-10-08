@@ -65,7 +65,7 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Tables
                         // the underlying EFObject was deleted, probably because it got moved to a different ETM
                         // go find it again
                         //
-                        // Let's say that that you have a 3 part hierarchy, Parent (P), Child (C), GrandChild (GC).  
+                        // Let's say that you have a 3 part hierarchy, Parent (P), Child (C), GrandChild (GC).  
                         // GC has a condition on column X.  C has a condition on column Y.  Now the user goes and 
                         // adds a condition on column X to entity C.  This will cause C's ETM to change (since it now
                         // has a condition also used by a child entity) and the first condition is moved.  This 

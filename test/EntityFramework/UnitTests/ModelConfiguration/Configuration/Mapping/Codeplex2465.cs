@@ -19,7 +19,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
             builder.Configurations.Add(new EntityTypeConfiguration());
 
-            Assert.DoesNotThrow(() => { model = builder.Build(ProviderRegistry.Sql2008_ProviderInfo); });
+            model = builder.Build(ProviderRegistry.Sql2008_ProviderInfo);
 
             var storeModel = model.StoreModel;
 

@@ -11,7 +11,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
     public enum EntityStoreSchemaFilterObjectTypes
     {
         /// <summary>
-        ///     The value that this enum will initilize to.
+        ///     The value that this enum will initialize to.
         ///     This is not a valid value to be use.
         /// </summary>
         None = 0x0000,

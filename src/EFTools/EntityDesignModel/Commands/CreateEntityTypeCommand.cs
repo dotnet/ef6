@@ -123,7 +123,7 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
         ///     get an entity called "EntityType2", etc.
         ///     This only creates these in the conceptual model.
         ///     NOTE: If the cpc already has an active transaction, these changes will be in that transaction
-        ///     and the caller of this helper method must commit it to see these changes commited.
+        ///     and the caller of this helper method must commit it to see these changes committed.
         /// </summary>
         /// <param name="cpc"></param>
         /// <returns>The new EntityType</returns>
@@ -156,7 +156,7 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
         ///     This helper function creates a new entity in the conceptual model that is derived from the
         ///     passed in entity.
         ///     NOTE: If the cpc already has an active transaction, these changes will be in that transaction
-        ///     and the caller of this helper method must commit it to see these changes commited.
+        ///     and the caller of this helper method must commit it to see these changes committed.
         /// </summary>
         /// <param name="cpc"></param>
         /// <param name="name">The name of the new, derived entity</param>
@@ -181,7 +181,7 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
         ///     This helper function is an easy way to get a new entity type, entity set and key property in the
         ///     new entity type created in the conceptual model.
         ///     NOTE: If the cpc already has an active transaction, these changes will be in that transaction
-        ///     and the caller of this helper method must commit it to see these changes commited.
+        ///     and the caller of this helper method must commit it to see these changes committed.
         /// </summary>
         /// <param name="cpc"></param>
         /// <param name="name">The name of the new entity</param>
@@ -210,7 +210,7 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
         ///     This helper function is an easy way to get a new entity type, entity set and key property in the
         ///     new entity type created in the conceptual or storage model.
         ///     NOTE: If the cpc already has an active transaction, these changes will be in that transaction
-        ///     and the caller of this helper method must commit it to see these changes commited.
+        ///     and the caller of this helper method must commit it to see these changes committed.
         /// </summary>
         /// <param name="cpc"></param>
         /// <param name="name">The name of the new entity</param>

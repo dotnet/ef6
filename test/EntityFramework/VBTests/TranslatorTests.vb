@@ -1,6 +1,7 @@
 ﻿' Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 Imports System.Data.Entity
+Imports Xunit
 
 Public Class TranslatorTests
     Inherits FunctionalTestBase
@@ -29,7 +30,8 @@ Public Class TranslatorTests
 "    [Extent1].[Id] AS [Id]" & vbCrLf &
 "    FROM [dbo].[Entities] AS [Extent1]" & vbCrLf &
 "    WHERE (POWER( CAST( [Extent1].[Id] AS float), cast(2 as float(53)))) < cast(30 as float(53))",
-                query.ToString())
+                query.ToString(),
+                ignoreLineEndingDifferences:=True)
         End Using
     End Sub
 
@@ -43,7 +45,8 @@ Public Class TranslatorTests
 "    [Extent1].[Id] AS [Id]" & vbCrLf &
 "    FROM [dbo].[Entities] AS [Extent1]" & vbCrLf &
 "    WHERE (POWER( CAST( [Extent1].[Id] AS float), cast(2 as float(53)))) < cast(30 as float(53))",
-                query.ToString())
+                query.ToString(),
+                ignoreLineEndingDifferences:=True)
         End Using
     End Sub
 

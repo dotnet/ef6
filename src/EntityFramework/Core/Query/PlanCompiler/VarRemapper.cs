@@ -91,7 +91,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         // <summary>
-        // Produce a a new remapped varList
+        // Produce a new remapped varList
         // </summary>
         // <returns> remapped varList </returns>
         internal VarList RemapVarList(VarList varList)

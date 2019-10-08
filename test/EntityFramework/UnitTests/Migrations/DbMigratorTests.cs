@@ -25,6 +25,11 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
     public class DbMigratorTests : DbTestCase
     {
+        public DbMigratorTests(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         [MigrationsTheory]
         public void Scaffold_throws_when_pending_migrations()
         {
@@ -373,6 +378,11 @@ namespace System.Data.Entity.Migrations
 
     public class DbMigratorTests_ContextConstruction : DbTestCase
     {
+        public DbMigratorTests_ContextConstruction(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         private class NuGetContext : DbContext
         {
             public NuGetContext()
@@ -403,6 +413,11 @@ namespace System.Data.Entity.Migrations
 
     public class DbMigratorTests_DatabaseInitialization : DbTestCase
     {
+        public DbMigratorTests_DatabaseInitialization(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         public class CustomInitizalzer : IDatabaseInitializer<DoNotInitContext>
         {
             public static bool HasRun { get; set; }
@@ -450,6 +465,11 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
     public class DbMigratorTests_SqlClientOnly : DbTestCase
     {
+        public DbMigratorTests_SqlClientOnly(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         [MigrationsTheory]
         [UseDefaultExecutionStrategy]
         public void ExecuteSql_should_honor_CommandTimeout()
@@ -500,6 +520,11 @@ namespace System.Data.Entity.Migrations
 
     public class ExecuteStatements : DbTestCase
     {
+        public ExecuteStatements(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         [Fact]
         public void Uses_ExecutionStrategy()
         {

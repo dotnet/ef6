@@ -58,7 +58,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
                 Debug.Assert(
                     DbExpressionKind.LeftOuterJoin == node.ExpressionKind || DbExpressionKind.InnerJoin == node.ExpressionKind,
-                    "(Update/JoinPropagagtor/JoinEvaluator) " +
+                    "(Update/JoinPropagator/JoinEvaluator) " +
                     "caller must ensure only left outer and inner joins are requested");
                 // Retrieve propagation rules for the join type of the expression.
                 if (DbExpressionKind.InnerJoin
@@ -336,7 +336,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     // If no propagation rules are defined, it suggests an invalid workload (e.g.
                     // a required entity or relationship is missing). In general, such exceptions
                     // should be caught by the RelationshipConstraintValidator, but we defensively
-                    // check for problems here regardless. For instance, a 0..1:1..1 self-assocation
+                    // check for problems here regardless. For instance, a 0..1:1..1 self-association
                     // implied a stronger constraint that cannot be checked by RelationshipConstraintValidator.
 
                     // First gather state entries contributing to the problem

@@ -93,7 +93,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         // <summary>
-        // Gets or sets the item at the specifed index.
+        // Gets or sets the item at the specified index.
         // </summary>
         // <param name="index">The zero-based index of the item to get or set.</param>
         // <returns>The item at the specified index.</returns>

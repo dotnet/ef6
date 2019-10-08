@@ -317,7 +317,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // an aggregate. Note that at this point the "aggregate" version of max2 is dropped and detached from the AST node when the middle scope region
         // completes processing; also note that because evaluating scope region of max3 is the outer scope region, max3 aggregate info is still attached to
         // the AST node and it is still wired to the dropped aggregate info object of max2. At this point max3 does not see new max2 as a containing aggregate,
-        // and it rewires to max1, during this rewiring it needs to to remove itself from the old max2 and add itself to max1.
+        // and it rewires to max1, during this rewiring it needs to remove itself from the old max2 and add itself to max1.
         // The old max2 at this point is sealed, so the removal is performed on the sealed object.
         // </summary>
         private void RemoveContainedAggregate(GroupAggregateInfo containedAggregate)

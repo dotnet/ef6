@@ -6,7 +6,7 @@ namespace Microsoft.Data.Entity.Design.Model.Mapping
     using System.Diagnostics;
     using Microsoft.Data.Entity.Design.Model.Entity;
 
-    internal static class ProperyMappingNameNormalizer
+    internal static class PropertyMappingNameNormalizer
     {
         internal static NormalizedName NameNormalizer(EFElement parent, string refName)
         {
@@ -45,7 +45,7 @@ namespace Microsoft.Data.Entity.Design.Model.Mapping
             }
 
             //
-            // try to normalize for an EntityTyepMapping with no FunctionAssociationEnd 
+            // try to normalize for an EntityTypeMapping with no FunctionAssociationEnd 
             //
             var etm = parentItem.GetParentOfType(typeof(EntityTypeMapping)) as EntityTypeMapping;
             normalizedName = NormalizePropertyNameRelativeToEntityTypeMapping(etm, parent, refName);
@@ -100,7 +100,7 @@ namespace Microsoft.Data.Entity.Design.Model.Mapping
                         var cet = type as ConceptualEntityType;
                         if (cet != null)
                         {
-                            // thie is a c-side entity type
+                            // this is a c-side entity type
                             while (cet != null)
                             {
                                 var nn = GetNormalizedNameRelativeToEntityType(cet, refName, parent.Artifact.ArtifactSet);

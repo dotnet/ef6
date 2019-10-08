@@ -473,7 +473,7 @@ namespace FunctionalTests
         }
 
         [Fact]
-        public void Configure_HasColumnName_using_configuration_can_be_overriden_using_api()
+        public void Configure_HasColumnName_using_configuration_can_be_overridden_using_api()
         {
             var modelBuilder = new AdventureWorksModelBuilder();
 

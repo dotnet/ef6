@@ -73,7 +73,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner
 		}
 		
 		/// <summary>
-		/// Serivce provider used to access services from the hosting environment.
+		/// Service provider used to access services from the hosting environment.
 		/// </summary>
 		protected global::System.IServiceProvider ServiceProvider
 		{
@@ -243,7 +243,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner
 		}
 		
 		/// <summary>
-		/// Given a toolbox item "unique ID" returns the the toolbox item using cached dictionary
+		/// Given a toolbox item "unique ID" returns the toolbox item using cached dictionary
 		/// </summary>
 		/// <param name="itemId">The unique ToolboxItem to retrieve</param>
 		private DslDesign::ModelingToolboxItem GetToolboxItem(string itemId)

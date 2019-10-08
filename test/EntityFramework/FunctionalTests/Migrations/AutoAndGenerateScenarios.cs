@@ -1,5 +1,7 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
+#if NET452
+
 namespace System.Data.Entity.Migrations
 {
     using System.Collections.Generic;
@@ -19,6 +21,11 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_Empty :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_Empty.V1, AutoAndGenerateScenarios_Empty.V2>
     {
+        public AutoAndGenerateScenarios_Empty(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         public class V1 : AutoAndGenerateContext_v1
         {
         }
@@ -45,7 +52,8 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_AddTable :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_AddTable.V1, AutoAndGenerateScenarios_AddTable.V2>
     {
-        public AutoAndGenerateScenarios_AddTable()
+        public AutoAndGenerateScenarios_AddTable(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
         {
             IsDownDataLoss = true;
         }
@@ -122,7 +130,8 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_AddTableWithGuidKey :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_AddTableWithGuidKey.V1, AutoAndGenerateScenarios_AddTableWithGuidKey.V2>
     {
-        public AutoAndGenerateScenarios_AddTableWithGuidKey()
+        public AutoAndGenerateScenarios_AddTableWithGuidKey(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
         {
             IsDownDataLoss = true;
         }
@@ -169,7 +178,8 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_RemoveTable :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_RemoveTable.V1, AutoAndGenerateScenarios_RemoveTable.V2>
     {
-        public AutoAndGenerateScenarios_RemoveTable()
+        public AutoAndGenerateScenarios_RemoveTable(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
         {
             UpDataLoss = true;
         }
@@ -211,6 +221,11 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_ChangeTableSchema :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_ChangeTableSchema.V1, AutoAndGenerateScenarios_ChangeTableSchema.V2>
     {
+        public AutoAndGenerateScenarios_ChangeTableSchema(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         public class V1 : AutoAndGenerateContext_v1
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -256,6 +271,11 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_ChangeTableName :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_ChangeTableName.V1, AutoAndGenerateScenarios_ChangeTableName.V2>
     {
+        public AutoAndGenerateScenarios_ChangeTableName(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         public class V1 : AutoAndGenerateContext_v1
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -302,6 +322,11 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_ChangeTablePrimaryKey :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_ChangeTablePrimaryKey.V1, AutoAndGenerateScenarios_ChangeTablePrimaryKey.V2>
     {
+        public AutoAndGenerateScenarios_ChangeTablePrimaryKey(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         public class V1 : AutoAndGenerateContext_v1
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -355,7 +380,8 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_CreateTableWithAnnotations :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_CreateTableWithAnnotations.V1, AutoAndGenerateScenarios_CreateTableWithAnnotations.V2>
     {
-        public AutoAndGenerateScenarios_CreateTableWithAnnotations()
+        public AutoAndGenerateScenarios_CreateTableWithAnnotations(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
         {
             IsDownDataLoss = true;
         }
@@ -410,7 +436,8 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_CreateTableWithColumnAnnotations :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_CreateTableWithColumnAnnotations.V1, AutoAndGenerateScenarios_CreateTableWithColumnAnnotations.V2>
     {
-        public AutoAndGenerateScenarios_CreateTableWithColumnAnnotations()
+        public AutoAndGenerateScenarios_CreateTableWithColumnAnnotations(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
         {
             IsDownDataLoss = true;
         }
@@ -482,7 +509,8 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_DropTableWithColumnAnnotations :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_DropTableWithColumnAnnotations.V1, AutoAndGenerateScenarios_DropTableWithColumnAnnotations.V2>
     {
-        public AutoAndGenerateScenarios_DropTableWithColumnAnnotations()
+        public AutoAndGenerateScenarios_DropTableWithColumnAnnotations(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
         {
             UpDataLoss = true;
         }
@@ -554,7 +582,8 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_DropTableWithAnnotations :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_DropTableWithAnnotations.V1, AutoAndGenerateScenarios_DropTableWithAnnotations.V2>
     {
-        public AutoAndGenerateScenarios_DropTableWithAnnotations()
+        public AutoAndGenerateScenarios_DropTableWithAnnotations(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
         {
             UpDataLoss = true;
         }
@@ -609,6 +638,11 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_AlterTableAnnotations :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_AlterTableAnnotations.V1, AutoAndGenerateScenarios_AlterTableAnnotations.V2>
     {
+        public AutoAndGenerateScenarios_AlterTableAnnotations(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         protected override void ModifyMigrationsConfiguration(DbMigrationsConfiguration configuration)
         {
             configuration.CodeGenerator.AnnotationGenerators[CollationAttribute.AnnotationName] = () => new CollationCSharpCodeGenerator();
@@ -678,6 +712,11 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_RenameTableWithAnnotations :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_RenameTableWithAnnotations.V1, AutoAndGenerateScenarios_RenameTableWithAnnotations.V2>
     {
+        public AutoAndGenerateScenarios_RenameTableWithAnnotations(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         protected override void ModifyMigrationsConfiguration(DbMigrationsConfiguration configuration)
         {
             configuration.CodeGenerator.AnnotationGenerators[CollationAttribute.AnnotationName] = () => new CollationCSharpCodeGenerator();
@@ -759,6 +798,11 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_AddForeignKey :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_AddForeignKey.V1, AutoAndGenerateScenarios_AddForeignKey.V2>
     {
+        public AutoAndGenerateScenarios_AddForeignKey(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         public class V1 : AutoAndGenerateContext_v1
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -817,7 +861,8 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_AddPromotedForeignKey :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_AddPromotedForeignKey.V1, AutoAndGenerateScenarios_AddPromotedForeignKey.V2>
     {
-        public AutoAndGenerateScenarios_AddPromotedForeignKey()
+        public AutoAndGenerateScenarios_AddPromotedForeignKey(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
         {
             IsDownDataLoss = true;
         }
@@ -888,6 +933,11 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_RemoveForeignKey :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_RemoveForeignKey.V1, AutoAndGenerateScenarios_RemoveForeignKey.V2>
     {
+        public AutoAndGenerateScenarios_RemoveForeignKey(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         public class V1 : AutoAndGenerateContext_v1
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -947,6 +997,11 @@ namespace System.Data.Entity.Migrations
         AutoAndGenerateTestCase
             <AutoAndGenerateScenarios_ChangeForeignKeyOnDeleteAction.V1, AutoAndGenerateScenarios_ChangeForeignKeyOnDeleteAction.V2>
     {
+        public AutoAndGenerateScenarios_ChangeForeignKeyOnDeleteAction(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         public class V1 : AutoAndGenerateContext_v1
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -1018,7 +1073,8 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_AddColumn :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_AddColumn.V1, AutoAndGenerateScenarios_AddColumn.V2>
     {
-        public AutoAndGenerateScenarios_AddColumn()
+        public AutoAndGenerateScenarios_AddColumn(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
         {
             IsDownDataLoss = true;
         }
@@ -1073,7 +1129,8 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_AddColumnNvarcharMax :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_AddColumnNvarcharMax.V1, AutoAndGenerateScenarios_AddColumnNvarcharMax.V2>
     {
-        public AutoAndGenerateScenarios_AddColumnNvarcharMax()
+        public AutoAndGenerateScenarios_AddColumnNvarcharMax(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
         {
             IsDownDataLoss = true;
         }
@@ -1137,7 +1194,8 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_AddColumnNvarcharMax64 :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_AddColumnNvarcharMax64.V1, AutoAndGenerateScenarios_AddColumnNvarcharMax64.V2>
     {
-        public AutoAndGenerateScenarios_AddColumnNvarcharMax64()
+        public AutoAndGenerateScenarios_AddColumnNvarcharMax64(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
         {
             IsDownDataLoss = true;
         }
@@ -1203,7 +1261,8 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_AddColumnNvarchar :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_AddColumnNvarchar.V1, AutoAndGenerateScenarios_AddColumnNvarchar.V2>
     {
-        public AutoAndGenerateScenarios_AddColumnNvarchar()
+        public AutoAndGenerateScenarios_AddColumnNvarchar(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
         {
             IsDownDataLoss = true;
         }
@@ -1259,7 +1318,8 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_AddColumnNvarcharMaxLength :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_AddColumnNvarcharMaxLength.V1, AutoAndGenerateScenarios_AddColumnNvarcharMaxLength.V2>
     {
-        public AutoAndGenerateScenarios_AddColumnNvarcharMaxLength()
+        public AutoAndGenerateScenarios_AddColumnNvarcharMaxLength(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
         {
             IsDownDataLoss = true;
         }
@@ -1318,7 +1378,8 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_AddColumnNvarchar64 :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_AddColumnNvarchar64.V1, AutoAndGenerateScenarios_AddColumnNvarchar64.V2>
     {
-        public AutoAndGenerateScenarios_AddColumnNvarchar64()
+        public AutoAndGenerateScenarios_AddColumnNvarchar64(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
         {
             IsDownDataLoss = true;
         }
@@ -1375,7 +1436,8 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_RemoveColumn :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_RemoveColumn.V1, AutoAndGenerateScenarios_RemoveColumn.V2>
     {
-        public AutoAndGenerateScenarios_RemoveColumn()
+        public AutoAndGenerateScenarios_RemoveColumn(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
         {
             UpDataLoss = true;
         }
@@ -1424,6 +1486,11 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_AlterColumnName :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_AlterColumnName.V1, AutoAndGenerateScenarios_AlterColumnName.V2>
     {
+        public AutoAndGenerateScenarios_AlterColumnName(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         public class V1 : AutoAndGenerateContext_v1
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -1486,6 +1553,11 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_AlterSpatialColumnNames :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_AlterSpatialColumnNames.V1, AutoAndGenerateScenarios_AlterSpatialColumnNames.V2>
     {
+        public AutoAndGenerateScenarios_AlterSpatialColumnNames(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         public class V1 : AutoAndGenerateContext_v1
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -1565,7 +1637,8 @@ namespace System.Data.Entity.Migrations
     {
         private readonly string _columnName;
 
-        protected AutoAndGenerateScenarios_AlterColumnType(string columnName)
+        protected AutoAndGenerateScenarios_AlterColumnType(DatabaseProviderFixture databaseProviderFixture, string columnName)
+            : base(databaseProviderFixture)
         {
             _columnName = columnName;
 
@@ -1709,8 +1782,8 @@ namespace System.Data.Entity.Migrations
     {
         private const string ColumnName = "Decimal15ToDouble";
 
-        public AutoAndGenerateScenarios_AlterColumnType_Decimal15ToDouble()
-            : base(ColumnName)
+        public AutoAndGenerateScenarios_AlterColumnType_Decimal15ToDouble(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture, ColumnName)
         {
         }
 
@@ -1739,8 +1812,8 @@ namespace System.Data.Entity.Migrations
     {
         private const string ColumnName = "SingleToDecimal16";
 
-        public AutoAndGenerateScenarios_AlterColumnType_SingleToDecimal16()
-            : base(ColumnName)
+        public AutoAndGenerateScenarios_AlterColumnType_SingleToDecimal16(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture, ColumnName)
         {
         }
 
@@ -1768,8 +1841,8 @@ namespace System.Data.Entity.Migrations
     {
         private const string ColumnName = "SingleToDouble";
 
-        public AutoAndGenerateScenarios_AlterColumnType_SingleToDouble()
-            : base(ColumnName)
+        public AutoAndGenerateScenarios_AlterColumnType_SingleToDouble(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture, ColumnName)
         {
         }
 
@@ -1798,8 +1871,8 @@ namespace System.Data.Entity.Migrations
     {
         private const string ColumnName = "SingleToDecimal11";
 
-        public AutoAndGenerateScenarios_AlterColumnType_SingleToDecimal11()
-            : base(ColumnName)
+        public AutoAndGenerateScenarios_AlterColumnType_SingleToDecimal11(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture, ColumnName)
         {
         }
 
@@ -1827,8 +1900,8 @@ namespace System.Data.Entity.Migrations
     {
         private const string ColumnName = "Decimal6ToDouble";
 
-        public AutoAndGenerateScenarios_AlterColumnType_Decimal6ToDouble()
-            : base(ColumnName)
+        public AutoAndGenerateScenarios_AlterColumnType_Decimal6ToDouble(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture, ColumnName)
         {
         }
 
@@ -1856,8 +1929,8 @@ namespace System.Data.Entity.Migrations
     {
         private const string ColumnName = "Int32ToInt64";
 
-        public AutoAndGenerateScenarios_AlterColumnType_Int32ToInt64()
-            : base(ColumnName)
+        public AutoAndGenerateScenarios_AlterColumnType_Int32ToInt64(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture, ColumnName)
         {
         }
 
@@ -1885,8 +1958,8 @@ namespace System.Data.Entity.Migrations
     {
         private const string ColumnName = "Int16ToInt64";
 
-        public AutoAndGenerateScenarios_AlterColumnType_Int16ToInt64()
-            : base(ColumnName)
+        public AutoAndGenerateScenarios_AlterColumnType_Int16ToInt64(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture, ColumnName)
         {
         }
 
@@ -1914,8 +1987,8 @@ namespace System.Data.Entity.Migrations
     {
         private const string ColumnName = "Int16ToInt32";
 
-        public AutoAndGenerateScenarios_AlterColumnType_Int16ToInt32()
-            : base(ColumnName)
+        public AutoAndGenerateScenarios_AlterColumnType_Int16ToInt32(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture, ColumnName)
         {
         }
 
@@ -1943,8 +2016,8 @@ namespace System.Data.Entity.Migrations
     {
         private const string ColumnName = "ByteToInt64";
 
-        public AutoAndGenerateScenarios_AlterColumnType_ByteToInt64()
-            : base(ColumnName)
+        public AutoAndGenerateScenarios_AlterColumnType_ByteToInt64(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture, ColumnName)
         {
         }
 
@@ -1972,8 +2045,8 @@ namespace System.Data.Entity.Migrations
     {
         private const string ColumnName = "ByteToInt32";
 
-        public AutoAndGenerateScenarios_AlterColumnType_ByteToInt32()
-            : base(ColumnName)
+        public AutoAndGenerateScenarios_AlterColumnType_ByteToInt32(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture, ColumnName)
         {
         }
 
@@ -2001,8 +2074,8 @@ namespace System.Data.Entity.Migrations
     {
         private const string ColumnName = "ByteToInt16";
 
-        public AutoAndGenerateScenarios_AlterColumnType_ByteToInt16()
-            : base(ColumnName)
+        public AutoAndGenerateScenarios_AlterColumnType_ByteToInt16(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture, ColumnName)
         {
         }
 
@@ -2026,7 +2099,8 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_AlterColumnFixedLength :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_AlterColumnFixedLength.V1, AutoAndGenerateScenarios_AlterColumnFixedLength.V2>
     {
-        public AutoAndGenerateScenarios_AlterColumnFixedLength()
+        public AutoAndGenerateScenarios_AlterColumnFixedLength(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
         {
             IsDownDataLoss = true;
         }
@@ -2083,7 +2157,8 @@ namespace System.Data.Entity.Migrations
     {
         private readonly int? _newMaxLength;
 
-        protected AutoAndGenerateScenarios_AlterColumnMaxLength(int? newMaxLength)
+        protected AutoAndGenerateScenarios_AlterColumnMaxLength(DatabaseProviderFixture databaseProviderFixture, int? newMaxLength)
+            : base(databaseProviderFixture)
         {
             _newMaxLength = newMaxLength;
 
@@ -2120,8 +2195,8 @@ namespace System.Data.Entity.Migrations
             AutoAndGenerateScenarios_AlterColumnMaxLength
                 <AutoAndGenerateScenarios_AlterColumn256_Max.V1, AutoAndGenerateScenarios_AlterColumn256_Max.V2>
     {
-        public AutoAndGenerateScenarios_AlterColumn256_Max()
-            : base(null)
+        public AutoAndGenerateScenarios_AlterColumn256_Max(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture, null)
         {
         }
 
@@ -2157,8 +2232,8 @@ namespace System.Data.Entity.Migrations
             AutoAndGenerateScenarios_AlterColumnMaxLength
                 <AutoAndGenerateScenarios_AlterColumnMaxLength_Max.V1, AutoAndGenerateScenarios_AlterColumnMaxLength_Max.V2>
     {
-        public AutoAndGenerateScenarios_AlterColumnMaxLength_Max()
-            : base(null)
+        public AutoAndGenerateScenarios_AlterColumnMaxLength_Max(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture, null)
         {
         }
 
@@ -2221,8 +2296,8 @@ namespace System.Data.Entity.Migrations
             AutoAndGenerateScenarios_AlterColumnMaxLength
                 <AutoAndGenerateScenarios_AlterColumnMaxLength_512.V1, AutoAndGenerateScenarios_AlterColumnMaxLength_512.V2>
     {
-        public AutoAndGenerateScenarios_AlterColumnMaxLength_512()
-            : base(512)
+        public AutoAndGenerateScenarios_AlterColumnMaxLength_512(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture, 512)
         {
         }
 
@@ -2256,7 +2331,8 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_AlterColumnNullable :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_AlterColumnNullable.V1, AutoAndGenerateScenarios_AlterColumnNullable.V2>
     {
-        public AutoAndGenerateScenarios_AlterColumnNullable()
+        public AutoAndGenerateScenarios_AlterColumnNullable(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
         {
             UpDataLoss = true;
         }
@@ -2309,7 +2385,8 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_AlterColumnPrecision :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_AlterColumnPrecision.V1, AutoAndGenerateScenarios_AlterColumnPrecision.V2>
     {
-        public AutoAndGenerateScenarios_AlterColumnPrecision()
+        public AutoAndGenerateScenarios_AlterColumnPrecision(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
         {
             IsDownDataLoss = true;
         }
@@ -2358,7 +2435,8 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_AlterColumnScale :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_AlterColumnScale.V1, AutoAndGenerateScenarios_AlterColumnScale.V2>
     {
-        public AutoAndGenerateScenarios_AlterColumnScale()
+        public AutoAndGenerateScenarios_AlterColumnScale(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
         {
             IsDownDataLoss = true;
         }
@@ -2407,6 +2485,11 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_AlterColumnUnicode :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_AlterColumnUnicode.V1, AutoAndGenerateScenarios_AlterColumnUnicode.V2>
     {
+        public AutoAndGenerateScenarios_AlterColumnUnicode(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         public override void Init(DatabaseProvider provider, ProgrammingLanguage language)
         {
             base.Init(provider, language);
@@ -2481,6 +2564,11 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_AlterColumnChangedAnnotations :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_AlterColumnChangedAnnotations.V1, AutoAndGenerateScenarios_AlterColumnChangedAnnotations.V2>
     {
+        public AutoAndGenerateScenarios_AlterColumnChangedAnnotations(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         public class V1 : AutoAndGenerateContext_v1
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -2545,6 +2633,11 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_AlterColumnAddedAnnotations :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_AlterColumnAddedAnnotations.V1, AutoAndGenerateScenarios_AlterColumnAddedAnnotations.V2>
     {
+        public AutoAndGenerateScenarios_AlterColumnAddedAnnotations(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         public class V1 : AutoAndGenerateContext_v1
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -2611,6 +2704,11 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_AlterColumnRemovedAnnotations :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_AlterColumnRemovedAnnotations.V1, AutoAndGenerateScenarios_AlterColumnRemovedAnnotations.V2>
     {
+        public AutoAndGenerateScenarios_AlterColumnRemovedAnnotations(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         public class V1 : AutoAndGenerateContext_v1
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -2677,6 +2775,11 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_AlterColumnEverythingAnnotations :
     AutoAndGenerateTestCase<AutoAndGenerateScenarios_AlterColumnEverythingAnnotations.V1, AutoAndGenerateScenarios_AlterColumnEverythingAnnotations.V2>
     {
+        public AutoAndGenerateScenarios_AlterColumnEverythingAnnotations(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         public class V1 : AutoAndGenerateContext_v1
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -2767,6 +2870,11 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_AlterColumnCustomAnnotation :
     AutoAndGenerateTestCase<AutoAndGenerateScenarios_AlterColumnCustomAnnotation.V1, AutoAndGenerateScenarios_AlterColumnCustomAnnotation.V2>
     {
+        public AutoAndGenerateScenarios_AlterColumnCustomAnnotation(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         protected override void ModifyMigrationsConfiguration(DbMigrationsConfiguration configuration)
         {
             configuration.CodeGenerator.AnnotationGenerators[CollationAttribute.AnnotationName] = () => new CollationCSharpCodeGenerator();
@@ -2850,7 +2958,8 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_AddColumnWithAnnotations :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_AddColumnWithAnnotations.V1, AutoAndGenerateScenarios_AddColumnWithAnnotations.V2>
     {
-        public AutoAndGenerateScenarios_AddColumnWithAnnotations()
+        public AutoAndGenerateScenarios_AddColumnWithAnnotations(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
         {
             IsDownDataLoss = true;
         }
@@ -2948,7 +3057,8 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_DropColumnWithAnnotations :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_DropColumnWithAnnotations.V1, AutoAndGenerateScenarios_DropColumnWithAnnotations.V2>
     {
-        public AutoAndGenerateScenarios_DropColumnWithAnnotations()
+        public AutoAndGenerateScenarios_DropColumnWithAnnotations(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
         {
             UpDataLoss = true;
         }
@@ -3050,6 +3160,11 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_AddIndex :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_AddIndex.V1, AutoAndGenerateScenarios_AddIndex.V2>
     {
+        public AutoAndGenerateScenarios_AddIndex(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         public class V1 : AutoAndGenerateContext_v1
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -3096,6 +3211,11 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_ChangeIndex :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_ChangeIndex.V1, AutoAndGenerateScenarios_ChangeIndex.V2>
     {
+        public AutoAndGenerateScenarios_ChangeIndex(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         public class V1 : AutoAndGenerateContext_v1
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -3156,6 +3276,11 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_DropIndex :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_DropIndex.V1, AutoAndGenerateScenarios_DropIndex.V2>
     {
+        public AutoAndGenerateScenarios_DropIndex(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         public class V1 : AutoAndGenerateContext_v1
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -3202,6 +3327,11 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_LotsOfIndexStuff :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_LotsOfIndexStuff.V1, AutoAndGenerateScenarios_LotsOfIndexStuff.V2>
     {
+        public AutoAndGenerateScenarios_LotsOfIndexStuff(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         public class V1 : AutoAndGenerateContext_v1
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -3453,6 +3583,11 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_CompositeKeyAndIndex :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_CompositeKeyAndIndex.V1, AutoAndGenerateScenarios_CompositeKeyAndIndex.V2>
     {
+        public AutoAndGenerateScenarios_CompositeKeyAndIndex(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         public override void Init(DatabaseProvider provider, ProgrammingLanguage language)
         {
             base.Init(provider, language);
@@ -3528,6 +3663,11 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_ImplicitIndexChanges :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_ImplicitIndexChanges.V1, AutoAndGenerateScenarios_ImplicitIndexChanges.V2>
     {
+        public AutoAndGenerateScenarios_ImplicitIndexChanges(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         public override void Init(DatabaseProvider provider, ProgrammingLanguage language)
         {
             base.Init(provider, language);
@@ -3684,6 +3824,11 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_DefaultNameIndexes :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_DefaultNameIndexes.V1, AutoAndGenerateScenarios_DefaultNameIndexes.V2>
     {
+        public AutoAndGenerateScenarios_DefaultNameIndexes(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         public class V1 : AutoAndGenerateContext_v1
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -3832,7 +3977,8 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_RenameProcedure :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_RenameProcedure.V1, AutoAndGenerateScenarios_RenameProcedure.V2>
     {
-        public AutoAndGenerateScenarios_RenameProcedure()
+        public AutoAndGenerateScenarios_RenameProcedure(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
         {
             IsDownDataLoss = false;
         }
@@ -3895,7 +4041,8 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_AlterProcedure :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_AlterProcedure.V1, AutoAndGenerateScenarios_AlterProcedure.V2>
     {
-        public AutoAndGenerateScenarios_AlterProcedure()
+        public AutoAndGenerateScenarios_AlterProcedure(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
         {
             IsDownNotSupported = true;
         }
@@ -3956,7 +4103,8 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_MoveProcedure :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_MoveProcedure.V1, AutoAndGenerateScenarios_MoveProcedure.V2>
     {
-        public AutoAndGenerateScenarios_MoveProcedure()
+        public AutoAndGenerateScenarios_MoveProcedure(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
         {
             IsDownDataLoss = false;
         }
@@ -4020,7 +4168,8 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_MoveProcedure_ManyToMany :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_MoveProcedure_ManyToMany.V1, AutoAndGenerateScenarios_MoveProcedure_ManyToMany.V2>
     {
-        public AutoAndGenerateScenarios_MoveProcedure_ManyToMany()
+        public AutoAndGenerateScenarios_MoveProcedure_ManyToMany(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
         {
             IsDownDataLoss = false;
         }
@@ -4089,7 +4238,8 @@ namespace System.Data.Entity.Migrations
         AutoAndGenerateTestCase
             <AutoAndGenerateScenarios_RenameProcedure_ManyToMany.V1, AutoAndGenerateScenarios_RenameProcedure_ManyToMany.V2>
     {
-        public AutoAndGenerateScenarios_RenameProcedure_ManyToMany()
+        public AutoAndGenerateScenarios_RenameProcedure_ManyToMany(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
         {
             IsDownDataLoss = false;
         }
@@ -4156,7 +4306,8 @@ namespace System.Data.Entity.Migrations
         AutoAndGenerateTestCase
             <AutoAndGenerateScenarios_AlterProcedure_ManyToMany.V1, AutoAndGenerateScenarios_AlterProcedure_ManyToMany.V2>
     {
-        public AutoAndGenerateScenarios_AlterProcedure_ManyToMany()
+        public AutoAndGenerateScenarios_AlterProcedure_ManyToMany(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
         {
             IsDownDataLoss = false;
             IsDownNotSupported = true;
@@ -4222,3 +4373,5 @@ namespace System.Data.Entity.Migrations
 
     #endregion
 }
+
+#endif

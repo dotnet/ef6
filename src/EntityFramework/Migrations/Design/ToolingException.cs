@@ -1,5 +1,7 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
+#if NET45 || NET40
+
 namespace System.Data.Entity.Migrations.Design
 {
     using System.Diagnostics.CodeAnalysis;
@@ -9,6 +11,7 @@ namespace System.Data.Entity.Migrations.Design
     ///     Represents an exception that occurred while running an operation in another AppDomain in the
     ///     <see cref="ToolingFacade" />.
     /// </summary>
+    [Obsolete("Use System.Data.Entity.Infrastructure.Design.IErrorHandler instead.")]
     [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors",
         Justification = "SerializeObjectState used instead")]
     [Serializable]
@@ -95,3 +98,5 @@ namespace System.Data.Entity.Migrations.Design
         }
     }
 }
+
+#endif

@@ -9,6 +9,7 @@ namespace System.Data.Entity.Utilities
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Resources;
+    using System.Data.SqlClient;
     using System.Diagnostics;
     using System.Linq;
 
@@ -29,6 +30,11 @@ namespace System.Data.Entity.Utilities
 
             if (row == null)
             {
+                if (factory.GetType() == typeof(SqlClientFactory))
+                {
+                    return "System.Data.SqlClient";
+                }
+
                 throw new NotSupportedException(Strings.ProviderNameNotFound(factory));
             }
 

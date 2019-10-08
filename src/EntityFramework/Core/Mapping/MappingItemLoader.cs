@@ -37,7 +37,7 @@ namespace System.Data.Entity.Core.Mapping
     // --EntityKey
     // --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
     // --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    // --DiscriminatorProperyMap ( constant value-->SMemberMetadata )
+    // --DiscriminatorPropertyMap ( constant value-->SMemberMetadata )
     // --EntityTypeMapping
     // --TableMappingFragment
     // --EntityKey
@@ -45,14 +45,14 @@ namespace System.Data.Entity.Core.Mapping
     // --ComplexPropertyMap
     // --ComplexTypeMap
     // --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    // --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
-    // --DiscriminatorProperyMap ( constant value-->SMemberMetadata )
+    // --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    // --DiscriminatorPropertyMap ( constant value-->SMemberMetadata )
     // --AssociationSetMapping
     // --AssociationTypeMapping
     // --TableMappingFragment
     // --EndPropertyMap
     // --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    // --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
+    // --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
     // --EndPropertyMap
     // --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
     // --EntityContainerMapping ( CMyDatabase-->SMyDatabase )
@@ -68,11 +68,11 @@ namespace System.Data.Entity.Core.Mapping
     // --ComplexPropertyMap
     // --ComplexTypeMap
     // --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    // --DiscriminatorProperyMap ( constant value-->SMemberMetadata )
+    // --DiscriminatorPropertyMap ( constant value-->SMemberMetadata )
     // --ScalarPropertyMap ( CMemberMetadata-->Constant value )
     // The CCMappingSchemaLoader loads an Xml file that has a conceptual structure
     // equivalent to the above example into in-memory data structure in a
-    // top-dwon approach.
+    // top-down approach.
     // </example>
     // <remarks>
     // The loader uses XPathNavigator to parse the XML. The advantage of using XPathNavigator
@@ -188,7 +188,7 @@ namespace System.Data.Entity.Core.Mapping
             try
             {
                 var doc = new XPathDocument(reader);
-                // If there were any xsd validation errors, we would have caught these while creatring xpath document.
+                // If there were any xsd validation errors, we would have caught these while creating xpath document.
                 if (m_parsingErrors.Count != 0)
                 {
                     // If the errors were only warnings continue, otherwise return the errors without loading the mapping.
@@ -199,7 +199,7 @@ namespace System.Data.Entity.Core.Mapping
                 }
 
                 // Create an XPathNavigator to navigate the document in a forward only manner.
-                // The XPathNavigator can also be used to run quries through the document while still maintaining
+                // The XPathNavigator can also be used to run queries through the document while still maintaining
                 // the current position. This will be helpful in running validation rules that are not part of Schema.
                 var nav = doc.CreateNavigator();
                 return LoadMappingItems(nav.Clone());
@@ -313,7 +313,7 @@ namespace System.Data.Entity.Core.Mapping
         {
             var navLineInfo = (IXmlLineInfo)nav;
 
-            // The element name can only be EntityContainerMapping element name since XSD validation should have guarneteed this.
+            // The element name can only be EntityContainerMapping element name since XSD validation should have guaranteed this.
             Debug.Assert(nav.LocalName == MslConstructs.EntityContainerMappingElement);
             var entityContainerName = GetAttributeValue(nav.Clone(), MslConstructs.CdmEntityContainerAttribute);
             var storageEntityContainerName = GetAttributeValue(nav.Clone(), MslConstructs.StorageEntityContainerAttribute);
@@ -708,7 +708,7 @@ namespace System.Data.Entity.Core.Mapping
                 foreach (var entitySetBase in additionalSetsInClosure)
                 {
                     var associationSet = entitySetBase as AssociationSet;
-                    //Foreign Key Associations do not add to the dependancies
+                    //Foreign Key Associations do not add to the dependencies
                     if (associationSet != null
                         && !associationSet.ElementType.IsForeignKey)
                     {
@@ -727,7 +727,7 @@ namespace System.Data.Entity.Core.Mapping
                 foreach (var entitySetBase in entityContainerMapping.EdmEntityContainer.BaseEntitySets)
                 {
                     var associationSet = entitySetBase as AssociationSet;
-                    //Foreign Key Associations do not add to the dependancies
+                    //Foreign Key Associations do not add to the dependencies
                     if (associationSet != null
                         && !associationSet.ElementType.IsForeignKey)
                     {
@@ -838,7 +838,7 @@ namespace System.Data.Entity.Core.Mapping
                     AddToSchemaErrorsWithMemberInfo(
                         Strings.Mapping_InvalidContent_Entity_Set, entitySetName,
                         MappingErrorCode.InvalidEntitySet, m_sourceLocation, navLineInfo, m_parsingErrors);
-                    //There is no point in continuing the loding of this EntitySetMapping if the EntitySet is not found
+                    //There is no point in continuing the loading of this EntitySetMapping if the EntitySet is not found
                     return;
                 }
                 //Create the EntitySet Mapping which contains the mapping information for EntitySetMap.
@@ -971,7 +971,7 @@ namespace System.Data.Entity.Core.Mapping
             entityTypes = new Set<EntityType>();
 
             // get components of type declaration
-            var entityTypeNames = entityTypeAttribute.Split(MslConstructs.TypeNameSperator).Select(s => s.Trim());
+            var entityTypeNames = entityTypeAttribute.Split(MslConstructs.TypeNameSeperator).Select(s => s.Trim());
 
             // figure out each component
             foreach (var name in entityTypeNames)
@@ -1253,7 +1253,7 @@ namespace System.Data.Entity.Core.Mapping
                 while (nav.MoveToNext(XPathNodeType.Element));
             }
 
-            // Ensure that assocation set end mappings bind to the same end (e.g., in Person Manages Person
+            // Ensure that association set end mappings bind to the same end (e.g., in Person Manages Person
             // self-association, ensure that the manager end or the report end is mapped but not both)
             IEnumerable<ModificationFunctionParameterBinding> parameterList = new List<ModificationFunctionParameterBinding>();
             if (null != deleteFunctionMapping)
@@ -2209,7 +2209,7 @@ namespace System.Data.Entity.Core.Mapping
             var value = GetAliasResolvedAttributeValue(nav.Clone(), MslConstructs.ConditionValueAttribute);
             var isNull = GetAliasResolvedAttributeValue(nav.Clone(), MslConstructs.ConditionIsNullAttribute);
 
-            //Either Value or NotNull need to be specifid on the condition mapping but not both
+            //Either Value or NotNull need to be specified on the condition mapping but not both
             if ((isNull != null)
                 && (value != null))
             {
@@ -2452,7 +2452,7 @@ namespace System.Data.Entity.Core.Mapping
             MappingFragment fragment = null;
             EntityType tableType = null;
 
-            //If there is a query view, Dont create a mapping fragment since there should n't be one
+            //If there is a query view, don't create a mapping fragment since there should n't be one
             if (setMapping.QueryView == null)
             {
                 //Get the table type that represents this table
@@ -2634,8 +2634,8 @@ namespace System.Data.Entity.Core.Mapping
             var collectionType = containerType as CollectionType;
             //Get the property name from MSL
             var propertyName = GetAliasResolvedAttributeValue(nav.Clone(), MslConstructs.ComplexPropertyNameAttribute);
-            //Get the member metadata from the contianer type passed in.
-            //But if the continer type is collection type, there would n't be any member to represent the member.
+            //Get the member metadata from the container type passed in.
+            //But if the container type is collection type, there would n't be any member to represent the member.
             EdmProperty member = null;
             EdmType memberType = null;
             //If member specified the type name, it takes precedence
@@ -2741,7 +2741,7 @@ namespace System.Data.Entity.Core.Mapping
             var partialAttribute = GetAttributeValue(nav.Clone(), MslConstructs.ComplexPropertyIsPartialAttribute);
             if (!String.IsNullOrEmpty(partialAttribute))
             {
-                //XSD validation should have guarenteed that the attribute value can only be true or false
+                //XSD validation should have guaranteed that the attribute value can only be true or false
                 Debug.Assert(partialAttribute == "true" || partialAttribute == "false");
                 isPartial = Convert.ToBoolean(partialAttribute, CultureInfo.InvariantCulture);
             }
@@ -2755,7 +2755,7 @@ namespace System.Data.Entity.Core.Mapping
             {
                 Debug.Assert(nav.LocalName == MslConstructs.ComplexTypeMappingElement);
                 var typeName = GetAliasResolvedAttributeValue(nav.Clone(), MslConstructs.ComplexTypeMappingTypeNameAttribute);
-                var index = typeName.IndexOf(MslConstructs.TypeNameSperator);
+                var index = typeName.IndexOf(MslConstructs.TypeNameSeperator);
                 string currentTypeName = null;
                 do
                 {
@@ -2788,7 +2788,7 @@ namespace System.Data.Entity.Core.Mapping
                         AddToSchemaErrorsWithMemberInfo(
                             Strings.Mapping_InvalidContent_Complex_Type, currentTypeName,
                             MappingErrorCode.InvalidComplexType, m_sourceLocation, (IXmlLineInfo)nav, m_parsingErrors);
-                        index = typeName.IndexOf(MslConstructs.TypeNameSperator);
+                        index = typeName.IndexOf(MslConstructs.TypeNameSeperator);
                         continue;
                     }
                     if (isTypeOfIndex == 0)
@@ -2799,7 +2799,7 @@ namespace System.Data.Entity.Core.Mapping
                     {
                         typeMapping.AddType(complexType);
                     }
-                    index = typeName.IndexOf(MslConstructs.TypeNameSperator);
+                    index = typeName.IndexOf(MslConstructs.TypeNameSeperator);
                 }
                 while (typeName.Length != 0);
             }
@@ -2942,7 +2942,7 @@ namespace System.Data.Entity.Core.Mapping
             }
 
             EdmProperty member = null;
-            //Get the CDM EdmMember reprsented by the name specified.
+            //Get the CDM EdmMember represented by the name specified.
             if (propertyName != null)
             {
                 EdmMember tempMember;
@@ -3039,7 +3039,7 @@ namespace System.Data.Entity.Core.Mapping
                     MappingErrorCode.ConditionError, m_sourceLocation, navLineInfo, m_parsingErrors);
                 return null;
             }
-            //Either Value or NotNull need to be specifid on the condition mapping but not both
+            //Either Value or NotNull need to be specified on the condition mapping but not both
             if ((isNullAttribute != null)
                 && (value != null))
             {
@@ -3059,7 +3059,7 @@ namespace System.Data.Entity.Core.Mapping
 
             if (isNullAttribute != null)
             {
-                //XSD validation should have guarenteed that the attribute value can only be true or false
+                //XSD validation should have guaranteed that the attribute value can only be true or false
                 Debug.Assert(isNullAttribute == "true" || isNullAttribute == "false");
                 isNullValue = Convert.ToBoolean(isNullAttribute, CultureInfo.InvariantCulture);
             }

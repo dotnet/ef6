@@ -21,6 +21,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             Assert.NotNull(EntityWrapperFactory.CreateWrapperDelegateTypedWithoutRelationshipsMethod);
         }
 
+#if NET452
         public class MarkAsNotSerializable : TestBase
         {
             [Fact]
@@ -109,6 +110,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 return typeBuilder.CreateType().GetRuntimeFields().Single(f => f.Name == "_knee");
             }
         }
+#endif
 
         public class TryGetAssociationTypeFromProxyInfo : TestBase
         {

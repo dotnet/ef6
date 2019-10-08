@@ -245,7 +245,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // where agg1', agg2', .. aggm'  are the "mapped" versions
         // of agg1, agg2, .. aggm, such that the references to c1, ... ck are
         // replaced by their definitions.
-        // We only do this if each c1, ..ck is refereneced (in aggregates) at most once or it is a constant.
+        // We only do this if each c1, ..ck is referenced (in aggregates) at most once or it is a constant.
         // </summary>
         // <param name="context"> Rule processing context </param>
         // <param name="n"> Current ProjectOp node </param>
@@ -321,7 +321,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         // <summary>
-        // Replaces each occurance of the given vars with their definitions.
+        // Replaces each occurrence of the given vars with their definitions.
         // </summary>
         internal class VarRefReplacer : BasicOpVisitorOfNode
         {
@@ -336,7 +336,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             // <summary>
             // "Public" entry point. In the subtree rooted at the given root,
-            // replace each occurance of the given vars with their definitions,
+            // replace each occurrence of the given vars with their definitions,
             // where each key-value pair in the dictionary is a var-definition pair.
             // </summary>
             internal static Node Replace(Dictionary<Var, Node> varReplacementTable, Node root, Command command)
@@ -387,7 +387,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             // <summary>
             // Public entry point. Returns true if at least one of the given vars occurs more than
-            // once in the subree rooted at the given root.
+            // once in the subtree rooted at the given root.
             // </summary>
             internal static bool AnyVarUsedMoreThanOnce(VarVec varVec, Node root, Command command)
             {
@@ -438,7 +438,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         // <summary>
         // If the GroupByOp has no aggregates:
-        // (1) and if it includes all all the keys of the input, than it is unnecessary
+        // (1) and if it includes all the keys of the input, than it is unnecessary
         // GroupBy (X, keys) -> Project(X, keys) where keys includes all keys of X.
         // (2) else it can be turned into a Distinct:
         // GroupBy (X, keys) -> Distinct(X, keys)

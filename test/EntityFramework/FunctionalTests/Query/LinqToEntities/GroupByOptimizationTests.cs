@@ -136,12 +136,12 @@ FROM ( SELECT
 [GroupBy1].[A2] AS [C3]
 FROM ( SELECT 
 	[Extent1].[K1] AS [K1], 
-	MAX([Extent1].[A1]) AS [A1], 
-	MIN([Extent1].[A2]) AS [A2]
+	MAX([Extent1].[A1_0]) AS [A1], 
+	MIN([Extent1].[A2_0]) AS [A2]
 	FROM ( SELECT 
 		[Extent1].[FirstName] AS [K1], 
-		[Extent1].[Id] AS [A1], 
-		[Extent1].[Id] + 2 AS [A2]
+		[Extent1].[Id] AS [A1_0], 
+		[Extent1].[Id] + 2 AS [A2_0]
 		FROM [dbo].[ArubaOwners] AS [Extent1]
 	)  AS [Extent1]
 	GROUP BY [K1]
@@ -221,10 +221,10 @@ FROM ( SELECT
 [GroupBy1].[A1] AS [C1]
 FROM ( SELECT 
 	[Extent1].[K1] AS [K1], 
-	MAX([Extent1].[A1]) AS [A1]
+	MAX([Extent1].[A1_0]) AS [A1]
 	FROM ( SELECT 
 		[Extent1].[FirstName] AS [K1], 
-		[Extent1].[Id] * 2 AS [A1]
+		[Extent1].[Id] * 2 AS [A1_0]
 		FROM [dbo].[ArubaOwners] AS [Extent1]
 	)  AS [Extent1]
 	GROUP BY [K1]
@@ -424,7 +424,7 @@ FROM ( SELECT DISTINCT
             {
                 var query2 = context.Users.GroupBy(o => o, u => new { u.Image, u.Name }, (k, g) => g.Count());
 
-                Assert.DoesNotThrow(() => query2.ToList());
+                query2.ToList();
             }
         }
 

@@ -64,7 +64,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // If any of the children changes, update the node info.
         // This is safe to do because the only way a child can change is
         // if it is a sort node that needs to be removed. The nodes whose children have
-        // chagnged also get tracked.
+        // changed also get tracked.
         // </summary>
         // <param name="n"> The current node </param>
         protected override void VisitChildren(Node n)

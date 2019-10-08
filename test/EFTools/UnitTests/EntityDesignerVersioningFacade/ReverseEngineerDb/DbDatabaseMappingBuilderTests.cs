@@ -289,7 +289,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
         }
 
         [Fact]
-        public void BuildAssociationSetMappings_builds_conceptual_assocation_set_mapping_for_collapsed_store_entity_sets()
+        public void BuildAssociationSetMappings_builds_conceptual_association_set_mapping_for_collapsed_store_entity_sets()
         {
             #region Setting up many to many relationship in the SSpace Teacher * -- 1 TeacherStudents 1 -- * Teachers
 

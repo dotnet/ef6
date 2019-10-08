@@ -157,7 +157,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         InvalidAction = 96,
 
         // <summary>
-        // An error occured processing the On&lt;Operation&gt;  elements
+        // An error occurred processing the On&lt;Operation&gt;  elements
         // </summary>
         InvalidOperation = 97,
 
@@ -169,7 +169,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         InvalidContainerTypeForEnd = 99,
 
         // <summary>
-        // The extent name used in the EntittyContainerType End does not match the name of any of the EntityContainerProperties in the containing EntityContainer
+        // The extent name used in the EntityContainerType End does not match the name of any of the EntityContainerProperties in the containing EntityContainer
         // </summary>
         InvalidEndEntitySet = 100,
 
@@ -179,7 +179,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         AmbiguousEntityContainerEnd = 101,
 
         // <summary>
-        // An end element was not given, and cannot be infered because there is no EntityContainerEntitySets that are the correct type to be used as an EntitySet.
+        // An end element was not given, and cannot be inferred because there is no EntityContainerEntitySets that are the correct type to be used as an EntitySet.
         // </summary>
         MissingExtentEntityContainerEnd = 102,
 
@@ -220,7 +220,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         TypeMismatchRelationshipConstraint = 112,
 
         // <summary>
-        // Invalid multiplicty in FromRole in the relationship constraint
+        // Invalid multiplicity in FromRole in the relationship constraint
         // </summary>
         InvalidMultiplicityInRoleInRelationshipConstraint = 113,
 
@@ -295,7 +295,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         EntityKeyTypeCurrentlyNotSupported = 129,
 
         // <summary>
-        // The primitive type kind does not have a prefered mapping
+        // The primitive type kind does not have a preferred mapping
         // </summary>
         NoPreferredMappingForPrimitiveTypeKind = 130,
 
@@ -361,14 +361,14 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         EmptyDefiningQuery = 142,
 
         // <summary>
-        // Schema, Table and DefiningQuery are all specified, and are mutualy exlusive
+        // Schema, Table and DefiningQuery are all specified, and are mutually exclusive
         // </summary>
         TableAndSchemaAreMutuallyExclusiveWithDefiningQuery = 143,
 
         // unused 144,
 
         // <summary>
-        // Conurency can't change for any sub types of an EntitySet type.
+        // Concurrency can't change for any sub types of an EntitySet type.
         // </summary>
         ConcurrencyRedefinedOnSubTypeOfEntitySetType = 145,
 

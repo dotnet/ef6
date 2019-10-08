@@ -345,7 +345,7 @@ namespace Microsoft.Data.Entity.Design.Package
                 // call the extensions that can save EDMX files first (even if we aren't going to end up in an EDMX file, let them process)
                 VSArtifact.DispatchToSerializationExtensions(serializers, transformContext, loading: false);
 
-                // get the extension of the file being loaded (might not be EDMX); this API will include the preceeding "."
+                // get the extension of the file being loaded (might not be EDMX); this API will include the preceding "."
                 var fileInfo = new FileInfo(FileName);
                 var fileExtension = fileInfo.Extension;
 
@@ -564,7 +564,7 @@ namespace Microsoft.Data.Entity.Design.Package
 
                                     // Ensure that DSL Diagram and Model Diagram are in sync:
                                     // - Update xref between 2 diagrams
-                                    // - Propagetes model diagram info to DSL Diagram.
+                                    // - Propagates model diagram info to DSL Diagram.
                                     var modelDiagram = artifact.DesignerInfo().Diagrams.FirstDiagram;
                                     Debug.Assert(modelDiagram != null, "modelDiagram should not be null");
                                     if (modelDiagram != null)
@@ -603,7 +603,7 @@ namespace Microsoft.Data.Entity.Design.Package
             if (UndoManager != null)
             {
                 // Set the buffer's IOleUndoManager on XmlModelProvider, so each time a Tx Commits using XmlStore, an UndoUnit will be 
-                // pushed onto the stack.  This is currently neccessary if you want XmlEditor to fire UndoRedoCompleted Event.
+                // pushed onto the stack.  This is currently necessary if you want XmlEditor to fire UndoRedoCompleted Event.
                 var artifact = EditingContextManager.GetArtifact(EditingContext);
                 Debug.Assert(artifact != null, "artifact should not be null");
                 if (artifact != null)
@@ -758,7 +758,7 @@ namespace Microsoft.Data.Entity.Design.Package
                 var viewModel = dataEntityDesignDocView.Diagram.ModelElement as EntityDesignerViewModel;
                 if (viewModel != null)
                 {
-                    viewModel.OnTransactionCommited(e);
+                    viewModel.OnTransactionCommitted(e);
 
                     // now set the isDirty flag on Shell's UndoManager so diagram layout changes can 
                     // also get persisted; if there isn't one of our context's in the xact, then this
@@ -777,7 +777,7 @@ namespace Microsoft.Data.Entity.Design.Package
                         // so run our validation
                         if (Store != null)
                         {
-                            ValidationController.ValidateCustom(Store, "OnTransactionCommited");
+                            ValidationController.ValidateCustom(Store, "OnTransactionCommitted");
                         }
                     }
                 }

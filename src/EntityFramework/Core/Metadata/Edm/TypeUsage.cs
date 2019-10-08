@@ -281,10 +281,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// A <see cref="T:System.Data.Metadata.Edm.DateTimeTypeUsage" /> object.
         /// </returns>
         /// <param name="primitiveType">
-        /// The simple type that defines the units of measurement of the <see cref="T:System." />DateTime object.
+        /// The simple type that defines the units of measurement of the <see cref="T:System.DateTime" /> object.
         /// </param>
         /// <param name="precision">
-        /// The degree of granularity of the <see cref="T:System." />DateTimeOffset in fractions of a second, based on the number of decimal places supported. For example a precision of 3 means the granularity supported is milliseconds.
+        /// The degree of granularity of the <see cref="T:System.DateTimeOffset" /> in fractions of a second, based on the number of decimal places supported. For example a precision of 3 means the granularity supported is milliseconds.
         /// </param>
         public static TypeUsage CreateDateTimeTypeUsage(
             PrimitiveType primitiveType,
@@ -314,7 +314,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </returns>
         /// <param name="primitiveType">The simple type that defines the units of measurement of the offset.</param>
         /// <param name="precision">
-        /// The degree of granularity of the <see cref="T:System." />DateTimeOffset in fractions of a second, based on the number of decimal places supported. For example a precision of 3 means the granularity supported is milliseconds.
+        /// The degree of granularity of the <see cref="T:System.DateTimeOffset" /> in fractions of a second, based on the number of decimal places supported. For example a precision of 3 means the granularity supported is milliseconds.
         /// </param>
         public static TypeUsage CreateDateTimeOffsetTypeUsage(
             PrimitiveType primitiveType,
@@ -344,10 +344,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// A <see cref="T:System.Data.Metadata.Edm.TimeTypeUsage" /> object.
         /// </returns>
         /// <param name="primitiveType">
-        /// The simple type that defines the units of measurement of the <see cref="T:System." />DateTime object.
+        /// The simple type that defines the units of measurement of the <see cref="T:System.DateTime" /> object.
         /// </param>
         /// <param name="precision">
-        /// The degree of granularity of the <see cref="T:System." />DateTimeOffset in fractions of a second, based on the number of decimal places supported. For example a precision of 3 means the granularity supported is milliseconds.
+        /// The degree of granularity of the <see cref="T:System.DateTimeOffset" /> in fractions of a second, based on the number of decimal places supported. For example a precision of 3 means the granularity supported is milliseconds.
         /// </param>
         public static TypeUsage CreateTimeTypeUsage(
             PrimitiveType primitiveType,

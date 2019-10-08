@@ -15,7 +15,7 @@ namespace ProductivityApiTests
     public class DbConfigurationTests : FunctionalTestBase
     {
         [Fact]
-        public void DefaultConnectionFactory_set_in_config_file_can_be_overriden_before_config_is_locked()
+        public void DefaultConnectionFactory_set_in_config_file_can_be_overridden_before_config_is_locked()
         {
             Assert.IsType<SqlConnectionFactory>(DbConfiguration.DependencyResolver.GetService<IDbConnectionFactory>());
             Assert.IsType<DefaultFunctionalTestsConnectionFactory>(FunctionalTestsConfiguration.OriginalConnectionFactories[0]);
@@ -32,7 +32,7 @@ namespace ProductivityApiTests
 
             Assert.Equal(
                 new[] { "Hook1()", "Hook1(2013, 'December 31')", "Hook2()", "Hook2('January 1', 2014)", "Hook2()", "Hook1(4102, '1 yraunaJ')", "Hook1()" },
-                TestLoadedInterceptor.HooksRun.ToArray().Reverse());
+                TestLoadedInterceptor.HooksRun.Reverse().ToArray());
         }
 
         public class TestLoadedInterceptor2 : IDbConfigurationInterceptor

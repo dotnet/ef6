@@ -120,6 +120,7 @@ namespace FunctionalTests
             public virtual string RoleId2 { get; set; }
         }
 
+#if NET452
         [Fact]
         public void Sql_ce_should_get_explicit_max_lengths_for_string_and_binary_properties_by_convention()
         {
@@ -171,6 +172,7 @@ namespace FunctionalTests
             databaseMapping.Assert<MaxLengthProperties>(e => e.Prop2).DbEqual(false, f => f.IsMaxLength);
             databaseMapping.Assert<MaxLengthProperties>(e => e.Prop2).DbEqual("binary", c => c.TypeName);
         }
+#endif
 
         [Fact]
         public void Sql_should_get_implicit_max_lengths_for_string_and_binary_properties_by_convention()

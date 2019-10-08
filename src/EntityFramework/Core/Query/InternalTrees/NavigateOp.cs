@@ -47,7 +47,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         // <summary>
-        // The rel property that describes this nvaigation
+        // The rel property that describes this navigation
         // </summary>
         internal RelProperty RelProperty
         {

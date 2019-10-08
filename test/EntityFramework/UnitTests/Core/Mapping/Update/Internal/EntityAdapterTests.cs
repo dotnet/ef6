@@ -29,7 +29,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             [Fact]
-            public void Returns_number_of_enties_affected()
+            public void Returns_number_of_entities_affected()
             {
                 var entityStateManagerMock = new Mock<ObjectStateManager>();
                 entityStateManagerMock.Setup(m => m.HasChanges()).Returns(true);
@@ -176,7 +176,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             [Fact]
-            public void Returns_number_of_enties_affected()
+            public void Returns_number_of_entities_affected()
             {
                 var entityStateManagerMock = new Mock<ObjectStateManager>();
                 entityStateManagerMock.Setup(m => m.HasChanges()).Returns(true);
@@ -212,7 +212,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             [Fact]
-            public void Update_throws_if_no_connection_set()
+            public async Task Update_throws_if_no_connection_set()
             {
                 var entityStateManagerMock = new Mock<ObjectStateManager>();
                 entityStateManagerMock.Setup(m => m.HasChanges()).Returns(true);
@@ -227,12 +227,12 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
                 Assert.Equal(
                     Strings.EntityClient_NoConnectionForAdapter,
-                    Assert.Throws<InvalidOperationException>(
-                        () => entityAdapter.UpdateAsync(CancellationToken.None)).Message);
+                    (await Assert.ThrowsAsync<InvalidOperationException>(
+                        () => entityAdapter.UpdateAsync(CancellationToken.None))).Message);
             }
 
             [Fact]
-            public void Throws_if_no_store_connection_set()
+            public async Task Throws_if_no_store_connection_set()
             {
                 var entityStateManagerMock = new Mock<ObjectStateManager>();
                 entityStateManagerMock.Setup(m => m.HasChanges()).Returns(true);
@@ -252,12 +252,12 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
                 Assert.Equal(
                     Strings.EntityClient_NoStoreConnectionForUpdate,
-                    Assert.Throws<InvalidOperationException>(
-                        () => entityAdapter.UpdateAsync(CancellationToken.None)).Message);
+                    (await Assert.ThrowsAsync<InvalidOperationException>(
+                        () => entityAdapter.UpdateAsync(CancellationToken.None))).Message);
             }
 
             [Fact]
-            public void Throws_if_no_store_provider_factory_set()
+            public async Task Throws_if_no_store_provider_factory_set()
             {
                 var entityStateManagerMock = new Mock<ObjectStateManager>();
                 entityStateManagerMock.Setup(m => m.HasChanges()).Returns(true);
@@ -277,12 +277,12 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
                 Assert.Equal(
                     Strings.EntityClient_NoStoreConnectionForUpdate,
-                    Assert.Throws<InvalidOperationException>(
-                        () => entityAdapter.UpdateAsync(CancellationToken.None)).Message);
+                    (await Assert.ThrowsAsync<InvalidOperationException>(
+                        () => entityAdapter.UpdateAsync(CancellationToken.None))).Message);
             }
 
             [Fact]
-            public void Throws_if_connection_is_closed()
+            public async Task Throws_if_connection_is_closed()
             {
                 var entityStateManagerMock = new Mock<ObjectStateManager>();
                 entityStateManagerMock.Setup(m => m.HasChanges()).Returns(true);
@@ -304,8 +304,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
                 Assert.Equal(
                     Strings.EntityClient_ClosedConnectionForUpdate,
-                    Assert.Throws<InvalidOperationException>(
-                        () => entityAdapter.UpdateAsync(CancellationToken.None)).Message);
+                    (await Assert.ThrowsAsync<InvalidOperationException>(
+                        () => entityAdapter.UpdateAsync(CancellationToken.None))).Message);
             }
         }
 

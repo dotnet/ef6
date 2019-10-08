@@ -227,7 +227,7 @@ namespace System.Data.Entity.Core.Mapping
             foreach (var structuralTypeMappings in structualTypeMappingTestValues)
 
             Assert.Equal(
-                Strings.StructuralTypeMappingsMustNotBeNullForFunctionImportsReturingNonScalarValues,
+                Strings.StructuralTypeMappingsMustNotBeNullForFunctionImportsReturningNonScalarValues,
                 Assert.Throws<ArgumentException>(
                     () => new FunctionImportMappingComposable(
                               functionImport,

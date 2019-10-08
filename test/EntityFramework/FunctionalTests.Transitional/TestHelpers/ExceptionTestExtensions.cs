@@ -9,6 +9,14 @@ namespace System.Data.Entity
 
     public static class ExceptionTestExtensions
     {
+#if NETCOREAPP
+        // (Parameter '{parameter name}')
+        private const string ParameterSeparator = " (";
+#else
+        // \r\nParameter name: {parameter name}
+        private const string ParameterSeparator = "\r\n";
+#endif
+
         public static void ValidateMessage(
             this Exception exception,
             string expectedResourceKey,
@@ -58,7 +66,7 @@ namespace System.Data.Entity
             var argException = exception as ArgumentException;
             if (argException != null)
             {
-                var paramPartIndex = argException.Message.LastIndexOf("\r\n");
+                var paramPartIndex = argException.Message.LastIndexOf(ParameterSeparator);
                 if (paramPartIndex != -1)
                 {
                     message = argException.Message.Substring(0, paramPartIndex);

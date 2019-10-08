@@ -17,7 +17,7 @@ namespace System.Data.Entity.Core.EntityClient
         public static EntityConnection CreateEntityConnection(MetadataWorkspace metadataWorkspace = null)
         {
             var providerFactory = new Mock<DbProviderFactory>(MockBehavior.Strict).Object;
-            var dbConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
+            var dbConnectionMock = new Mock<DbConnection>();
             dbConnectionMock.SetupGet(m => m.State).Returns(ConnectionState.Open);
             var dbConnection = dbConnectionMock.Object;
 

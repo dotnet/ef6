@@ -117,7 +117,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
         #endregion
 
-        #region Constructors and static initializors
+        #region Constructors and static initializers
 
         internal ExpressionConverter(Funcletizer funcletizer, Expression expression)
         {
@@ -832,7 +832,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
             }
 
-            // try to find the appropriate target target for the cast
+            // try to find the appropriate target for the cast
             var toType = GetCastTargetType(source.ResultType, toClrType, fromClrType, true);
             if (null == toType)
             {
@@ -914,7 +914,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             DebugCheck.NotNull(input);
 
             // If input looks like "select x from (...) as x", rewrite it as "(...)".
-            // If input has span information attached to to it then leave it as is, otherwise 
+            // If input has span information attached to it then leave it as is, otherwise 
             // span info will be lost.
             Span span;
             if (input.ExpressionKind == DbExpressionKind.Project
@@ -1493,12 +1493,12 @@ namespace System.Data.Entity.Core.Objects.ELinq
         // String.Contains is translated into:
         // 1) If argument is a constant or parameter and the provider supports escaping:
         // object like ("%") + argument1 + ("%"), where argument1 is argument escaped by the provider
-        // and ("%") are appended on the begining/end depending on whether
+        // and ("%") are appended on the beginning/end depending on whether
         // insertPercentAtStart/insertPercentAtEnd are specified
         // 2) Otherwise:
         // object.Method(argument) ->  defaultTranslator
         // </summary>
-        // <param name="insertPercentAtStart"> Should '%' be inserted at the begining of the pattern </param>
+        // <param name="insertPercentAtStart"> Should '%' be inserted at the beginning of the pattern </param>
         // <param name="insertPercentAtEnd"> Should '%' be inserted at the end of the pattern </param>
         // <param name="defaultTranslator"> The delegate that provides the default translation </param>
         // <returns> The translation </returns>

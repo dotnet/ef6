@@ -29,6 +29,17 @@ namespace System.Data.Entity.TestModels.ArubaModel
             modelBuilder.Entity<ArubaPerson>().HasMany(p => p.Children).WithMany(p => p.Parents)
                 .MapToStoredProcedures(
                     m => m.Insert(d => d.LeftKeyParameter(l => l.Id, "Left_id").RightKeyParameter(r => r.Id, "Right_Id")));
+
+#if NETCOREAPP
+            modelBuilder.Entity<ArubaAllTypes>().Ignore(x => x.c31_geography);
+            modelBuilder.Entity<ArubaAllTypes>().Ignore(x => x.c32_geometry);
+            modelBuilder.Entity<ArubaAllTypes>().Ignore(x => x.c36_geometry_linestring);
+            modelBuilder.Entity<ArubaAllTypes>().Ignore(x => x.c37_geometry_polygon);
+
+            modelBuilder.Entity<ArubaMachineConfig>().Ignore(x => x.Location);
+
+            modelBuilder.Entity<ArubaRun>().Ignore(x => x.Geometry);
+#endif
         }
     }
 }

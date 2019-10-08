@@ -255,7 +255,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
             var member = m_path.Last();
 
-            //Dont check last member, thats the property we are testing
+            //Don't check last member, thats the property we are testing
             for (var i = 0; i < m_path.Count - 1; i++)
             {
                 var current = m_path[i];
@@ -280,7 +280,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 return true;
             }
 
-            //well, we handle the first case because we don't knwo how to get to subtype (i.e. the edge to avoid)
+            //well, we handle the first case because we don't know how to get to subtype (i.e. the edge to avoid)
             var memberDeclaringType = m_path[0].DeclaringType as EntityType;
             var parentType = memberDeclaringType.BaseType as EntityType;
 
@@ -310,7 +310,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             // navigate depth-first
             foreach (var edge in edges.Where(type => !type.EdmEquals(avoidEdge)))
             {
-                //Dont traverse above the EntitySet's Element type
+                //Don't traverse above the EntitySet's Element type
                 if (entitySetType.BaseType != null
                     && entitySetType.BaseType.EdmEquals(edge))
                 {
@@ -399,7 +399,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         // <summary>
-        // Given a member path and an alias, returns an eSQL string correspondng to the fully-qualified name
+        // Given a member path and an alias, returns an eSQL string corresponding to the fully-qualified name
         // <paramref
         //     name="blockAlias" />
         // .path, e.g., T1.Address.Phone.Zip.
@@ -645,7 +645,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 {
                     return false;
                 }
-                result = AreAssocationEndPathsEquivalentViaRefConstraint(path0, path1, assocSet0);
+                result = AreAssociationEndPathsEquivalentViaRefConstraint(path0, path1, assocSet0);
             }
             else if (entitySet0 != null
                      && entitySet1 != null)
@@ -660,7 +660,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                     // For Person.pid, get PersonAddress.Person.pid or
                     var assocEndPath0 = path0.GetCorrespondingAssociationPath(assocSet);
                     var assocEndPath1 = path1.GetCorrespondingAssociationPath(assocSet);
-                    if (AreAssocationEndPathsEquivalentViaRefConstraint(assocEndPath0, assocEndPath1, assocSet))
+                    if (AreAssociationEndPathsEquivalentViaRefConstraint(assocEndPath0, assocEndPath1, assocSet))
                     {
                         result = true;
                         break;
@@ -689,7 +689,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 }
                 else
                 {
-                    result = AreAssocationEndPathsEquivalentViaRefConstraint(assocEndPathA, assocEndPathB, assocSet);
+                    result = AreAssociationEndPathsEquivalentViaRefConstraint(assocEndPathA, assocEndPathB, assocSet);
                 }
             }
 
@@ -706,7 +706,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         //     name="assocSet" />
         // .
         // </summary>
-        private static bool AreAssocationEndPathsEquivalentViaRefConstraint(
+        private static bool AreAssociationEndPathsEquivalentViaRefConstraint(
             MemberPath assocPath0,
             MemberPath assocPath1,
             AssociationSet assocSet)

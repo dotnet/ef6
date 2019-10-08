@@ -15,7 +15,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
 
         /// <summary>
         ///     was unable to find an entity container that
-        ///     the the type should go into
+        ///     the type should go into
         /// </summary>
         RelationshipSpansSchemas = BaseValue + 1,
 
@@ -48,7 +48,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
         FacetValueOutOfRange = BaseValue + 6,
 
         /// <summary>
-        ///     The association must be skipped because a neede key column
+        ///     The association must be skipped because a needed key column
         ///     is missing
         /// </summary>
         AssociationMissingKeyColumn = BaseValue + 7,
@@ -59,7 +59,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
         PrimaryKeyCannotBeForeignKey = BaseValue + 8,
 
         /// <summary>
-        ///     Found an usupported one to one association
+        ///     Found an unsupported one to one association
         /// </summary>
         OneToOneAssociationFound = BaseValue + 9,
 
@@ -110,7 +110,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
         InvalidGetStatementSuppliedForProperty = BaseValue + 27,
         InvalidSetStatementSuppliedForProperty = BaseValue + 28,
         GeneratedFactoryMethodNameConflict = BaseValue + 29,
-        UnsupportedForeinKeyPattern = BaseValue + 30,
+        UnsupportedForeignKeyPattern = BaseValue + 30,
         ExcludedColumnWasAKeyColumn = BaseValue + 31,
         InvalidKeyTypeFound = BaseValue + 32,
         GeneratedPropertyAccessibilityConflict = BaseValue + 33,

@@ -1947,7 +1947,7 @@ namespace System.Data.Entity
         /// The type of the elements of <paramref name="source" />.
         /// </typeparam>
         /// <param name="source">
-        /// An <see cref="IQueryable{T}" /> to return the the single element of.
+        /// An <see cref="IQueryable{T}" /> to return the single element of.
         /// </param>
         /// <param name="predicate"> A function to test an element for a condition. </param>
         /// <returns>

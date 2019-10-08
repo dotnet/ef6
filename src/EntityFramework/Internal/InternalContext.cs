@@ -201,7 +201,7 @@ namespace System.Data.Entity.Internal
         // <see cref="ObjectContext" /> and sets it as the context to use DisposeTempObjectContext is called.
         // This allows this internal context and its DbContext to be used for transient operations
         // such as initializing and seeding the database, after which it can be thrown away.
-        // This isolates the real <see cref="ObjectContext" /> from any changes made and and saves performed.
+        // This isolates the real <see cref="ObjectContext" /> from any changes made and saves performed.
         // </summary>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public virtual void UseTempObjectContext()
@@ -609,6 +609,16 @@ namespace System.Data.Entity.Internal
         // Gets or sets a value indicating whether database null comparison behavior is enabled.
         // </summary>
         public abstract bool UseDatabaseNullSemantics { get; set; }
+
+        /// <summary>
+        /// By default expression like 
+        /// .Select(x => NewProperty = func(x.Property)).Where(x => x.NewProperty == ...)
+        /// are simplified to avoid nested SELECT
+        /// In some cases, simplifying query with UDFs could caused to suboptimal plans due to calling UDF twice.
+        /// Also some SQL functions aren't allow in WHERE clause.
+        /// Disabling that behavior
+        /// </summary>
+        public abstract bool DisableFilterOverProjectionSimplificationForCustomFunctions { get; set; }
 
         public abstract int? CommandTimeout { get; set; }
 
@@ -1189,7 +1199,7 @@ namespace System.Data.Entity.Internal
 
         // <summary>
         // Gets or sets an object representing a config file used for looking for DefaultConnectionFactory entries,
-        // database intializers and connection strings.
+        // database initializers and connection strings.
         // </summary>
         public virtual AppConfig AppConfig
         {

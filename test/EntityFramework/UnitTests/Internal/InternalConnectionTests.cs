@@ -435,7 +435,7 @@ namespace System.Data.Entity.Internal
         [Fact]
         public void EagerInternalConnection_Dispose_uses_interception()
         {
-            var connectionMock = new Mock<DbConnection>(MockBehavior.Strict);
+            var connectionMock = new Mock<DbConnection>();
             connectionMock.Setup(m => m.ConnectionString).Returns("fake");
             connectionMock.Setup(m => m.Database).Returns("fakeDb");
             connectionMock.Setup(m => m.DataSource).Returns("fakeSource");
@@ -693,10 +693,10 @@ namespace System.Data.Entity.Internal
                 connection.AppConfig =
                     new AppConfig(
                         CreateEmptyConfig().AddConnectionString(
-                            "LazyConnectionTest", "Database=FromOverridenConfig", "System.Data.SqlClient"));
+                            "LazyConnectionTest", "Database=FromOverriddenConfig", "System.Data.SqlClient"));
 
                 Assert.IsType<SqlConnection>(connection.Connection);
-                Assert.Equal("FromOverridenConfig", connection.Connection.Database);
+                Assert.Equal("FromOverriddenConfig", connection.Connection.Database);
                 Assert.Equal("LazyConnectionTest", connection.ConnectionStringName);
                 Assert.Equal(DbConnectionStringOrigin.DbContextInfo, connection.ConnectionStringOrigin);
             }

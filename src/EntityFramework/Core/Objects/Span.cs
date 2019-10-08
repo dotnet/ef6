@@ -182,7 +182,7 @@ namespace System.Data.Entity.Core.Objects
         // </summary>
         private bool ValidateSpanPath(SpanPath spanPath)
         {
-            // Check for dupliacte entries
+            // Check for duplicate entries
             for (var i = 0; i < _spanList.Count; i++)
             {
                 // make sure spanPath is not a sub-path of anything already in the list

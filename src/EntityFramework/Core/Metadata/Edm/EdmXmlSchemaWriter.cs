@@ -508,12 +508,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _xmlWriter.WriteStartElement(XmlConstants.ReferentialConstraint);
         }
 
-        internal void WriteDelaredKeyPropertiesElementHeader()
+        internal void WriteDeclaredKeyPropertiesElementHeader()
         {
             _xmlWriter.WriteStartElement(XmlConstants.Key);
         }
 
-        internal void WriteDelaredKeyPropertyRefElement(EdmProperty property)
+        internal void WriteDeclaredKeyPropertyRefElement(EdmProperty property)
         {
             DebugCheck.NotNull(property);
 

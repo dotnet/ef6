@@ -70,7 +70,7 @@ namespace Microsoft.Data.Entity.Design.Model.Validation
             XObject xobject = null;
 
             // in theory this should never happen but since we are using reflection to get these 
-            // fields it's safer to return false if we could not find any of these fileds
+            // fields it's safer to return false if we could not find any of these fields
             if (_sourceFieldInfo != null
                 && _parentFieldInfo != null)
             {
@@ -102,7 +102,7 @@ namespace Microsoft.Data.Entity.Design.Model.Validation
         public bool HasLineInfo()
         {
             // in theory this should never happen but since we are using reflection to get these 
-            // fields it's safer to return false if we could not find any of these fileds
+            // fields it's safer to return false if we could not find any of these fields
             return _sourceFieldInfo != null && _parentFieldInfo != null;
         }
     }

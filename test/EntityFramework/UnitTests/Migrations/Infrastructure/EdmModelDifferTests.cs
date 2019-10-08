@@ -30,6 +30,11 @@ namespace System.Data.Entity.Migrations.Infrastructure
     [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
     public class EdmModelDifferTests : DbTestCase
     {
+        public EdmModelDifferTests(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         #region Table Renames
 
         public class ManyManySelfRef

@@ -649,6 +649,7 @@ namespace ProductivityApiTests
             }
         }
 
+#if NET452
         [Fact]
         public void CreateDatabaseIfNotExists_does_nothing_if_database_exists_without_metadata_but_with_model_table_in_nondefault_schema_ce()
         {
@@ -681,6 +682,7 @@ namespace ProductivityApiTests
                 MutableResolver.ClearResolvers();
             }
         }
+#endif
 
         #endregion
 
@@ -1787,7 +1789,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Model_is_built_and_existance_checked_only_once_when_database_exists_and_contains_metadata()
+        public void Model_is_built_and_existence_checked_only_once_when_database_exists_and_contains_metadata()
         {
             using (var context = new BaseModelContext(SimpleConnection<ExistingDatabaseContext>()))
             {
@@ -1821,7 +1823,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Model_is_built_and_existance_checked_only_once_when_database_exists_and_contains_no_metadata()
+        public void Model_is_built_and_existence_checked_only_once_when_database_exists_and_contains_no_metadata()
         {
             using (var context = new BaseModelContext(SimpleConnection<ExistingDatabaseNoMetadataContext>()))
             {
@@ -1859,7 +1861,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Model_is_built_and_existance_checked_only_once_when_database_does_not_exist()
+        public void Model_is_built_and_existence_checked_only_once_when_database_does_not_exist()
         {
             using (var context = new BaseModelContext(SimpleConnection<NewDatabaseContext>()))
             {
@@ -1889,7 +1891,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Model_is_built_and_existance_checked_only_once_when_dropping_and_creating_database()
+        public void Model_is_built_and_existence_checked_only_once_when_dropping_and_creating_database()
         {
             using (var context = new BaseModelContext(SimpleConnection<DropCreateContext>()))
             {

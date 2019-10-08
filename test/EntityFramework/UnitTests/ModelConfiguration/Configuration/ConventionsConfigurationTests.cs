@@ -277,19 +277,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 new ConventionSet());
 
             Assert.Equal(
-                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(ConceptualModelConventionFixture)),
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention.GetType(), typeof(ConceptualModelConventionFixture)),
                 Assert.Throws<InvalidOperationException>(
                     () =>
                         conventionsConfiguration.AddAfter<ConceptualModelConventionFixture>(mockConvention)).Message);
 
             Assert.Equal(
-                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(StoreModelConventionFixture)),
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention.GetType(), typeof(StoreModelConventionFixture)),
                 Assert.Throws<InvalidOperationException>(
                     () =>
                         conventionsConfiguration.AddAfter<StoreModelConventionFixture>(mockConvention)).Message);
 
             Assert.Equal(
-                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(MappingConventionFixture)),
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention.GetType(), typeof(MappingConventionFixture)),
                 Assert.Throws<InvalidOperationException>(
                     () =>
                         conventionsConfiguration.AddAfter<MappingConventionFixture>(mockConvention)).Message);
@@ -303,19 +303,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 new ConventionSet());
 
             Assert.Equal(
-                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(ConventionFixture)),
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention.GetType(), typeof(ConventionFixture)),
                 Assert.Throws<InvalidOperationException>(
                     () =>
                         conventionsConfiguration.AddAfter<ConventionFixture>(mockConvention)).Message);
 
             Assert.Equal(
-                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(StoreModelConventionFixture)),
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention.GetType(), typeof(StoreModelConventionFixture)),
                 Assert.Throws<InvalidOperationException>(
                     () =>
                         conventionsConfiguration.AddAfter<StoreModelConventionFixture>(mockConvention)).Message);
 
             Assert.Equal(
-                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(MappingConventionFixture)),
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention.GetType(), typeof(MappingConventionFixture)),
                 Assert.Throws<InvalidOperationException>(
                     () =>
                         conventionsConfiguration.AddAfter<MappingConventionFixture>(mockConvention)).Message);
@@ -329,19 +329,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 new ConventionSet());
 
             Assert.Equal(
-                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(ConventionFixture)),
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention.GetType(), typeof(ConventionFixture)),
                 Assert.Throws<InvalidOperationException>(
                     () =>
                         conventionsConfiguration.AddAfter<ConventionFixture>(mockConvention)).Message);
 
             Assert.Equal(
-                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(ConceptualModelConventionFixture)),
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention.GetType(), typeof(ConceptualModelConventionFixture)),
                 Assert.Throws<InvalidOperationException>(
                     () =>
                         conventionsConfiguration.AddAfter<ConceptualModelConventionFixture>(mockConvention)).Message);
 
             Assert.Equal(
-                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(MappingConventionFixture)),
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention.GetType(), typeof(MappingConventionFixture)),
                 Assert.Throws<InvalidOperationException>(
                     () =>
                         conventionsConfiguration.AddAfter<MappingConventionFixture>(mockConvention)).Message);
@@ -355,19 +355,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 new ConventionSet());
 
             Assert.Equal(
-                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(ConventionFixture)),
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention.GetType(), typeof(ConventionFixture)),
                 Assert.Throws<InvalidOperationException>(
                     () =>
                         conventionsConfiguration.AddAfter<ConventionFixture>(mockConvention)).Message);
 
             Assert.Equal(
-                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(ConceptualModelConventionFixture)),
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention.GetType(), typeof(ConceptualModelConventionFixture)),
                 Assert.Throws<InvalidOperationException>(
                     () =>
                         conventionsConfiguration.AddAfter<ConceptualModelConventionFixture>(mockConvention)).Message);
 
             Assert.Equal(
-                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(StoreModelConventionFixture)),
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention.GetType(), typeof(StoreModelConventionFixture)),
                 Assert.Throws<InvalidOperationException>(
                     () =>
                         conventionsConfiguration.AddAfter<StoreModelConventionFixture>(mockConvention)).Message);
@@ -500,19 +500,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 new ConventionSet());
 
             Assert.Equal(
-                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(ConceptualModelConventionFixture)),
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention.GetType(), typeof(ConceptualModelConventionFixture)),
                 Assert.Throws<InvalidOperationException>(
                     () =>
                         conventionsConfiguration.AddBefore<ConceptualModelConventionFixture>(mockConvention)).Message);
 
             Assert.Equal(
-                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(StoreModelConventionFixture)),
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention.GetType(), typeof(StoreModelConventionFixture)),
                 Assert.Throws<InvalidOperationException>(
                     () =>
                         conventionsConfiguration.AddBefore<StoreModelConventionFixture>(mockConvention)).Message);
 
             Assert.Equal(
-                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(MappingConventionFixture)),
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention.GetType(), typeof(MappingConventionFixture)),
                 Assert.Throws<InvalidOperationException>(
                     () =>
                         conventionsConfiguration.AddBefore<MappingConventionFixture>(mockConvention)).Message);
@@ -526,19 +526,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 new ConventionSet());
 
             Assert.Equal(
-                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(ConventionFixture)),
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention.GetType(), typeof(ConventionFixture)),
                 Assert.Throws<InvalidOperationException>(
                     () =>
                         conventionsConfiguration.AddBefore<ConventionFixture>(mockConvention)).Message);
 
             Assert.Equal(
-                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(StoreModelConventionFixture)),
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention.GetType(), typeof(StoreModelConventionFixture)),
                 Assert.Throws<InvalidOperationException>(
                     () =>
                         conventionsConfiguration.AddBefore<StoreModelConventionFixture>(mockConvention)).Message);
 
             Assert.Equal(
-                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(MappingConventionFixture)),
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention.GetType(), typeof(MappingConventionFixture)),
                 Assert.Throws<InvalidOperationException>(
                     () =>
                         conventionsConfiguration.AddBefore<MappingConventionFixture>(mockConvention)).Message);
@@ -552,19 +552,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 new ConventionSet());
 
             Assert.Equal(
-                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(ConventionFixture)),
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention.GetType(), typeof(ConventionFixture)),
                 Assert.Throws<InvalidOperationException>(
                     () =>
                         conventionsConfiguration.AddBefore<ConventionFixture>(mockConvention)).Message);
 
             Assert.Equal(
-                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(ConceptualModelConventionFixture)),
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention.GetType(), typeof(ConceptualModelConventionFixture)),
                 Assert.Throws<InvalidOperationException>(
                     () =>
                         conventionsConfiguration.AddBefore<ConceptualModelConventionFixture>(mockConvention)).Message);
 
             Assert.Equal(
-                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(MappingConventionFixture)),
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention.GetType(), typeof(MappingConventionFixture)),
                 Assert.Throws<InvalidOperationException>(
                     () =>
                         conventionsConfiguration.AddBefore<MappingConventionFixture>(mockConvention)).Message);
@@ -578,19 +578,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 new ConventionSet());
 
             Assert.Equal(
-                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(ConventionFixture)),
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention.GetType(), typeof(ConventionFixture)),
                 Assert.Throws<InvalidOperationException>(
                     () =>
                         conventionsConfiguration.AddBefore<ConventionFixture>(mockConvention)).Message);
 
             Assert.Equal(
-                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(ConceptualModelConventionFixture)),
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention.GetType(), typeof(ConceptualModelConventionFixture)),
                 Assert.Throws<InvalidOperationException>(
                     () =>
                         conventionsConfiguration.AddBefore<ConceptualModelConventionFixture>(mockConvention)).Message);
 
             Assert.Equal(
-                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(StoreModelConventionFixture)),
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention.GetType(), typeof(StoreModelConventionFixture)),
                 Assert.Throws<InvalidOperationException>(
                     () =>
                         conventionsConfiguration.AddBefore<StoreModelConventionFixture>(mockConvention)).Message);

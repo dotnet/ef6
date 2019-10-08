@@ -154,7 +154,7 @@ namespace System.Data.Entity.Core.Mapping
             if (!TypeSemantics.IsScalarType(resultType)
                 && (structuralTypeMappings == null || structuralTypeMappings.Count == 0))
             {
-                throw new ArgumentException(Strings.StructuralTypeMappingsMustNotBeNullForFunctionImportsReturingNonScalarValues);
+                throw new ArgumentException(Strings.StructuralTypeMappingsMustNotBeNullForFunctionImportsReturningNonScalarValues);
             }
 
             m_structuralTypeMappings = structuralTypeMappings;
@@ -403,7 +403,7 @@ namespace System.Data.Entity.Core.Mapping
             // Generate parameterized command, where command parameters are semantically the c-space function parameters.
             return DbQueryCommandTree.FromValidExpression(
                 _containerMapping.StorageMappingItemCollection.Workspace, TargetPerspective.TargetPerspectiveDataSpace, queryExpression,
-                useDatabaseNullSemantics: true);
+                useDatabaseNullSemantics: true, disableFilterOverProjectionSimplificationForCustomFunctions: false);
         }
 
         private IEnumerable<DbExpression> GetParametersForTargetFunctionCall()

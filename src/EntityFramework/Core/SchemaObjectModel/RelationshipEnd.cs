@@ -110,7 +110,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         // </summary>
         protected override void HandleAttributesComplete()
         {
-            // set up the default name in before validating anythig that might want to display it in an error message;
+            // set up the default name in before validating anything that might want to display it in an error message;
             if (Name == null
                 && _unresolvedType != null)
             {

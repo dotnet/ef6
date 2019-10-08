@@ -1831,7 +1831,7 @@ namespace Microsoft.Data.Entity.Design.Model
             }
 
             // this will remove the 'Collection' around the return type. It will now either be 'None',
-            // the primitive type name, complec type name, or entity name.
+            // the primitive type name, complex type name, or entity name.
             var desanitizedReturnType = UnwrapCollectionAroundFunctionImportReturnType(returnTypeAsString, true);
 
             // if this is a complex type name, attempt to get the complex type object
@@ -1860,7 +1860,7 @@ namespace Microsoft.Data.Entity.Design.Model
         /// <summary>
         ///     Given the runtime format for the return type: "Collection([namespace-qualified return type])", return back either:
         ///     1. The namespace-(Un)qualified EntityType name.
-        ///     2. The namespace-(Un)qualified ComplexType namme.
+        ///     2. The namespace-(Un)qualified ComplexType name.
         ///     3. The primitive type name
         ///     4. "(None)" if the passed in string is null.
         /// </summary>
@@ -2274,7 +2274,7 @@ namespace Microsoft.Data.Entity.Design.Model
 
         /// <summary>
         ///     Return the list of entity-types that are related (through association or direct inheritance) to the passed in entity-type.
-        ///     TODO: there are common functionality between this method and EntiyTypeShape's CreateEntityTypeShapeAndConnectorsInDiagram,
+        ///     TODO: there are common functionality between this method and EntityTypeShape's CreateEntityTypeShapeAndConnectorsInDiagram,
         ///     We should be able to extract common functionality that can be shared between 2 methods.
         /// </summary>
         internal static IEnumerable<EntityType> GetRelatedEntityTypes(EntityType entityType)
@@ -2348,7 +2348,7 @@ namespace Microsoft.Data.Entity.Design.Model
             IEnumerable<Association> participatingAssociations =
                 Association.GetAssociationsForEntityType(entityTypeShape.EntityType.SafeTarget);
 
-            // Find all all associationConnectors in the diagram.
+            // Find all associationConnectors in the diagram.
             foreach (var association in participatingAssociations)
             {
                 foreach (

@@ -348,7 +348,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
 
         internal override void ToCompactString(StringBuilder builder)
         {
-            LeftCellWrapper.WrappersToStringBuilder(builder, m_cellWrappers, "Left Celll Wrappers");
+            LeftCellWrapper.WrappersToStringBuilder(builder, m_cellWrappers, "Left Cell Wrappers");
         }
     }
 }

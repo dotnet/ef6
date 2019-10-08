@@ -93,7 +93,7 @@ namespace System.Data.Entity
         #region Connection helpers
 
         private static readonly string _baseConnectionString = ConfigurationManager.AppSettings["BaseConnectionString"]
-                                                               ?? @"Data Source=.\SQLEXPRESS; Integrated Security=True; MultipleActiveResultSets=True;";
+                                                               ?? @"Data Source=(localdb)\MSSQLLocalDB; Integrated Security=True; MultipleActiveResultSets=True;";
 
         public static string BaseConnectionString
         {

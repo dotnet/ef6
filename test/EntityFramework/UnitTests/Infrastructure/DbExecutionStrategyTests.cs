@@ -470,18 +470,18 @@ namespace System.Data.Entity.Infrastructure
         public class ExecuteAsync
         {
             [Fact]
-            public void ExecuteAsync_Action_throws_for_an_existing_transaction()
+            public Task ExecuteAsync_Action_throws_for_an_existing_transaction()
             {
-                ExecuteAsync_throws_for_an_existing_transaction(e => e.ExecuteAsync(() => (Task)Task.FromResult(1), CancellationToken.None));
+                return ExecuteAsync_throws_for_an_existing_transaction(e => e.ExecuteAsync(() => (Task)Task.FromResult(1), CancellationToken.None));
             }
 
             [Fact]
-            public void ExecuteAsync_Func_throws_for_an_existing_transaction()
+            public Task ExecuteAsync_Func_throws_for_an_existing_transaction()
             {
-                ExecuteAsync_throws_for_an_existing_transaction(e => e.ExecuteAsync(() => Task.FromResult(1), CancellationToken.None));
+                return ExecuteAsync_throws_for_an_existing_transaction(e => e.ExecuteAsync(() => Task.FromResult(1), CancellationToken.None));
             }
 
-            private void ExecuteAsync_throws_for_an_existing_transaction(Func<DbExecutionStrategy, Task> executeAsync)
+            private async Task ExecuteAsync_throws_for_an_existing_transaction(Func<DbExecutionStrategy, Task> executeAsync)
             {
                 var mockExecutionStrategy =
                     new Mock<DbExecutionStrategy>
@@ -493,9 +493,9 @@ namespace System.Data.Entity.Infrastructure
                 {
                     Assert.Equal(
                         Strings.ExecutionStrategy_ExistingTransaction(mockExecutionStrategy.GetType().Name),
-                        Assert.Throws<InvalidOperationException>(
+                        (await Assert.ThrowsAsync<InvalidOperationException>(
                             () =>
-                            executeAsync(mockExecutionStrategy)).Message);
+                            executeAsync(mockExecutionStrategy))).Message);
                 }
             }
 
@@ -863,7 +863,7 @@ namespace System.Data.Entity.Infrastructure
             }
 
             [Fact]
-            public void Non_generic_ExecuteAsync_checks_transactions_before_checking_cancellation()
+            public async Task Non_generic_ExecuteAsync_checks_transactions_before_checking_cancellation()
             {
                 using (new TransactionScope())
                 {
@@ -871,8 +871,8 @@ namespace System.Data.Entity.Infrastructure
 
                     Assert.Equal(
                         Strings.ExecutionStrategy_ExistingTransaction("DbExecutionStrategyProxy"),
-                        Assert.Throws<InvalidOperationException>(
-                            () => mockExecutionStrategy.Object.ExecuteAsync(() => null, new CancellationToken(canceled: true))).Message);
+                        (await Assert.ThrowsAsync<InvalidOperationException>(
+                            () => mockExecutionStrategy.Object.ExecuteAsync(() => null, new CancellationToken(canceled: true)))).Message);
                 }
             }
 
@@ -887,7 +887,7 @@ namespace System.Data.Entity.Infrastructure
             }
 
             [Fact]
-            public void Generic_ExecuteAsync_checks_transactions_before_checking_cancellation()
+            public async Task Generic_ExecuteAsync_checks_transactions_before_checking_cancellation()
             {
                 using (new TransactionScope())
                 {
@@ -895,8 +895,8 @@ namespace System.Data.Entity.Infrastructure
 
                     Assert.Equal(
                         Strings.ExecutionStrategy_ExistingTransaction("DbExecutionStrategyProxy"),
-                        Assert.Throws<InvalidOperationException>(
-                            () => mockExecutionStrategy.Object.ExecuteAsync<object>(() => null, new CancellationToken(canceled: true))).Message);
+                        (await Assert.ThrowsAsync<InvalidOperationException>(
+                            () => mockExecutionStrategy.Object.ExecuteAsync<object>(() => null, new CancellationToken(canceled: true)))).Message);
                 }
             }
         }

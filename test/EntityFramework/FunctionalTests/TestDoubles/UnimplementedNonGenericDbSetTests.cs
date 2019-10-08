@@ -5,6 +5,7 @@ namespace System.Data.Entity.TestDoubles
     using System.ComponentModel;
     using System.Data.Entity.Infrastructure;
     using System.Linq;
+    using System.Threading.Tasks;
     using SimpleModel;
     using Xunit;
 
@@ -217,9 +218,9 @@ namespace System.Data.Entity.TestDoubles
 
 #if !NET40
         [Fact]
-        public void FindAsync_throws_for_unimplemented_DbSet()
+        public async Task FindAsync_throws_for_unimplemented_DbSet()
         {
-            Assert.Throws<NotImplementedException>(() => new UnimplementedNonGenericDbSet().FindAsync(1))
+            (await Assert.ThrowsAsync<NotImplementedException>(() => new UnimplementedNonGenericDbSet().FindAsync(1)))
                 .ValidateMessage("TestDoubleNotImplemented", "FindAsync", typeof(UnimplementedNonGenericDbSet).Name, typeof(DbSet).Name);
         }
 

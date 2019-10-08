@@ -22,7 +22,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         // <summary>
-        // Returns optional function defintions. May be null.
+        // Returns optional function definitions. May be null.
         // </summary>
         internal NodeList<FunctionDefinition> FunctionDefList
         {

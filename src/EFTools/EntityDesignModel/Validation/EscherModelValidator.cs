@@ -46,7 +46,7 @@ namespace Microsoft.Data.Entity.Design.Model.Validation
                 if (ei.ErrorCode == ErrorCodes.ESCHER_VALIDATOR_CIRCULAR_INHERITANCE
                     || ei.ErrorCode == ErrorCodes.ESCHER_VALIDATOR_CIRCULAR_COMPLEX_TYPE_DEFINITION
                     || ei.ErrorCode == ErrorCodes.ESCHER_VALIDATOR_ENTITY_TYPE_WITHOUT_ENTITY_SET
-                    || ei.ErrorCode == ErrorCodes.ESCHER_VALIDATOR_MULTIPE_ENTITY_SETS_PER_TYPE
+                    || ei.ErrorCode == ErrorCodes.ESCHER_VALIDATOR_MULTIPLE_ENTITY_SETS_PER_TYPE
                     || ei.ErrorCode == ErrorCodes.ESCHER_VALIDATOR_ASSOCIATION_WITHOUT_ASSOCIATION_SET
                     || ei.ErrorCode == ErrorCodes.ESCHER_VALIDATOR_INCLUDES_USING
                     || ei.ErrorCode == ErrorCodes.NON_QUALIFIED_ELEMENT)
@@ -182,7 +182,7 @@ namespace Microsoft.Data.Entity.Design.Model.Validation
                         if (baseTypes.Contains(t))
                         {
                             var msg = String.Format(
-                                CultureInfo.CurrentCulture, Resources.EscherValidation_CiricularInheritance,
+                                CultureInfo.CurrentCulture, Resources.EscherValidation_CircularInheritance,
                                 NameableItemsToCommaSeparatedString(baseTypes));
                             ArtifactSet.AddError(
                                 new ErrorInfo(
@@ -201,7 +201,7 @@ namespace Microsoft.Data.Entity.Design.Model.Validation
                 if (ModelHelper.ContainsCircularComplexTypeDefinition(complexType))
                 {
                     var msg = String.Format(
-                        CultureInfo.CurrentCulture, Resources.EscherValidation_CiricularComplexTypeDefinition, complexType.LocalName.Value);
+                        CultureInfo.CurrentCulture, Resources.EscherValidation_CircularComplexTypeDefinition, complexType.LocalName.Value);
                     ArtifactSet.AddError(
                         new ErrorInfo(
                             ErrorInfo.Severity.ERROR, msg, complexType, ErrorCodes.ESCHER_VALIDATOR_CIRCULAR_COMPLEX_TYPE_DEFINITION,
@@ -231,7 +231,7 @@ namespace Microsoft.Data.Entity.Design.Model.Validation
                         }
                         ArtifactSet.AddError(
                             new ErrorInfo(
-                                ErrorInfo.Severity.WARNING, msg, t, ErrorCodes.ESCHER_VALIDATOR_MULTIPE_ENTITY_SETS_PER_TYPE, errorClass));
+                                ErrorInfo.Severity.WARNING, msg, t, ErrorCodes.ESCHER_VALIDATOR_MULTIPLE_ENTITY_SETS_PER_TYPE, errorClass));
                     }
                 }
             }
@@ -265,7 +265,7 @@ namespace Microsoft.Data.Entity.Design.Model.Validation
                         if (a.AssociationSet == null)
                         {
                             var msg = String.Format(
-                                CultureInfo.CurrentCulture, Resources.EscherValidation_AssociationWithtouAssociationSet, a.LocalName.Value);
+                                CultureInfo.CurrentCulture, Resources.EscherValidation_AssociationWithoutAssociationSet, a.LocalName.Value);
                             ArtifactSet.AddError(
                                 new ErrorInfo(
                                     ErrorInfo.Severity.WARNING, msg, a, ErrorCodes.ESCHER_VALIDATOR_ASSOCIATION_WITHOUT_ASSOCIATION_SET,

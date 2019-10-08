@@ -255,7 +255,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         // <summary>
-        // Attempts to get the property name for the assoication between the two given end
+        // Attempts to get the property name for the association between the two given end
         // names.  Note that this property may not exist if a navigation property is defined
         // in one direction but not in the other.
         // </summary>
@@ -268,7 +268,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             string relationshipType, string fromName, string toName, out NavigationProperty navigationProperty)
         {
             // This is a linear search but it's probably okay because the number of entries
-            // is generally small and this method is only called to generate code during lighweight
+            // is generally small and this method is only called to generate code during lightweight
             // code gen.
             foreach (var navProperty in NavigationProperties)
             {

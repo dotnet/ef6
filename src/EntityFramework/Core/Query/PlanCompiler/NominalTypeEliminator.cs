@@ -596,7 +596,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // <param name="input"> The input expression tree </param>
         // <param name="ignoreMissingProperties"> Should we ignore missing properties </param>
         // <param name="properties"> Output: list of properties </param>
-        // <param name="values"> Output: correspondng list of values </param>
+        // <param name="values"> Output: corresponding list of values </param>
         private void GetPropertyValues(
             TypeInfo typeInfo, OperationKind opKind, Node input, bool ignoreMissingProperties,
             out List<md.EdmProperty> properties, out List<Node> values)
@@ -1123,7 +1123,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             if (op.Outputs != newVars)
             {
-                // If the set of vars is empty, that means we didn;t need any of the Vars
+                // If the set of vars is empty, that means we didn't need any of the Vars
                 if (newVars.IsEmpty)
                 {
                     return n.Child0;
@@ -1166,7 +1166,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             //
-            // Create a flattened table definition, and a table with that definiton;
+            // Create a flattened table definition, and a table with that definition;
             //
             var newTableMD = m_command.CreateFlatTableDefinition(properties, keyProperties, op.Table.TableMetadata.Extent);
             var newTable = m_command.CreateTableInstance(newTableMD);
@@ -1330,7 +1330,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                             // For a TVF function call use the original non-flattened variable:
                             // the function will not return properties described in the flattened type, there would be no null sentinel and 
                             // row prop names will be as declared in the function signature.
-                            // The mismatch between the flattened type and the orignial type is fixed by wrapping into a ProjectOp produced by CreateTVFProjection(...).
+                            // The mismatch between the flattened type and the original type is fixed by wrapping into a ProjectOp produced by CreateTVFProjection(...).
                             newUnnestVar = computedVar;
                             processingTVF = ((FunctionOp)chi.Child0.Op).Function;
                         }
@@ -1402,9 +1402,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 // 3. If processingTVF, create a ProjectOp and wrap the new UnnestOp into it.
                 //    The new ProjectOp projects fields of the typeInfo.FlattenedType. The values of the projected fields
                 //    are taken from the corresponding variables of the new UnnestOp. 
-                //    The new ProjectOp also projects a null sentinenel if the flattened type has one.
+                //    The new ProjectOp also projects a null sentinel if the flattened type has one.
                 //
-                // 4. Update m_varInfoMap with the new new entry that maps the old unnestTableColumnVar to the list of new flattened vars:
+                // 4. Update m_varInfoMap with the new entry that maps the old unnestTableColumnVar to the list of new flattened vars:
                 //    If processingTVF, the new flattended vars are the outputs of the ProjectOp, 
                 //    otherwise the new flattened vars are the columns on the new UnnestOp.Table.
                 //
@@ -1939,7 +1939,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // <returns> new subtree </returns>
         public override Node Visit(CaseOp op, Node n)
         {
-            // Before visiting the children, check whether the case statment can be optimized 
+            // Before visiting the children, check whether the case statement can be optimized 
             bool thenClauseIsNull;
             var canSimplifyPrecheck = PlanCompilerUtil.IsRowTypeCaseOpWithNullability(op, n, out thenClauseIsNull);
 
@@ -1995,7 +1995,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // (1) case when X then NULL else Y, or
         // (2) case when X then Y else NULL,
         // where Y is of row type and the types of the input CaseOp, the NULL and Y are the same,
-        // it rewrittes into:  Y', where Y's null sentinel N' is:
+        // it rewrites into:  Y', where Y's null sentinel N' is:
         // (1) case when X then NULL else N, or
         // where N is Y's null sentinel.
         // The rewrite only happens if:
@@ -2031,7 +2031,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             var newCaseOp = m_command.CreateCaseOp(integerType);
             var children = new List<Node>(3);
 
-            //The the 'when' from the case statement
+            //The 'when' from the case statement
             children.Add(n.Child0);
 
             var nullSentinelNullNode = m_command.CreateNode(m_command.CreateNullOp(integerType));
@@ -2208,7 +2208,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // IS NULL predicates, one for each property. There are a couple of
             // optimizations that we perform. 
             //
-            // For entity types, we simply perfom the IS NULL operations on the 
+            // For entity types, we simply perform the IS NULL operations on the 
             // key attributes alone. 
             //
             // Complex types must have a typeid property - the isnull is pushed to the

@@ -200,7 +200,7 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Branches
         //    EditingContext editingContext = _mappingConceptualTypeMapping.Context;
         //    if (editingContext.Services.Contains<EFArtifactService>() == false)
         //    {
-        //        // TODO: For some reason, RemoveEventHanlders() isn't being called; figure out why
+        //        // TODO: For some reason, RemoveEventHandlers() isn't being called; figure out why
         //        RemoveEventHandlers();
         //        return;
         //    }

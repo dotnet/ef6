@@ -48,7 +48,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // </summary>
         // <param name="subtree"> The input subtree </param>
         // <param name="groupAggregateVarInfo"> The groupAggregateVarInfo over which the input subtree can be translated </param>
-        // <param name="templateNode"> A tree that is equvalent to the input tree, but over the group aggregate variable represented by the groupAggregetVarInfo </param>
+        // <param name="templateNode"> A tree that is equivalent to the input tree, but over the group aggregate variable represented by the groupAggregateVarInfo </param>
         // <returns> True, if the translation can be done, false otherwise </returns>
         public static bool TryTranslateOverGroupAggregateVar(
             Node subtree,
@@ -154,7 +154,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // Unnest
         // where the unnest is over the group aggregate var and the output var
         // is either a reference to the group aggregate var or to a constant, it returns the
-        // translation of the ouput var.
+        // translation of the output var.
         // </summary>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]

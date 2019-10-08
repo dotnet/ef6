@@ -6,6 +6,7 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Resources;
     using System.Threading;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class InternalCollectionEntryTests
@@ -157,7 +158,7 @@ namespace System.Data.Entity.Internal
         public class LoadAsync
         {
             [Fact]
-            public void InternalCollectionEntry_LoadAsync_throws_if_used_with_Detached_entity()
+            public async Task InternalCollectionEntry_LoadAsync_throws_if_used_with_Detached_entity()
             {
                 var mockInternalEntry = MockHelper.CreateMockInternalEntityEntry(
                     new FakeEntity(), isDetached: true);
@@ -165,9 +166,9 @@ namespace System.Data.Entity.Internal
 
                 Assert.Equal(
                     Strings.DbPropertyEntry_NotSupportedForDetached("LoadAsync", "Collection", "FakeEntity"),
-                    Assert.Throws<InvalidOperationException>(
+                    (await Assert.ThrowsAsync<InvalidOperationException>(
                         () =>
-                        internalEntry.LoadAsync(CancellationToken.None)).Message);
+                        internalEntry.LoadAsync(CancellationToken.None))).Message);
             }
         }
 

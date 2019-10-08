@@ -121,7 +121,7 @@ namespace System.Data.Entity.Infrastructure.Interception
         }
 
         /// <summary>
-        /// When true, this flag indicates that that execution of the operation has been suppressed by
+        /// When true, this flag indicates that execution of the operation has been suppressed by
         /// one of the interceptors. This can be done before the operation has executed by calling
         /// <see cref="SuppressExecution" /> or by setting an <see cref="Exception" /> to be thrown
         /// </summary>

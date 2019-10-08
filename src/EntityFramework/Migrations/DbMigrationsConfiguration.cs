@@ -254,9 +254,12 @@ namespace System.Data.Entity.Migrations
 
         /// <summary>
         /// Gets or sets the timeout value used for the individual commands within a
-        /// migration. A null value indicates that the default value of the underlying
-        /// provider will be used.
+        /// migration.
         /// </summary>
+        /// <returns>
+        /// The time in seconds to wait for the command to execute. A null value indicates 
+        /// that the default value of the underlying provider will be used.
+        /// </returns>
         public int? CommandTimeout
         {
             get { return _commandTimeout; }

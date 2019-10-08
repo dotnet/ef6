@@ -4,7 +4,6 @@ namespace System.Data.Entity.Core.Mapping
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Utilities;
-    using System.Runtime.Remoting.Proxies;
 
     /// <summary>
     /// Specifies a mapping condition evaluated by comparing the value of 

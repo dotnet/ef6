@@ -275,7 +275,7 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
                 XmlModelHelper.NormalizeAndResolve(fae);
             }
 
-            Debug.Assert(fae != null, "Failed to create the AssocationEnd to house this ScalarProperty");
+            Debug.Assert(fae != null, "Failed to create the AssociationEnd to house this ScalarProperty");
             if (fae == null)
             {
                 throw new ParentItemCreationFailureException();

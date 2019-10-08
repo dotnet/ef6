@@ -26,7 +26,7 @@ namespace System.Data.Entity.TestModels.FantasyModel
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Creature>().Property(p => p.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
-            
+
             // if this is not added, we throw bad exception
             modelBuilder.Entity<Carnivore>().HasMany(c => c.Eats).WithMany();
             modelBuilder.Entity<Omnivore>().HasMany(c => c.Eats).WithMany();
@@ -67,6 +67,10 @@ namespace System.Data.Entity.TestModels.FantasyModel
             modelBuilder.Entity<Landmark>().HasRequired(l => l.MatchingTower).WithRequiredPrincipal(s => s.MatchingLandnmark);
             modelBuilder.Entity<Landmark>().Property(p => p.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
             modelBuilder.Entity<Tower>().Property(p => p.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+
+#if NETCOREAPP
+            modelBuilder.Entity<Province>().Ignore(x => x.Shape);
+#endif
         }
     }
 }

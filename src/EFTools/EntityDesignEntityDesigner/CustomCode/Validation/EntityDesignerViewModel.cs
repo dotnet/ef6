@@ -15,7 +15,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.ViewModel
         /// Validate model Namespace
         /// </summary>
         /// <param name="context"></param>
-        [ValidationMethod(ValidationCategories.Open | ValidationCategories.Save, CustomCategory = "OnTransactionCommited")]
+        [ValidationMethod(ValidationCategories.Open | ValidationCategories.Save, CustomCategory = "OnTransactionCommitted")]
         private void ValidateNamespace(ValidationContext context)
         {
             if (String.IsNullOrEmpty(this.Namespace))

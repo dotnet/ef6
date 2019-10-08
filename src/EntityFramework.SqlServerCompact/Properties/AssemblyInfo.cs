@@ -2,6 +2,4 @@
 
 using System.Reflection;
 
-[assembly: AssemblyTitle("EntityFramework.SqlServerCompact")]
-[assembly: AssemblyDescription("EntityFramework.SqlServerCompact.dll")]
 [assembly: AssemblyDefaultAlias("EntityFramework.SqlServerCompact.dll")]

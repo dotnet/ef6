@@ -102,8 +102,8 @@ namespace System.Data.Entity.Core.Objects.Internal
         internal void BeginAddTracking()
         {
             Debug.Assert(!IsAddTracking);
-            Debug.Assert(PopulatedEntityReferences == null, "Expected promotion index to be null when begining tracking.");
-            Debug.Assert(AlignedEntityReferences == null, "Expected promotion index to be null when begining tracking.");
+            Debug.Assert(PopulatedEntityReferences == null, "Expected promotion index to be null when beginning tracking.");
+            Debug.Assert(AlignedEntityReferences == null, "Expected promotion index to be null when beginning tracking.");
             IsAddTracking = true;
             PopulatedEntityReferences = new HashSet<EntityReference>();
             AlignedEntityReferences = new HashSet<EntityReference>();
@@ -126,7 +126,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             AlignedEntityReferences = null;
             PromotedRelationships = null;
 
-            // Clear flags/dictionaries only if we are not in the iddle of DetectChanges.
+            // Clear flags/dictionaries only if we are not in the middle of DetectChanges.
             if (!IsDetectChanges)
             {
                 TrackProcessedEntities = false;
@@ -151,7 +151,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             ProcessedEntities = new HashSet<IEntityWrapper>();
             WrappedEntities = new Dictionary<object, IEntityWrapper>(ObjectReferenceEqualityComparer.Default);
 
-            OriginalMergeOption = null; // this must be set explicitely to value!=null later when the merge option is known
+            OriginalMergeOption = null; // this must be set explicitly to value!=null later when the merge option is known
         }
 
         internal void EndAttachTracking()

@@ -240,6 +240,55 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionAggregate" />.
+        /// </summary>
+        /// <returns>A new function aggregate with a reference to the given function and argument. The function aggregate's Distinct property will have the value false.</returns>
+        /// <param name="function">The function that defines the aggregate operation.</param>
+        /// <param name="arguments">The argument over which the aggregate function should be calculated.</param>
+        /// <exception cref="T:System.ArgumentNullException">function or argument null.</exception>
+        /// <exception cref="T:System.ArgumentException">function is not an aggregate function or has more than one argument, or the result type of argument is not equal or promotable to the parameter type of function.</exception>
+        public static DbFunctionAggregate Aggregate(this EdmFunction function, IEnumerable<DbExpression> arguments)
+        {
+            Check.NotNull(function, "function");
+            Check.NotNull(arguments, "argument");
+
+            if (arguments.Any() == false)
+            {
+                throw new ArgumentNullException("arguments");
+            }
+
+            return CreateFunctionAggregate(function, arguments, false);
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionAggregate" /> that is applied in a distinct fashion.
+        /// </summary>
+        /// <returns>A new function aggregate with a reference to the given function and argument. The function aggregate's Distinct property will have the value true.</returns>
+        /// <param name="function">The function that defines the aggregate operation.</param>
+        /// <param name="arguments">The arguments over which the aggregate function should be calculated.</param>
+        /// <exception cref="T:System.ArgumentNullException">function or argument is null.</exception>
+        /// <exception cref="T:System.ArgumentException">function is not an aggregate function, or the result type of argument is not equal or promotable to the parameter type of function.</exception>
+        public static DbFunctionAggregate AggregateDistinct(this EdmFunction function, IEnumerable<DbExpression> arguments)
+        {
+            Check.NotNull(function, "function");
+            Check.NotNull(arguments, "argument");
+
+            if (arguments.Any() == false)
+            {
+                throw new ArgumentNullException("arguments");
+            }
+
+            return CreateFunctionAggregate(function, arguments, true);
+        }
+
+        private static DbFunctionAggregate CreateFunctionAggregate(EdmFunction function, IEnumerable<DbExpression> arguments, bool isDistinct)
+        {
+            var funcArgs = ArgumentValidation.ValidateFunctionAggregate(function, arguments);
+            var resultType = function.ReturnParameter.TypeUsage;
+            return new DbFunctionAggregate(resultType, funcArgs, function, isDistinct);
+        }
+
+        /// <summary>
         /// Creates a new <see cref="DbGroupAggregate" /> over the specified argument
         /// </summary>
         /// <param name="argument"> The argument over which to perform the nest operation </param>
@@ -1521,7 +1570,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbEntityRefExpression" /> that retrieves the ref of the specifed entity in structural form.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbEntityRefExpression" /> that retrieves the ref of the specified entity in structural form.
         /// </summary>
         /// <returns>A new DbEntityRefExpression that retrieves a reference to the specified entity.</returns>
         /// <param name="argument">The expression that provides the entity. This expression must have an entity result type.</param>
@@ -1677,7 +1726,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRefKeyExpression" /> that retrieves the key values of the specifed reference in structural form.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRefKeyExpression" /> that retrieves the key values of the specified reference in structural form.
         /// </summary>
         /// <returns>A new DbRefKeyExpression that retrieves the key values of the specified reference.</returns>
         /// <param name="argument">The expression that provides the reference. This expression must have a reference Type with an Entity element type.</param>
@@ -1729,7 +1778,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <param name="type">Metadata for the relation type that represents the relationship.</param>
         /// <param name="fromEndName">The name of the property of the relation type that represents the end of the relationship from which navigation should occur.</param>
         /// <param name="toEndName">The name of the property of the relation type that represents the end of the relationship to which navigation should occur.</param>
-        /// <param name="navigateFrom">An expression the specifies the instance from which naviagtion should occur.</param>
+        /// <param name="navigateFrom">An expression the specifies the instance from which navigation should occur.</param>
         /// <exception cref="T:System.ArgumentNullException">type, fromEndName, toEndName or navigateFrom is null.</exception>
         /// <exception cref="T:System.ArgumentException">type is not associated with this command tree's metadata workspace or navigateFrom is associated with a different command tree, or type does not declare a relation end property with name toEndName or fromEndName, or navigateFrom has a result type that is not compatible with the property type of the relation end property with name fromEndName.</exception>
         public static DbRelationshipNavigationExpression Navigate(
@@ -1754,7 +1803,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbDistinctExpression" /> that removes duplicates from the given set argument.
         /// </summary>
         /// <returns>A new DbDistinctExpression that represents the distinct operation applied to the specified set argument.</returns>
-        /// <param name="argument">An expression that defines the set over which to perfom the distinct operation.</param>
+        /// <param name="argument">An expression that defines the set over which to perform the distinct operation.</param>
         /// <exception cref="T:System.ArgumentNullException">argument is null.</exception>
         /// <exception cref="T:System.ArgumentException">argument does not have a collection result type.</exception>
         public static DbDistinctExpression Distinct(this DbExpression argument)
@@ -1839,7 +1888,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <summary>
         /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbUnionAllExpression" /> that computes the union of the left and right set arguments and does not remove duplicates.
         /// </summary>
-        /// <returns>A new DbUnionAllExpression that union, including duplicates, of the the left and right arguments.</returns>
+        /// <returns>A new DbUnionAllExpression that union, including duplicates, of the left and right arguments.</returns>
         /// <param name="left">An expression that defines the left set argument.</param>
         /// <param name="right">An expression that defines the right set argument.</param>
         /// <exception cref="T:System.ArgumentNullException">left or right is null.</exception>
@@ -2252,7 +2301,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             int start;
             int paramCount;
             if (method.IsStatic
-                && typeof(Closure) == methodParams[0].ParameterType)
+                && "System.Runtime.CompilerServices.Closure" == methodParams[0].ParameterType.FullName)
             {
                 // Static lambda method has additional first closure parameter
                 start = 1;
@@ -3086,7 +3135,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <summary>
         /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that computes the union of the left and right set arguments with duplicates removed.
         /// </summary>
-        /// <returns>A new DbExpression that computes the union, without duplicates, of the the left and right arguments.</returns>
+        /// <returns>A new DbExpression that computes the union, without duplicates, of the left and right arguments.</returns>
         /// <param name="left">An expression that defines the left set argument.</param>
         /// <param name="right">An expression that defines the right set argument.</param>
         /// <exception cref="T:System.ArgumentNullException">left or right is null.</exception>
@@ -3250,7 +3299,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         // Creates a new <see cref="DbRelatedEntityRef" /> that describes how to satisfy the relationship
         // navigation operation from <paramref name="sourceEnd" /> to <paramref name="targetEnd" />, which
         // must be declared by the same relationship type.
-        // DbRelatedEntityRefs are used in conjuction with <see cref="DbNewInstanceExpression" />
+        // DbRelatedEntityRefs are used in conjunction with <see cref="DbNewInstanceExpression" />
         // to construct Entity instances that are capable of resolving relationship navigation operations based on
         // the provided DbRelatedEntityRefs without the need for additional navigation operations.
         // Note also that this factory method is not intended to be part of the public Command Tree API
@@ -3258,7 +3307,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         // related Entities using the 'WITH RELATIONSHIP' clause in eSQL.
         // </summary>
         // <param name="sourceEnd"> The relationship end from which navigation takes place </param>
-        // <param name="targetEnd"> The relationship end to which navigation may be satisifed using the target entity ref </param>
+        // <param name="targetEnd"> The relationship end to which navigation may be satisfied using the target entity ref </param>
         // <param name="targetEntity"> An expression that produces a reference to the target entity (and must therefore have a Ref result type) </param>
         internal static DbRelatedEntityRef CreateRelatedEntityRef(
             RelationshipEndMember sourceEnd, RelationshipEndMember targetEnd, DbExpression targetEntity)

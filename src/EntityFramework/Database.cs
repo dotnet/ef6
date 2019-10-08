@@ -33,7 +33,7 @@ namespace System.Data.Entity
         // The default factory object used to create a DbConnection from a database name.
         private static readonly Lazy<IDbConnectionFactory> _defaultDefaultConnectionFactory =
             new Lazy<IDbConnectionFactory>(
-                () => AppConfig.DefaultInstance.TryGetDefaultConnectionFactory() ?? new SqlConnectionFactory(), isThreadSafe: true);
+                () => AppConfig.DefaultInstance.TryGetDefaultConnectionFactory() ?? new LocalDbConnectionFactory(), isThreadSafe: true);
 
         private static volatile Lazy<IDbConnectionFactory> _defaultConnectionFactory = _defaultDefaultConnectionFactory;
 
@@ -177,7 +177,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// Runs the the registered <see cref="IDatabaseInitializer{TContext}" /> on this context.
+        /// Runs the registered <see cref="IDatabaseInitializer{TContext}" /> on this context.
         /// If "force" is set to true, then the initializer is run regardless of whether or not it
         /// has been run before.  This can be useful if a database is deleted while an app is running
         /// and needs to be reinitialized.
@@ -204,7 +204,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// Checks whether or not the database is compatible with the the current Code First model.
+        /// Checks whether or not the database is compatible with the current Code First model.
         /// </summary>
         /// <remarks>
         /// Model compatibility currently uses the following rules.
@@ -432,7 +432,7 @@ namespace System.Data.Entity
         /// the context class is passed to this factory in order to generate a DbConnection.
         /// By default, the <see cref="IDbConnectionFactory" /> instance to use is read from the application's .config
         /// file from the "EntityFramework DefaultConnectionFactory" entry in appSettings. If no entry is found in
-        /// the config file then <see cref="SqlConnectionFactory" /> is used. Setting this property in code
+        /// the config file then <see cref="LocalDbConnectionFactory" /> is used. Setting this property in code
         /// always overrides whatever value is found in the config file.
         /// </remarks>
         [Obsolete(

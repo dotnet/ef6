@@ -1,8 +1,34 @@
-﻿param($installPath, $toolsPath, $package, $project)
+param($installPath, $toolsPath, $package, $project)
 
-if (Get-Module | ?{ $_.Name -eq 'EntityFramework' })
+# NB: Not set for scripts in PowerShell 2.0
+if (!$PSScriptRoot)
 {
-    Remove-Module EntityFramework
+    $PSScriptRoot = Split-Path $MyInvocation.MyCommand.Path -Parent
 }
 
-Import-Module (Join-Path $toolsPath EntityFramework.psd1)
+if ($PSVersionTable.PSVersion -lt '3.0')
+{
+    Import-Module (Join-Path $PSScriptRoot 'EntityFramework6.PS2.psd1')
+
+    return
+}
+
+$importedModule = Get-Module 'EntityFramework6'
+$moduleToImport = Test-ModuleManifest (Join-Path $PSScriptRoot 'EntityFramework6.psd1')
+$import = $true
+if ($importedModule)
+{
+    if ($importedModule.Version -le $moduleToImport.Version)
+    {
+        Remove-Module 'EntityFramework6'
+    }
+    else
+    {
+        $import = $false
+    }
+}
+
+if ($import)
+{
+    Import-Module $moduleToImport
+}

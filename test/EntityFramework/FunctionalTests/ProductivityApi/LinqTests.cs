@@ -12595,9 +12595,9 @@ namespace ProductivityApiTests
                      select n.Value).Skip(1).First());
                 Assert.True(false);
             }
-            catch (AssertException ex)
+            catch (XunitException ex)
             {
-                Assert.Equal("Assert.Equal() Failure\r\nExpected: 5\r\nActual:   4", ex.Message);
+                Assert.Equal("Assert.Equal() Failure\r\nExpected: 5\r\nActual:   4", ex.Message, ignoreLineEndingDifferences: true);
             }
         }
 
@@ -12630,9 +12630,9 @@ namespace ProductivityApiTests
                      select n).ToList());
                 Assert.True(false);
             }
-            catch (AssertException ex)
+            catch (XunitException ex)
             {
-                Assert.Equal(
+                Assert.StartsWith(
                     "Left 'ID: 7, Value: 6, Name: Six' different from right 'ID: 8, Value: 7, Name: Seven'",
                     ex.Message);
             }
@@ -12666,9 +12666,9 @@ namespace ProductivityApiTests
                         ToList());
                 Assert.True(false);
             }
-            catch (AssertException ex)
+            catch (XunitException ex)
             {
-                Assert.Equal(
+                Assert.StartsWith(
                     "Left 'ID: 1, Region: WA, CompanyName: Microsoft\r\n' different from right 'ID: 1, Region: WA, CompanyName: Microsoft\r\n  ID: 1, Total: 111.00, OrderDate: 09/03/1997 00:00:00\r\n  ID: 3, Total: 333.00, OrderDate: 09/03/1999 00:00:00\r\n'",
                     ex.Message);
             }
@@ -12709,9 +12709,9 @@ namespace ProductivityApiTests
                                 }).ToList());
                 Assert.True(false);
             }
-            catch (AssertException ex)
+            catch (XunitException ex)
             {
-                Assert.Equal("Left list had fewer elements than right list.", ex.Message);
+                Assert.StartsWith("Left list had fewer elements than right list.", ex.Message);
             }
         }
 

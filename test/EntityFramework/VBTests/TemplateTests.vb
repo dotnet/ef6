@@ -7,7 +7,7 @@ Imports System.Reflection
 Imports System.Transactions
 Imports AdvancedPatternsVB
 Imports Another.Place
-Imports Xunit.Extensions
+Imports Xunit
 Imports ProductivityApiTests
 
 ''' <summary>

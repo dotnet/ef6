@@ -1194,13 +1194,13 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
                 var tableDetails = new[]
                     {
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "A", "Id", 0, false, "int", isIdentiy: true, isPrimaryKey: true),
+                            "catalog", "schema", "A", "Id", 0, false, "int", isIdentity: true, isPrimaryKey: true),
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "B", "Col1", 0, false, "int", isIdentiy: false, isPrimaryKey: true),
+                            "catalog", "schema", "B", "Col1", 0, false, "int", isIdentity: false, isPrimaryKey: true),
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "C", "Id", 0, false, "int", isIdentiy: true, isPrimaryKey: true),
+                            "catalog", "schema", "C", "Id", 0, false, "int", isIdentity: true, isPrimaryKey: true),
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "C", "Col1", 1, false, "int", isIdentiy: false, isPrimaryKey: true)
+                            "catalog", "schema", "C", "Col1", 1, false, "int", isIdentity: false, isPrimaryKey: true)
                     };
 
                 var relationshipDetails = new[]
@@ -1234,13 +1234,13 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
                 var tableDetails = new[]
                     {
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "A", "Id", 0, false, "int", isIdentiy: true, isPrimaryKey: true),
+                            "catalog", "schema", "A", "Id", 0, false, "int", isIdentity: true, isPrimaryKey: true),
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "B", "Col1", 0, false, "int", isIdentiy: false, isPrimaryKey: true),
+                            "catalog", "schema", "B", "Col1", 0, false, "int", isIdentity: false, isPrimaryKey: true),
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "C", "Id", 0, false, "int", isIdentiy: true, isPrimaryKey: true),
+                            "catalog", "schema", "C", "Id", 0, false, "int", isIdentity: true, isPrimaryKey: true),
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "C", "Col1", 1, false, "int", isIdentiy: false, isPrimaryKey: true)
+                            "catalog", "schema", "C", "Col1", 1, false, "int", isIdentity: false, isPrimaryKey: true)
                     };
 
                 var relationshipDetails = new[]
@@ -1272,15 +1272,15 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
                 var tableDetails = new[]
                     {
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "A", "Id", 0, false, "int", isIdentiy: true, isPrimaryKey: true),
+                            "catalog", "schema", "A", "Id", 0, false, "int", isIdentity: true, isPrimaryKey: true),
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "B", "Col1", 0, false, "int", isIdentiy: false, isPrimaryKey: true),
+                            "catalog", "schema", "B", "Col1", 0, false, "int", isIdentity: false, isPrimaryKey: true),
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "C", "CId", 0, false, "int", isIdentiy: true, isPrimaryKey: true),
+                            "catalog", "schema", "C", "CId", 0, false, "int", isIdentity: true, isPrimaryKey: true),
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "C", "Id", 0, false, "int", isIdentiy: true, isPrimaryKey: false),
+                            "catalog", "schema", "C", "Id", 0, false, "int", isIdentity: true, isPrimaryKey: false),
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "C", "Col1", 1, true, "int", isIdentiy: false, isPrimaryKey: false)
+                            "catalog", "schema", "C", "Col1", 1, true, "int", isIdentity: false, isPrimaryKey: false)
                     };
 
                 var relationshipDetails = new[]
@@ -1310,15 +1310,15 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
                 var tableDetails = new[]
                     {
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "A", "Id", 0, false, "int", isIdentiy: true, isPrimaryKey: true),
+                            "catalog", "schema", "A", "Id", 0, false, "int", isIdentity: true, isPrimaryKey: true),
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "B", "Col1", 0, false, "int", isIdentiy: false, isPrimaryKey: true),
+                            "catalog", "schema", "B", "Col1", 0, false, "int", isIdentity: false, isPrimaryKey: true),
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "C", "Id", 0, false, "int", isIdentiy: true, isPrimaryKey: true),
+                            "catalog", "schema", "C", "Id", 0, false, "int", isIdentity: true, isPrimaryKey: true),
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "C", "Col1", 1, false, "int", isIdentiy: false, isPrimaryKey: true),
+                            "catalog", "schema", "C", "Col1", 1, false, "int", isIdentity: false, isPrimaryKey: true),
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "C", "Col2", 2, false, "int", isIdentiy: false, isPrimaryKey: false)
+                            "catalog", "schema", "C", "Col2", 2, false, "int", isIdentity: false, isPrimaryKey: false)
                     };
 
                 var relationshipDetails = new[]
@@ -1348,19 +1348,19 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
                 var tableDetails = new[]
                     {
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "A", "Id", 0, false, "int", isIdentiy: true, isPrimaryKey: true),
+                            "catalog", "schema", "A", "Id", 0, false, "int", isIdentity: true, isPrimaryKey: true),
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "A", "Col1", 1, false, "int", isIdentiy: false, isPrimaryKey: true),
+                            "catalog", "schema", "A", "Col1", 1, false, "int", isIdentity: false, isPrimaryKey: true),
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "B", "Col1", 0, false, "int", isIdentiy: false, isPrimaryKey: true),
+                            "catalog", "schema", "B", "Col1", 0, false, "int", isIdentity: false, isPrimaryKey: true),
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "B", "Col2", 1, false, "int", isIdentiy: false, isPrimaryKey: true),
+                            "catalog", "schema", "B", "Col2", 1, false, "int", isIdentity: false, isPrimaryKey: true),
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "C", "Id", 0, false, "int", isIdentiy: true, isPrimaryKey: true),
+                            "catalog", "schema", "C", "Id", 0, false, "int", isIdentity: true, isPrimaryKey: true),
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "C", "Col1", 1, false, "int", isIdentiy: false, isPrimaryKey: true),
+                            "catalog", "schema", "C", "Col1", 1, false, "int", isIdentity: false, isPrimaryKey: true),
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "C", "Col2", 2, false, "int", isIdentiy: false, isPrimaryKey: true)
+                            "catalog", "schema", "C", "Col2", 2, false, "int", isIdentity: false, isPrimaryKey: true)
                     };
 
                 var relationshipDetails = new[]
@@ -1408,9 +1408,9 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
                 var tableDetails = new[]
                     {
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "A", "Id", 0, false, "int", isIdentiy: true, isPrimaryKey: true),
+                            "catalog", "schema", "A", "Id", 0, false, "int", isIdentity: true, isPrimaryKey: true),
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "B", "Id", 0, false, "int", isIdentiy: true, isPrimaryKey: true)
+                            "catalog", "schema", "B", "Id", 0, false, "int", isIdentity: true, isPrimaryKey: true)
                     };
 
                 var relationshipDetails = new[]
@@ -1452,13 +1452,13 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
                 var tableDetails = new[]
                     {
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "A", "Id", 0, false, "int", isIdentiy: true, isPrimaryKey: true),
+                            "catalog", "schema", "A", "Id", 0, false, "int", isIdentity: true, isPrimaryKey: true),
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "B", "Col1", 0, false, "int", isIdentiy: false, isPrimaryKey: true),
+                            "catalog", "schema", "B", "Col1", 0, false, "int", isIdentity: false, isPrimaryKey: true),
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "C", "Id", 0, false, "int", isIdentiy: true, isPrimaryKey: true),
+                            "catalog", "schema", "C", "Id", 0, false, "int", isIdentity: true, isPrimaryKey: true),
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "C", "Col1", 1, false, "int", isIdentiy: false, isPrimaryKey: true)
+                            "catalog", "schema", "C", "Col1", 1, false, "int", isIdentity: false, isPrimaryKey: true)
                     };
 
                 var relationshipDetails = new[]
@@ -1501,9 +1501,9 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
                 var tableDetails = new[]
                     {
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "A", "Id", 0, false, "int", isIdentiy: true, isPrimaryKey: true),
+                            "catalog", "schema", "A", "Id", 0, false, "int", isIdentity: true, isPrimaryKey: true),
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "B", "Id", 0, false, "int", isIdentiy: true, isPrimaryKey: true)
+                            "catalog", "schema", "B", "Id", 0, false, "int", isIdentity: true, isPrimaryKey: true)
                     };
 
                 var relationshipDetails = new[]
@@ -1566,13 +1566,13 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
                 var tableDetails = new[]
                     {
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "A", "Id", 0, false, "int", isIdentiy: true, isPrimaryKey: true),
+                            "catalog", "schema", "A", "Id", 0, false, "int", isIdentity: true, isPrimaryKey: true),
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "B", "Col1", 0, false, "int", isIdentiy: false, isPrimaryKey: true),
+                            "catalog", "schema", "B", "Col1", 0, false, "int", isIdentity: false, isPrimaryKey: true),
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "C", "Id", 0, false, "int", isIdentiy: true, isPrimaryKey: true),
+                            "catalog", "schema", "C", "Id", 0, false, "int", isIdentity: true, isPrimaryKey: true),
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "C", "Col1", 1, false, "int", isIdentiy: false, isPrimaryKey: true)
+                            "catalog", "schema", "C", "Col1", 1, false, "int", isIdentity: false, isPrimaryKey: true)
                     };
 
                 var relationshipDetails = new[]
@@ -1636,9 +1636,9 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
                 var tableDetails = new[]
                     {
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "A", "Id", 0, false, "int", isIdentiy: true, isPrimaryKey: true),
+                            "catalog", "schema", "A", "Id", 0, false, "int", isIdentity: true, isPrimaryKey: true),
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "B", "Id", 0, false, "int", isIdentiy: true, isPrimaryKey: true)
+                            "catalog", "schema", "B", "Id", 0, false, "int", isIdentity: true, isPrimaryKey: true)
                     };
 
                 var relationshipDetails = new[]
@@ -1682,11 +1682,11 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
                 var tableDetails = new[]
                     {
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "A", "Id", 0, false, "int", isIdentiy: true, isPrimaryKey: true),
+                            "catalog", "schema", "A", "Id", 0, false, "int", isIdentity: true, isPrimaryKey: true),
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "B", "Id", 0, false, "int", isIdentiy: true, isPrimaryKey: true),
+                            "catalog", "schema", "B", "Id", 0, false, "int", isIdentity: true, isPrimaryKey: true),
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "B", "Col1", 0, false, "int", isIdentiy: false, isPrimaryKey: false)
+                            "catalog", "schema", "B", "Col1", 0, false, "int", isIdentity: false, isPrimaryKey: false)
                     };
 
                 var relationshipDetails = new[]

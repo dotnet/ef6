@@ -50,7 +50,7 @@ namespace System.Data.Entity.Core.Common.Internal
         // </summary>
         // <param name="name"> string to parse </param>
         // <param name="leftQuote"> set of characters which are valid quoteing characters to initiate a quote </param>
-        // <param name="rightQuote"> set of characters which are valid to stop a quote, array index's correspond to the the leftquote array. </param>
+        // <param name="rightQuote"> set of characters which are valid to stop a quote, array index's correspond to the leftquote array. </param>
         // <param name="separator"> separator to use </param>
         [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly")]
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
@@ -63,7 +63,7 @@ namespace System.Data.Entity.Core.Common.Internal
             var parsedNames = new List<string>();
             parsedNames.Add(null);
             var stringCount = 0; // index of current string in the list
-            var state = MPIState.MPI_Value; // Initalize the starting state
+            var state = MPIState.MPI_Value; // Initialize the starting state
 
             var sb = new StringBuilder(name.Length);
             // String buffer to hold the string being currently built, init the string builder so it will never be resized
@@ -85,8 +85,8 @@ namespace System.Data.Entity.Core.Common.Internal
                             }
                             else if (testchar == separator)
                             {
-                                // If we found a separator, no string was found, initalize the string we are parsing to Empty and the next one to Empty.
-                                // This is NOT a redundent setting of string.Empty it solves the case where we are parsing ".xyz" and we should be returning null, null, empty, xyz
+                                // If we found a separator, no string was found, initialize the string we are parsing to Empty and the next one to Empty.
+                                // This is NOT a redundant setting of string.Empty it solves the case where we are parsing ".xyz" and we should be returning null, null, empty, xyz
                                 parsedNames[stringCount] = string.Empty;
                                 IncrementStringCount(parsedNames, ref stringCount);
                             }
@@ -230,7 +230,7 @@ namespace System.Data.Entity.Core.Common.Internal
                                 }
                                 else
                                 {
-                                    // Othewise not a separator
+                                    // Otherwise not a separator
                                     throw new ArgumentException(Strings.ADP_InvalidMultipartNameDelimiterUsage, "path");
                                 }
                             }

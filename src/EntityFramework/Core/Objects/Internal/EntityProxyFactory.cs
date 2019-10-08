@@ -27,12 +27,6 @@ namespace System.Data.Entity.Core.Objects.Internal
         internal const string CompareByteArraysFieldName = "_compareByteArrays";
 
         // <summary>
-        // A hook such that test code can change the AssemblyBuilderAccess of the
-        // proxy assembly through reflection into the EntityProxyFactory.
-        // </summary>
-        private static AssemblyBuilderAccess s_ProxyAssemblyBuilderAccess = AssemblyBuilderAccess.Run;
-
-        // <summary>
         // Dictionary of proxy class type information, keyed by the pair of the CLR type and EntityType CSpaceName of the type being proxied.
         // A null value for a particular EntityType name key records the fact that
         // no proxy Type could be created for the specified type.
@@ -67,18 +61,14 @@ namespace System.Data.Entity.Core.Objects.Internal
                     new AssemblyName(String.Format(CultureInfo.InvariantCulture, "EntityFrameworkDynamicProxies-{0}", assembly.FullName));
                 assemblyName.Version = new Version(1, 0, 0, 0);
 
-                var assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(
-                    assemblyName, s_ProxyAssemblyBuilderAccess);
+                var assemblyBuilder =
+#if NET40
+                    AppDomain.CurrentDomain.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
+#else
+                    AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
+#endif
 
-                if (s_ProxyAssemblyBuilderAccess == AssemblyBuilderAccess.RunAndSave)
-                {
-                    // Make the module persistable if the AssemblyBuilderAccess is changed to be RunAndSave.
-                    moduleBuilder = assemblyBuilder.DefineDynamicModule("EntityProxyModule", "EntityProxyModule.dll");
-                }
-                else
-                {
-                    moduleBuilder = assemblyBuilder.DefineDynamicModule("EntityProxyModule");
-                }
+                moduleBuilder = assemblyBuilder.DefineDynamicModule("EntityProxyModule");
 
                 _moduleBuilders.Add(assembly, moduleBuilder);
             }
@@ -292,7 +282,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         // </summary>
         // <returns> Enumerable of the current set of CLR proxy types. This value will never be null. </returns>
         // <remarks>
-        // The enumerable is based on a shapshot of the current list of types.
+        // The enumerable is based on a snapshot of the current list of types.
         // </remarks>
         internal static IEnumerable<Type> GetKnownProxyTypes()
         {
@@ -416,7 +406,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 proxyTypeInfo = new EntityProxyTypeInfo(
                     proxyType,
                     ospaceEntityType,
-                    proxyTypeBuilder.CreateInitalizeCollectionMethod(proxyType),
+                    proxyTypeBuilder.CreateInitializeCollectionMethod(proxyType),
                     proxyTypeBuilder.BaseGetters,
                     proxyTypeBuilder.BaseSetters,
                     workspace);
@@ -523,7 +513,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         // <summary>
         // Called in the finally clause of each overridden property setter to ensure that the flag
         // indicating that we are in an FK setter is cleared.  Note that the wrapped entity is passed as
-        // an obejct becayse IEntityWrapper is an internal type and is therefore not accessable to
+        // an object because IEntityWrapper is an internal type and is therefore not accessable to
         // the proxy type.  Once we're in the framework it is cast back to an IEntityWrapper.
         // </summary>
         private static void ResetFKSetterFlag(object wrappedEntityAsObject)
@@ -637,9 +627,9 @@ namespace System.Data.Entity.Core.Objects.Internal
                 get { return _ospaceEntityType.ClrType; }
             }
 
-            public DynamicMethod CreateInitalizeCollectionMethod(Type proxyType)
+            public DynamicMethod CreateInitializeCollectionMethod(Type proxyType)
             {
-                return _ipocoImplementor.CreateInitalizeCollectionMethod(proxyType);
+                return _ipocoImplementor.CreateInitializeCollectionMethod(proxyType);
             }
 
             public List<PropertyInfo> BaseGetters

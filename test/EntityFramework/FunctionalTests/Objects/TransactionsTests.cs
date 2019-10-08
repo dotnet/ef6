@@ -69,7 +69,7 @@ namespace System.Data.Entity.Objects
         public DbSet<TransactionLogEntry> LogEntries { get; set; }
     }
 
-    public class TransactionsTests : FunctionalTestBase, IUseFixture<TransactionFixture>
+    public class TransactionsTests : FunctionalTestBase, IClassFixture<TransactionFixture>
     {
         private string _entityConnectionString;
         private string _connectionString;
@@ -77,7 +77,7 @@ namespace System.Data.Entity.Objects
         private MetadataWorkspace _workspace;
         private DbCompiledModel _compiledModel;
 
-        public void SetFixture(TransactionFixture data)
+        public TransactionsTests(TransactionFixture data)
         {
             _compiledModel = data.CompiledModel;
             _connectionString = data.ConnectionString;
@@ -620,7 +620,7 @@ namespace System.Data.Entity.Objects
             {
                 // this test only works for integrated security, or when password is persisted after connecting
                 // otherwise we can't connect to database during context initialization (password is gone from connection string)
-                if (DatabaseTestHelpers.IsIntegratedSecutity(connection.ConnectionString) || 
+                if (DatabaseTestHelpers.IsIntegratedSecurity(connection.ConnectionString) || 
                     DatabaseTestHelpers.PersistsSecurityInfo(connection.ConnectionString))
                 {
                     connection.Open();
@@ -1115,7 +1115,7 @@ namespace System.Data.Entity.Objects
                     }
                 });
 
-            // "Transaction not commited. No entities should be saved to the database."
+            // "Transaction not committed. No entities should be saved to the database."
             Assert.Equal(0, LogEntriesCount());
         }
 
@@ -1137,7 +1137,7 @@ namespace System.Data.Entity.Objects
                     }
                 });
 
-            // "Transaction not commited. No entities should be saved to the database."
+            // "Transaction not committed. No entities should be saved to the database."
             Assert.Equal(0, LogEntriesCount());
         }
 
@@ -1160,7 +1160,7 @@ namespace System.Data.Entity.Objects
                     }
                 });
 
-            // "Transaction not commited. No entities should be saved to the database."
+            // "Transaction not committed. No entities should be saved to the database."
             Assert.Equal(0, LogEntriesCount());
         }
 
@@ -1287,7 +1287,7 @@ namespace System.Data.Entity.Objects
                     }
                 });
 
-            // Transaction not commited. No entities should be saved to the database.
+            // Transaction not committed. No entities should be saved to the database.
             Assert.Equal(0, LogEntriesCount());
         }
 
@@ -1310,7 +1310,7 @@ namespace System.Data.Entity.Objects
                     }
                 });
 
-            // Transaction not commited. No entities should be saved to the database.
+            // Transaction not committed. No entities should be saved to the database.
             Assert.Equal(0, LogEntriesCount());
         }
 
@@ -1335,7 +1335,7 @@ namespace System.Data.Entity.Objects
                     }
                 });
 
-            // Transaction not commited. No entities should be saved to the database.
+            // Transaction not committed. No entities should be saved to the database.
             Assert.Equal(0, LogEntriesCount());
         }
 
@@ -1358,7 +1358,7 @@ namespace System.Data.Entity.Objects
                     }
                 });
 
-            // Transaction not commited. No entities should be saved to the database.
+            // Transaction not committed. No entities should be saved to the database.
             Assert.Equal(0, LogEntriesCount());
         }
 
@@ -1382,7 +1382,7 @@ namespace System.Data.Entity.Objects
                     }
                 });
 
-            // Transaction not commited. No entities should be saved to the database.
+            // Transaction not committed. No entities should be saved to the database.
             Assert.Equal(0, LogEntriesCount());
         }
 
@@ -1445,7 +1445,7 @@ namespace System.Data.Entity.Objects
                     }
                 });
 
-            // Transaction not commited. No entities should be saved to the database.
+            // Transaction not committed. No entities should be saved to the database.
             Assert.Equal(0, LogEntriesCount());
         }
 
@@ -1471,7 +1471,7 @@ namespace System.Data.Entity.Objects
                     }
                 });
 
-            // Transaction not commited. No entities should be saved to the database.
+            // Transaction not committed. No entities should be saved to the database.
             Assert.Equal(0, LogEntriesCount());
         }
 
@@ -1499,7 +1499,7 @@ namespace System.Data.Entity.Objects
                     }
                 });
 
-            // "Transaction not commited. No entities should be saved to the database."
+            // "Transaction not committed. No entities should be saved to the database."
             Assert.Equal(0, LogEntriesCount());
         }
 
@@ -1525,7 +1525,7 @@ namespace System.Data.Entity.Objects
                     }
                 });
 
-            // "Transaction not commited. No entities should be saved to the database."
+            // "Transaction not committed. No entities should be saved to the database."
             Assert.Equal(0, LogEntriesCount());
         }
 
@@ -1551,7 +1551,7 @@ namespace System.Data.Entity.Objects
                     }
                 });
 
-            // "Transaction not commited. No entities should be saved to the database."
+            // "Transaction not committed. No entities should be saved to the database."
             Assert.Equal(0, LogEntriesCount());
         }
 
@@ -1580,7 +1580,7 @@ namespace System.Data.Entity.Objects
                     }
                 });
 
-            // Transaction not commited. No entities should be saved to the database.
+            // Transaction not committed. No entities should be saved to the database.
             Assert.Equal(0, LogEntriesCount());
         }
 
@@ -1604,7 +1604,7 @@ namespace System.Data.Entity.Objects
                     }
                 });
 
-            // "Transaction not commited. No entities should be saved to the database."
+            // "Transaction not committed. No entities should be saved to the database."
             Assert.Equal(0, LogEntriesCount());
         }
 
@@ -1694,7 +1694,7 @@ namespace System.Data.Entity.Objects
                     }
                 });
 
-            // "Transaction not commited. No entities should be saved to the database."
+            // "Transaction not committed. No entities should be saved to the database."
             Assert.Equal(0, LogEntriesCount());
         }
 
@@ -1724,7 +1724,7 @@ namespace System.Data.Entity.Objects
                     }
                 });
 
-            // "Transaction not commited. No entities should be saved to the database."
+            // "Transaction not committed. No entities should be saved to the database."
             Assert.Equal(0, LogEntriesCount());
         }
 
@@ -1811,7 +1811,7 @@ namespace System.Data.Entity.Objects
                                 Assert.Equal(ConnectionState.Open, ctx.Connection.State);
                             }
 
-                            // "Transaction not commited. No entities should be saved to the database."
+                            // "Transaction not committed. No entities should be saved to the database."
                             Assert.Equal(0, LogEntriesCount());
 
                             AddLogEntryToDatabase(ctx);
@@ -1847,7 +1847,7 @@ namespace System.Data.Entity.Objects
                         }
                     });
 
-                // "Transaction not commited. No entities should be saved to the database."
+                // "Transaction not committed. No entities should be saved to the database."
                 Assert.Equal(0, LogEntriesCount());
 
                 using (var committableTransaction = new CommittableTransaction())
@@ -1858,7 +1858,7 @@ namespace System.Data.Entity.Objects
                     Assert.Equal(ConnectionState.Open, ctx.Connection.State);
                 }
 
-                // "Transaction not commited. No entities should be saved to the database."
+                // "Transaction not committed. No entities should be saved to the database."
                 Assert.Equal(0, LogEntriesCount());
                 ctx.Connection.Close();
             }
@@ -1883,7 +1883,7 @@ namespace System.Data.Entity.Objects
                             }
                         });
 
-                    // "Transaction not commited. No entities should be saved to the database."
+                    // "Transaction not committed. No entities should be saved to the database."
                     Assert.Equal(0, LogEntriesCount());
 
                     ExtendedSqlAzureExecutionStrategy.ExecuteNew(
@@ -1923,7 +1923,7 @@ namespace System.Data.Entity.Objects
                                 Assert.Equal(1, transactionLogEntry.TransactionCount);
                             }
 
-                            // "Transaction not commited. No entities should be saved to the database."
+                            // "Transaction not committed. No entities should be saved to the database."
                             Assert.Equal(0, CreateTransactionContext().LogEntries.Count());
 
                             AddLogEntryToDatabase(ctx);
@@ -1968,7 +1968,7 @@ namespace System.Data.Entity.Objects
                     }
                 });
 
-            // "Transaction not commited. No entities should be saved to the database."
+            // "Transaction not committed. No entities should be saved to the database."
             Assert.Equal(0, LogEntriesCount());
         }
 
@@ -2002,7 +2002,7 @@ namespace System.Data.Entity.Objects
                     }
                 });
 
-            // "Transaction not commited. No entities should be saved to the database."
+            // "Transaction not committed. No entities should be saved to the database."
             Assert.Equal(0, LogEntriesCount());
         }
 
@@ -2034,7 +2034,7 @@ namespace System.Data.Entity.Objects
                     }
                 });
 
-            // "Transaction not commited. No entities should be saved to the database."
+            // "Transaction not committed. No entities should be saved to the database."
             Assert.Equal(0, LogEntriesCount());
         }
 

@@ -21,7 +21,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
         /// <summary>
         ///     Return the count of visible items in this branch. The branch can contain
         ///     items beyond the visible count as long as expanded items each have a unique
-        ///     index. The tree tree does not care how many total items a branch has.
+        ///     index. The tree does not care how many total items a branch has.
         /// </summary>
         int VisibleItemCount { get; }
 
@@ -108,7 +108,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
         /// </summary>
         /// <param name="row">Target row</param>
         /// <param name="column">Target column</param>
-        /// <returns>Populated VirtualTreeAccessibilityData structue, or VirtualTreeAccessibilityData.Empty</returns>
+        /// <returns>Populated VirtualTreeAccessibilityData structure, or VirtualTreeAccessibilityData.Empty</returns>
         VirtualTreeAccessibilityData GetAccessibilityData(int row, int column);
 
         //Begin a label edit. Return true to continue, false to abort.

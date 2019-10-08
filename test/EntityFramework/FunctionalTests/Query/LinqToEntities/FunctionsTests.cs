@@ -336,19 +336,19 @@ namespace System.Data.Entity.Query.LinqToEntities
                 {
                     var query = ctx.AllTypes.Select(
                         a => a.c5_datetime == DbFunctions.CreateDateTime(8, 2, 29, 1, 1, 1));
-                    Assert.DoesNotThrow(() => query.Count());
+                    query.Count();
 
                     query = ctx.AllTypes.Select(
                         a => a.c6_smalldatetime == DbFunctions.CreateDateTime(8, 2, 29, 1, 1, 1));
-                    Assert.DoesNotThrow(() => query.Count());
+                    query.Count();
 
                     query = ctx.AllTypes.Select(
                         a => a.c28_date == DbFunctions.CreateDateTime(8, 2, 29, null, null, null));
-                    Assert.DoesNotThrow(() => query.Count());
+                    query.Count();
 
                     query = ctx.AllTypes.Select(
                         a => a.c29_datetime2 == DbFunctions.CreateDateTime(8, 2, 29, 1, 1, 1));
-                    Assert.DoesNotThrow(() => query.Count());
+                    query.Count();
                 }
             }
 
@@ -359,7 +359,7 @@ namespace System.Data.Entity.Query.LinqToEntities
                 {
                     var query = ctx.AllTypes.Select(
                         a => a.c30_datetimeoffset == DbFunctions.CreateDateTimeOffset(8, 2, 29, 1, 1, 1, 1));
-                    Assert.DoesNotThrow(() => query.Count());
+                    query.Count();
                 }
             }
         }

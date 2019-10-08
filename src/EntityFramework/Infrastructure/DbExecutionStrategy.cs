@@ -7,10 +7,13 @@ namespace System.Data.Entity.Infrastructure
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Runtime.Remoting.Messaging;
     using System.Threading;
     using System.Threading.Tasks;
     using System.Transactions;
+
+#if NET45 || NET40
+    using System.Runtime.Remoting.Messaging;
+#endif
 
     /// <summary>
     /// Provides the base implementation of the retry mechanism for unreliable operations and transient conditions that uses
@@ -31,7 +34,11 @@ namespace System.Data.Entity.Infrastructure
         private readonly int _maxRetryCount;
         private readonly TimeSpan _maxDelay;
 
+#if NET45 || NET40
         private const string ContextName = "ExecutionStrategySuspended";
+#else
+        private static readonly AsyncLocal<bool> _suspended = new AsyncLocal<bool>();
+#endif
 
         // <summary>
         // The default number of retry attempts, must be nonnegative.
@@ -103,8 +110,13 @@ namespace System.Data.Entity.Infrastructure
         /// </summary>
         protected internal static bool Suspended
         {
+#if NET45 || NET40
             get { return (bool?)CallContext.LogicalGetData(ContextName) ?? false; }
             set { CallContext.LogicalSetData(ContextName, value); }
+#else
+            get => _suspended.Value;
+            set => _suspended.Value = value;
+#endif
         }
 
         /// <summary>

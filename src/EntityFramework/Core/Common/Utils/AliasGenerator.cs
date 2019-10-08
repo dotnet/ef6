@@ -19,7 +19,7 @@ namespace System.Data.Entity.Core.Common.Utils
         // beyond this size per prefix, we don't cache the names (really large queries)
         private const int CacheSize = 250;
 
-        // this caches integer->string so that happens less fequently
+        // this caches integer->string so that happens less frequently
         private static readonly string[] _counterNames = new string[CacheSize];
 
         // We are using a copy-on-write instead of lock-on-read because dictionary is not multi-reader/single-writer safe.
@@ -47,7 +47,7 @@ namespace System.Data.Entity.Core.Common.Utils
         {
             _prefix = prefix ?? String.Empty;
 
-            // don't cache all alias, some are truely unique like CommandTree.BindingAliases
+            // don't cache all alias, some are truly unique like CommandTree.BindingAliases
             if (0 < cacheSize)
             {
                 string[] cache = null;
@@ -105,7 +105,7 @@ namespace System.Data.Entity.Core.Common.Utils
             if ((null == _cache)
                 || unchecked((uint)_cache.Length <= (uint)index))
             {
-                // names are not cached beyond a particlar size
+                // names are not cached beyond a particular size
                 name = String.Concat(_prefix, index.ToString(CultureInfo.InvariantCulture));
             }
             else if (null == (name = _cache[index]))

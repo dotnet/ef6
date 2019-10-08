@@ -101,7 +101,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             // <summary>
-            // Attempts to retrieve the the default value for the specified primitive type.
+            // Attempts to retrieve the default value for the specified primitive type.
             // </summary>
             // <param name="primitiveType">A primitive type.</param>
             // <param name="defaultValue">The default value for the primitive type.</param>

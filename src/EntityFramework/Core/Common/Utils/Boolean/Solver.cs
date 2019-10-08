@@ -250,7 +250,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         // Returns 'vertex' evaluated for the given value of 'variable'. Requires that
         // the variable is less than or equal to vertex.Variable.
         // </summary>
-        private static Vertex EvaluateFor(Vertex vertex, int variable, int variableAssigment)
+        private static Vertex EvaluateFor(Vertex vertex, int variable, int variableAssignment)
         {
             if (variable < vertex.Variable)
             {
@@ -266,8 +266,8 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
             // If the 'vertex' is conditioned on the given 'variable', the children
             // represent the decompositions of the function for various assignments
             // to that variable.
-            Debug.Assert(variableAssigment < vertex.Children.Length, "variable assignment out of range");
-            return vertex.Children[variableAssigment];
+            Debug.Assert(variableAssignment < vertex.Children.Length, "variable assignment out of range");
+            return vertex.Children[variableAssignment];
         }
 
         // <summary>

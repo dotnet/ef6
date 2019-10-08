@@ -260,7 +260,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         private bool _forceNonUnicode;
 
         // <summary>
-        // Set when it is is safe to ignore the unicode/non-unicode aspect. See <see cref="VisitIsNullExpression" /> for an example.
+        // Set when it is safe to ignore the unicode/non-unicode aspect. See <see cref="VisitIsNullExpression" /> for an example.
         // </summary>
         private bool _ignoreForceNonUnicodeFlag;
 
@@ -274,7 +274,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             get { return _targets; }
         }
 
-        // Define lists of functions that take string arugments and return strings.
+        // Define lists of functions that take string arguments and return strings.
         private static readonly ISet<string> _canonicalAndStoreStringFunctionsOneArg =
             new HashSet<string>(StringComparer.Ordinal)
                 {
@@ -473,7 +473,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             {
                 var sqlStatement = VisitExpressionEnsureSqlStatement(targetTree.Query);
 
-                Debug.Assert(sqlStatement != null, "The outer most sql statment is null");
+                Debug.Assert(sqlStatement != null, "The outer most sql statement is null");
 
                 sqlStatement.IsTopMost = true;
                 result = sqlStatement;
@@ -1028,7 +1028,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
             // Spatial constants are represented by calls to a static constructor function. The attempt is made to extract an
             // appropriate representation from the value (which may not implement the required methods). If an SRID value and
-            // a text, binary or GML representation of the spatial value can be extracted, the the corresponding function call
+            // a text, binary or GML representation of the spatial value can be extracted, the corresponding function call
             // expression is built and processed.
             DbFunctionExpression functionExpression = null;
             var srid = spatialValue.CoordinateSystemId;
@@ -1403,7 +1403,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         //         an aggregate or a subquery. (SQLBUDT #504600)
         //     </item>
         //     <item>
-        //         Sql Server requries each GROUP BY expression (key) to contain at least one column
+        //         Sql Server requires each GROUP BY expression (key) to contain at least one column
         //         that is not an outer reference. (SQLBUDT #616523)
         //     </item>
         //     <item>
@@ -1417,7 +1417,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         // aggf1(aexpr1) AS agg1, .. aggfn(aexprn) AS aggn
         // FROM input AS a
         // GROUP BY kexp1, kexp2, .. kexpn
-        // When we inject an innner query, the equivalent translation is:
+        // When we inject an inner query, the equivalent translation is:
         // SELECT
         // key1 AS key1, key2 AS key2, .. keyn AS keys,
         // aggf1(agg1) AS agg1, aggfn(aggn) AS aggn
@@ -1535,33 +1535,42 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     var member = members.Current;
                     var alias = QuoteIdentifier(member.Name);
 
-                    Debug.Assert(aggregate.Arguments.Count == 1);
-                    var translatedAggregateArgument = aggregate.Arguments[0].Accept(this);
+                    var finalArgs = new List<object>();
 
-                    object aggregateArgument;
-
-                    if (needsInnerQuery)
+                    for (var childIndex = 0; childIndex < aggregate.Arguments.Count; childIndex++)
                     {
-                        //In this case the argument to the aggratete is reference to the one projected out by the
-                        // inner query
-                        var wrappingAggregateArgument = new SqlBuilder();
-                        wrappingAggregateArgument.Append(fromSymbol);
-                        wrappingAggregateArgument.Append(".");
-                        wrappingAggregateArgument.Append(alias);
-                        aggregateArgument = wrappingAggregateArgument;
+                        var argument = aggregate.Arguments[childIndex];
+                        var translatedAggregateArgument = argument.Accept(this);
 
-                        innerQuery.Select.Append(separator);
-                        innerQuery.Select.AppendLine();
-                        innerQuery.Select.Append(translatedAggregateArgument);
-                        innerQuery.Select.Append(" AS ");
-                        innerQuery.Select.Append(alias);
-                    }
-                    else
-                    {
-                        aggregateArgument = translatedAggregateArgument;
+                        object aggregateArgument;
+
+                        if (needsInnerQuery)
+                        {
+                            var argAlias = QuoteIdentifier(member.Name + "_" + childIndex);
+
+                            //In this case the argument to the aggregate is reference to the one projected out by the
+                            // inner query
+                            var wrappingAggregateArgument = new SqlBuilder();
+                            wrappingAggregateArgument.Append(fromSymbol);
+                            wrappingAggregateArgument.Append(".");
+                            wrappingAggregateArgument.Append(argAlias);
+                            aggregateArgument = wrappingAggregateArgument;
+
+                            innerQuery.Select.Append(separator);
+                            innerQuery.Select.AppendLine();
+                            innerQuery.Select.Append(translatedAggregateArgument);
+                            innerQuery.Select.Append(" AS ");
+                            innerQuery.Select.Append(argAlias);
+                        }
+                        else
+                        {
+                            aggregateArgument = translatedAggregateArgument;
+                        }
+
+                        finalArgs.Add(aggregateArgument);
                     }
 
-                    ISqlFragment aggregateResult = VisitAggregate(aggregate, aggregateArgument);
+                    ISqlFragment aggregateResult = VisitAggregate(aggregate, finalArgs);
 
                     result.Select.Append(separator);
                     result.Select.AppendLine();
@@ -2756,8 +2765,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
         // Aggregates are not visited by the normal visitor walk.
         // </summary>
         // <param name="aggregate"> The aggregate go be translated </param>
-        // <param name="aggregateArgument"> The translated aggregate argument </param>
-        private static SqlBuilder VisitAggregate(DbAggregate aggregate, object aggregateArgument)
+        // <param name="aggregateArguments"> The translated aggregate arguments </param>
+        private static SqlBuilder VisitAggregate(DbAggregate aggregate, IList<object> aggregateArguments)
         {
             var aggregateResult = new SqlBuilder();
             var functionAggregate = aggregate as DbFunctionAggregate;
@@ -2788,7 +2797,13 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 aggregateResult.Append("DISTINCT ");
             }
 
-            aggregateResult.Append(aggregateArgument);
+            string separator = String.Empty;
+            foreach (var arg in aggregateArguments)
+            {
+                aggregateResult.Append(separator);
+                aggregateResult.Append(arg);
+                separator = ", ";
+            }
 
             aggregateResult.Append(")");
             return aggregateResult;
@@ -3452,7 +3467,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 // This is case only for SQL 8.0 when the left child has order by in it
                 // If the output columns of the left child got renamed, 
                 // then the output of the union all is renamed
-                // All this currenlty only happens for UNION ALL, because INTERSECT and
+                // All this currently only happens for UNION ALL, because INTERSECT and
                 // EXCEPT get translated for SQL 8.0 before SqlGen.
                 var selectStatement = new SqlSelectStatement();
                 selectStatement.From.Append("( ");
@@ -3871,7 +3886,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             {
                 var columns = AddDefaultColumns(oldStatement);
 
-                // Thid could not have been called from a join node.
+                // This could not have been called from a join node.
                 Debug.Assert(oldStatement.FromExtents.Count == 1);
 
                 // if the oldStatement has a join as its input, ...
@@ -4009,7 +4024,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 == DbExpressionKind.Constant)
             {
                 //For constant expression we should not cast the value, 
-                // thus we don't go throught the default DbConstantExpression handling
+                // thus we don't go through the default DbConstantExpression handling
                 var sqlBuilder = new SqlBuilder();
                 sqlBuilder.Append(((DbConstantExpression)e).Value.ToString());
                 result = sqlBuilder;
@@ -4328,13 +4343,13 @@ namespace System.Data.Entity.SqlServer.SqlGen
         //         an aggregate or a subquery. (SQLBUDT #504600)
         //     </item>
         // </list>
-        // Potentially, we could furhter optimize this.
+        // Potentially, we could further optimize this.
         // </summary>
         private static bool GroupByAggregatesNeedInnerQuery(IList<DbAggregate> aggregates, string inputVarRefName)
         {
             foreach (var aggregate in aggregates)
             {
-                Debug.Assert(aggregate.Arguments.Count == 1);
+                Debug.Assert(aggregate.Arguments.Count >= 1);
                 if (GroupByAggregateNeedsInnerQuery(aggregate.Arguments[0], inputVarRefName))
                 {
                     return true;

@@ -283,7 +283,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 if (m_command.MetadataWorkspace.TryGetGeneratedViewOfType(entitySet, requiredType, includeSubtypes, out definingQuery))
                 {
                     //
-                    // At this point a type-specific view was found that satisifies the type filter's
+                    // At this point a type-specific view was found that satisfies the type filter's
                     // constraints in terms of required type and whether subtypes should be included;
                     // the type filter itself is now unnecessary and should be set to null indicating
                     // that it can be safely removed (see ProcessScanTableOp and Visit(FilterOp) for this).
@@ -332,9 +332,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         // <summary>
-        // If the discrminator map we're already tracking for this type (in this entityset)
+        // If the discriminator map we're already tracking for this type (in this entityset)
         // isn't already rooted at our required type, then we have to suppress the use of
-        // the descriminator maps when we constrct the structuredtypes; see SQLBUDT #615744
+        // the discriminator maps when we construct the structuredtypes; see SQLBUDT #615744
         // </summary>
         private void DetermineDiscriminatorMapUsage(
             Node viewNode, EntitySetBase entitySet, EntityTypeBase rootEntityType, bool includeSubtypes)
@@ -968,7 +968,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 m_command.CreateGetEntityRefOp(relProperty.FromEnd.TypeUsage),
                 sourceEntityNode);
 
-            // Hanlde the 1:M and N:M cases
+            // Handle the 1:M and N:M cases
             if (relProperty.ToEnd.RelationshipMultiplicity
                 == RelationshipMultiplicity.Many)
             {
@@ -1513,7 +1513,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         // <summary>
         // Returns the current entity set scope, if any, for an entity type constructor.
-        // The scope defines the result of the construtor as a scoped entity type.
+        // The scope defines the result of the constructor as a scoped entity type.
         // </summary>
         private EntitySet GetCurrentEntityTypeScope()
         {
@@ -1711,7 +1711,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         // <summary>
         // Handler for NewEntityOp.
-        // Assignes scope to the entity constructor if it hasn't been assigned before.
+        // Assigns scope to the entity constructor if it hasn't been assigned before.
         // </summary>
         // <param name="op"> the NewEntityOp </param>
         // <param name="n"> the node tree corresponding to the op </param>
@@ -1886,7 +1886,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // Handles a NewMultiset constructor, i.e. {x, y, z}
         // 1. Empty multiset constructors are simply converted into:
         // select x from singlerowtable as x where false
-        // 2. Mulltset constructors with only one element or with multiple elements all of
+        // 2. Multiset constructors with only one element or with multiple elements all of
         // which are constants or nulls are converted into:
         // select x from dual union all select y from dual union all select z
         // 3. All others are converted into:
@@ -1932,7 +1932,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
                 //
-            // Multiset constructors with only one elment or with multiple elments all of 
+            // Multiset constructors with only one element or with multiple elements all of 
             //   which are constants or nulls are converted into: 
             //    
             // UnionAll(Project(SingleRowTable, e1), Project(SingleRowTable, e2), ...)
@@ -2173,7 +2173,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 m_compilerState.MarkPhaseAsNeeded(PlanCompilerPhase.JoinElimination);
             }
 
-            // If a subquery was added with an exists node, we have to go througth Normalization
+            // If a subquery was added with an exists node, we have to go through Normalization
             if (base.ProcessJoinOp(n))
             {
                 m_compilerState.MarkPhaseAsNeeded(PlanCompilerPhase.Normalization);

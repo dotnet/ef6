@@ -11,7 +11,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     internal abstract class ConversionContext<T_Identifier>
     {
         // <summary>
-        // Gets the solver instance associated with this conversion context. Used to reterieve
+        // Gets the solver instance associated with this conversion context. Used to retrieve
         // canonical Decision Diagram vertices for this context.
         // </summary>
         internal readonly Solver Solver = new Solver();

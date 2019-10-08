@@ -202,7 +202,7 @@ namespace Microsoft.Data.Entity.Design.Base.Shell
         }
 
         /// <summary>
-        ///     Each node in the tree can have an associated tracking object used to indentify it.
+        ///     Each node in the tree can have an associated tracking object used to identify it.
         ///     The branch can override this method to return the row index corresponding to the given
         ///     object.
         /// </summary>
@@ -372,7 +372,7 @@ namespace Microsoft.Data.Entity.Design.Base.Shell
         /// </summary>
         /// <param name="row">Target row</param>
         /// <param name="column">Target column</param>
-        /// <returns>Populated VirtualTreeAccessibilityData structue, or VirtualTreeAccessibilityData.Empty</returns>
+        /// <returns>Populated VirtualTreeAccessibilityData structure, or VirtualTreeAccessibilityData.Empty</returns>
         protected virtual VirtualTreeAccessibilityData GetAccessibilityData(int row, int column)
         {
             if (_columns[column].ColumnIsCheckBox)

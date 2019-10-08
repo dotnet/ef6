@@ -39,6 +39,7 @@ namespace ProductivityApiTests
             }
         }
 
+#if NET452
         [Fact]
         public void Can_replace_connection_with_different_provider()
         {
@@ -54,6 +55,7 @@ namespace ProductivityApiTests
                 }
             }
         }
+#endif
 
         private void Can_replace_connection_implementation(
             ReplaceConnectionContext context,

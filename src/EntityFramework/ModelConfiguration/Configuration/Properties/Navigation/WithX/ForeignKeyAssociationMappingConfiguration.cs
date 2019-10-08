@@ -50,7 +50,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary>
         /// Configures the name of the column(s) for the foreign key.
         /// </summary>
-        /// <param name="keyColumnNames"> The foreign key column names. When using multiple foreign key properties, the properties must be specified in the same order that the the primary key properties were configured for the target entity type. </param>
+        /// <param name="keyColumnNames"> The foreign key column names. When using multiple foreign key properties, the properties must be specified in the same order that the primary key properties were configured for the target entity type. </param>
         /// <returns> The same ForeignKeyAssociationMappingConfiguration instance so that multiple calls can be chained. </returns>
         public ForeignKeyAssociationMappingConfiguration MapKey(params string[] keyColumnNames)
         {

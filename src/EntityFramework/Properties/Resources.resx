@@ -288,7 +288,7 @@
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="ConflictingTypeAnnotation" xml:space="preserve">
-    <value>Annotation '{0}' value '{1}' conflicts with value '{2}' for table '{3}'. Annotations of a given name configured for a given table must be specified only once or have have matching values in each configuration.</value>
+    <value>Annotation '{0}' value '{1}' conflicts with value '{2}' for table '{3}'. Annotations of a given name configured for a given table must be specified only once or have matching values in each configuration.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="ConflictingColumnConfiguration" xml:space="preserve">
@@ -954,7 +954,7 @@
   <data name="EdmModel_Validator_Syntactic_EdmModel_NameIsNotAllowed" xml:space="preserve">
     <value>The specified name is not allowed: '{0}'.</value>
   </data>
-  <data name="EdmModel_Validator_Syntactic_EdmAssociationType_AssocationEndMustNotBeNull" xml:space="preserve">
+  <data name="EdmModel_Validator_Syntactic_EdmAssociationType_AssociationEndMustNotBeNull" xml:space="preserve">
     <value>AssociationEnd must not be null.</value>
   </data>
   <data name="EdmModel_Validator_Syntactic_EdmAssociationConstraint_DependentEndMustNotBeNull" xml:space="preserve">
@@ -963,7 +963,7 @@
   <data name="EdmModel_Validator_Syntactic_EdmAssociationConstraint_DependentPropertiesMustNotBeEmpty" xml:space="preserve">
     <value>ToProperties must not be empty.</value>
   </data>
-  <data name="EdmModel_Validator_Syntactic_EdmNavigationProperty_AssocationMustNotBeNull" xml:space="preserve">
+  <data name="EdmModel_Validator_Syntactic_EdmNavigationProperty_AssociationMustNotBeNull" xml:space="preserve">
     <value>Association must not be null.</value>
   </data>
   <data name="EdmModel_Validator_Syntactic_EdmNavigationProperty_ResultEndMustNotBeNull" xml:space="preserve">
@@ -1885,7 +1885,7 @@
     <value>Inconsistent metadata error</value>
   </data>
   <data name="InvalidNumberOfParametersForAggregateFunction" xml:space="preserve">
-    <value>Error in Function '{0}'. Aggregate Functions should take exactly one input parameter.</value>
+    <value>Error in Function '{0}'. Aggregate Functions should take at least one input parameter.</value>
   </data>
   <data name="InvalidParameterTypeForAggregateFunction" xml:space="preserve">
     <value>Type of parameter '{0}' in function '{1}' is not valid. The aggregate function parameter type must be of CollectionType.</value>
@@ -4952,7 +4952,7 @@
   <data name="ComposableFunctionImportsReturningEntitiesNotSupported" xml:space="preserve">
     <value>Mapping function imports returning entities is not supported.</value>
   </data>
-  <data name="StructuralTypeMappingsMustNotBeNullForFunctionImportsReturingNonScalarValues" xml:space="preserve">
+  <data name="StructuralTypeMappingsMustNotBeNullForFunctionImportsReturningNonScalarValues" xml:space="preserve">
     <value>Structural type mappings must not be null or empty for function imports returning non-scalar values.</value>
   </data>
   <data name="InvalidReturnTypeForComposableFunction" xml:space="preserve">

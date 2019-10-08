@@ -52,10 +52,10 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
             }
 
             _names = null;
-            var leftIdenitifier = _leftExpr as Identifier;
-            if (leftIdenitifier != null)
+            var leftIdentifier = _leftExpr as Identifier;
+            if (leftIdentifier != null)
             {
-                _names = new[] { leftIdenitifier.Name, _identifier.Name };
+                _names = new[] { leftIdentifier.Name, _identifier.Name };
             }
 
             var leftDotExpr = _leftExpr as DotExpr;

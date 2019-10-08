@@ -57,6 +57,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             ObjectQueryExecutionPlan plan = null;
             var cacheEntry = _cacheEntry;
             var useCSharpNullComparisonBehavior = ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior;
+            var disableFilterOverProjectionSimplificationForCustomFunctions = ObjectContext.ContextOptions.DisableFilterOverProjectionSimplificationForCustomFunctions;
             if (cacheEntry != null)
             {
                 // The cache entry has already been retrieved, so compute the effective merge option with the following precedence:
@@ -77,7 +78,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
                     // Prepare the execution plan using the command tree and the computed effective merge option
                     var tree = DbQueryCommandTree.FromValidExpression(
-                        ObjectContext.MetadataWorkspace, DataSpace.CSpace, queryExpression, !useCSharpNullComparisonBehavior);
+                        ObjectContext.MetadataWorkspace, DataSpace.CSpace, queryExpression, !useCSharpNullComparisonBehavior, disableFilterOverProjectionSimplificationForCustomFunctions);
                     plan = _objectQueryExecutionPlanFactory.Prepare(
                         ObjectContext, tree, ElementType, mergeOption, EffectiveStreamingBehavior, converter.PropagatedSpan, parameters,
                         converter.AliasGenerator);
@@ -110,7 +111,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     var queryExpression = converter.Convert();
                     var parameters = converter.GetParameters();
                     var tree = DbQueryCommandTree.FromValidExpression(
-                        ObjectContext.MetadataWorkspace, DataSpace.CSpace, queryExpression, !useCSharpNullComparisonBehavior);
+                        ObjectContext.MetadataWorkspace, DataSpace.CSpace, queryExpression, !useCSharpNullComparisonBehavior, disableFilterOverProjectionSimplificationForCustomFunctions);
 
                     // If a cache entry for this compiled query's cache key was not successfully retrieved, then it must be created now.
                     // Note that this is only possible after converting the LINQ expression and discovering the propagated merge option,

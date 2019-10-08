@@ -55,7 +55,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // Determines if the two types are structurally equivalent.
         // </summary>
         // <remarks>
-        // Equivalence for nomimal types is based on lexical identity and structural equivalence for structural types.
+        // Equivalence for nominal types is based on lexical identity and structural equivalence for structural types.
         // Structural equivalence for row types is based only on equivalence of property types, property names are ignored.
         // </remarks>
         // <returns> true if equivalent, false otherwise </returns>
@@ -279,7 +279,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         // <summary>
         // determines if fromType can be cast to toType. this operation is valid only
-        // if fromtype and totype are polimorphic types.
+        // if fromtype and totype are polymorphic types.
         // </summary>
         internal static bool IsValidPolymorphicCast(TypeUsage fromType, TypeUsage toType)
         {
@@ -293,7 +293,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         // <summary>
         // determines if fromEdmType can be cast to toEdmType. this operation is valid only
-        // if fromtype and totype are polimorphic types.
+        // if fromtype and totype are polymorphic types.
         // </summary>
         internal static bool IsValidPolymorphicCast(EdmType fromEdmType, EdmType toEdmType)
         {
@@ -467,7 +467,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         // <summary>
-        // determines if type is a polimorphic type, ie, EntityType or ComplexType.
+        // determines if type is a polymorphic type, ie, EntityType or ComplexType.
         // </summary>
         internal static bool IsPolymorphicType(TypeUsage type)
         {
@@ -599,7 +599,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // <summary>
         // Determines if type1 is equal-comparable to type2.
         // in order for type1 and type2 to be equal-comparable, they must be
-        // individualy equal-comparable and have a common super-type.
+        // individually equal-comparable and have a common super-type.
         // </summary>
         // <param name="type1"> an instance of a TypeUsage </param>
         // <param name="type2"> an instance of a TypeUsage </param>
@@ -628,7 +628,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // <summary>
         // Determines if type1 is order-comparable to type2.
         // in order for type1 and type2 to be order-comparable, they must be
-        // individualy order-comparable and have a common super-type.
+        // individually order-comparable and have a common super-type.
         // </summary>
         // <param name="type1"> an instance of a TypeUsage </param>
         // <param name="type2"> an instance of a TypeUsage </param>

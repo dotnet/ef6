@@ -236,7 +236,7 @@ namespace EFDesigner.InProcTests
         ///     3. Undo/Redo Creation of another Association
         ///     4. Undo/Redo Change of Multiplicity
         ///     5. Undo/Redo Change of Role
-        ///     6. Undo/Redo Rename of Navigation Property (AssocationSetEnd Roles should get updated)
+        ///     6. Undo/Redo Rename of Navigation Property (AssociationSetEnd Roles should get updated)
         ///     7. Undo/Redo Rename of EntitySet (AssociationSetEnds should get updated)
         ///     8. Undo/Redo Rename of Association
         ///     9. Undo/Redo Rename of AssociationSet

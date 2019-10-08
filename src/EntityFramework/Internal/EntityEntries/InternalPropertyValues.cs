@@ -323,7 +323,7 @@ namespace System.Data.Entity.Internal
         // Gets a value indicating whether the object for this dictionary is an entity or a complex object.
         // </summary>
         // <value>
-        // <c>true</c> if this this is a dictionary for an entity; <c>false</c> if it is a dictionary for a complex object.
+        // <c>true</c> if this is a dictionary for an entity; <c>false</c> if it is a dictionary for a complex object.
         // </value>
         public bool IsEntityValues
         {

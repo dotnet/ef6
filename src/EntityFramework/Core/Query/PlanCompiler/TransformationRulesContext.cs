@@ -23,9 +23,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // Whether any rule was applied that may have caused modifications such that projection pruning
         // may be useful
         // </summary>
-        internal bool ProjectionPrunningRequired
+        internal bool ProjectionPruningRequired
         {
-            get { return m_projectionPrunningRequired; }
+            get { return m_projectionPruningRequired; }
         }
 
         // <summary>
@@ -38,7 +38,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         // <summary>
-        // Remap the given subree using the current remapper
+        // Remap the given subtree using the current remapper
         // </summary>
         internal void RemapSubtree(Node subTree)
         {
@@ -262,6 +262,52 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return IsScalarOpTree(node, varRefMap, ref nodeCount);
         }
 
+        /// <summary>
+        /// Is this tree uses user-defined functions
+        /// Simplifying query with UDFs could caused to suboptimal plans
+        /// </summary>
+        /// <param name="node"> Current subtree to process </param>
+        /// <param name="varMap">Mapped variables</param>
+        /// <returns></returns>
+        internal bool IncludeCustomFunctionOp(Node node, Dictionary<Var, Node> varMap)
+        {
+            if (!m_compilerState.DisableFilterOverProjectionSimplificationForCustomFunctions)
+            {
+                return false;
+            }
+
+            PlanCompiler.Assert(varMap != null, "Null varRef map");
+
+            if (node.Op.OpType == OpType.VarRef)
+            {
+                var varRefOp = (VarRefOp)node.Op;
+                if (varMap.TryGetValue(varRefOp.Var, out var newNode))
+                {
+                    return IncludeCustomFunctionOp(newNode, varMap);
+                }
+            }
+
+            if (node.Op.OpType == OpType.Function)
+            {
+                var functionOp = node.Op as FunctionOp;
+                if (!functionOp.Function.BuiltInAttribute)
+                {
+                    return true;
+                }
+            }
+
+            // Simply process the result of the children.
+            for (var i = 0; i < node.Children.Count; i++)
+            {
+                if (IncludeCustomFunctionOp(node.Children[i], varMap))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         // <summary>
         // Get a mapping from Var->Expression for a VarDefListOp tree. This information
         // will be used by later stages to replace all references to the Vars by the
@@ -274,7 +320,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // </summary>
         // <param name="varDefListNode"> The varDefListOp subtree </param>
         // <param name="varRefMap"> ref counts for each referenced var </param>
-        // <returns> mapping from Var->replacement xpressions </returns>
+        // <returns> mapping from Var->replacement expressions </returns>
         [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "varDefListOp", Justification = "Ensures will throw exception if varDefListNode.Op is of wrong type.")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "varDef")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
@@ -370,7 +416,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             foreach (var v in varList)
             {
-                // Any Int32 var regardless of the fasets will do
+                // Any Int32 var regardless of the facets will do
                 PrimitiveTypeKind typeKind;
                 if (TypeHelpers.TryGetPrimitiveTypeKind(v.Type, out typeKind)
                     && typeKind == PrimitiveTypeKind.Int32)
@@ -406,7 +452,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private readonly VarRemapper m_remapper;
         private readonly Dictionary<Node, Node> m_suppressions;
         private readonly VarVec m_remappedVars;
-        private bool m_projectionPrunningRequired;
+        private bool m_projectionPruningRequired;
         private bool m_reapplyNullabilityRules;
         private readonly Stack<Node> m_relOpAncestors = new Stack<Node>();
 #if DEBUG
@@ -484,7 +530,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // Callback function to invoke *after* rules are applied
         // Recomputes the node info, if this node has changed
         // If the rule is among the rules after which projection pruning may be beneficial,
-        // m_projectionPrunningRequired is set to true.
+        // m_projectionPruningRequired is set to true.
         // If the rule is among the rules after which reapplying the nullability rules may be beneficial,
         // m_reapplyNullabilityRules is set to true.
         // </summary>
@@ -497,10 +543,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 appliedRules.Append(rule.MethodName);
                 appliedRules.AppendLine();
 #endif
-                if (!m_projectionPrunningRequired
+                if (!m_projectionPruningRequired
                     && TransformationRules.RulesRequiringProjectionPruning.Contains(rule))
                 {
-                    m_projectionPrunningRequired = true;
+                    m_projectionPruningRequired = true;
                 }
                 if (!m_reapplyNullabilityRules
                     && TransformationRules.RulesRequiringNullabilityRulesToBeReapplied.Contains(rule))

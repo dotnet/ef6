@@ -6,6 +6,7 @@ namespace System.Data.Entity.TestDoubles
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations;
     using System.Linq;
+    using System.Threading.Tasks;
     using SimpleModel;
     using Xunit;
 
@@ -239,23 +240,23 @@ namespace System.Data.Entity.TestDoubles
 
 #if !NET40
         [Fact]
-        public void FindAsync_throws_for_unimplemented_DbSet()
+        public async Task FindAsync_throws_for_unimplemented_DbSet()
         {
-            Assert.Throws<NotImplementedException>(() => new UnimplementedDbSet<Product>().FindAsync(1))
+            (await Assert.ThrowsAsync<NotImplementedException>(() => new UnimplementedDbSet<Product>().FindAsync(1)))
                 .ValidateMessage("TestDoubleNotImplemented", "FindAsync", typeof(UnimplementedDbSet<Product>).Name, typeof(DbSet<>).Name);
         }
 
         [Fact]
-        public void Getting_async_results_throws_for_unimplemented_DbSet()
+        public async Task Getting_async_results_throws_for_unimplemented_DbSet()
         {
-            Assert.Throws<NotImplementedException>(() => new UnimplementedDbSet<Product>().ToListAsync())
+            (await Assert.ThrowsAsync<NotImplementedException>(() => new UnimplementedDbSet<Product>().ToListAsync()))
                 .ValidateMessage("TestDoubleNotImplemented", "IDbAsyncEnumerable<TResult>.GetAsyncEnumerator", typeof(UnimplementedDbSet<Product>).Name, typeof(DbSet<>).Name);
         }
 
         [Fact]
-        public void Getting_results_from_async_SqlQuery_throws_for_unimplemented_DbSet()
+        public async Task Getting_results_from_async_SqlQuery_throws_for_unimplemented_DbSet()
         {
-            Assert.Throws<NotImplementedException>(() => new UnimplementedDbSet<Product>().SqlQuery("not a real query").ToListAsync())
+            (await Assert.ThrowsAsync<NotImplementedException>(() => new UnimplementedDbSet<Product>().SqlQuery("not a real query").ToListAsync()))
                 .ValidateMessage("TestDoubleNotImplemented", "IDbAsyncEnumerable<TElement>.GetAsyncEnumerator", typeof(DbSqlQuery<Product>).Name, typeof(DbSqlQuery<>).Name);
         }
 #endif

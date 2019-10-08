@@ -848,7 +848,7 @@ namespace Microsoft.Data.Entity.Design.Package
                 {
                     var entityShape = view.Selection.PrimaryItem.Shape as EntityTypeShape;
 
-                    // if EntityShape is null, the user might select the the entity shape compartment.
+                    // if EntityShape is null, the user might select the entity shape compartment.
                     if (entityShape == null)
                     {
                         var compartment = view.Selection.PrimaryItem.Shape as ElementListCompartment;
@@ -863,7 +863,7 @@ namespace Microsoft.Data.Entity.Design.Package
                         // Make sure what is returned is what the user requested.
                         Debug.Assert(
                             result != null,
-                            "Could not retrieve compartment with isPropertiesComparment property value : " + isPropertiesCompartment);
+                            "Could not retrieve compartment with isPropertiesCompartment property value : " + isPropertiesCompartment);
                     }
                 }
             }
@@ -1314,11 +1314,11 @@ namespace Microsoft.Data.Entity.Design.Package
                 bool.TryParse(shouldConfirmDelete, out displayConfirmDeleteDialog);
             }
             if (displayConfirmDeleteDialog
-                && DismissableWarningDialog.ShowWarningDialogAndSaveDismissOption(
+                && DismissibleWarningDialog.ShowWarningDialogAndSaveDismissOption(
                     DialogsResource.ConfirmDeleteDialog_Title,
                     DialogsResource.ConfirmDeleteDialog_DescriptionLabel_Text,
                     RegKeyConfirmDelete,
-                    DismissableWarningDialog.ButtonMode.YesNo))
+                    DismissibleWarningDialog.ButtonMode.YesNo))
             {
                     return;
             }
@@ -2849,7 +2849,7 @@ namespace Microsoft.Data.Entity.Design.Package
                             var name = (end == ConnectorEnd.Source)
                                            ? SelectedAssociationConnector.ModelElement.SourceEntityType.Name
                                            : SelectedAssociationConnector.ModelElement.TargetEntityType.Name;
-                            cmd.Text = String.Format(CultureInfo.CurrentCulture, Resources.SelectAssociationEndCommnadText, name);
+                            cmd.Text = String.Format(CultureInfo.CurrentCulture, Resources.SelectAssociationEndCommandText, name);
                         }
                         else
                         {
@@ -3131,7 +3131,7 @@ namespace Microsoft.Data.Entity.Design.Package
                         var property = obj as Property;
                         Debug.Assert(
                             property != null && property.EntityType == selectedProperty.EntityType,
-                            "Selected object is not a property or is from another EnityType");
+                            "Selected object is not a property or is from another EntityType");
                         if (property != null
                             && property.EntityType == selectedProperty.EntityType)
                         {
@@ -3338,7 +3338,7 @@ namespace Microsoft.Data.Entity.Design.Package
                                     var cp = new CommandProcessor(cpc, cmd);
                                     cp.Invoke();
                                     // Ensure that newly created properties are selected.
-                                    // Since we dont support copy and past for navigation properties, we can safely assume pass the entity's PropertiesCompartment.
+                                    // Since we don't support copy and past for navigation properties, we can safely assume pass the entity's PropertiesCompartment.
                                     SelectProperties(cmd.Properties, entityShape.PropertiesCompartment);
                                 }
                             }
@@ -3812,7 +3812,7 @@ namespace Microsoft.Data.Entity.Design.Package
                     var property = obj as Property;
                     Debug.Assert(
                         property != null && property.EntityType == selectedProperty.EntityType,
-                        "Selected object is not a property or is from another EnityType");
+                        "Selected object is not a property or is from another EntityType");
                     if (property != null
                         && property.EntityType == selectedProperty.EntityType)
                     {

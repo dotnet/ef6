@@ -474,7 +474,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
         internal static void RegisterForNotifications()
         {
             // The document frame listens for the RunningDocumentTable events, and it will 
-            // clean out errros for a document when it is closed. 
+            // clean out errors for a document when it is closed. 
 
             // Register to receive solution events
             var IVsSolution = Services.IVsSolution;

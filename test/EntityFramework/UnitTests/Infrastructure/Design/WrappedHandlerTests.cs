@@ -11,7 +11,7 @@ namespace System.Data.Entity.Infrastructure.Design
         public void SetResult_invokes_when_implemented()
         {
             var handler = new Mock<HandlerBase>().As<IResultHandler>();
-            var wrappedHandler = new WrappedHandler(handler.Object);
+            var wrappedHandler = new WrappedResultHandler(handler.Object);
 
             wrappedHandler.SetResult("Value1");
 
@@ -22,7 +22,7 @@ namespace System.Data.Entity.Infrastructure.Design
         public void SetResult_is_noop_when_not_implemented()
         {
             var handler = new Mock<HandlerBase>();
-            var wrappedHandler = new WrappedHandler(handler.Object);
+            var wrappedHandler = new WrappedResultHandler(handler.Object);
 
             wrappedHandler.SetResult("Value1");
         }

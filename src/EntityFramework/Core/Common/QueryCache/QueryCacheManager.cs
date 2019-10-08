@@ -105,7 +105,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
         // value; returns an existing entry if the key is already in the
         // dictionary.
         // </summary>
-        // <param name="outQueryCacheEntry"> The existing entry in the dicitionary if already there; inQueryCacheEntry if none was found and inQueryCacheEntry was added instead. </param>
+        // <param name="outQueryCacheEntry"> The existing entry in the dictionary if already there; inQueryCacheEntry if none was found and inQueryCacheEntry was added instead. </param>
         // <returns> true if the output entry was already found; false if it had to be added. </returns>
         internal bool TryLookupAndAdd(QueryCacheEntry inQueryCacheEntry, out QueryCacheEntry outQueryCacheEntry)
         {
@@ -399,7 +399,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
             // Pauses the operation of the eviction timer.
             // </summary>
             // <returns>
-            // If this eviction timer has already been stopped (using the <see cref="Stop" /> method), returns <c>false</c> ; otherwise, returns <c>true</c> to indicate that the call successfully suspended the inderlying
+            // If this eviction timer has already been stopped (using the <see cref="Stop" /> method), returns <c>false</c> ; otherwise, returns <c>true</c> to indicate that the call successfully suspended the underlying
             // <see
             //     cref="Timer" />
             // and no further periodic callbacks will be generated until the <see cref="Resume" /> method is called.

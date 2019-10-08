@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-#if !NET40
+#if NET452
 namespace System.Data.Entity.Configuration
 {
     using MySql.Data.MySqlClient;

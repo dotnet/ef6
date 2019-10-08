@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    $CommonMetadataElements$
+    <language>$NeutralLanguage$</language>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System.ComponentModel.DataAnnotations" targetFramework=".NETFramework4.0, .NETFramework4.5" />
+    </frameworkAssemblies>
+    <dependencies>
+      <group targetFramework=".NETFramework4.0" />
+      <group targetFramework=".NETFramework4.5" />
+      <group targetFramework=".NETStandard2.1">
+        <dependency id="Microsoft.CSharp" version="$MicrosoftCSharpVersion$" exclude="Build,Analyzers" />
+        <dependency id="System.CodeDom" version="$SystemCodeDomVersion$" exclude="Build,Analyzers" />
+        <dependency id="System.ComponentModel.Annotations" version="$SystemComponentModelAnnotationsVersion$" exclude="Build,Analyzers" />
+        <dependency id="System.Configuration.ConfigurationManager" version="$SystemConfigurationConfigurationManagerVersion$" exclude="Build,Analyzers" />
+        <dependency id="System.Data.SqlClient" version="$SystemDataSqlClientVersion$" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="$IntermediateOutputPath$EntityFramework6.psd1" target="tools/"/>
+    <file src="$IntermediateOutputPath$EntityFramework6.PS2.psd1" target="tools/"/>
+    <file src="../../../artifacts/bin/EntityFramework/$Configuration$/net40/EntityFramework.dll" target="lib/net40/" />
+    <file src="../../../artifacts/bin/EntityFramework/$Configuration$/net40/EntityFramework.xml" target="lib/net40/" />
+    <file src="../../../artifacts/bin/EntityFramework/$Configuration$/net45/EntityFramework.dll" target="lib/net45/" />
+    <file src="../../../artifacts/bin/EntityFramework/$Configuration$/net45/EntityFramework.xml" target="lib/net45/" />
+    <file src="../../../artifacts/bin/EntityFramework/$Configuration$/netstandard2.1/EntityFramework.dll" target="lib/netstandard2.1/" />
+    <file src="../../../artifacts/bin/EntityFramework/$Configuration$/netstandard2.1/EntityFramework.xml" target="lib/netstandard2.1/" />
+    <file src="../../../artifacts/bin/ef6/$Configuration$/net40/ef6.exe" target="tools/net40/any/" />
+    <file src="../../../artifacts/bin/ef6/$Configuration$/net40/ef6.pdb" target="tools/net40/any/" />
+    <file src="../../../artifacts/bin/ef6/$Configuration$/net45/ef6.exe" target="tools/net45/any/" />
+    <file src="../../../artifacts/bin/ef6/$Configuration$/net45/ef6.pdb" target="tools/net45/any/" />
+    <file src="../../../artifacts/bin/ef6/$Configuration$/$DefaultNetCoreTargetFramework$/ef6.dll" target="tools/$DefaultNetCoreTargetFramework$/any/" />
+    <file src="../../../artifacts/bin/ef6/$Configuration$/$DefaultNetCoreTargetFramework$/ef6.pdb" target="tools/$DefaultNetCoreTargetFramework$/any/" />
+    <file src="../../../artifacts/bin/ef6/$Configuration$/$DefaultNetCoreTargetFramework$/ef6.runtimeconfig.json" target="tools/$DefaultNetCoreTargetFramework$/any/" />
+    <file src="../../../artifacts/bin/ef6/x86/$Configuration$/net40/ef6.exe" target="tools/net40/win-x86/" />
+    <file src="../../../artifacts/bin/ef6/x86/$Configuration$/net40/ef6.pdb" target="tools/net40/win-x86/" />
+    <file src="../../../artifacts/bin/ef6/x86/$Configuration$/net45/ef6.exe" target="tools/net45/win-x86/" />
+    <file src="../../../artifacts/bin/ef6/x86/$Configuration$/net45/ef6.pdb" target="tools/net45/win-x86/" />
+    <file src="../../../artifacts/bin/EntityFramework.SqlServer/$Configuration$/net40/EntityFramework.SqlServer.dll" target="lib/net40/" />
+    <file src="../../../artifacts/bin/EntityFramework.SqlServer/$Configuration$/net40/EntityFramework.SqlServer.xml" target="lib/net40/" />
+    <file src="../../../artifacts/bin/EntityFramework.SqlServer/$Configuration$/net45/EntityFramework.SqlServer.dll" target="lib/net45/" />
+    <file src="../../../artifacts/bin/EntityFramework.SqlServer/$Configuration$/net45/EntityFramework.SqlServer.xml" target="lib/net45/" />
+    <file src="../../../artifacts/bin/EntityFramework.SqlServer/$Configuration$/netstandard2.1/EntityFramework.SqlServer.dll" target="lib/netstandard2.1/" />
+    <file src="../../../artifacts/bin/EntityFramework.SqlServer/$Configuration$/netstandard2.1/EntityFramework.SqlServer.xml" target="lib/netstandard2.1/" />
+    <file src="../../../artifacts/bin/Microsoft.Data.Entity.Build.Tasks/$Configuration$/netstandard2.0/Microsoft.Data.Entity.Build.Tasks.dll" target="build/" />
+    <file src="build\**\*" target="build/" />
+    <file src="buildTransitive\**\*" target="buildTransitive/" />
+    <file src="content\**\*" target="content/" />
+    <file src="tools\**\*" target="tools/" />
+  </files>
+</package>

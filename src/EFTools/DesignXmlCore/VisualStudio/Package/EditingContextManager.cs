@@ -127,7 +127,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                             // we need to refresh all sets that refer to the document
                             // so that they revert to the document that is persisted in the file system
 
-                            // TODO: add this functinality
+                            // TODO: add this functionality
                             //ModelManager.RefreshModelForLocation(closingFrame.Uri);
                         }
                     }

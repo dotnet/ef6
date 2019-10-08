@@ -1,0 +1,32 @@
+<Project>
+  <Import Project="Sdk.targets" Sdk="Microsoft.DotNet.Arcade.Sdk" />
+
+  <!-- Workaround while there is no 5.0 SDK available, suppress unsupported version error -->
+  <PropertyGroup>
+    <NETCoreAppMaximumVersion>5.0</NETCoreAppMaximumVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Workaround when there is no vNext SDK available, copy known apphost/framework reference info from 3.0 -->
+    <KnownAppHostPack 
+      Include="@(KnownAppHostPack->WithMetadataValue('TargetFramework', 'netcoreapp3.0'))"
+      TargetFramework="$(DefaultNetCoreTargetFramework)"
+      Condition="!(@(KnownAppHostPack->AnyHaveMetadataValue('TargetFramework', '$(DefaultNetCoreTargetFramework)')))"
+      />
+    <KnownFrameworkReference
+      Include="@(KnownFrameworkReference->WithMetadataValue('TargetFramework', 'netcoreapp3.0'))"
+      TargetFramework="$(DefaultNetCoreTargetFramework)"
+      Condition="!(@(KnownFrameworkReference->AnyHaveMetadataValue('TargetFramework', '$(DefaultNetCoreTargetFramework)')))"
+      />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Reference base shared framework at incoming dependency flow version, not bundled sdk version. -->
+    <KnownFrameworkReference 
+      Update="Microsoft.NETCore.App"
+      Condition="'$(TargetFramework)' == 'netcoreapp5.0'"
+      RuntimeFrameworkVersion="$(MicrosoftNETCoreAppRuntimeVersion)"
+      TargetingPackVersion="$(MicrosoftNETCoreAppRefPackageVersion)"
+      />
+  </ItemGroup>
+</Project>

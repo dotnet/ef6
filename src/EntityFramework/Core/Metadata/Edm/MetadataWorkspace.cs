@@ -457,7 +457,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // loaded, but the callingAssembly and its referenced assemblies are loaded.
         // </summary>
         // <param name="type"> The type's assembly is loaded into the OSpace ItemCollection </param>
-        // <param name="callingAssembly"> The assembly and its referenced assemblies to load when type is insuffiecent </param>
+        // <param name="callingAssembly"> The assembly and its referenced assemblies to load when type is insufficient </param>
         internal virtual void ImplicitLoadAssemblyForType(Type type, Assembly callingAssembly)
         {
             // this exists separately from LoadFromAssembly so that we can handle generics, like IEnumerable<Product>
@@ -483,7 +483,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
                     // If the schema attribute is presented on the assembly or any referenced assemblies, then it is a V1 scenario that we should
                     // strictly follow the Get all referenced assemblies rules.
-                    // If the attribute is not presented on the assembly, then we won't load the referenced asssembly 
+                    // If the attribute is not presented on the assembly, then we won't load the referenced assembly 
                     // for this callingAssembly
                     if (ObjectItemAttributeAssemblyLoader.IsSchemaAttributePresent(callingAssembly)
                         || (_foundAssemblyWithAttribute
@@ -491,7 +491,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                                 ObjectItemAttributeAssemblyLoader.IsSchemaAttributePresent)))
                     {
                         // cache the knowledge that we found an attribute
-                        // because it can be expesive to figure out
+                        // because it can be expensive to figure out
                         _foundAssemblyWithAttribute = true;
                         objItemCollection.ImplicitLoadAllReferencedAssemblies(callingAssembly, edmItemCollection);
                     }
@@ -508,7 +508,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // the load metadata from the callingAssembly and its referenced assemblies.
         // </summary>
         // <param name="type"> The CSPace type to verify its OSpace counterpart is loaded </param>
-        // <param name="callingAssembly"> The assembly and its referenced assemblies to load when type is insuffiecent </param>
+        // <param name="callingAssembly"> The assembly and its referenced assemblies to load when type is insufficient </param>
         internal virtual void ImplicitLoadFromEntityType(EntityType type, Assembly callingAssembly)
         {
             // used by ObjectContext.*GetObjectByKey when the clr type is not available
@@ -548,7 +548,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="identity">The conceptual model on which the item is searched.</param>
         /// <param name="space">The conceptual model on which the item is searched.</param>
         /// <param name="item">
-        /// When this method returns, contains a <see cref="T:System.Data.Metadata.Edm.GlobalIem" /> object. This parameter is passed uninitialized.
+        /// When this method returns, contains a <see cref="T:System.Data.Metadata.Edm.GlobalItem" /> object. This parameter is passed uninitialized.
         /// </param>
         /// <typeparam name="T">The type returned by the method.</typeparam>
         public virtual bool TryGetItem<T>(string identity, DataSpace space, out T item) where T : GlobalItem
@@ -577,7 +577,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="ignoreCase">true to perform the case-insensitive search; otherwise, false.</param>
         /// <param name="dataSpace">The conceptual model on which the item is searched.</param>
         /// <param name="item">
-        /// When this method returns, contains a <see cref="T:System.Data.Metadata.Edm.GlobalIem" /> object. This parameter is passed uninitialized.
+        /// When this method returns, contains a <see cref="T:System.Data.Metadata.Edm.GlobalItem" /> object. This parameter is passed uninitialized.
         /// </param>
         /// <typeparam name="T">The type returned by the method.</typeparam>
         public virtual bool TryGetItem<T>(string identity, bool ignoreCase, DataSpace dataSpace, out T item) where T : GlobalItem
@@ -1140,7 +1140,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// . If there is no matched type, this method returns null.
         /// </returns>
         /// <param name="objectSpaceType">
-        /// A <see cref="T:System.Data.Metadata.Edm.EnumlType" /> that supplies the type in the object space.
+        /// A <see cref="T:System.Data.Metadata.Edm.EnumType" /> that supplies the type in the object space.
         /// </param>
         public virtual EnumType GetEdmSpaceType(EnumType objectSpaceType)
         {
@@ -1266,7 +1266,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // Guarantees type match of declaration and generated parameters.
         // Guarantees return type match.
         // Throws internal error for functions without definition.
-        // Passes thru exception occured during definition generation.
+        // Passes thru exception occurred during definition generation.
         // </summary>
         internal virtual DbLambda GetGeneratedFunctionDefinition(EdmFunction function)
         {
@@ -1386,7 +1386,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public static void ClearCache()
         {
             MetadataCache.Instance.Clear();
-            using (var cache = AssemblyCache.AquireLockedAssemblyCache())
+            using (var cache = AssemblyCache.AcquireLockedAssemblyCache())
             {
                 cache.Clear();
             }

@@ -9,7 +9,7 @@ namespace System.Data.Entity.Internal
     // <summary>
     // Extends <see cref="SortableBindingList{T}" /> to create a sortable binding list that stays in
     // sync with an underlying <see cref="ObservableCollection{T}" />.  That is, when items are added
-    // or removed from the binding list, they are added or removed from the ObservableCollecion, and
+    // or removed from the binding list, they are added or removed from the ObservableCollection, and
     // vice-versa.
     // </summary>
     // <typeparam name="T"> The list element type. </typeparam>

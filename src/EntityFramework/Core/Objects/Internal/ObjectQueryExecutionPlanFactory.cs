@@ -35,7 +35,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             if (ObjectSpanRewriter.TryRewrite(tree, span, mergeOption, aliasGenerator, out spannedQuery, out spanInfo))
             {
                 tree = DbQueryCommandTree.FromValidExpression(
-                    tree.MetadataWorkspace, tree.DataSpace, spannedQuery, tree.UseDatabaseNullSemantics);
+                    tree.MetadataWorkspace, tree.DataSpace, spannedQuery, tree.UseDatabaseNullSemantics, tree.DisableFilterOverProjectionSimplificationForCustomFunctions);
             }
             else
             {
@@ -109,7 +109,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 // we should not be wrapping all exceptions
                 if (e.IsCatchableExceptionType())
                 {
-                    // we don't wan't folks to have to know all the various types of exceptions that can 
+                    // we don't want folks to have to know all the various types of exceptions that can 
                     // occur, so we just rethrow a CommandDefinitionException and make whatever we caught  
                     // the inner exception of it.
                     throw new EntityCommandCompilationException(Strings.EntityClient_CommandDefinitionPreparationFailed, e);

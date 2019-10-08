@@ -9,9 +9,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
     internal class DefaultAssemblyResolver : MetadataArtifactAssemblyResolver
     {
-        internal override bool TryResolveAssemblyReference(AssemblyName refernceName, out Assembly assembly)
+        internal override bool TryResolveAssemblyReference(AssemblyName referenceName, out Assembly assembly)
         {
-            assembly = ResolveAssembly(refernceName);
+            assembly = ResolveAssembly(referenceName);
             return assembly != null;
         }
 
@@ -153,7 +153,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // if two assemblies have the same full name, we will consider them as the same.
             // for example,
             // both of x and y have the full name as "{RES, Version=3.5.0.0, Culture=neutral, PublicKeyToken=null}",
-            // although they are different instances since the ReflectionOnly field in them are different, we sitll
+            // although they are different instances since the ReflectionOnly field in them are different, we still
             // consider them as the same.
             // </summary>
             public bool Equals(Assembly x, Assembly y)

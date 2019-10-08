@@ -11,7 +11,7 @@ namespace System.Data.Entity.Core.Mapping
     internal abstract class ObjectMemberMapping
     {
         // <summary>
-        // Constrcut a new member mapping metadata object
+        // Construct a new member mapping metadata object
         // </summary>
         protected ObjectMemberMapping(EdmMember edmMember, EdmMember clrMember)
         {

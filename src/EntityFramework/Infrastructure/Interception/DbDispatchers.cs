@@ -8,7 +8,7 @@ namespace System.Data.Entity.Infrastructure.Interception
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    /// Provides access to all dispatchers through the the <see cref="DbInterception.Dispatch" /> fluent API.
+    /// Provides access to all dispatchers through the <see cref="DbInterception.Dispatch" /> fluent API.
     /// </summary>
     public class DbDispatchers
     {

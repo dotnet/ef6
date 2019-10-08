@@ -1017,7 +1017,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
 
         /// <summary>
         ///     Flag that indicates whether this Synchronization event has been processed.  If this is set to true by a handler
-        ///     of the ITree.SynchronizationBeginning event, subsequent calls to IBranch.SynchonizeState will not be made.  The
+        ///     of the ITree.SynchronizationBeginning event, subsequent calls to IBranch.SynchronizeState will not be made.  The
         ///     ITree.SynchronizationEnding event will still be raised, however.
         /// </summary>
         public bool Handled { get; set; }
@@ -1033,7 +1033,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
         }
 
         /// <summary>
-        ///     The branch whose state the items in the ItemsToSynchronize enumerator should be syncronized to.
+        ///     The branch whose state the items in the ItemsToSynchronize enumerator should be synchronized to.
         /// </summary>
         public IBranch MatchBranch
         {
@@ -1041,7 +1041,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
         }
 
         /// <summary>
-        ///     The row index (relative to MatchBranch) that indicates the item in MatchBranch that the items in the ItemsToSynchronize enumerator should be syncronized to.
+        ///     The row index (relative to MatchBranch) that indicates the item in MatchBranch that the items in the ItemsToSynchronize enumerator should be synchronized to.
         /// </summary>
         public int MatchRow
         {
@@ -1049,7 +1049,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
         }
 
         /// <summary>
-        ///     The column index that indicates the item in MatchBranch that the items in the ItemsToSynchronize enumerator should be syncronized to.
+        ///     The column index that indicates the item in MatchBranch that the items in the ItemsToSynchronize enumerator should be synchronized to.
         /// </summary>
         public int MatchColumn
         {

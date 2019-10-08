@@ -109,7 +109,7 @@ namespace System.Data.Entity
         /// <remarks>
         /// Handlers can only be added before EF starts to use the configuration and so handlers should
         /// generally be added as part of application initialization. Do not access the DbConfiguration
-        /// static methods inside the handler; instead use the the members of <see cref="DbConfigurationLoadedEventArgs" />
+        /// static methods inside the handler; instead use the members of <see cref="DbConfigurationLoadedEventArgs" />
         /// to get current services and/or add overrides.
         /// </remarks>
         public static event EventHandler<DbConfigurationLoadedEventArgs> Loaded
@@ -523,7 +523,7 @@ namespace System.Data.Entity
 
         /// <summary>
         /// Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to set
-        /// a <see cref="Func{DbConnection, String, HistoryContext}" /> delegate which which be used for 
+        /// a <see cref="Func{DbConnection, String, HistoryContext}" /> delegate which can be used for 
         /// creation of the default  <see cref="Migrations.History.HistoryContext" /> for a any
         /// <see cref="DbMigrationsConfiguration" />. This default factory will only be used if no factory is
         /// set explicitly in the <see cref="DbMigrationsConfiguration" /> and if no factory has been registered

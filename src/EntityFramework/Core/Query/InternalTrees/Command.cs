@@ -849,7 +849,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         // <summary>
-        // Build out a new NewEntityOp constructing the uscoped entity <paramref name="type" />.
+        // Build out a new NewEntityOp constructing the unscoped entity <paramref name="type" />.
         // </summary>
         internal virtual NewEntityOp CreateNewEntityOp(TypeUsage type, List<RelProperty> relProperties)
         {
@@ -1386,7 +1386,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         // <summary>
-        // Creates a new UnionAllOp, with a branch descriminator.
+        // Creates a new UnionAllOp, with a branch discriminator.
         // </summary>
         // <param name="leftMap"> Mappings from the Output Vars to the Vars produced by the left argument </param>
         // <param name="rightMap"> Mappings from the Output Vars to the Vars produced by the right argument </param>
@@ -1494,7 +1494,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         // <param name="columnMap"> column map for the collection element </param>
         // <param name="flattenedElementVars"> elementVars with any nested collections pulled up </param>
         // <param name="keys"> keys specific to this collection </param>
-        // <param name="sortKeys"> sort keys specific to this collecion </param>
+        // <param name="sortKeys"> sort keys specific to this collection </param>
         // <param name="discriminatorValue"> discriminator value for this collection (under the current nestOp) </param>
         // <returns> a new CollectionInfo instance </returns>
         internal static CollectionInfo CreateCollectionInfo(
@@ -1540,7 +1540,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region NodeInfo
 
         // <summary>
-        // Get auxilliary information for a Node
+        // Get auxiliary information for a Node
         // </summary>
         // <param name="n"> the node </param>
         // <returns> node info for this node </returns>

@@ -213,7 +213,7 @@ namespace System.Data.Entity.Objects
 
             public string Name { get; set; }
 
-            public virtual ICollection<Child> Childs { get; set; }
+            public virtual ICollection<Child> Children { get; set; }
         }
 
         [Fact] // CodePlex 1142

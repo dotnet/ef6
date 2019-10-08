@@ -26,7 +26,7 @@ namespace System.Data.Entity.TestHelpers
             return connectionString.ToLower().Contains(@"(localdb)");
         }
 
-        public static bool IsIntegratedSecutity(string connectionString)
+        public static bool IsIntegratedSecurity(string connectionString)
         {
             var formattedConnectionString = connectionString.ToLower().Replace(" ", "");
             

@@ -61,7 +61,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             return new TypeConventionConfiguration<T>(
                 _conventionsConfiguration,
-                _predicates.Append(predicate));
+                IEnumerableExtensions.Append(_predicates, predicate));
         }
 
         /// <summary>

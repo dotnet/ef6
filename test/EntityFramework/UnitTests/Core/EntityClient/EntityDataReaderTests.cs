@@ -144,7 +144,7 @@ namespace System.Data.Entity.Core.EntityClient
                 () => entityDataReader.NextResultAsync().Wait());
         }
 
-        private static void AssertThrowsInAsyncMethod<TException>(string expectedMessage, Assert.ThrowsDelegate testCode)
+        private static void AssertThrowsInAsyncMethod<TException>(string expectedMessage, Action testCode)
             where TException : Exception
         {
             var exception = Assert.Throws<AggregateException>(testCode);

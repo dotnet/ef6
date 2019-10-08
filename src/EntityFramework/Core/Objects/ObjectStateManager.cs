@@ -401,7 +401,7 @@ namespace System.Data.Entity.Core.Objects
                 newEntry.AttachObjectStateManagerToEntity();
                 AddEntityEntryToDictionary(newEntry, newEntry.State);
 
-                // fire ColectionChanged event  only when a new entity is added to cache
+                // fire CollectionChanged event  only when a new entity is added to cache
                 OnObjectStateManagerChanged(CollectionChangeAction.Add, newEntry.Entity);
 
                 // When adding, we do this in AddSingleObject since we don't want to do it before the context is attached.
@@ -653,7 +653,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         // <summary>
-        // Upgrades an entity key entry in the cache to a a regular entity
+        // Upgrades an entity key entry in the cache to a regular entity
         // </summary>
         // <param name="keyEntry"> the key entry that exists in the state manager </param>
         // <param name="wrappedEntity"> the object to add </param>
@@ -1475,7 +1475,7 @@ namespace System.Data.Entity.Core.Objects
             newEntry.AttachObjectStateManagerToEntity();
             AddEntityEntryToDictionary(newEntry, newEntry.State);
 
-            // fire ColectionChanged event only when a new entity is added to cache
+            // fire CollectionChanged event only when a new entity is added to cache
             OnObjectStateManagerChanged(CollectionChangeAction.Add, newEntry.Entity);
 
             return newEntry;
@@ -2255,7 +2255,7 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="T:System.InvalidOperationException">
         /// When the object is not detached and does not have an entry in the state manager
         /// or when you try to change the state to <see cref="F:System.Data.Entity.EntityState.Detached" />
-        /// from any other <see cref="T:System.Data.Entity.EntityState." />
+        /// from any other <see cref="T:System.Data.Entity.EntityState" />
         /// or when  state  is not a valid <see cref="T:System.Data.Entity.EntityState" /> value.
         /// </exception>
         public virtual ObjectStateEntry ChangeObjectState(object entity, EntityState entityState)

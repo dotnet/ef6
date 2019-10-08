@@ -2070,31 +2070,31 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         private readonly string RangeAttribute_ValidationError = LookupString
             (
                 SystemComponentModelDataAnnotationsAssembly,
-                "System.ComponentModel.DataAnnotations.Resources.DataAnnotationsResources",
+                SystemComponentModelDataAnnotationsResourceTable,
                 "RangeAttribute_ValidationError");
 
         private readonly string RegexAttribute_ValidationError = LookupString
             (
                 SystemComponentModelDataAnnotationsAssembly,
-                "System.ComponentModel.DataAnnotations.Resources.DataAnnotationsResources",
+                SystemComponentModelDataAnnotationsResourceTable,
                 "RegexAttribute_ValidationError");
 
         private readonly string RequiredAttribute_ValidationError = LookupString
             (
                 SystemComponentModelDataAnnotationsAssembly,
-                "System.ComponentModel.DataAnnotations.Resources.DataAnnotationsResources",
+                SystemComponentModelDataAnnotationsResourceTable,
                 "RequiredAttribute_ValidationError");
 
         private readonly string StringLengthAttribute_ValidationError = LookupString
             (
                 SystemComponentModelDataAnnotationsAssembly,
-                "System.ComponentModel.DataAnnotations.Resources.DataAnnotationsResources",
+                SystemComponentModelDataAnnotationsResourceTable,
                 "StringLengthAttribute_ValidationError");
 
         private readonly string StringLengthAttribute_ValidationErrorIncludingMinimum = LookupString
             (
                 SystemComponentModelDataAnnotationsAssembly,
-                "System.ComponentModel.DataAnnotations.Resources.DataAnnotationsResources",
+                SystemComponentModelDataAnnotationsResourceTable,
                 "StringLengthAttribute_ValidationErrorIncludingMinimum");
 
         #endregion

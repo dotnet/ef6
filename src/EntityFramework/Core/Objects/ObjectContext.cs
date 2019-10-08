@@ -63,7 +63,7 @@ namespace System.Data.Entity.Core.Objects
         // but rather the disposal of the underlying connection object if the ObjectContext owns the connection,
         // or the separation of the underlying connection object from the ObjectContext if the ObjectContext does not own the connection.
         //
-        // Operations that require a connection should throw an ObjectDiposedException if the connection is null.
+        // Operations that require a connection should throw an ObjectDisposedException if the connection is null.
         // Other operations that do not need a connection should continue to work after disposal.
         private EntityConnection _connection;
 
@@ -163,7 +163,7 @@ namespace System.Data.Entity.Core.Objects
         [ResourceExposure(ResourceScope.Machine)] //Exposes the file names as part of ConnectionString which are a Machine resource
         [ResourceConsumption(ResourceScope.Machine)] //For ObjectContext method. But the paths are not created in this method.
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors",
-            Justification = "Class is internal and methods are made virtual for testing purposes only. They cannot be overrided by user.")]
+            Justification = "Class is internal and methods are made virtual for testing purposes only. They cannot be overridden by the user.")]
         protected ObjectContext(string connectionString, string defaultContainerName)
             : this(connectionString)
         {
@@ -184,7 +184,7 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="T:System.ArgumentNullException">The  connection  is null.</exception>
         /// <exception cref="T:System.ArgumentException">The  connection ,  defaultContainerName , or metadata workspace is not valid.</exception>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors",
-            Justification = "Class is internal and methods are made virtual for testing purposes only. They cannot be overrided by user.")]
+            Justification = "Class is internal and methods are made virtual for testing purposes only. They cannot be overridden by the user.")]
         protected ObjectContext(EntityConnection connection, string defaultContainerName)
             : this(connection)
         {
@@ -643,9 +643,9 @@ namespace System.Data.Entity.Core.Objects
                 }
                 else
                 {
-                    var exptectedState = doAttach ? EntityState.Unchanged : EntityState.Added;
+                    var expectedState = doAttach ? EntityState.Unchanged : EntityState.Added;
 
-                    if (existingEntry.State != exptectedState)
+                    if (existingEntry.State != expectedState)
                     {
                         throw doAttach
                                   ? new InvalidOperationException(Strings.ObjectContext_EntityAlreadyExistsInObjectStateManager)
@@ -686,7 +686,7 @@ namespace System.Data.Entity.Core.Objects
 
             if (existingEntry == null)
             {
-                // If the exact object being added is already in the context, there there is no way we need to
+                // If the exact object being added is already in the context, there is no way we need to
                 // load the type for it, and since this is expensive, we only do the load if we have to.
 
                 // SQLBUDT 480919: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
@@ -788,7 +788,7 @@ namespace System.Data.Entity.Core.Objects
             // AppendOnly (if adding a new object to a context, set
             // the relationships up to cache by default -- load option
             // is only set to other values when AttachContext is
-            // called by the materializer). Also add all related entitites to
+            // called by the materializer). Also add all related entities to
             // cache.
             //
             // NOTE: AttachContext must be called after adding the object to
@@ -815,7 +815,7 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="T:System.InvalidOperationException">
         /// The  entity  is in a <see cref="F:System.Data.Entity.EntityState.Detached" />,
         /// <see
-        ///     cref="F:System.Data.Entity.EntityState.Added," />
+        ///     cref="F:System.Data.Entity.EntityState.Added" />
         /// or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state or the  entity  is attached to another instance of
         /// <see
         ///     cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
@@ -836,7 +836,7 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="T:System.InvalidOperationException">
         /// The  entity  is in a <see cref="F:System.Data.Entity.EntityState.Detached" />,
         /// <see
-        ///     cref="F:System.Data.Entity.EntityState.Added," />
+        ///     cref="F:System.Data.Entity.EntityState.Added" />
         /// or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state or the  entity  is attached to another instance of
         /// <see
         ///     cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
@@ -857,7 +857,7 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="T:System.InvalidOperationException">
         /// The  entity  is in a <see cref="F:System.Data.Entity.EntityState.Detached" />,
         /// <see
-        ///     cref="F:System.Data.Entity.EntityState.Added," />
+        ///     cref="F:System.Data.Entity.EntityState.Added" />
         /// or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state or the  entity  is attached to another instance of
         /// <see
         ///     cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
@@ -887,7 +887,7 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="T:System.InvalidOperationException">
         /// The  entity  is in a <see cref="F:System.Data.Entity.EntityState.Detached" />,
         /// <see
-        ///     cref="F:System.Data.Entity.EntityState.Added," />
+        ///     cref="F:System.Data.Entity.EntityState.Added" />
         /// or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state or the  entity  is attached to another instance of
         /// <see
         ///     cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
@@ -905,7 +905,7 @@ namespace System.Data.Entity.Core.Objects
             wrappedEntity.RelationshipManager.GetRelatedEnd(navProp, throwArgumentException: removedConvert).Load(mergeOption);
         }
 
-        // Wraps the given entity and checks that it has a non-null context (i.e. that is is not detached).
+        // Wraps the given entity and checks that it has a non-null context (i.e. that it is not detached).
         private IEntityWrapper WrapEntityAndCheckContext(object entity, string refType)
         {
             var wrappedEntity = EntityWrapperFactory.WrapEntityUsingContext(entity, this);
@@ -1152,7 +1152,7 @@ namespace System.Data.Entity.Core.Objects
             entityEntry.CompareKeyProperties(originalEntity);
 
             // The ObjectStateEntry.UpdateModifiedFields uses a variation of Shaper.UpdateRecord method 
-            // which additionaly marks properties as modified as necessary.
+            // which additionally marks properties as modified as necessary.
             entityEntry.UpdateOriginalValues(wrappedOriginalEntity.Entity);
 
             // return the current entity
@@ -1195,7 +1195,7 @@ namespace System.Data.Entity.Core.Objects
 
             if (existingEntry == null)
             {
-                // If the exact object being added is already in the context, there there is no way we need to
+                // If the exact object being added is already in the context, there is no way we need to
                 // load the type for it, and since this is expensive, we only do the load if we have to.
 
                 // SQLBUDT 480919: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
@@ -1687,7 +1687,7 @@ namespace System.Data.Entity.Core.Objects
             }
             catch (Exception)
             {
-                // when the connection is unable to enlist properly or another error occured, be sure to release this connection
+                // when the connection is unable to enlist properly or another error occurred, be sure to release this connection
                 ReleaseConnection();
                 throw;
             }
@@ -1748,7 +1748,7 @@ namespace System.Data.Entity.Core.Objects
             }
             catch (Exception)
             {
-                // when the connection is unable to enlist properly or another error occured, be sure to release this connection
+                // when the connection is unable to enlist properly or another error occurred, be sure to release this connection
                 ReleaseConnection();
                 throw;
             }
@@ -1797,7 +1797,7 @@ namespace System.Data.Entity.Core.Objects
             //  6   non-null            null                       Closed            Yes            no-op;                                  implicit transaction will be created and used                                N/A - cannot enlist in transaction on a closed connection
             //  7   non-null tx1        non-null tx2               Open              No             connection.Enlist(currentTransaction);  currentTransaction enlisted and used                                         N/A - it is not possible to EnlistTransaction if another transaction has already enlisted
             //  8   non-null tx1        non-null tx2               Open              Yes            connection.Close(); connection.Open();  Re-opening connection will automatically enlist into Transaction.Current     N/A - only applies to TransactionScope - requires two transactions and CommitableTransaction and TransactionScope cannot be mixed
-            //  9   non-null tx1        non-null tx2               Closed            Yes            connection.Open();                      Opening connection will automatcially enlist into Transaction.Current        N/A - cannot enlist in transaction on a closed connection
+            //  9   non-null tx1        non-null tx2               Closed            Yes            connection.Open();                      Opening connection will automatically enlist into Transaction.Current        N/A - cannot enlist in transaction on a closed connection
 
             var transactionHasChanged = (null != currentTransaction && !currentTransaction.Equals(_lastTransaction)) ||
                                         (null != _lastTransaction && !_lastTransaction.Equals(currentTransaction));
@@ -2557,7 +2557,7 @@ namespace System.Data.Entity.Core.Objects
 
                 if (RefreshMode.StoreWins == refreshMode)
                 {
-                    // remove all entites that have been removed from the store, not added by client
+                    // remove all entities that have been removed from the store, not added by client
                     foreach (var item in entities)
                     {
                         Debug.Assert(EntityState.Added != item.Value.State, "should not be possible");
@@ -2705,7 +2705,7 @@ namespace System.Data.Entity.Core.Objects
 
                 if (RefreshMode.StoreWins == refreshMode)
                 {
-                    // remove all entites that have been removed from the store, not added by client
+                    // remove all entities that have been removed from the store, not added by client
                     foreach (var item in entities)
                     {
                         Debug.Assert(EntityState.Added != item.Value.State, "should not be possible");
@@ -2869,7 +2869,7 @@ namespace System.Data.Entity.Core.Objects
 
             // Initialize the command tree used to issue the refresh query.
             var tree = DbQueryCommandTree.FromValidExpression(
-                MetadataWorkspace, DataSpace.CSpace, refreshQuery, useDatabaseNullSemantics: true);
+                MetadataWorkspace, DataSpace.CSpace, refreshQuery, useDatabaseNullSemantics: true, disableFilterOverProjectionSimplificationForCustomFunctions: false);
 
             // Evaluate the refresh query using ObjectQuery<T> and process the results to update the ObjectStateManager.
             var mergeOption = (RefreshMode.StoreWins == refreshMode
@@ -3878,9 +3878,9 @@ namespace System.Data.Entity.Core.Objects
                         Debug.Assert(objectParameter.MappableType != null, "MappableType must not be null");
                         Debug.Assert(Nullable.GetUnderlyingType(objectParameter.MappableType) == null, "Nullable types not expected here.");
 
-                        // since ObjectParameters do not allow users to especify 'facets', make 
+                        // since ObjectParameters do not allow users to specify 'facets', make 
                         // sure that the parameter typeusage is not populated with the provider
-                        // dafault facet values.
+                        // default facet values.
                         // Try getting the type from the workspace. This may fail however for one of the following reasons:
                         // - the type is not a model type
                         // - the types were not loaded into the workspace yet

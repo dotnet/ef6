@@ -33,7 +33,7 @@ namespace System.Data.Entity.TestModels.GearsOfWarModel
             modelBuilder.Entity<Gear>().HasOptional(g => g.CityOfBirth).WithMany();
             modelBuilder.Entity<Gear>().HasRequired(g => g.Squad).WithMany(g => g.Members);
             modelBuilder.Entity<Gear>().HasTableAnnotation("Annotation_Gear", "Step to West 17");
-            
+
             modelBuilder.Entity<Gear>()
                 .Property(g => g.Rank)
                 .HasColumnAnnotation("Annotation_Rank", "Love not war!")
@@ -70,6 +70,10 @@ namespace System.Data.Entity.TestModels.GearsOfWarModel
             modelBuilder.ComplexType<WeaponSpecification>()
                 .Property(c => c.AmmoPerClip)
                 .HasColumnAnnotation("Annotation_AmmoPerClip", "Let It Be");
+
+#if NETCOREAPP
+            modelBuilder.Entity<City>().Ignore(x => x.Location);
+#endif
         }
     }
 }

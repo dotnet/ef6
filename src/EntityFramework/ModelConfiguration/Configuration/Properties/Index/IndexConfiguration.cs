@@ -92,7 +92,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Index
         {
             DebugCheck.NotNull(edmProperty);
 
-            edmProperty.AddAnnotation(XmlConstants.IndexAnnotationWithPrefix,
+            AddAnnotationWithMerge(edmProperty,
                 new IndexAnnotation(new IndexAttribute(_name, indexOrder, _isClustered, _isUnique)));
         }
 
@@ -100,8 +100,20 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Index
         {
             DebugCheck.NotNull(entityType);
 
-            entityType.AddAnnotation(XmlConstants.IndexAnnotationWithPrefix,
+            AddAnnotationWithMerge(entityType,
                 new IndexAnnotation(new IndexAttribute(_name, _isClustered, _isUnique)));
+        }
+
+        private static void AddAnnotationWithMerge(MetadataItem metadataItem, IndexAnnotation newAnnotation)
+        {
+            var existingAnnotation = metadataItem.Annotations.GetAnnotation(XmlConstants.IndexAnnotationWithPrefix);
+
+            if (existingAnnotation != null)
+            {
+                newAnnotation = (IndexAnnotation)((IndexAnnotation)existingAnnotation).MergeWith(newAnnotation);
+            }
+
+            metadataItem.AddAnnotation(XmlConstants.IndexAnnotationWithPrefix, newAnnotation);
         }
     }
 }

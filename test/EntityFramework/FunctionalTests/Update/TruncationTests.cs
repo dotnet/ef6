@@ -168,6 +168,7 @@ namespace System.Data.Entity.Update
             allTypes.c12_smallmoney = value;
         }
 
+#if NET452
         [Fact]
         public void SQL_Compact_does_not_truncate_decimals_on_insert_or_update()
         {
@@ -235,5 +236,6 @@ namespace System.Data.Entity.Update
                 }
             }
         }
+#endif
     }
 }

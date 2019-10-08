@@ -216,7 +216,7 @@ namespace System.Data.Entity.Query.LinqToEntities
         </EntitySetMapping>
         <EntitySetMapping Name=""Dependents"">
         <QueryView>
-            SELECT VALUE QueryViewStackOverflowRepro.ContextModel.Dependent(g.Id) FROM QueryViewStackOverflowReproContextModelStoreContainer.Dependents AS g  <!-- WHERE g.PrinicpalId > 100 -->
+            SELECT VALUE QueryViewStackOverflowRepro.ContextModel.Dependent(g.Id) FROM QueryViewStackOverflowReproContextModelStoreContainer.Dependents AS g  <!-- WHERE g.PrincipalId > 100 -->
         </QueryView>
         </EntitySetMapping>
     </EntityContainerMapping>
@@ -271,8 +271,7 @@ namespace System.Data.Entity.Query.LinqToEntities
                 {
                     using (var context = new Context(new ObjectContext(connection), true))
                     {
-                        Assert.DoesNotThrow(
-                            () => context.Dependents.Include(d => d.Principal).ToString());
+                        context.Dependents.Include(d => d.Principal).ToString();
                     }
                 }
             }

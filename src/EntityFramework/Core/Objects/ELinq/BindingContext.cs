@@ -16,7 +16,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
     // Usage pattern:
     // <code>BindingContext context = ...;
     // 
-    //     // translate a "Where" lamba expression input.Where(i => i.X > 2);
+    //     // translate a "Where" lambda expression input.Where(i => i.X > 2);
     //     LambdaExpression whereLambda = ...;
     //     CqtExpression inputCqt = Translate(whereLambda.Arguments[1]);
     //     CqtExpression inputBinding = CreateExpressionBinding(inputCqt).Var;

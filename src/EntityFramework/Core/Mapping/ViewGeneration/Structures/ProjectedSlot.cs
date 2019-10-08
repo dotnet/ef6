@@ -11,7 +11,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Text;
 
     // <summary>
-    // This class represents the constants or members that that can be referenced in a C or S Cell query.
+    // This class represents the constants or members that can be referenced in a C or S Cell query.
     // In addition to fields, may represent constants such as types of fields, booleans, etc.
     // </summary>
     internal abstract class ProjectedSlot : InternalBase, IEquatable<ProjectedSlot>

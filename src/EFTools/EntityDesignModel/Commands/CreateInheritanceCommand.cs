@@ -21,7 +21,7 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
     ///     1. Only the base-most class in an inheritance hierarchy can have keys, so any keys must be removed from the derived class
     ///     2. The entity set for the newly derived class is removed since it will now use the base class's entity set
     ///     3. Due to this change in entity set, we must also change any references to this set in an AssociationSet ends
-    ///     4. We register to run the EnforceEntitySetMappingRules check so rewrite any MSL as neededo
+    ///     4. We register to run the EnforceEntitySetMappingRules check so rewrite any MSL as needed
     /// </summary>
     internal class CreateInheritanceCommand : Command
     {
@@ -205,7 +205,7 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
                             // here, to work around an xml editor bug, we clone the entity type mapping, instead of re-parenting it
                             etm.Clone(entitySetMappingOfBaseType);
 
-                            // The old EntityTyepMapping will be deleted when we delete the entity set below.  
+                            // The old EntityTypeMapping will be deleted when we delete the entity set below.  
                         }
                     }
                 }

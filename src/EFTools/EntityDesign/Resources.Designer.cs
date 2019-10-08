@@ -624,9 +624,9 @@ namespace Microsoft.Data.Entity.Design {
         /// <summary>
         ///   Looks up a localized string similar to (User).
         /// </summary>
-        public static string DbGenExtensibileListConverter_UserDir {
+        public static string DbGenExtensibleListConverter_UserDir {
             get {
-                return ResourceManager.GetString("DbGenExtensibileListConverter_UserDir", resourceCulture);
+                return ResourceManager.GetString("DbGenExtensibleListConverter_UserDir", resourceCulture);
             }
         }
         
@@ -2760,72 +2760,72 @@ namespace Microsoft.Data.Entity.Design {
         /// <summary>
         ///   Looks up a localized string similar to The name of the association..
         /// </summary>
-        public static string PropertyWindow_Descritpion_AssociationName {
+        public static string PropertyWindow_Description_AssociationName {
             get {
-                return ResourceManager.GetString("PropertyWindow_Descritpion_AssociationName", resourceCulture);
+                return ResourceManager.GetString("PropertyWindow_Description_AssociationName", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to The name of the association set that contains the association..
         /// </summary>
-        public static string PropertyWindow_Descritpion_AssociationSetName {
+        public static string PropertyWindow_Description_AssociationSetName {
             get {
-                return ResourceManager.GetString("PropertyWindow_Descritpion_AssociationSetName", resourceCulture);
+                return ResourceManager.GetString("PropertyWindow_Description_AssociationSetName", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Name of the entity property that returns the value at this end.
         /// </summary>
-        public static string PropertyWindow_Descritpion_EndNavigationProperty {
+        public static string PropertyWindow_Description_EndNavigationProperty {
             get {
-                return ResourceManager.GetString("PropertyWindow_Descritpion_EndNavigationProperty", resourceCulture);
+                return ResourceManager.GetString("PropertyWindow_Description_EndNavigationProperty", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Specifies the action to take when an entity on this end is deleted.
         /// </summary>
-        public static string PropertyWindow_Descritpion_EndOnDelete {
+        public static string PropertyWindow_Description_EndOnDelete {
             get {
-                return ResourceManager.GetString("PropertyWindow_Descritpion_EndOnDelete", resourceCulture);
+                return ResourceManager.GetString("PropertyWindow_Description_EndOnDelete", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to The name of the entity container, which contains all instances of entities for the Entity Data Model..
         /// </summary>
-        public static string PropertyWindow_Descritpion_EntityContainerName {
+        public static string PropertyWindow_Description_EntityContainerName {
             get {
-                return ResourceManager.GetString("PropertyWindow_Descritpion_EntityContainerName", resourceCulture);
+                return ResourceManager.GetString("PropertyWindow_Description_EntityContainerName", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to The allowed number of entities at this end of the association.
         /// </summary>
-        public static string PropertyWindow_Descritpion_Multiplicity {
+        public static string PropertyWindow_Description_Multiplicity {
             get {
-                return ResourceManager.GetString("PropertyWindow_Descritpion_Multiplicity", resourceCulture);
+                return ResourceManager.GetString("PropertyWindow_Description_Multiplicity", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to The namespace for the Entity Data Model..
         /// </summary>
-        public static string PropertyWindow_Descritpion_Namespace {
+        public static string PropertyWindow_Description_Namespace {
             get {
-                return ResourceManager.GetString("PropertyWindow_Descritpion_Namespace", resourceCulture);
+                return ResourceManager.GetString("PropertyWindow_Description_Namespace", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Name of this end.
         /// </summary>
-        public static string PropertyWindow_Descritpion_Role {
+        public static string PropertyWindow_Description_Role {
             get {
-                return ResourceManager.GetString("PropertyWindow_Descritpion_Role", resourceCulture);
+                return ResourceManager.GetString("PropertyWindow_Description_Role", resourceCulture);
             }
         }
         
@@ -3460,7 +3460,7 @@ namespace Microsoft.Data.Entity.Design {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to To Role.
+        ///   Looks up a localized string similar to ToRole.
         /// </summary>
         public static string PropertyWindow_DisplayName_ToRole {
             get {

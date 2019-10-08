@@ -15,7 +15,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // Currently, we need to have a way to map an entityset or a relationship set in S space
         // to the appropriate structures in the store. In order to address this we said we would
         // add new ItemAttributes (tableName, schemaName and catalogName to the EntitySetBase)... 
-        // problem with this is that we are bleading a leaf-level, store specific set of constructs
+        // problem with this is that we are bleeding a leaf-level, store specific set of constructs
         // into the object model for things that may exist at either C or S. 
         //
         // We need to do this for now to push forward on enabling the conversion but we need to re-examine

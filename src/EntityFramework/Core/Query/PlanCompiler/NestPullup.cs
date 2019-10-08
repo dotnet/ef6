@@ -520,7 +520,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         // <summary>
         // Applies a IsNotNull(sentinelVar) filter to the given node.
-        // The filter is pushed below all MultiStremNest-s, because this part of the tree has
+        // The filter is pushed below all MultiStreamNest-s, because this part of the tree has
         // already been visited and it is expected that the MultiStreamNests have bubbled up
         // above the filters.
         // </summary>
@@ -742,7 +742,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             Node newNode;
 
             // If the ProjectOp's input is a SortOp, swap the ProjectOp and the SortOp, 
-            // to allow the SortOp to buble up and be honored. This may only occur if the original input to the  
+            // to allow the SortOp to bubble up and be honored. This may only occur if the original input to the  
             // ProjectOp was an UnnestOp (or a Project over a Unnest Op). 
             if (n.Child0.Op.OpType
                 == OpType.Sort)
@@ -1106,7 +1106,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // introduce some prefix sortkeys, but there aren't any now.
             var nestOp = Command.CreateMultiStreamNestOp(new List<SortKey>(), outputVars, collectionInfoList);
 
-            // Insert the current node at the head of the the list of collections
+            // Insert the current node at the head of the list of collections
             collectionNodes.Insert(0, projectNode);
             var nestNode = Command.CreateNode(nestOp, collectionNodes);
 
@@ -1728,16 +1728,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // Copies the given defining node for a collection var, but also makes sure to 'register' all newly
         // created collection vars (i.e. copied).
         // SQLBUDT #557427: The defining node that is being copied may itself contain definitions to other
-        // collection vars. These defintions would be present in m_definingNodeMap. However, after we make a copy
+        // collection vars. These definitions would be present in m_definingNodeMap. However, after we make a copy
         // of the defining node, we need to make sure to also put 'matching' definitions of these other collection
         // vars into m_definingNodeMap.
         // The dictionary collectionVarDefinitions (below) contains the copied definitions of such collection vars.
         // but without the wrapping PhysicalProjectOp.
-        // Example:     m_definingNodeMap contains (var1, definition1) and (var2, definintion2).
+        // Example:     m_definingNodeMap contains (var1, definition1) and (var2, definition2).
         // var2 is defined inside the definition of var1.
-        // Here we copy definition1 -> definintion1'.
+        // Here we copy definition1 -> definition1'.
         // We need to add to m_definitionNodeMap (var2', definition2').
-        // definition2' should be a copy of definiton2 in the context of to definition1',
+        // definition2' should be a copy of definition2 in the context of to definition1',
         // i.e. definition2' should relate to definition1' in same way that definition2 relates to definition1
         // </summary>
         private Node CopyCollectionVarDefinition(Node refVarDefiningNode)
@@ -1813,7 +1813,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // PhysicalProjectOp
         // </summary>
         // <remarks>
-        // Tranformation:
+        // Transformation:
         // PhysicalProjectOp(MultiStreamNestOp(...)) => PhysicalProjectOp(SortOp(...))
         // Strategy:
         // (1) Convert MultiStreamNestOp(...) => SingleStreamNestOp(...)
@@ -1925,7 +1925,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // - The keys of the nest operation
         // - The discriminator column for the nest operation
         // - the list of postfix sort keys (used to represent nested collections)
-        // Note that we only add the first occurrance of a var to the list; further
+        // Note that we only add the first occurrence of a var to the list; further
         // references to the same variable would be trumped by the first one.
         // </summary>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
@@ -2105,7 +2105,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             // While we're at it, we'll build a new list of top-level output columns, which
             // should include only the Discriminator, the columns from the driving collection,
-            // and and one column for each of the nested collections.
+            // and one column for each of the nested collections.
 
             // Start building the flattenedOutputVarList that the top level PhysicalProjectOp
             // is to output.
@@ -2252,7 +2252,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             discriminatorVarList = Command.CreateVarList();
 
-            // We insert a dummy var and value at poistion 0 for the deriving node, which
+            // We insert a dummy var and value at position 0 for the deriving node, which
             // we should never reference;
             discriminatorVarList.Add(null);
 
@@ -2333,13 +2333,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // N ==> Project(N,{definitions-from-N, constant})
         // </summary>
         // <param name="input"> the input node to augment </param>
-        // <param name="createOp"> The fucntion to create the constant op </param>
+        // <param name="createOp"> The function to create the constant op </param>
         // <param name="constantVar"> the computed Var for the internal constant </param>
         // <returns> the augmented node </returns>
         private Node AugmentNodeWithConstant(Node input, Func<ConstantBaseOp> createOp, out Var constantVar)
         {
             // Construct the op for the constant value and 
-            // a VarDef node that that defines it.
+            // a VarDef node that defines it.
             var constantOp = createOp();
             var constantNode = Command.CreateNode(constantOp);
             var varDefListNode = Command.CreateVarDefListNode(constantNode, out constantVar);

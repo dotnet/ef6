@@ -3,10 +3,17 @@
 namespace System.Data.Entity.Migrations
 {
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
+#if NET452
     [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
+#endif
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
     public class DatabaseGeneratedScenarios : DbTestCase
     {
+        public DatabaseGeneratedScenarios(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         [MigrationsTheory]
         public void Can_auto_migrate_when_string_column_with_identity_database_generated_option()
         {

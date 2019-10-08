@@ -99,7 +99,7 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.Explorer
                         Resources.BadChildForParentException, GetType().FullName, childElementType.FullName));
                 return null;
                 // TODO: we need to provide a general exception-handling mechanism and replace the above Assert()
-                // by e.g. the excepiton below
+                // by e.g. the exception below
                 // throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture,
                 //     Resources.BadChildForParentException, this.GetType().FullName, childElementType.FullName));
             }

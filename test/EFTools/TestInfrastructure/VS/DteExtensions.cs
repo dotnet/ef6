@@ -15,7 +15,7 @@ namespace EFDesignerTestInfrastructure.VS
 
     #endregion
 
-    #region VS IDE related utitilies
+    #region VS IDE related utilities
 
     /// <summary>
     ///     Helper functions relate to winfrom
@@ -36,7 +36,7 @@ namespace EFDesignerTestInfrastructure.VS
         /// </summary>
         public enum ProjectKind
         {
-            Libary = 0,
+            Library = 0,
             Executable
         }
 
@@ -91,7 +91,7 @@ namespace EFDesignerTestInfrastructure.VS
                 path = Path.Combine(path, "{0}");
             }
 
-            // VCS and VB sku templates are all located in the same folder. Other skus have a language and category heirarchy.
+            // VCS and VB sku templates are all located in the same folder. Other skus have a language and category hierarchy.
             if (!skuName.Equals("VCSExpress", StringComparison.InvariantCultureIgnoreCase)
                 &&
                 !skuName.Equals("VBExpress", StringComparison.InvariantCultureIgnoreCase))
@@ -117,7 +117,7 @@ namespace EFDesignerTestInfrastructure.VS
         public static void ExecuteCommandForOpenDocument(this DTE dte, string fullFilePath, string command)
         {
             Debug.Assert(dte != null, "dte must not be null.");
-            Debug.Assert(!string.IsNullOrWhiteSpace(fullFilePath), "fullFilePath must not be null or emtpy string.");
+            Debug.Assert(!string.IsNullOrWhiteSpace(fullFilePath), "fullFilePath must not be null or empty string.");
 
             var serviceProvider = new ServiceProvider((IServiceProvider)dte);
 

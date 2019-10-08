@@ -88,7 +88,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         [Fact]
-        public void ContextType_should_return_tyoe_of_passed_context_instance()
+        public void ContextType_should_return_type_of_passed_context_instance()
         {
             var contextInfo = new DbContextInfo(new SimpleContext());
 
@@ -248,13 +248,13 @@ namespace System.Data.Entity.Infrastructure
             var mockContext = new Mock<InternalContextForMock<SimpleContext>>();
             mockContext.Setup(m => m.ConnectionStringOrigin).Returns(DbConnectionStringOrigin.UserCode);
             mockContext.Setup(m => m.ProviderName).Returns("My.Provider");
-            mockContext.Setup(m => m.OriginalConnectionString).Returns("Databse=Foo");
+            mockContext.Setup(m => m.OriginalConnectionString).Returns("Database=Foo");
             mockContext.Setup(m => m.ConnectionStringName).Returns("SomeName");
 
             var contextInfo = new DbContextInfo(mockContext.Object.Owner);
 
             Assert.Equal(DbConnectionStringOrigin.UserCode, contextInfo.ConnectionStringOrigin);
-            Assert.Equal("Databse=Foo", contextInfo.ConnectionString);
+            Assert.Equal("Database=Foo", contextInfo.ConnectionString);
             Assert.Equal("SomeName", contextInfo.ConnectionStringName);
             Assert.Equal("My.Provider", contextInfo.ConnectionProviderName);
         }
@@ -775,9 +775,9 @@ namespace System.Data.Entity.Infrastructure
             Assert.NotNull(objectContext);
             Assert.Equal(1, calledCount);
 
-            using (var contexct = contextInfo.CreateInstance())
+            using (var context = contextInfo.CreateInstance())
             {
-                objectContext = ((IObjectContextAdapter)contexct).ObjectContext;
+                objectContext = ((IObjectContextAdapter)context).ObjectContext;
             }
 
             Assert.NotNull(objectContext);
@@ -859,18 +859,18 @@ namespace System.Data.Entity.Infrastructure
         }
 
         [Fact]
-        public void Should_obtain_DefaultConnectionFactory_from_supplied_config_but_this_can_be_overriden_normal_constructor()
+        public void Should_obtain_DefaultConnectionFactory_from_supplied_config_but_this_can_be_overridden_normal_constructor()
         {
-            Should_obtain_DefaultConnectionFactory_from_supplied_config_but_this_can_be_overriden(typeof(ContextWithoutDefaultCtor));
+            Should_obtain_DefaultConnectionFactory_from_supplied_config_but_this_can_be_overridden(typeof(ContextWithoutDefaultCtor));
         }
 
         [Fact]
-        public void Should_obtain_DefaultConnectionFactory_from_supplied_config_but_this_can_be_overriden_init_constructor()
+        public void Should_obtain_DefaultConnectionFactory_from_supplied_config_but_this_can_be_overridden_init_constructor()
         {
-            Should_obtain_DefaultConnectionFactory_from_supplied_config_but_this_can_be_overriden(typeof(ContextWithoutDefaultCtorWithInit));
+            Should_obtain_DefaultConnectionFactory_from_supplied_config_but_this_can_be_overridden(typeof(ContextWithoutDefaultCtorWithInit));
         }
 
-        private void Should_obtain_DefaultConnectionFactory_from_supplied_config_but_this_can_be_overriden(Type contextType)
+        private void Should_obtain_DefaultConnectionFactory_from_supplied_config_but_this_can_be_overridden(Type contextType)
         {
             RunTestWithConnectionFactory(
                 Database.ResetDefaultConnectionFactory,
@@ -938,20 +938,20 @@ namespace System.Data.Entity.Infrastructure
         }
 
         [Fact]
-        public void Should_use_connectioin_string_from_supplied_config_even_if_DefaultConnectionFactory_is_also_present_normal_constructor()
+        public void Should_use_connection_string_from_supplied_config_even_if_DefaultConnectionFactory_is_also_present_normal_constructor()
         {
-            Should_use_connectioin_string_from_supplied_config_even_if_DefaultConnectionFactory_is_also_present(
+            Should_use_connection_string_from_supplied_config_even_if_DefaultConnectionFactory_is_also_present(
                 typeof(ContextWithoutDefaultCtor));
         }
 
         [Fact]
-        public void Should_use_connectioin_string_from_supplied_config_even_if_DefaultConnectionFactory_is_also_present_init_constructor()
+        public void Should_use_connection_string_from_supplied_config_even_if_DefaultConnectionFactory_is_also_present_init_constructor()
         {
-            Should_use_connectioin_string_from_supplied_config_even_if_DefaultConnectionFactory_is_also_present(
+            Should_use_connection_string_from_supplied_config_even_if_DefaultConnectionFactory_is_also_present(
                 typeof(ContextWithoutDefaultCtorWithInit));
         }
 
-        private void Should_use_connectioin_string_from_supplied_config_even_if_DefaultConnectionFactory_is_also_present(Type contextType)
+        private void Should_use_connection_string_from_supplied_config_even_if_DefaultConnectionFactory_is_also_present(Type contextType)
         {
             RunTestWithConnectionFactory(
                 Database.ResetDefaultConnectionFactory,
@@ -1148,18 +1148,18 @@ namespace System.Data.Entity.Infrastructure
         }
 
         [Fact]
-        public void Supplied_config_used_to_load_original_and_overriden_connection_normal_constructor()
+        public void Supplied_config_used_to_load_original_and_overridden_connection_normal_constructor()
         {
-            Supplied_config_used_to_load_original_and_overriden_connection(typeof(ContextWithConnectionNameNotInAppConfigFile));
+            Supplied_config_used_to_load_original_and_overridden_connection(typeof(ContextWithConnectionNameNotInAppConfigFile));
         }
 
         [Fact]
-        public void Supplied_config_used_to_load_original_and_overriden_connection_init_constructor()
+        public void Supplied_config_used_to_load_original_and_overridden_connection_init_constructor()
         {
-            Supplied_config_used_to_load_original_and_overriden_connection(typeof(ContextWithConnectionNameNotInAppConfigFileWithInit));
+            Supplied_config_used_to_load_original_and_overridden_connection(typeof(ContextWithConnectionNameNotInAppConfigFileWithInit));
         }
 
-        private void Supplied_config_used_to_load_original_and_overriden_connection(Type contextType)
+        private void Supplied_config_used_to_load_original_and_overridden_connection(Type contextType)
         {
             var connection = new DbConnectionInfo("GetMeFromSuppliedConfig");
             var contextInfo = new DbContextInfo(
@@ -1282,7 +1282,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         [Fact] // CodePlex 291, 1316
-        public void CreateInstance_should_not_cause_database_initializer_to_run_even_if_context_consturctor_would_cause_it()
+        public void CreateInstance_should_not_cause_database_initializer_to_run_even_if_context_constructor_would_cause_it()
         {
             var contextInfo = new DbContextInfo(typeof(InitTestContext));
 
@@ -1328,7 +1328,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         [Fact]
-        public void Context_type_can_be_assoictaed_with_DbContextInfo_and_then_later_unsuppressed()
+        public void Context_type_can_be_associated_with_DbContextInfo_and_then_later_unsuppressed()
         {
             Assert.Null(DbContextInfo.CurrentInfo);
 

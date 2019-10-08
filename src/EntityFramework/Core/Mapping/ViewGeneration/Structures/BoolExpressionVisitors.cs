@@ -353,7 +353,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 m_skipIsNotNull = true;
             }
 
-            // We could maintain a stack of bools ratehr than a single
+            // We could maintain a stack of bools rather than a single
             // boolean for the visitor to allow IS NOT NULLs to be not
             // generated for some scenarios
             private bool m_skipIsNotNull;
@@ -393,7 +393,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
             private readonly StringBuilder m_builder;
             private readonly string m_blockAlias;
-            // We could maintain a stack of bools ratehr than a single
+            // We could maintain a stack of bools rather than a single
             // boolean for the visitor to allow IS NOT NULLs to be not
             // generated for some scenarios
             private bool m_skipIsNotNull;

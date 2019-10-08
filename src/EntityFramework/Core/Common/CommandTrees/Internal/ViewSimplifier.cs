@@ -16,7 +16,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
     // Utility class that walks a mapping view and returns a simplified expression with projection
     // nodes collapsed. Specifically recognizes the following common pattern in mapping views:
     // outerProject(outerBinding(innerProject(innerBinding, innerNew)), outerProjection)
-    // Recognizes simple disciminator patterns of the form:
+    // Recognizes simple discriminator patterns of the form:
     // select
     // case when Disc = value1 then value Type1(...)
     // case when Disc = value2 then value Type2(...)
@@ -58,7 +58,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
             queryExpression = simplifier(queryExpression);
 
             view = DbQueryCommandTree.FromValidExpression(
-                view.MetadataWorkspace, view.DataSpace, queryExpression, view.UseDatabaseNullSemantics);
+                view.MetadataWorkspace, view.DataSpace, queryExpression, view.UseDatabaseNullSemantics, view.DisableFilterOverProjectionSimplificationForCustomFunctions);
             return view;
         }
 
@@ -129,7 +129,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
             // foreign key constraint are used to determine if the entity set is the dependent set.
             // If it is the dependent set, then it is possible to augment the view definition with a
             // related entity ref that represents the navigation of the relationship set's relationship
-            // from the dependent end (this entity set) to the the principal end (the entity set that
+            // from the dependent end (this entity set) to the principal end (the entity set that
             // is referenced by the other association set end of the relationship set).
             //
             var principalSetsAndDependentTypes = new HashSet<Tuple<EntityType, AssociationSetEnd, ReferentialConstraint>>();
@@ -395,7 +395,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         // are only allowed to be scalars or complex type constructors based on direct property references
         // to the store entity set's scalar properties.
         // SELECT CASE
-        // WHEN y.Discriminator = SUBTTYPE1_Value THEN SUBTYPE1()
+        // WHEN y.Discriminator = SUBTYPE1_Value THEN SUBTYPE1()
         // ...
         // WHEN y.Discriminator = SUBTYPE_n-1_Value THEN SUBTYPE_n-1()
         // ELSE SUBTYPE_n()
@@ -765,7 +765,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
             {
                 Check.NotNull(varRef, "varRef");
 
-                // if we encounter an unsubstitutued var ref, give up...
+                // if we encounter an unsubstituted var ref, give up...
                 if (IsOuterBindingVarRef(varRef))
                 {
                     m_doomed = true;

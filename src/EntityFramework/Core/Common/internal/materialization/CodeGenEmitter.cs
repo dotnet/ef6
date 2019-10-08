@@ -255,9 +255,9 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         // <summary>
-        // Emits an expression that represnts a NullEntityWrapper instance.
+        // Emits an expression that represents a NullEntityWrapper instance.
         // </summary>
-        // <returns> An expression represnting a wrapped null </returns>
+        // <returns> An expression representing a wrapped null </returns>
         internal static Expression Emit_WrappedNullConstant()
         {
             return Expression.Property(null, EntityWrapperFactory_NullWrapper);
@@ -296,7 +296,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         // <param name="input"> The expression that creates the entity to be wrapped </param>
         // <param name="keyReader"> Expression to read the entity key </param>
         // <param name="entitySetReader"> Expression to read the entity set </param>
-        // <param name="requestedType"> The type that was actuall requested by the client--may be object </param>
+        // <param name="requestedType"> The type that was actually requested by the client--may be object </param>
         // <param name="identityType"> The type of the identity type of the entity being materialized--never a proxy type </param>
         // <param name="actualType"> The actual type being materialized--may be a proxy type </param>
         // <param name="mergeOption"> Either NoTracking or AppendOnly depending on whether the entity is to be tracked </param>

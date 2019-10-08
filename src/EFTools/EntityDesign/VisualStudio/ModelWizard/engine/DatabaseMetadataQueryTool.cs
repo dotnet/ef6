@@ -77,7 +77,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
 
                 using (var command = new EntityCommand(null, ec, DependencyResolver.Instance))
                 {
-                    // NOTE:  DO NOT set the the command.CommandTimeout value.  Some providers don't support a non-zero value, and will throw (eg, SqlCE provider). 
+                    // NOTE:  DO NOT set the command.CommandTimeout value.  Some providers don't support a non-zero value, and will throw (eg, SqlCE provider). 
                     // The System.Data.SqlClient's default value is 15, so we will still get a timeout for sql server. 
 
                     command.CommandType = CommandType.Text;

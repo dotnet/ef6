@@ -186,7 +186,7 @@ namespace System.Data.Entity.Core.Objects
                 Debug.Assert(queryExpression != null, "EntitySqlQueryState.Parse returned null expression?");
                 var tree = DbQueryCommandTree.FromValidExpression(
                     ObjectContext.MetadataWorkspace, DataSpace.CSpace, queryExpression,
-                    useDatabaseNullSemantics: true);
+                    useDatabaseNullSemantics: true, disableFilterOverProjectionSimplificationForCustomFunctions: false);
                 plan = _objectQueryExecutionPlanFactory.Prepare(
                     ObjectContext, tree, ElementType, mergeOption, EffectiveStreamingBehavior, Span, null,
                     DbExpressionBuilder.AliasGenerator);

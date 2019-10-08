@@ -1,0 +1,273 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AssemblyDescription" xml:space="preserve">
+    <value>The assembly to use.</value>
+  </data>
+  <data name="AutomaticMigrationDisabledInfo" xml:space="preserve">
+    <value>You can use the Add-Migration command to write the pending model changes to a code-based migration.</value>
+  </data>
+  <data name="ConfigDescription" xml:space="preserve">
+    <value>Specifies the configuration file to use for named connection strings.</value>
+  </data>
+  <data name="ConnectionProviderDescription" xml:space="preserve">
+    <value>Specifies the provider invariant name of the connection string.</value>
+  </data>
+  <data name="ConnectionStringDescription" xml:space="preserve">
+    <value>Specifies the connection string to use. If omitted, the context's default connection will be used.</value>
+  </data>
+  <data name="ConnectionStringNameDescription" xml:space="preserve">
+    <value>Specifies the name of a connection string to use from the application's configuration file.</value>
+  </data>
+  <data name="ContextAssemblyDescription" xml:space="preserve">
+    <value>Specifies the name of the assembly which contains the DbContext class to use. If omitted, the context is assumed to be in the same assembly used for migrations.</value>
+  </data>
+  <data name="ContextDescription" xml:space="preserve">
+    <value>Specifies the context to use. If omitted, migrations will attempt to locate a single context type in the target project.</value>
+  </data>
+  <data name="DatabaseDescription" xml:space="preserve">
+    <value>Commands to manage the database.</value>
+  </data>
+  <data name="DatabaseUpdateDescription" xml:space="preserve">
+    <value>Applies any pending migrations to the database.</value>
+  </data>
+  <data name="DatabaseUpdateForceDescription" xml:space="preserve">
+    <value>Specifies that data loss is acceptable during automatic migration of the database.</value>
+  </data>
+  <data name="DatabaseUpdateScriptDescription" xml:space="preserve">
+    <value>Generate a SQL script rather than executing the pending changes directly.</value>
+  </data>
+  <data name="DatabaseUpdateSourceDescription" xml:space="preserve">
+    <value>Only valid with --script. Specifies the name of a particular migration to use as the update's starting point. If omitted, the last applied migration in the database will be used.</value>
+  </data>
+  <data name="DatabaseUpdateTargetDescription" xml:space="preserve">
+    <value>Specifies the name of a particular migration to update the database to. If omitted, the current model will be used.</value>
+  </data>
+  <data name="DataDirDescription" xml:space="preserve">
+    <value>The data directory.</value>
+  </data>
+  <data name="DidYouMeanToRescaffold" xml:space="preserve">
+    <value>A previous migration called '{0}' was already applied to the target database. If you meant to re-scaffold '{0}', revert it by running 'Update-Database -TargetMigration {1}', then delete '{2}' and run 'Add-Migration {0}' again.</value>
+  </data>
+  <data name="EF6FullName" xml:space="preserve">
+    <value>Entity Framework Command-line Tools</value>
+  </data>
+  <data name="EnableMigrations_BeginInitialScaffold" xml:space="preserve">
+    <value>Checking if the context targets an existing database...</value>
+  </data>
+  <data name="EnableMigrations_InitialScaffold" xml:space="preserve">
+    <value>Detected database created with a database initializer. Scaffolded migration '{0}' corresponding to existing database. To use an automatic migration instead, delete the Migrations folder and re-run Enable-Migrations specifying the -EnableAutomaticMigrations parameter.</value>
+  </data>
+  <data name="EnableMigrations_Success" xml:space="preserve">
+    <value>Code First Migrations enabled for project {0}.</value>
+  </data>
+  <data name="EntityFrameworkNotFound" xml:space="preserve">
+    <value>Your target project '{0}' doesn't reference EntityFramework. This package is required for the Entity Framework Core Tools to work. Ensure your target project is correct, install the package, and try again.</value>
+  </data>
+  <data name="GetMigrationsCommand_Intro" xml:space="preserve">
+    <value>Retrieving migrations that have been applied to the target database.</value>
+  </data>
+  <data name="GetMigrationsCommand_NoHistory" xml:space="preserve">
+    <value>No migrations have been applied to the target database.</value>
+  </data>
+  <data name="IgnoreChangesDescription" xml:space="preserve">
+    <value>Scaffolds an empty migration ignoring any pending changes detected in the current model. This can be used to create an initial, empty migration to enable Migrations for an existing database. N.B. Doing this assumes that the target database schema is compatible with the current model.</value>
+  </data>
+  <data name="JsonDescription" xml:space="preserve">
+    <value>Show JSON output.</value>
+  </data>
+  <data name="LanguageDescription" xml:space="preserve">
+    <value>The language. Defaults to 'C#'.</value>
+  </data>
+  <data name="MigrationNameDescription" xml:space="preserve">
+    <value>Specifies the name of the custom script.</value>
+  </data>
+  <data name="MigrationsAddDescription" xml:space="preserve">
+    <value>Scaffolds a migration script for any pending model changes.</value>
+  </data>
+  <data name="MigrationsAddForceDescription" xml:space="preserve">
+    <value>Specifies that the migration user code be overwritten when re-scaffolding an existing migration.</value>
+  </data>
+  <data name="MigrationsAlreadyEnabled" xml:space="preserve">
+    <value>Migrations have already been enabled in project '{0}'. To overwrite the existing migrations configuration, use the -Force parameter.</value>
+  </data>
+  <data name="MigrationsConfigDescription" xml:space="preserve">
+    <value>Specifies the migrations configuration to use. If omitted, migrations will attempt to locate a single migrations configuration type in the target project.</value>
+  </data>
+  <data name="MigrationsDescription" xml:space="preserve">
+    <value>Commands to manage migrations.</value>
+  </data>
+  <data name="MigrationsDirDescription" xml:space="preserve">
+    <value>Specifies the name of the directory that will contain migrations code files. If omitted, the directory will be named "Migrations".</value>
+  </data>
+  <data name="MigrationsDirectoryParamIsRooted" xml:space="preserve">
+    <value>The 'MigrationsDirectory' parameter was set to the absolute path '{0}'. The migrations directory must be set to a relative path for a sub-directory under the Visual Studio project root.</value>
+  </data>
+  <data name="MigrationsEnableAutoDescription" xml:space="preserve">
+    <value>Specifies whether automatic migrations will be enabled in the scaffolded migrations configuration. If omitted, automatic migrations will be disabled.</value>
+  </data>
+  <data name="MigrationsEnableDescription" xml:space="preserve">
+    <value>Enables Code First Migrations in a project.</value>
+  </data>
+  <data name="MigrationsEnableForceDescription" xml:space="preserve">
+    <value>Specifies that the migrations configuration be overwritten when running more than once for a given project.</value>
+  </data>
+  <data name="MigrationsListDescription" xml:space="preserve">
+    <value>Displays the migrations that have been applied to the target database.</value>
+  </data>
+  <data name="MissingArgument" xml:space="preserve">
+    <value>Missing required argument '{0}'.</value>
+  </data>
+  <data name="MissingOption" xml:space="preserve">
+    <value>Missing required option '--{0}'.</value>
+  </data>
+  <data name="MutuallyExclusiveOptions" xml:space="preserve">
+    <value>Specify either option '--{0}' or '--{2}', but not both.</value>
+  </data>
+  <data name="NoColorDescription" xml:space="preserve">
+    <value>Don't colorize output.</value>
+  </data>
+  <data name="PrefixDescription" xml:space="preserve">
+    <value>Prefix output with level.</value>
+  </data>
+  <data name="ProjectDirDescription" xml:space="preserve">
+    <value>The project directory. Defaults to the current directory.</value>
+  </data>
+  <data name="RescaffoldingMigration" xml:space="preserve">
+    <value>Re-scaffolding migration '{0}'.</value>
+  </data>
+  <data name="RescaffoldNoForce" xml:space="preserve">
+    <value>Only the Designer Code for migration '{0}' was re-scaffolded. To re-scaffold the entire migration, use the -Force parameter.</value>
+  </data>
+  <data name="RootNamespaceDescription" xml:space="preserve">
+    <value>The root namespace. Defaults to the target assembly name.</value>
+  </data>
+  <data name="ScaffoldingMigration" xml:space="preserve">
+    <value>Scaffolding migration '{0}'.</value>
+  </data>
+  <data name="SnapshotBehindWarning" xml:space="preserve">
+    <value>The Designer Code for this migration file includes a snapshot of your current Code First model. This snapshot is used to calculate the changes to your model when you scaffold the next migration. If you make additional changes to your model that you want to include in this migration, then you can re-scaffold it by running 'Add-Migration {0}' again.</value>
+  </data>
+  <data name="UpdateDatabaseCommand_VerboseInstructions" xml:space="preserve">
+    <value>Specify the '-Verbose' flag to view the SQL statements being applied to the target database.</value>
+  </data>
+  <data name="VerboseDescription" xml:space="preserve">
+    <value>Show verbose output.</value>
+  </data>
+</root>

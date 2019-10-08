@@ -1,0 +1,18 @@
+<Project>
+  <!-- HACK: Our test projects don't match Arcade's conventions -->
+  <PropertyGroup>
+    <IsUnitTestProject>True</IsUnitTestProject>
+  </PropertyGroup>
+
+  <Import Project="..\Directory.Build.props" />
+
+  <PropertyGroup>
+    <StrongNameKeyId>Microsoft</StrongNameKeyId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)xunit.runner.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

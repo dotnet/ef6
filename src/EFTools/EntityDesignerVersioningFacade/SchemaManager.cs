@@ -195,7 +195,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade
         // </summary>
         internal static Version GetSchemaVersion(XNamespace xNamespace)
         {
-            // TODO: Returing V1 if the namespace not found feels wrong. Investigate where it is used and return null (or throw?)
+            // TODO: Returning V1 if the namespace not found feels wrong. Investigate where it is used and return null (or throw?)
             // Note that throwing from this method can crash VS if the exception is not handled.
 
             Version schemaVersion;

@@ -442,16 +442,16 @@ namespace System.Data.Entity.Core.Objects.Internal
                 // Copy over any eLinq initializer metadata (if present, or null if not).
                 // Note that this initializer metadata does not strictly match the new row type
                 // that includes spanned columns, but will be correct once the object materializer
-                // has interpreted the query results to produce the correct value for each colum.
+                // has interpreted the query results to produce the correct value for each column.
                 var rewrittenRow = new RowType(properties, rowType.InitializerMetadata);
                 var rewrittenRowTypeUsage = TypeUsage.Create(rewrittenRow);
                 DbExpression rewritten = rewrittenRowTypeUsage.New(columnArguments);
 
-                // SQLBUDT #554182: If we insert a new projection we should should make sure to 
+                // SQLBUDT #554182: If we insert a new projection we should make sure to 
                 // not interfere with the nullability of the input. 
                 // In particular, if the input row is null and we construct a new row as a projection over its columns
                 // we would get a row consisting of nulls, instead of a null row. 
-                // Thus, given an input X, we rewritte it as:  if (X is null) then NULL else rewritten.
+                // Thus, given an input X, we rewrite it as:  if (X is null) then NULL else rewritten.
                 if (newRow == null)
                 {
                     DbExpression condition = expression.IsNull();
@@ -543,7 +543,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             // If a navigation expression defines this collection and its navigation information was used to
             // short-circuit relationship span rewrites, then enclose the entire rewritten expression in a
             // Lambda binding that brings the source Ref of the navigation operation into scope. This ref is
-            // refered to by VariableReferenceExpressions in the original navigation expression as well as any
+            // referred to by VariableReferenceExpressions in the original navigation expression as well as any
             // short-circuited relationship span columns in the rewritten expression.
             if (navInfo != null
                 && navInfo.InUse)

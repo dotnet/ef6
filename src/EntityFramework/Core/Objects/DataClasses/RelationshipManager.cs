@@ -280,7 +280,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     }
                     finally
                     {
-                        // An error occured so we need to put the previous relatedEnd back into the RelationshipManager
+                        // An error occurred so we need to put the previous relatedEnd back into the RelationshipManager
                         if (doCleanup && relatedEnd != null)
                         {
                             Debug.Assert(_relationships != null, "Expected _relationships to be non-null.");
@@ -311,7 +311,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
             var relatedEntityCount = 0;
 
-            // We will be modifing the collection's enumerator, so we need to make a copy of it
+            // We will be modifying the collection's enumerator, so we need to make a copy of it
             var tempEntities = new List<IEntityWrapper>(collection.CountInternal);
             foreach (var wrappedEntity in collection.GetWrappedEntities())
             {
@@ -599,7 +599,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             if (TryGetCachedRelatedEnd(relationshipName, targetRoleName, out relatedEnd))
             {
                 // For some serialization scenarios, we have to allow replacing a related end that we already know about, but in those scenarios 
-                // the end is always empty, so we can further restrict the user calling method method directly by doing this extra validation
+                // the end is always empty, so we can further restrict the user calling the method directly by doing this extra validation
                 if (!relatedEnd.IsEmpty())
                 {
                     entityReference.InitializeWithValue(relatedEnd);
@@ -672,7 +672,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // source and adds that namespace to the front of the relationship name.  If the namespace
         // can't be found, then the relationshipName is returned untouched and the expectation is that
         // other validations will fail later in the code paths that use this.
-        // This method should only be used at the imediate top-level public surface since all internal
+        // This method should only be used at the immediate top-level public surface since all internal
         // calls are expected to use fully qualified names already.
         // </summary>
         internal string PrependNamespaceToRelationshipName(string relationshipName)
@@ -1322,7 +1322,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         // Remove entity from its relationships and do cascade delete if required.
         // All removed relationships are marked for deletion and all cascade deleted 
-        // entitites are also marked for deletion.
+        // entities are also marked for deletion.
         internal void RemoveEntityFromRelationships()
         {
             if (null != _relationships)
@@ -1344,7 +1344,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             if (_relationships != null)
             {
                 // Build a list of the dependent RelatedEnds because with overlapping FKs we could
-                // end up removing a relationship before we have suceeded in nulling all the FK values
+                // end up removing a relationship before we have succeeded in nulling all the FK values
                 // for that relationship.
                 var dependentEndsToProcess = new List<EntityReference>();
                 foreach (var relatedEnd in Relationships)
@@ -1409,7 +1409,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // Method used to retrieve properties from principal entities.
         // Parameter includeOwnValues means that values from current entity should be also added to "properties"
         // includeOwnValues is false only when this method is called from ObjectStateEntry.AcceptChanges()
-        // Parmeter "visited" is a set containig entities which were already visited during traversing the graph.
+        // Parmeter "visited" is a set containing entities which were already visited during traversing the graph.
         // If _owner already exists in the set, it means that there is a cycle in the graph of relationships with RI Constraints.
         internal void RetrieveReferentialConstraintProperties(
             out Dictionary<string, KeyValuePair<object, IntBox>> properties, HashSet<object> visited, bool includeOwnValues)
@@ -1461,7 +1461,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
                     if (!CheckIfAllPropertiesWereRetrieved(properties, propertiesToRetrieve))
                     {
-                        // Properties couldn't be found in entities in collections or refrences.
+                        // Properties couldn't be found in entities in collections or references.
                         // Try to find missing properties in related key entries.
                         // This process is slow but it is not a common case.
                         var entry = wrappedOwner.Context.ObjectStateManager.FindEntityEntry(ownerKey);
@@ -1484,14 +1484,14 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             if (!ownerKey.IsTemporary || includeOwnValues)
             {
                 // NOTE this part is never executed when the method is called from ObjectStateManager.AcceptChanges(),
-                //      so we don't try to "retrieve" properties from the the same (callers) entity.
+                //      so we don't try to "retrieve" properties from the same (callers) entity.
                 var entry = wrappedOwner.Context.ObjectStateManager.FindEntityEntry(ownerKey);
                 Debug.Assert(entry != null, "Owner entry not found in the object state manager");
                 entry.GetOtherKeyProperties(properties);
             }
         }
 
-        // properties dictionary contains name of property, its value and coutner saying how many times this property was retrieved from principal entities
+        // properties dictionary contains name of property, its value and counter saying how many times this property was retrieved from principal entities
         private static bool CheckIfAllPropertiesWereRetrieved(
             Dictionary<string, KeyValuePair<object, IntBox>> properties, List<string> propertiesToRetrieve)
         {
@@ -1526,7 +1526,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 }
             }
 
-            // Check if all the coutners equal 0
+            // Check if all the counters equal 0
             if (isSuccess)
             {
                 foreach (var valueCounterPair in values)
@@ -1787,7 +1787,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         // <summary>
-        // Calls AttachContext on each RelatedEnd referenced by this manager and also on all the enties
+        // Calls AttachContext on each RelatedEnd referenced by this manager and also on all the entities
         // referenced by that related end.
         // </summary>
         internal void ResetContextOnRelatedEnds(ObjectContext context, EntitySet entitySet, MergeOption mergeOption)

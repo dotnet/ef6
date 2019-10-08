@@ -107,7 +107,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
 
             return DbQueryCommandTree.FromValidExpression(
                 m_mappingItemCollection.Workspace, TargetPerspective.TargetPerspectiveDataSpace, query,
-                useDatabaseNullSemantics: true);
+                useDatabaseNullSemantics: true, disableFilterOverProjectionSimplificationForCustomFunctions: false);
         }
 
         // <summary>
@@ -119,7 +119,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             // tree and then we layer case statements on top of that view --
             // one case statement for each multiconstant entry
 
-            // Dertmine the slots that are projected by the whole tree. Tell
+            // Determine the slots that are projected by the whole tree. Tell
             // the children that they need to produce those slots somehow --
             // if they don't have it, they can produce null
             var requiredSlots = GetRequiredSlots();
@@ -129,7 +129,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             var viewBlock = m_view.ToCqlBlock(requiredSlots, m_identifiers, ref m_currentBlockNum, ref withRelationships);
 
             // Handle case statements for multiconstant entries
-            // Right now, we have a simplication step that removes one of the
+            // Right now, we have a simplification step that removes one of the
             // entries and adds ELSE instead
             foreach (var statement in m_caseStatements.Values)
             {
@@ -351,7 +351,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         }
 
         // <summary>
-        // Returns an array of size <see cref="TotalSlots" /> which indicates the slots that are needed to constuct value at
+        // Returns an array of size <see cref="TotalSlots" /> which indicates the slots that are needed to construct value at
         // <paramref
         //     name="caseMemberPath" />
         // ,

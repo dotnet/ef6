@@ -494,7 +494,7 @@ namespace System.Data.Entity
                 init.InitializeDatabase(context);
 
                 Assert.Equal(0, context.ChangeTracker.Entries().Count());
-                Assert.ReferenceEquals(context, SeedingMigrationsConfiguration.DbContextUsedForSeeding);
+                Assert.Same(context, SeedingMigrationsConfiguration.DbContextUsedForSeeding);
             }
         }
 

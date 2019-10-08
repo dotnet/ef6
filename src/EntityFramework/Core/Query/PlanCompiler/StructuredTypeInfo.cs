@@ -368,7 +368,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // <param name="referencedTypes"> referenced types </param>
         private void ProcessTypes(HashSet<md.TypeUsage> referencedTypes)
         {
-            // Build up auxilliary information for each type
+            // Build up auxiliary information for each type
             PopulateTypeInfoMap(referencedTypes);
             // Assign typeids to all nominal types
             AssignTypeIds();
@@ -379,7 +379,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Populating TypeInfo Map
 
         // <summary>
-        // Build up auxilliary information for each referenced type in the query
+        // Build up auxiliary information for each referenced type in the query
         // </summary>
         private void PopulateTypeInfoMap(HashSet<md.TypeUsage> referencedTypes)
         {
@@ -901,7 +901,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             //
             // If this type corresponds to an entity type, and that entity type
-            // has no subtypes, and that that entity type has no complex properties
+            // has no subtypes, and that entity type has no complex properties
             // then simply use the name from that property
             //
             bool usePropertyNamesFromUnderlyingType;

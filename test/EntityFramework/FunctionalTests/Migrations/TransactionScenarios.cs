@@ -1,5 +1,7 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
+#if NET452
+
 namespace System.Data.Entity.Migrations
 {
     using System.Data.SqlClient;
@@ -11,6 +13,11 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
     public class TransactionScenarios : DbTestCase
     {
+        public TransactionScenarios(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         private class MigrationWithError : DbMigration
         {
             public override void Up()
@@ -48,6 +55,11 @@ namespace System.Data.Entity.Migrations
 
     public class SqlClientTransactionScenarios : DbTestCase
     {
+        public SqlClientTransactionScenarios(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         private class MigrationWithNonTransactionalSql : DbMigration
         {
             public override void Up()
@@ -72,3 +84,5 @@ namespace System.Data.Entity.Migrations
         }
     }
 }
+
+#endif

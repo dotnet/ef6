@@ -47,7 +47,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 return NullEntityWrapper.NullWrapper;
             }
             // We used a cache of functions based on the actual type of entity that we need to wrap.
-            // Creatung these functions is slow, but once they are created they are relatively fast.
+            // Creating these functions is slow, but once they are created they are relatively fast.
             var wrappedEntity = _delegateCache.Evaluate(entity.GetType())(entity);
             wrappedEntity.RelationshipManager.SetWrappedOwner(wrappedEntity, entity);
             // We cast to object here to avoid calling the overridden != operator on EntityKey.
@@ -246,7 +246,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             {
                 return NullEntityWrapper.NullWrapper;
             }
-            // First attempt to find an existing wrapper in the ObjectStateMager.
+            // First attempt to find an existing wrapper in the ObjectStateManager.
             if (stateManager != null)
             {
                 existingEntry = stateManager.FindEntityEntry(entity);
@@ -302,7 +302,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         // <summary>
-        // When an entity enters Object Services that was retreived with NoTracking, it may not have certain fields set that are in many cases
+        // When an entity enters Object Services that was retrieved with NoTracking, it may not have certain fields set that are in many cases
         // assumed to be present. This method updates the wrapper with a key and a context.
         // </summary>
         // <param name="wrapper"> The wrapped entity </param>

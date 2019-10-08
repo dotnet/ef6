@@ -38,6 +38,7 @@ namespace System.Data.Entity.WrappingProvider
             RegisterAdoNetProvider(typeof(SqlClientFactory));
         }
 
+#if NET452
         [Fact]
         public void Wrapping_provider_can_be_found_using_net40_style_table_lookup_even_after_first_asking_for_non_wrapped_provider()
         {
@@ -58,6 +59,7 @@ namespace System.Data.Entity.WrappingProvider
                 DbConfiguration.DependencyResolver.GetService<IDbProviderFactoryResolver>()
                                .ResolveProviderFactory(new WrappingConnection<SqlClientFactory>(new SqlConnection())));
         }
+#endif
 
         [Fact]
         public void Correct_services_are_returned_when_setup_by_replacing_ADO_NET_provider()
@@ -328,6 +330,7 @@ namespace System.Data.Entity.WrappingProvider
 
         private static void RegisterAdoNetProvider(Type providerFactoryType)
         {
+#if NET452
             var row = _providerTable.NewRow();
             row["Name"] = "SqlClient Data Provider";
             row["Description"] = ".Net Framework Data Provider for SqlServer";
@@ -336,6 +339,10 @@ namespace System.Data.Entity.WrappingProvider
 
             _providerTable.Rows.Remove(_providerTable.Rows.Find(SqlClientInvariantName));
             _providerTable.Rows.Add(row);
+#else
+            DbProviderFactories.UnregisterFactory(SqlClientInvariantName);
+            DbProviderFactories.RegisterFactory(SqlClientInvariantName, providerFactoryType.AssemblyQualifiedName);
+#endif
         }
 
         private static void RegisterResolvers()

@@ -319,7 +319,7 @@ namespace Microsoft.Data.Entity.Design.Model
                     // an exception occurred during loading, dispose each artifact in the list and rethrow.
                     if (artifacts != null)
                     {
-                        // call dispose & clear the artifact.  We need both since the the entry may not be 
+                        // call dispose & clear the artifact.  We need both since the entry may not be 
                         // in the _artifactsByUri table. 
                         artifacts.ForEach(
                             artifact =>

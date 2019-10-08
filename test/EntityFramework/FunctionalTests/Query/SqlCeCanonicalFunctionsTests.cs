@@ -1,5 +1,7 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
+#if NET452
+
 namespace System.Data.Entity.Query
 {
     using System.Data.Entity.Core;
@@ -514,7 +516,7 @@ namespace System.Data.Entity.Query
             using (var context = GetArubaCeContext())
             {
                 var query = context.CreateQuery<DateTime>(@"SELECT VALUE Edm.TruncateTime(A.c5_datetime) FROM ArubaCeContext.AllTypes AS A");
-                Assert.Contains("CONVERT", query.ToTraceString().ToUpperInvariant());
+                Assert.Contains("DATEADD(D, DATEDIFF(D, 0, [EXTENT1].[C5_DATETIME]), 0)", query.ToTraceString().ToUpperInvariant());
                 Assert.Equal(new DateTime(1990, 2, 2, 0, 0, 0), query.First());
             }
         }
@@ -527,3 +529,5 @@ namespace System.Data.Entity.Query
         }
     }
 }
+
+#endif

@@ -13,7 +13,7 @@ namespace System.Data.Entity.Internal
 
     // <summary>
     // Service used to search for instance properties on a DbContext class that can
-    // be assigned a DbSet instance.  Also, if the the property has a public setter,
+    // be assigned a DbSet instance.  Also, if the property has a public setter,
     // then a delegate is compiled to set the property to a new instance of DbSet.
     // All of this information is cached per app domain.
     // </summary>

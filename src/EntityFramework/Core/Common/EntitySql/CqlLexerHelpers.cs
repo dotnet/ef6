@@ -56,12 +56,12 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
         // Defines the set of characters to be interpreted as mandatory line breaks
         // according to UNICODE 5.0, section 5.8 Newline Guidelines.These are 'mandatory'
-        // line breaks. We do not handle other 'line breaking opportunities'as defined by
+        // line breaks. We do not handle other 'line breaking opportunities' as defined by
         // UNICODE 5.0 since they are intended for presentation. The mandatory line break
         // defines breaking opportunities that must not be ignored. For all practical purposes
         // the interpretation of mandatory breaks determines the end of one line and consequently
         // the start of the next line of query text.
-        // NOTE that CR and CRLF is treated as a composite 'character' and was obviously and intentionaly
+        // NOTE that CR and CRLF is treated as a composite 'character' and was obviously and intentionally
         // omitted in the character set bellow.
         private static readonly Char[] _newLineCharacters =
             {
@@ -73,7 +73,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             };
 
         // <summary>
-        // Intializes scanner
+        // Initializes scanner
         // </summary>
         // <param name="query"> input query </param>
         // <param name="parserOptions"> parser options </param>
@@ -269,7 +269,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             that may be defined in the query or in the model (such as Key in Customer.Key). 
             Although it adds usability for common cases, it does not solve the general problem:
             select c.id as Key from Customers as c -- works
-            select Key from (select c.id from Customers as c) as Key -- does not work for the first occurence of Key
+            select Key from (select c.id from Customers as c) as Key -- does not work for the first occurrence of Key
                                                                      -- it is mapped to a keyword which results in 
                                                                      -- invalid syntax
             select [Key] from (select c.id from Customers as c) as Key -- works again
@@ -298,7 +298,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             by the L_PAREN, which makes them look like method expression. The reason for this stronger restriction is to
             disallow the following kind of ambiguos queries:
             Function Key(c Customer) AS (Key(c))
-            select Key(cust) from Customsers as cust
+            select Key(cust) from Customers as cust
             */
 
             Token token;
@@ -389,8 +389,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         // <summary>
-        // Returns true when current symbol looks like a caninical function name in a function call.
-        // Method only treats canonical functions with names ovelapping eSQL keywords.
+        // Returns true when current symbol looks like a canonical function name in a function call.
+        // Method only treats canonical functions with names overlapping eSQL keywords.
         // This check allows calling these canonical functions without escaping their names.
         // Check lookAheadChar for a left paren to see if looks like a function call, check symbol against the list of
         // canonical functions with names overlapping keywords.
@@ -510,7 +510,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         // <summary>
-        // Maps double quoted string to a literal or an idendifier
+        // Maps double quoted string to a literal or an identifier
         // </summary>
         // <returns> Token </returns>
         internal Token MapDoubleQuotedString(string symbol)
@@ -665,7 +665,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // Returns true if given char is a new line character defined by
         // UNICODE 5.0, section 5.8 Newline Guidelines.
         // These are 'mandatory' line breaks. NOTE that CRLF is treated as a
-        // composite 'character' and was intentionaly omitted in the character set bellow.
+        // composite 'character' and was intentionally omitted in the character set bellow.
         // </summary>
         internal static bool IsNewLine(Char c)
         {

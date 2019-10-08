@@ -36,6 +36,10 @@ namespace System.Data.Entity.TestModels.GearsOfWarModel
 
             // issue 1155
             //modelBuilder.Entity<Gear>().HasMany(g => g.Weapons).WithMany().MapToStoredProcedures();
+
+#if NETCOREAPP
+            modelBuilder.Entity<City>().Ignore(x => x.Location);
+#endif
         }
     }
 }

@@ -165,7 +165,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
         // effect: returns the default value for the member
         // if the member is nullable and has no default, changes default value to CellConstant.NULL and returns true
-        // if the mebmer is not nullable and has no default, returns false
+        // if the member is not nullable and has no default, returns false
         // CHANGE_ADYA_FEATURE_DEFAULT_VALUES: return the right default once metadata supports it
         internal static bool TryGetDefaultValueForMemberPath(MemberPath memberPath, out Constant defaultConstant)
         {
@@ -233,7 +233,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         // effects: Given a set of values in domain, "normalizes" it, i.e.,
-        // all positive constants are seperated out and any negative constant
+        // all positive constants are separated out and any negative constant
         // is changed s.t. it is the negative of all positive values
         // extraValues indicates more constants that domain could take, e.g.,
         // domain could be "1, 2, NOT(1, 2)", extraValues could be "3". In

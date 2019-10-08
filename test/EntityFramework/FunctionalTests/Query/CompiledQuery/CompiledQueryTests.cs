@@ -37,7 +37,7 @@
         }
     }
 
-    public class CompiledQueryTests : FunctionalTestBase, IUseFixture<CompiledQueryFixture>
+    public class CompiledQueryTests : FunctionalTestBase, IClassFixture<CompiledQueryFixture>
     {
         private string _entityConnectionString;
         private string _connectionString;
@@ -45,7 +45,7 @@
         private MetadataWorkspace _workspace;
         private DbCompiledModel _compiledModel;
 
-        public void SetFixture(CompiledQueryFixture data)
+        public CompiledQueryTests(CompiledQueryFixture data)
         {
             _compiledModel = data.CompiledModel;
             _connectionString = data.ConnectionString;

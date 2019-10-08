@@ -378,7 +378,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.Common
                 }
                 else
                 {
-                    // File is not in RDT, open it in invisble editor.
+                    // File is not in RDT, open it in invisible editor.
                     if (!TryGetTextLinesAndInvisibleEditor(fullPathFileName, out invisibleEditor, out textLines))
                     {
                         // Failed to get text lines or invisible editor.

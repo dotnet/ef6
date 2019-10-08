@@ -1,0 +1,16 @@
+{
+  "tools": {
+    "dotnet": "5.0.100-alpha1-014696",
+    "runtimes": {
+      "dotnet": [
+        "$(MicrosoftNETCoreAppRuntimeVersion)"
+      ]
+    }
+  },
+  "sdk": {
+    "version": "5.0.100-alpha1-014696"
+  },
+  "msbuild-sdks": {
+    "Microsoft.DotNet.Arcade.Sdk": "1.0.0-beta.19461.7"
+  }
+}

@@ -650,7 +650,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
             public TREENODE NextSibling;
 
             /// <summary>
-            ///     The head of the position tracker list associated with thie node
+            ///     The head of the position tracker list associated with this node
             /// </summary>
             public NODEPOSITIONTRACKER FirstPositionTracker;
 
@@ -701,7 +701,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
                 get { return HasFullSubItemGain ? (StoreFullSubItemGain - ImmedSubItemGain) : 0; }
             }
 
-            // The next set of properties are overriden in by different implementations
+            // The next set of properties are overridden in by different implementations
             // of TREENODE to add functionality.
 
             /// <summary>
@@ -6048,7 +6048,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
                                 var adjustColumn = absColumn;
 
                                 // TrackCell is currently broken for all values after absRow, but it will work down
-                                // to the row we are curently expanding. We need this call to get the affectedSubItemColumns.
+                                // to the row we are currently expanding. We need this call to get the affectedSubItemColumns.
                                 TrackCell(
                                     absRow, ref adjustColumn, ref parentRowOffset, ref affectedSubItemColumns, ref singleColumnSubItemAdjust);
                                 Debug.Assert(adjustColumn == 0);
@@ -6885,7 +6885,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
                     var adjustColumn = firstUnexpandedColumnOffset;
                     var singleColumnSubItemAdjust = 0;
                     // TrackCell is currently broken for all values after absRow, but it will work down
-                    // to the row we are curently expanding. We need this call to get the affectedSubItemColumns.
+                    // to the row we are currently expanding. We need this call to get the affectedSubItemColumns.
                     // UNDONE: We should be able to calculate affectedSubItemColumns during the course of this
                     // routine instead of rewalking the tree here.
                     TrackCell(
@@ -7010,7 +7010,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
                     // Get the branch out of the tracked list altogether. Readding the list of
                     // nodes with the replacement branch is deferred until all the work is done because
                     // it is possible to replace with an existing branch, or expand the existing branch
-                    // in a different locaion while reattaching tree nodes. As a simple example, the top
+                    // in a different location while reattaching tree nodes. As a simple example, the top
                     // level branch can be eliminated by calling ShiftBranchLevels(branch, 2, 1, replacement)
                     // where the replacement a child list of the parent (useful if parent has 1 item in it).
                     myNodeTracker.RemoveBranch(branch);
@@ -7222,7 +7222,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
                                 var adjustResult = branchTester.ValidateAdjustDepth(tnChild.Branch);
                                 var depthAdjustment = adjustResult.DepthAdjustment;
                                 var keepWalkingBranch = adjustResult.Continue;
-                                // Ignore any negative depth ajustment returned by the branchTester.
+                                // Ignore any negative depth adjustment returned by the branchTester.
                                 // We can't do anything with a negative adjustment here because we're 
                                 // already at 0. Also, it is very likely that this same call in the 
                                 // depth > 0 block is what put us here in the first place, so we should
@@ -7986,7 +7986,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
             // 3) Active methods, which fire events back to the single and multi-column trees in response
             //    to actions at a given index (as opposed to pass through methods, which take branches).
             //    These methods are implemented by translating he single-column row into a multi-column
-            //    row and and deferring to the main VirtualTree implementation, which will fire events
+            //    row and deferring to the main VirtualTree implementation, which will fire events
             //    to both the multi-column tree and the single-column view.
             private readonly VirtualTree myParent;
 

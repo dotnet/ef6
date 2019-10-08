@@ -129,7 +129,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // Add this to the known type map so we won't try to load it again
             LoadedTypes.Add(type.FullName, ospaceType);
 
-            // we only add the referenceResolution to the list unless we structrually matched this type
+            // we only add the referenceResolution to the list unless we structurally matched this type
             foreach (var referenceResolution in referenceResolutionListForCurrentType)
             {
                 ReferenceResolutions.Add(referenceResolution);

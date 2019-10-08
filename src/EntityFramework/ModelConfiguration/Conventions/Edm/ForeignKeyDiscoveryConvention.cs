@@ -24,7 +24,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         }
 
         /// <summary>
-        /// When overriden returns <c>true</c> if <paramref name="dependentProperty"/> should be part of the foreign key.
+        /// When overridden returns <c>true</c> if <paramref name="dependentProperty"/> should be part of the foreign key.
         /// </summary>
         /// <param name="associationType"> The association type being configured. </param>
         /// <param name="dependentAssociationEnd"> The dependent end. </param>

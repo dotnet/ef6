@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 
     // <summary>
     // An extension of the EntityWrapper class for entities that implement IEntityWithRelationships.
-    // Using this class causes creation of the RelationshipManager to be defered to the entity object.
+    // Using this class causes creation of the RelationshipManager to be deferred to the entity object.
     // </summary>
     // <typeparam name="TEntity"> The type of entity wrapped </typeparam>
     internal sealed class EntityWrapperWithRelationships<TEntity> : EntityWrapper<TEntity>
@@ -26,7 +26,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         // <param name="context"> The context to which the entity should be attached </param>
         // <param name="mergeOption"> NoTracking for non-tracked entities, AppendOnly otherwise </param>
         // <param name="identityType"> The type of the entity ignoring any possible proxy type </param>
-        // <param name="propertyStrategy"> A delegate to create the property accesor strategy object </param>
+        // <param name="propertyStrategy"> A delegate to create the property accessor strategy object </param>
         // <param name="changeTrackingStrategy"> A delegate to create the change tracking strategy object </param>
         // <param name="keyStrategy"> A delegate to create the entity key strategy object </param>
         internal EntityWrapperWithRelationships(
@@ -43,7 +43,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         // Note: use EntityWrapperFactory instead of calling this constructor directly.
         // </summary>
         // <param name="entity"> The entity to wrap </param>
-        // <param name="propertyStrategy"> A delegate to create the property accesor strategy object </param>
+        // <param name="propertyStrategy"> A delegate to create the property accessor strategy object </param>
         // <param name="changeTrackingStrategy"> A delegate to create the change tracking strategy object </param>
         // <param name="keyStrategy"> A delegate to create the entity key strategy object </param>
         internal EntityWrapperWithRelationships(

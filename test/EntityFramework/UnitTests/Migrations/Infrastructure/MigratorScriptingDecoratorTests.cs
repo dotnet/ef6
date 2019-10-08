@@ -8,6 +8,11 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
     public class MigratorScriptingDecoratorTests : DbTestCase
     {
+        public MigratorScriptingDecoratorTests(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         [MigrationsTheory]
         public void Ctor_should_validate_preconditions()
         {

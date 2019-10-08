@@ -21,6 +21,7 @@ namespace System.Data.Entity.Spatial
             Assert.Equal(new HierarchyId("/1/2.1/3/").GetAncestor(2), new HierarchyId("/1/"));
             Assert.Equal(new HierarchyId("/1/").GetAncestor(2) == null, true);
             Assert.Equal(new HierarchyId("/1/").GetAncestor(2) == new HierarchyId(null), true);
+            Assert.Equal(new HierarchyId("/1/").GetAncestor(1), new HierarchyId("/"));
             Assert.Equal(new HierarchyId("/1/").IsDescendantOf(null), true);
             Assert.Equal(new HierarchyId("/1/").IsDescendantOf(new HierarchyId(null)), true);
             Assert.Equal(new HierarchyId("/1/2/").IsDescendantOf(new HierarchyId("/")), true);

@@ -44,7 +44,7 @@ namespace Microsoft.Data.Entity.Design.Model
         private bool _isStructurallySafe;
 
         /// <summary>
-        ///     True if this artifact's XMLNS values are consistent with the desireed EDMX version.
+        ///     True if this artifact's XMLNS values are consistent with the desired EDMX version.
         /// </summary>
         private bool _isVersionSafe;
 
@@ -836,7 +836,7 @@ namespace Microsoft.Data.Entity.Design.Model
         internal virtual bool IsXmlValid()
         {
             // since the xml editor will fix-up parser errors, we can't detect if the xml will parse.  This method  is 
-            // overriden in VSArtifact to see if the xml will parse.
+            // overridden in VSArtifact to see if the xml will parse.
             return true;
         }
 
@@ -849,7 +849,7 @@ namespace Microsoft.Data.Entity.Design.Model
         }
 
         /// <summary>
-        ///     Retrives the namespace of the root elemnt of the document.  This should be either an EDMX, CSDL, SSDL or MSL namespace URI.
+        ///     Retrives the namespace of the root element of the document.  This should be either an EDMX, CSDL, SSDL or MSL namespace URI.
         /// </summary>
         /// <returns>The namespace of the Edmx document or NULL if the XDocument for edmx is null.</returns>
         internal XNamespace GetRootNamespace()
@@ -877,7 +877,7 @@ namespace Microsoft.Data.Entity.Design.Model
             {
                 foreach (var n in SchemaManager.GetEDMXNamespaceNames())
                 {
-                    // see if this element is the "Edmx" element.  We don't exepct a EFObject for this element
+                    // see if this element is the "Edmx" element.  We don't expect a EFObject for this element
                     if (xe.Name.NamespaceName.Equals(n, StringComparison.OrdinalIgnoreCase))
                     {
                         if (xe.Name.LocalName.Equals("Edmx", StringComparison.OrdinalIgnoreCase))

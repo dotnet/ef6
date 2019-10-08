@@ -1,5 +1,7 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
+#if NET452
+
 namespace System.Data.Entity.Migrations
 {
     using System.Collections.Generic;
@@ -19,6 +21,11 @@ namespace System.Data.Entity.Migrations
         private SqlInterceptor _upVerifier;
         private SqlInterceptor _downVerifier;
         private ScaffoldedMigration _generatedMigration_v1;
+
+        public AutoAndGenerateTestCase(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
 
         protected bool UpDataLoss { get; set; }
         protected bool IsDownDataLoss { get; set; }
@@ -230,3 +237,5 @@ namespace System.Data.Entity.Migrations
         }
     }
 }
+
+#endif

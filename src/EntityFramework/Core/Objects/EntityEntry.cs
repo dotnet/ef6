@@ -278,7 +278,7 @@ namespace System.Data.Entity.Core.Objects
 
         // <summary>
         // Rejects any changes made to the property with the given name since the property was last loaded,
-        // attached, saved, or changes were accepted. The orginal value of the property is stored and the
+        // attached, saved, or changes were accepted. The original value of the property is stored and the
         // property will no longer be marked as modified.
         // </summary>
         // <remarks>
@@ -567,7 +567,7 @@ namespace System.Data.Entity.Core.Objects
 
             ValidateState();
 
-            // store a referece to the cache because this.ObjectStatemanager will be null if the requested state is Detached
+            // store a reference to the cache because this.ObjectStatemanager will be null if the requested state is Detached
             var osm = ObjectStateManager;
             osm.TransactionManager.BeginLocalPublicAPI();
             try
@@ -699,14 +699,14 @@ namespace System.Data.Entity.Core.Objects
                     RelationshipEntry next;
                     if (currentIsKey0)
                     {
-                        // if this.EntityKey matches Key0, NextKey0 is the next element in the lsit
+                        // if this.EntityKey matches Key0, NextKey0 is the next element in the list
                         Debug.Assert(EntityKey.Equals(current.RelationshipWrapper.Key0), "entity key didn't match");
                         next = current.NextKey0;
                         current.NextKey0 = null;
                     }
                     else
                     {
-                        // if this.EntityKey matches Key1, NextKey1 is the next element in the lsit
+                        // if this.EntityKey matches Key1, NextKey1 is the next element in the list
                         Debug.Assert(EntityKey.Equals(current.RelationshipWrapper.Key1), "entity key didn't match");
                         next = current.NextKey1;
                         current.NextKey1 = null;
@@ -1393,7 +1393,7 @@ namespace System.Data.Entity.Core.Objects
             if (member.IsComplex
                 && retValue != null)
             {
-                // need to get the new StateManagerTypeMetadata for nested /complext member
+                // need to get the new StateManagerTypeMetadata for nested /complex member
                 switch (updatableRecord)
                 {
                     case ObjectStateValueRecord.OriginalReadonly:
@@ -1498,10 +1498,10 @@ namespace System.Data.Entity.Core.Objects
 
                         if (oldComplexMemberValue == null)
                         {
-                            var orignalValueIndex = FindOriginalValueIndex(complexMemberMetadata, oldComplexObject);
-                            if (orignalValueIndex >= 0)
+                            var originalValueIndex = FindOriginalValueIndex(complexMemberMetadata, oldComplexObject);
+                            if (originalValueIndex >= 0)
                             {
-                                _originalValues.RemoveAt(orignalValueIndex);
+                                _originalValues.RemoveAt(originalValueIndex);
                             }
                         }
                     }
@@ -1714,7 +1714,7 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        // This method is used for entities which don't implement IEntityWithChangeTracker to store orignal values of properties
+        // This method is used for entities which don't implement IEntityWithChangeTracker to store original values of properties
         // which are later used to detect changes in properties
         internal void TakeSnapshot(bool onlySnapshotComplexProperties)
         {
@@ -2416,7 +2416,7 @@ namespace System.Data.Entity.Core.Objects
                 && ObjectStateManager.FindEntityEntry(relatedObject) == null)
             {
                 // If the relatedObject is not tracked by the context, let's detect it before OSM.PerformAdd to avoid
-                // making RelatedEnd.Add() more complicated (it would have to know when the values in relatedEndTo can be overriden, and when not
+                // making RelatedEnd.Add() more complicated (it would have to know when the values in relatedEndTo can be overridden, and when not
                 relatedEndTo.VerifyNavigationPropertyForAdd(_wrappedEntity);
             }
 
@@ -2430,7 +2430,7 @@ namespace System.Data.Entity.Core.Objects
             EntityEntry relatedEntry,
             RelatedEnd relatedEndFrom)
         {
-            Debug.Assert(!relatedKey.IsTemporary, "the relatedKey was created by a method which returns only permaanent keys");
+            Debug.Assert(!relatedKey.IsTemporary, "the relatedKey was created by a method which returns only permanent keys");
             AddDetectedRelationship(relationships, relatedKey, relatedEndFrom);
 
             if (relatedEntry != null)
@@ -2738,7 +2738,7 @@ namespace System.Data.Entity.Core.Objects
                 foreach (var relationshipEntry in _cache.CopyOfRelationshipsByKey(EntityKey))
                 {
                     // Only delete the relationship entry if it is not already deleted (in which case we cannot access its values)
-                    // and when the given (optionally) relationshipSet matches the one in teh relationship entry
+                    // and when the given (optionally) relationshipSet matches the one in the relationship entry
                     if ((relationshipEntry.State != EntityState.Deleted)
                         &&
                         (relationshipSet == null || relationshipSet == relationshipEntry.EntitySet))
@@ -2832,7 +2832,7 @@ namespace System.Data.Entity.Core.Objects
                     {
                         thisRole = GetAssociationEndMember(relationshipEntry).Name;
 
-                        // Check if curent entry is a dependent end of the referential constraint
+                        // Check if current entry is a dependent end of the referential constraint
                         if (constraint.ToRole.Name == thisRole)
                         {
                             Debug.Assert(!otherEnd.EntityKey.IsTemporary, "key of key entry can't be temporary");
@@ -2912,7 +2912,7 @@ namespace System.Data.Entity.Core.Objects
                     {
                         thisRole = GetAssociationEndMember(relationshipEntry).Name;
 
-                        // Check if curent entry is a principal end of the referential constraint
+                        // Check if current entry is a principal end of the referential constraint
                         if (constraint.FromRole.Name == thisRole)
                         {
                             Debug.Assert(!otherEnd.EntityKey.IsTemporary, "key of Unchanged or Modified entry can't be temporary");
@@ -3108,12 +3108,12 @@ namespace System.Data.Entity.Core.Objects
 
         // This API are mainly for DbDataRecord implementations to get and set the values
         // also for loadoptions, setoldvalue will be used.
-        // we should handle just for C-space, we will not recieve a call from O-space for set
+        // we should handle just for C-space, we will not receive a call from O-space for set
         // We will not also return any value in term of O-Layer. all set and gets for us is in terms of C-layer.
         // the only O-layer interaction we have is through delegates from entity.
         internal void SetCurrentEntityValue(StateManagerTypeMetadata metadata, int ordinal, object userObject, object newValue)
         {
-            // required to validate state because entity could be detatched from this context and added to another context
+            // required to validate state because entity could be detached from this context and added to another context
             // and we want this to fail instead of setting the value which would redirect to the other context
             ValidateState();
 
@@ -3505,7 +3505,7 @@ namespace System.Data.Entity.Core.Objects
             CompareKeyProperties(wrappedOriginalEntity.Entity);
 
             // The ObjectStateEntry.UpdateModifiedFields uses a variation of Shaper.UpdateRecord method 
-            // which additionaly marks properties as modified as necessary.
+            // which additionally marks properties as modified as necessary.
             UpdateOriginalValues(wrappedOriginalEntity.Entity);
         }
 
@@ -3804,7 +3804,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         // <summary>
-        // Performs fixuyup of foreign keys based on referencesd between objects.  This should only be called
+        // Performs fixup of foreign keys based on referenced between objects.  This should only be called
         // for Added objects since this is the only time that references take precedence over FKs in fixup.
         // </summary>
         internal void FixupForeignKeysByReference()
@@ -3823,7 +3823,7 @@ namespace System.Data.Entity.Core.Objects
 
         // <summary>
         // Fixup the FKs by the current reference values
-        // Do this in the order of fixing up values from the principal ends first, and then propogate those values to the dependents
+        // Do this in the order of fixing up values from the principal ends first, and then propagate those values to the dependents
         // </summary>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private void FixupForeignKeysByReference(List<EntityEntry> visited)
@@ -3877,7 +3877,7 @@ namespace System.Data.Entity.Core.Objects
                     }
                     // "forceChange" is false because we don't want to actually set the property values
                     // here if they are aready set to the same thing--we don't want the events and setting
-                    // the modified flag is irrelavent during AcceptChanges.
+                    // the modified flag is irrelevant during AcceptChanges.
                     reference.UpdateForeignKeyValues(WrappedEntity, existingPrincipal, changedFKs: null, forceChange: false);
                 }
                 else
@@ -3893,8 +3893,8 @@ namespace System.Data.Entity.Core.Objects
 
             foreach (var principal in ForeignKeyPrincipals)
             {
-                // Added prinipal end.  Fixup FKs on all dependents.
-                // This is necessary because of the case where a PK in an added entity is changed after it and its dependnents
+                // Added principal end.  Fixup FKs on all dependents.
+                // This is necessary because of the case where a PK in an added entity is changed after it and its dependents
                 // are added to the context--see bug 628752.
                 var fkOverlapsPk = false; // Set to true if we find out that the FK overlaps the dependent PK
                 var dependentPropsChecked = false; // Set to true once we have checked whether or not the FK overlaps the PK
@@ -3914,7 +3914,7 @@ namespace System.Data.Entity.Core.Objects
                             var member = dependentEntry._cacheTypeMetadata.Member(dependentOrdinal);
                             if (member.IsPartOfKey)
                             {
-                                // If the FK overlpas the PK then we can't set it for non-Added entities.
+                                // If the FK overlaps the PK then we can't set it for non-Added entities.
                                 // In this situation we just continue with the next one and if the conflict
                                 // may then be flagged later as a RIC check.
                                 fkOverlapsPk = true;
@@ -3923,7 +3923,7 @@ namespace System.Data.Entity.Core.Objects
                         }
                     }
                     // This code relies on the fact that a dependent referenced to an Added principal must be either Added or
-                    // Modified since we cannpt trust thestate of the principal PK and therefore the dependent FK must also
+                    // Modified since we cannot trust thestate of the principal PK and therefore the dependent FK must also
                     // be considered not completely trusted--it may need to be updated.
                     if (dependentEntry.State == EntityState.Added
                         || (dependentEntry.State == EntityState.Modified && !fkOverlapsPk))
@@ -3932,7 +3932,7 @@ namespace System.Data.Entity.Core.Objects
                         Debug.Assert(principalRef != null, "Expected reference to exist and be an entity reference (not collection)");
                         // "forceChange" is false because we don't want to actually set the property values
                         // here if they are aready set to the same thing--we don't want the events and setting
-                        // the modified flag is irrelavent during AcceptChanges.
+                        // the modified flag is irrelevant during AcceptChanges.
                         principalRef.UpdateForeignKeyValues(dependent, WrappedEntity, changedFKs: null, forceChange: false);
                     }
                 }
@@ -4044,7 +4044,7 @@ namespace System.Data.Entity.Core.Objects
         // - TransactionManager.DeletedRelationshipsByForeignKey
         // If the FK change will result in fix-up then two entries
         // are added to TransactionManager.AddedRelationshipsByForeignKey
-        // (one for each direction of the new realtionship)
+        // (one for each direction of the new relationship)
         // </summary>
         internal void DetectChangesInForeignKeys()
         {

@@ -63,7 +63,7 @@ namespace Microsoft.Data.Entity.Design.Model
             // This is needed to workaround problems with facet propagation feature.
             // For Sql Server and Sql Server CE facets on properties in S-Space are by default 
             // the same as facets on corresponding properties in C-Space and therefore it is possible 
-            // to blindly (i.e. wihtout asking the provider) propagate facets from S-Space properties 
+            // to blindly (i.e. without asking the provider) propagate facets from S-Space properties 
             // to C-Space properties. Providers for other databases may use facets to distinguish among 
             // different types in which case the mismatch between facets on C-Space properties and S-Space 
             // properties is intentional and facet propagation breaks this. In general we should always ask
