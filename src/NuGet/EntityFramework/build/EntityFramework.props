@@ -1,6 +1,3 @@
-<Project>
-  <ItemGroup Condition="'$(EnableDefaultItems)' == 'True' And '$(EnableDefaultEntityDeployItems)' == 'True'">
-    <EntityDeploy Include="**/*.edmx" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-    <None Remove="**/*.edmx" Condition="'$(EnableDefaultNoneItems)' == 'True'" />
-  </ItemGroup>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Condition="'$(EnableDefaultItems)' == 'True'" Project="EntityFramework.DefaultItems.props" />
 </Project>
