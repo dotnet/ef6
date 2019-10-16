@@ -66,7 +66,7 @@ steps:
 
     filename: '$(comspec)'
 
-    arguments: '/c "call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\VsDevCmd.bat" & msbuild $(Build.Repository.LocalPath)\EFTools.msbuild /p:RunCodeAnalysis=false /p:Configuration=$(BuildConfiguration) /t:EnableSkipStrongNames;Clean;BuildDesigner /v:diag /bl:$(Build.SourcesDirectory)\bin\$(BuildConfiguration)\BuildDesigner.binlog"'
+    arguments: '/c "call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\VsDevCmd.bat" & msbuild $(Build.Repository.LocalPath)\EFTools.msbuild /p:RunCodeAnalysis=false /p:Configuration=$(BuildConfiguration) /t:EnableSkipStrongNames;Clean;BuildDesigner -flp3:verbosity=diagnostic;logfile=$(Build.SourcesDirectory)\bin\$(BuildConfiguration)\BuildDesigner.log -binaryLogger:logfile=$(Build.SourcesDirectory)\bin\$(BuildConfiguration)\BuildDesigner.binlog"'
 
 
 
@@ -228,6 +228,7 @@ steps:
      $(SingletonMsiName).msi
      $(SingletonMsiName).cab
      $(SingletonMsiName).wixpdb
+     BuildDesigner.log
      BuildDesigner.binlog
      BuildSingletonMSI.binlog
      
