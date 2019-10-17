@@ -88,6 +88,6 @@ namespace System.Data.Entity.Tools
     }
 }
 
-#elif !NETCOREAPP3_0
+#elif !NETCOREAPP
 #error Unexpected target framework
 #endif
