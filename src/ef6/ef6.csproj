@@ -2,8 +2,13 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>$(DefaultNetCoreTargetFramework);net40;net45</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.0;net40;net45</TargetFrameworks>
     <RootNamespace>System.Data.Entity.Tools</RootNamespace>
+    <!--
+      This keeps ef6.exe targeting the default version of .NET Core for netcoreapp3.0,
+      which maximizes the machines on which this tool will be compatible.
+    -->
+    <TargetLatestDotNetRuntime Condition=" '$(IsServicingBuild)' == 'true' ">false</TargetLatestDotNetRuntime>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
