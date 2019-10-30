@@ -862,7 +862,7 @@ function EF6($project, $startupProject, $workingDir, $params)
         $projectAssetsFile = GetCpsProperty $project 'ProjectAssetsFile'
         $runtimeConfig = Join-Path $targetDir ($targetName + '.runtimeconfig.json')
         $runtimeFrameworkVersion = GetCpsProperty $project 'RuntimeFrameworkVersion'
-        $efPath = Join-Path $PSScriptRoot 'netcoreapp5.0\any\ef6.dll'
+        $efPath = Join-Path $PSScriptRoot 'netcoreapp3.0\any\ef6.dll'
 
         $dotnetParams = 'exec', '--depsfile', $depsFile
 
@@ -1206,4 +1206,4 @@ function GetConfigPath($project)
     return GetProperty $item.Properties 'FullPath'
 }
 
-Export-ModuleMember -Variable 'InitialDatabase'
+Export-ModuleMember 'Add-EFDefaultConnectionFactory', 'Add-EFProvider', 'Add-Migration', 'Enable-Migrations', 'Get-Migrations', 'Update-Database' -Variable 'InitialDatabase'
