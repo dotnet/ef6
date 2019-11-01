@@ -843,11 +843,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         private class ArrayPool
         {
-            private Dictionary<int, ConcurrentBag<int[]>> dictionary;
+            private ConcurrentDictionary<int, ConcurrentBag<int[]>> dictionary;
 
             private ArrayPool()
             {
-                dictionary = new Dictionary<int, ConcurrentBag<int[]>>();
+                dictionary = new ConcurrentDictionary<int, ConcurrentBag<int[]>>();
             }
 
             private static readonly ArrayPool instance = new ArrayPool();
@@ -872,17 +872,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
             private ConcurrentBag<int[]> GetBag(int length)
             {
-                ConcurrentBag<int[]> arrays;
-                if (!dictionary.ContainsKey(length))
-                {
-                    arrays = new ConcurrentBag<int[]>();
-                    dictionary[length] = arrays;
-                }
-                else
-                {
-                    arrays = dictionary[length];
-                }
-                return arrays;
+				return dictionary.GetOrAdd(length, l => new ConcurrentBag<int[]>());
             }
 
             public void PutArray(int[] arr)
