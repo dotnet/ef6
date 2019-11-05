@@ -11,6 +11,7 @@
     </dependencies>
   </metadata>
   <files>
+    $CommonFileElements$
     <file src="../../artifacts/bin/EntityFramework.SqlServerCompact/$Configuration$/net40/EntityFramework.SqlServerCompact.dll" target="lib/net40/" />
     <file src="../../artifacts/bin/EntityFramework.SqlServerCompact/$Configuration$/net40/EntityFramework.SqlServerCompact.xml" target="lib/net40/" />
     <file src="../../artifacts/bin/EntityFramework.SqlServerCompact/$Configuration$/net45/EntityFramework.SqlServerCompact.dll" target="lib/net45/" />
