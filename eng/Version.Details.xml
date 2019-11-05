@@ -1,35 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Dependencies>
-  <ProductDependencies>
-    <Dependency Name="Microsoft.CSharp" Version="5.0.0-alpha.1.19556.7" CoherentParentDependency="Microsoft.NETCore.App.Runtime.win-x64">
-      <Uri>https://github.com/dotnet/corefx</Uri>
-      <Sha>475778fa982064e26a8b3a5d7545112f6586ac61</Sha>
-    </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="5.0.0-alpha.1.19559.5">
-      <Uri>https://github.com/dotnet/core-setup</Uri>
-      <Sha>72dd42ffc2dd50509a4a4255d21f01e87a1b431f</Sha>
-    </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Runtime.win-x64" Version="5.0.0-alpha.1.19559.5">
-      <Uri>https://github.com/dotnet/core-setup</Uri>
-      <Sha>72dd42ffc2dd50509a4a4255d21f01e87a1b431f</Sha>
-    </Dependency>
-    <Dependency Name="System.CodeDom" Version="5.0.0-alpha.1.19556.7" CoherentParentDependency="Microsoft.NETCore.App.Runtime.win-x64">
-      <Uri>https://github.com/dotnet/corefx</Uri>
-      <Sha>475778fa982064e26a8b3a5d7545112f6586ac61</Sha>
-    </Dependency>
-    <Dependency Name="System.ComponentModel.Annotations" Version="5.0.0-alpha.1.19556.7" CoherentParentDependency="Microsoft.NETCore.App.Runtime.win-x64">
-      <Uri>https://github.com/dotnet/corefx</Uri>
-      <Sha>475778fa982064e26a8b3a5d7545112f6586ac61</Sha>
-    </Dependency>
-    <Dependency Name="System.Configuration.ConfigurationManager" Version="5.0.0-alpha.1.19556.7" CoherentParentDependency="Microsoft.NETCore.App.Runtime.win-x64">
-      <Uri>https://github.com/dotnet/corefx</Uri>
-      <Sha>475778fa982064e26a8b3a5d7545112f6586ac61</Sha>
-    </Dependency>
-    <Dependency Name="System.Data.SqlClient" Version="5.0.0-alpha.1.19556.7" CoherentParentDependency="Microsoft.NETCore.App.Runtime.win-x64">
-      <Uri>https://github.com/dotnet/corefx</Uri>
-      <Sha>475778fa982064e26a8b3a5d7545112f6586ac61</Sha>
-    </Dependency>
-  </ProductDependencies>
   <ToolsetDependencies>
     <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="5.0.0-beta.19574.1">
       <Uri>https://github.com/dotnet/arcade</Uri>

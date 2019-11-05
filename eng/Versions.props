@@ -19,23 +19,12 @@
     <MicrosoftSqlServerTypesVersion>14.0.1016.290</MicrosoftSqlServerTypesVersion>
     <MoqVersion>4.7.145</MoqVersion>
     <MySqlDataEntityVersion>6.7.2-beta-ef6</MySqlDataEntityVersion>
-  </PropertyGroup>
-  <PropertyGroup Label="Dependencies from dotnet/corefx">
-    <MicrosoftCSharpVersion>5.0.0-alpha.1.19556.7</MicrosoftCSharpVersion>
-    <SystemCodeDomVersion>5.0.0-alpha.1.19556.7</SystemCodeDomVersion>
-    <SystemComponentModelAnnotationsVersion>5.0.0-alpha.1.19556.7</SystemComponentModelAnnotationsVersion>
-    <SystemConfigurationConfigurationManagerVersion>5.0.0-alpha.1.19556.7</SystemConfigurationConfigurationManagerVersion>
-    <SystemDataSqlClientVersion>5.0.0-alpha.1.19556.7</SystemDataSqlClientVersion>
-  </PropertyGroup>
-  <PropertyGroup Label="Dependencies from dotnet/core-setup">
-    <MicrosoftNETCoreAppRefPackageVersion>5.0.0-alpha.1.19559.5</MicrosoftNETCoreAppRefPackageVersion>
-    <MicrosoftNETCoreAppRuntimewinx64PackageVersion>5.0.0-alpha.1.19559.5</MicrosoftNETCoreAppRuntimewinx64PackageVersion>
-  </PropertyGroup>
-  <PropertyGroup Label="Dependency version settings">
-    <!--
-      Win-x64 is used here because we have picked an arbitrary runtime identifier to flow the version of the latest NETCore.App runtime.
-      All Runtime.$rid packages should have the same version.
-    -->
-    <MicrosoftNETCoreAppRuntimeVersion>$(MicrosoftNETCoreAppRuntimewinx64PackageVersion)</MicrosoftNETCoreAppRuntimeVersion>
+    <MicrosoftCSharpVersion>4.7.0</MicrosoftCSharpVersion>
+    <SystemCodeDomVersion>4.7.0</SystemCodeDomVersion>
+    <SystemComponentModelAnnotationsVersion>4.7.0</SystemComponentModelAnnotationsVersion>
+    <SystemConfigurationConfigurationManagerVersion>4.7.0</SystemConfigurationConfigurationManagerVersion>
+    <SystemDataSqlClientVersion>4.8.0</SystemDataSqlClientVersion>
+    <MicrosoftNETCoreAppRefPackageVersion>3.1.0</MicrosoftNETCoreAppRefPackageVersion>
+    <MicrosoftNETCoreAppRuntimewinx64PackageVersion>3.1.0</MicrosoftNETCoreAppRuntimewinx64PackageVersion>
   </PropertyGroup>
 </Project>

@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <DefaultNetCoreTargetFramework>netcoreapp5.0</DefaultNetCoreTargetFramework>
+    <DefaultNetCoreTargetFramework>netcoreapp3.1</DefaultNetCoreTargetFramework>
   </PropertyGroup>
 
   <PropertyGroup>
