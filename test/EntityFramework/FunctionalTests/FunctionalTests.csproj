@@ -6,9 +6,6 @@
     <TargetFrameworks>net452;netcoreapp3.0</TargetFrameworks>
     <DefineConstants>$(DefineConstants);EF_FUNCTIONALS</DefineConstants>
     <NoWarn>$(NoWarn);CS0169</NoWarn>
-
-    <!-- Work around https://github.com/microsoft/msbuild/issues/4740 -->
-    <EmbeddedResourceUseDependentUponConvention>false</EmbeddedResourceUseDependentUponConvention>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net452'">

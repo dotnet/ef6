@@ -13,5 +13,6 @@
     <PackageIconUrl>http://go.microsoft.com/fwlink/?LinkID=386613</PackageIconUrl>
     <PackageProjectUrl>http://go.microsoft.com/fwlink/?LinkID=263480</PackageProjectUrl>
     <DebugType>portable</DebugType>
+    <EmbeddedResourceUseDependentUponConvention>false</EmbeddedResourceUseDependentUponConvention>
   </PropertyGroup>
 </Project>

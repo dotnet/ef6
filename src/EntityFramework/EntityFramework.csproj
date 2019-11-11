@@ -7,9 +7,6 @@
     <Description>EntityFramework.dll</Description>
     <AssemblyVersion>6.0.0.0</AssemblyVersion>
     <DefineConstants>$(DefineConstants);INTERNALS_INVISIBLE</DefineConstants>
-
-    <!-- Properties\Resources.tt expects a path that does not match the class in Properties\Resources.cs -->
-    <EmbeddedResourceUseDependentUponConvention>false</EmbeddedResourceUseDependentUponConvention>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">

@@ -5,9 +5,6 @@
     <RootNamespace>System.Data.Entity</RootNamespace>
     <TargetFrameworks>net45;netstandard2.1</TargetFrameworks>
     <AssemblyVersion>6.0.0.0</AssemblyVersion>
-
-    <!-- Properties\Resources.tt expects a path that does not match the class in Properties\Resources.cs -->
-    <EmbeddedResourceUseDependentUponConvention>false</EmbeddedResourceUseDependentUponConvention>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
