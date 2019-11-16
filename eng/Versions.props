@@ -39,4 +39,3 @@
     <MicrosoftNETCoreAppRuntimeVersion>$(MicrosoftNETCoreAppRuntimewinx64PackageVersion)</MicrosoftNETCoreAppRuntimeVersion>
   </PropertyGroup>
 </Project>
- 
