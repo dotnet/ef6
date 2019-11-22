@@ -9,9 +9,9 @@
       <Uri>https://github.com/dotnet/core-setup</Uri>
       <Sha>f8bfa4242fb299c1d1a635c069dbfec7870a023b</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Runtime.win-x64" Version="3.0.2-servicing-19571-02">
+    <Dependency Name="Microsoft.NETCore.App.Runtime.win-x64" Version="3.0.2-servicing-19571-04">
       <Uri>https://github.com/dotnet/core-setup</Uri>
-      <Sha>07f338c15044f71b1ea6acdfcbb917d790fa4cc2</Sha>
+      <Sha>1c5c5dc1d535de9af2a3115cacec9f1ee2e730e1</Sha>
     </Dependency>
     <Dependency Name="System.CodeDom" Version="4.6.0" CoherentParentDependency="Microsoft.NETCore.App.Runtime.win-x64">
       <Uri>https://github.com/dotnet/corefx</Uri>
