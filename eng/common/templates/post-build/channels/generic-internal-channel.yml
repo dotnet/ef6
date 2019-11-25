@@ -132,8 +132,4 @@ stages:
 
       - template: ../../steps/promote-build.yml
         parameters:
-<<<<<<< HEAD:eng/common/templates/post-build/channels/generic-internal-channel.yml
           ChannelId: ${{ parameters.channelId }}
-=======
-          ChannelId: ${{ variables.InternalServicing_30_Channel_Id }}
->>>>>>> origin/release/6.4:eng/common/templates/post-build/channels/netcore-internal-30.yml
