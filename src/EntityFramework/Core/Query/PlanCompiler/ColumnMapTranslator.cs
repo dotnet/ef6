@@ -49,7 +49,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // replacement.  Note that we will follow the chain of replacements, in
         // case the replacement was also replaced.
         // </summary>
-        private static Var GetReplacementVar(Var originalVar, Dictionary<Var, Var> replacementVarMap)
+        private static Var GetReplacementVar(Var originalVar, IDictionary<Var, Var> replacementVarMap)
         {
             // SQLBUDT #478509: Follow the chain of mapped vars, don't
             //                  just stop at the first one
@@ -124,7 +124,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // <summary>
         // Replace VarRefColumnMaps with new VarRefColumnMaps with the specified Var
         // </summary>
-        internal static ColumnMap Translate(ColumnMap columnMapToTranslate, Dictionary<Var, Var> varToVarMap)
+        internal static ColumnMap Translate(ColumnMap columnMapToTranslate, IDictionary<Var, Var> varToVarMap)
         {
             var result = Translate(
                 columnMapToTranslate,

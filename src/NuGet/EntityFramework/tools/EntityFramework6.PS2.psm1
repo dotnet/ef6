@@ -535,4 +535,4 @@ function WarnIfOtherEFs($cmdlet)
     }
 }
 
-Export-ModuleMember -Variable 'InitialDatabase'
+Export-ModuleMember 'Add-EFDefaultConnectionFactory', 'Add-EFProvider', 'Add-Migration', 'Enable-Migrations', 'Get-Migrations', 'Update-Database' -Variable 'InitialDatabase'

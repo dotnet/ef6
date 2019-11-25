@@ -1,26 +1,20 @@
 parameters:
-  publishInstallersAndChecksums: false
   symbolPublishingAdditionalParameters: ''
-  stageName: ''
-  channelName: ''
-  channelId: ''
-  transportFeed: ''
-  shippingFeed: ''
-  symbolsFeed: ''
+  artifactsPublishingAdditionalParameters: ''
 
 stages:
-- stage: ${{ parameters.stageName }}
+- stage: NetCore_30_Internal_Servicing_Publishing
   dependsOn: validate
   variables:
     - template: ../common-variables.yml
-  displayName: ${{ parameters.channelName }} Publishing
+  displayName: .NET Core 3.0 Internal Servicing Publishing
   jobs:
   - template: ../setup-maestro-vars.yml
 
   - job:
     displayName: Symbol Publishing
     dependsOn: setupMaestroVars
-    condition: contains(dependencies.setupMaestroVars.outputs['setReleaseVars.InitialChannels'], format('[{0}]', ${{ parameters.channelId }} ))
+    condition: contains(dependencies.setupMaestroVars.outputs['setReleaseVars.InitialChannels'], format('[{0}]', variables.InternalServicing_30_Channel_Id))
     variables:
       - group: DotNet-Symbol-Server-Pats
     pool:
@@ -61,7 +55,7 @@ stages:
         value: $[ dependencies.setupMaestroVars.outputs['setReleaseVars.BARBuildId'] ]
       - name: IsStableBuild
         value: $[ dependencies.setupMaestroVars.outputs['setReleaseVars.IsStableBuild'] ]
-    condition: contains(dependencies.setupMaestroVars.outputs['setReleaseVars.InitialChannels'], format('[{0}]', ${{ parameters.channelId }}))
+    condition: contains(dependencies.setupMaestroVars.outputs['setReleaseVars.InitialChannels'], format('[{0}]', variables.InternalServicing_30_Channel_Id))
     pool:
       vmImage: 'windows-2019'
     steps:
@@ -121,19 +115,14 @@ stages:
             /p:InstallersTargetStaticFeed=$(InternalInstallersBlobFeedUrl)
             /p:InstallersAzureAccountKey=$(InternalInstallersBlobFeedKey)
             /p:PublishToAzureDevOpsNuGetFeeds=true
-            /p:AzureDevOpsStaticShippingFeed='${{ parameters.shippingFeed }}'
+            /p:AzureDevOpsStaticShippingFeed='https://pkgs.dev.azure.com/dnceng/_packaging/dotnet3-internal/nuget/v3/index.json'
             /p:AzureDevOpsStaticShippingFeedKey='$(dn-bot-dnceng-artifact-feeds-rw)'
-            /p:AzureDevOpsStaticTransportFeed='${{ parameters.transportFeed }}'
+            /p:AzureDevOpsStaticTransportFeed='https://pkgs.dev.azure.com/dnceng/_packaging/dotnet3-internal-transport/nuget/v3/index.json'
             /p:AzureDevOpsStaticTransportFeedKey='$(dn-bot-dnceng-artifact-feeds-rw)'
-            /p:AzureDevOpsStaticSymbolsFeed='${{ parameters.symbolsFeed }}'
+            /p:AzureDevOpsStaticSymbolsFeed='https://pkgs.dev.azure.com/dnceng/_packaging/dotnet3-internal-symbols/nuget/v3/index.json'
             /p:AzureDevOpsStaticSymbolsFeedKey='$(dn-bot-dnceng-artifact-feeds-rw)'
-            /p:PublishToMSDL=false
             ${{ parameters.artifactsPublishingAdditionalParameters }}
 
       - template: ../../steps/promote-build.yml
         parameters:
-<<<<<<< HEAD:eng/common/templates/post-build/channels/generic-internal-channel.yml
-          ChannelId: ${{ parameters.channelId }}
-=======
           ChannelId: ${{ variables.InternalServicing_30_Channel_Id }}
->>>>>>> origin/release/6.4:eng/common/templates/post-build/channels/netcore-internal-30.yml

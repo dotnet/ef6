@@ -207,29 +207,29 @@ namespace Microsoft.Data.Entity.Build.Tasks
                 outputDir.Create();
             }
 
-            string outputDirPath = outputDir.FullName + "\\";
+            string outputDirPath = outputDir.FullName;
             string outputFileNamePrefix = outputFile.Name.Replace(XmlConstants.EdmxFileExtension, String.Empty);
             string csdlFileName = outputFileNamePrefix + XmlConstants.CSpaceSchemaExtension;
             string mslFileName = outputFileNamePrefix + XmlConstants.CSSpaceSchemaExtension;
             string ssdlFileName = outputFileNamePrefix + XmlConstants.SSpaceSchemaExtension;
 
-            bool csdlProducedSuccessfully = OutputXml(outputDirPath + csdlFileName, conceptualSchemaElement);
-            bool mslProducedSuccessfully = OutputXml(outputDirPath + mslFileName, mappingElement);
-            bool ssdlProducedSuccessfully = OutputXml(outputDirPath + ssdlFileName, storageSchemaElement);
+            bool csdlProducedSuccessfully = OutputXml(Path.Combine(outputDirPath, csdlFileName), conceptualSchemaElement);
+            bool mslProducedSuccessfully = OutputXml(Path.Combine(outputDirPath, mslFileName), mappingElement);
+            bool ssdlProducedSuccessfully = OutputXml(Path.Combine(outputDirPath, ssdlFileName), storageSchemaElement);
 
             if (csdlProducedSuccessfully)
             {
-                _newResources.Add(CreateTaskItem(outputDirPath + csdlFileName, csdlFileName, inputFileRelativePath));
+                _newResources.Add(CreateTaskItem(Path.Combine(outputDirPath, csdlFileName), csdlFileName, inputFileRelativePath));
             }
 
             if (ssdlProducedSuccessfully)
             {
-                _newResources.Add(CreateTaskItem(outputDirPath + ssdlFileName, ssdlFileName, inputFileRelativePath));
+                _newResources.Add(CreateTaskItem(Path.Combine(outputDirPath, ssdlFileName), ssdlFileName, inputFileRelativePath));
             }
 
             if (mslProducedSuccessfully)
             {
-                _newResources.Add(CreateTaskItem(outputDirPath + mslFileName, mslFileName, inputFileRelativePath));
+                _newResources.Add(CreateTaskItem(Path.Combine(outputDirPath, mslFileName), mslFileName, inputFileRelativePath));
             }
 
             return (csdlProducedSuccessfully && mslProducedSuccessfully && ssdlProducedSuccessfully);
