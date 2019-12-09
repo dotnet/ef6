@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.NETCore.App.Internal" Version="3.1.1-servicing.19576.9">
+    <Dependency Name="Microsoft.NETCore.App.Internal" Version="3.1.0-rtm.19565.2" Pinned="true">
       <Uri>https://github.com/dotnet/core-setup</Uri>
-      <Sha>f3f2dd583fffa254015fc21ff0e45784b333256d</Sha>
+      <Sha>65f04fb6db7a5e198d05dbebd5c4ad21eb018f89</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
