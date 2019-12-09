@@ -9,13 +9,13 @@
       <Uri>https://github.com/dotnet/core-setup</Uri>
       <Sha>f8bfa4242fb299c1d1a635c069dbfec7870a023b</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Runtime.win-x64" Version="3.0.2-servicing-19576-08">
-      <Uri>https://github.com/dotnet/core-setup</Uri>
-      <Sha>547ae1f5f072d130b32ec3089876711070b2dc4f</Sha>
+    <Dependency Name="Microsoft.NETCore.App.Runtime.win-x64" Version="3.0.2">
+      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-core-setup</Uri>
+      <Sha>a2c3406f47bed9f53fea5205c07d22be382f19b8</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Internal" Version="3.0.2-servicing-19576-08">
-      <Uri>https://github.com/dotnet/core-setup</Uri>
-      <Sha>547ae1f5f072d130b32ec3089876711070b2dc4f</Sha>
+    <Dependency Name="Microsoft.NETCore.App.Internal" Version="3.0.2-servicing-19604-02">
+      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-core-setup</Uri>
+      <Sha>a2c3406f47bed9f53fea5205c07d22be382f19b8</Sha>
     </Dependency>
     <Dependency Name="System.CodeDom" Version="4.6.0" CoherentParentDependency="Microsoft.NETCore.App.Runtime.win-x64">
       <Uri>https://github.com/dotnet/corefx</Uri>
