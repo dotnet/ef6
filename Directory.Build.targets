@@ -1,12 +1,3 @@
 <Project>
   <Import Project="Sdk.targets" Sdk="Microsoft.DotNet.Arcade.Sdk" />
-  <ItemGroup>
-    <!-- Use the latest version instead of the one bundled with the SDK. -->
-    <KnownFrameworkReference Update="Microsoft.NETCore.App"
-        Condition=" '$(TargetFramework)' == '$(DefaultNetCoreTargetFramework)' ">
-      <LatestRuntimeFrameworkVersion>$(MicrosoftNETCoreAppRuntimeVersion)</LatestRuntimeFrameworkVersion>
-      <DefaultRuntimeFrameworkVersion>$(MicrosoftNETCoreAppRuntimeVersion)</DefaultRuntimeFrameworkVersion>
-      <TargetingPackVersion>$(MicrosoftNETCoreAppRefPackageVersion)</TargetingPackVersion>
-    </KnownFrameworkReference>
-  </ItemGroup>
 </Project>
