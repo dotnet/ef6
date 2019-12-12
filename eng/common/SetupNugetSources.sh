@@ -146,3 +146,4 @@ for FeedName in ${PackageSources[@]} ; do
 
         sed -i.bak "s|$PackageSourceCredentialsNodeFooter|$NewCredential${NL}$PackageSourceCredentialsNodeFooter|" $ConfigFile
     fi
+done
