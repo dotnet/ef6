@@ -451,6 +451,49 @@ namespace System.Data.Entity.Query.LinqToEntities
             }
         }
 
+        private void DoInitializerMetadataMustNotHeldInstanceReferences(SimpleModelContext context, WeakReference weakRef)
+        {
+            var clo = new TestClosure();
+            weakRef.Target = clo;
+
+            var products = context.Products
+                .Take(3)
+                .Select(e => new TestProjection
+                {
+                    ProductName = e.Name == clo.ProductName ? e.Name : e.Name + "a"
+                })
+                .ToList();
+
+            Assert.NotNull(products);
+        }
+
+        [Fact]
+        public void InitializerMetadataMustNotHeldInstanceReferences()
+        {
+            var weakRef = new WeakReference(null);
+
+            using (var context = new SimpleModelContext())
+            {
+                DoInitializerMetadataMustNotHeldInstanceReferences(context, weakRef);
+            }
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            // if weakRef.IsAlive => memory leak detected
+            Assert.False(weakRef.IsAlive);
+        }
+
+        private class TestClosure
+        {
+            public string ProductName { get; set; } = "Some";
+        }
+
+        private class TestProjection
+        {
+            public string ProductName { get; set; }
+        }
+
         private static class StaticExpressions
         {
             public static readonly Expression<Func<Product, bool>> Member = (p => p.Id == 1);

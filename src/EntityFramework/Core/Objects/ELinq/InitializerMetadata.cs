@@ -37,6 +37,17 @@ namespace System.Data.Entity.Core.Objects.ELinq
             Identity = _identifierPrefix + Interlocked.Increment(ref s_identifier).ToString(CultureInfo.InvariantCulture);
         }
 
+        // Make copy of NewExpression as "shape" only - replace all arguments with dummy ParameterExpression with same types
+        protected static NewExpression CopyNewExpressionShape(NewExpression newExpression)
+        {
+            var args = new ParameterExpression[newExpression.Arguments.Count];
+            for (var i = 0; i < newExpression.Arguments.Count; i++)
+            {
+                args[i] = Expression.Parameter(newExpression.Arguments[i].Type);
+            }
+            return Expression.New(newExpression.Constructor, args, newExpression.Members);
+        }
+
         // Gets the kind of this initializer (grouping, row, etc.)
         internal abstract InitializerMetadataKind Kind { get; }
 
@@ -258,7 +269,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 : base(newExpression.Type)
             {
                 DebugCheck.NotNull(newExpression);
-                _newExpression = newExpression;
+                _newExpression = CopyNewExpressionShape(newExpression);
             }
 
             private readonly NewExpression _newExpression;
@@ -359,10 +370,24 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 : base(initExpression.Type)
             {
                 DebugCheck.NotNull(initExpression);
-                _initExpression = initExpression;
+                _initExpression = CopyMemberInitExpressionShape(initExpression);
             }
 
             private readonly MemberInitExpression _initExpression;
+
+            // Make copy of MemberInitExpression as "shape" only - replace all MemberAssignment expressions with dummy ParameterExpression with same types
+            private static MemberInitExpression CopyMemberInitExpressionShape(MemberInitExpression initExpression)
+            {
+                var bindings = new MemberBinding[initExpression.Bindings.Count];
+                for (var i = 0; i < initExpression.Bindings.Count; i++)
+                {
+                    var b = initExpression.Bindings[i];
+                    var pi = b.Member as PropertyInfo;
+                    var exprType = (pi == null) ? ((FieldInfo)(b.Member)).FieldType : pi.PropertyType;
+                    bindings[i] = Expression.Bind(b.Member, Expression.Parameter(exprType));
+                }
+                return Expression.MemberInit(CopyNewExpressionShape(initExpression.NewExpression), bindings);
+            }
 
             internal override InitializerMetadataKind Kind
             {
