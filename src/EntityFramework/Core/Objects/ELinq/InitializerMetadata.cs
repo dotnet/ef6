@@ -40,6 +40,10 @@ namespace System.Data.Entity.Core.Objects.ELinq
         // Make copy of NewExpression as "shape" only - replace all arguments with dummy ParameterExpression with same types
         protected static NewExpression CopyNewExpressionShape(NewExpression newExpression)
         {
+            // NewValueTypeExpression has no ConstructorInfo
+            if (newExpression.Constructor == null)
+                return newExpression;
+
             var args = new ParameterExpression[newExpression.Arguments.Count];
             for (var i = 0; i < newExpression.Arguments.Count; i++)
             {
