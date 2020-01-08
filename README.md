@@ -20,6 +20,6 @@ If you want to try out the latest changes that have not been officially released
 
 ## How do I contribute
 
-There are lots of ways to [contribute to the Entity Framework project](https://github.com/dotnet/ef6/wiki/Contributing) including [testing out nighty builds](https://github.com//blob/master/docs/DailyBuilds.md), reporting bugs, and contributing code.
+There are lots of ways to [contribute to the Entity Framework project](https://github.com/dotnet/ef6/wiki/Contributing) including [testing out nighty builds](https://github.com/dotnet/aspnetcore/blob/master/docs/DailyBuilds.md), reporting bugs, and contributing code.
 
 All code submissions will be rigorously reviewed and tested by the Entity Framework team, and only those that meet an extremely high bar for both quality and design/roadmap appropriateness will be merged into the source.
