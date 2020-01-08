@@ -32,7 +32,7 @@ stages:
         enablePublishTestResults: true
         enablePublishUsingPipelines: ${{ variables._PublishUsingPipelines }}
         enableTelemetry: true
-        helixRepo: aspnet/EntityFramework6
+        helixRepo: dotnet/ef6
         jobs:
           - job: Windows
             timeoutInMinutes: 180

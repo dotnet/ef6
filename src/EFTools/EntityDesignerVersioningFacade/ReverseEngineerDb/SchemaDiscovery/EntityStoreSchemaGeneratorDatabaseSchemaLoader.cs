@@ -554,7 +554,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
 
         /// <summary>
         /// This interceptor is added to work around a problem with SQL Server
-        /// cardinality estimation: https://github.com/aspnet/EntityFramework6/issues/4
+        /// cardinality estimation: https://github.com/dotnet/ef6/issues/4
         /// which in turn causes bad performance running the queries above on large models.
         /// We can workaround this by directing SQL Server to use MERGE JOINs.
         /// </summary>
