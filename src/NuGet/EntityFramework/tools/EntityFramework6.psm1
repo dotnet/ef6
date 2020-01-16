@@ -820,75 +820,84 @@ function EF6($project, $startupProject, $workingDir, $params)
     $projectDir = GetProperty $project.Properties 'FullPath'
     $outputPath = GetProperty $project.ConfigurationManager.ActiveConfiguration.Properties 'OutputPath'
     $targetDir = [IO.Path]::GetFullPath([IO.Path]::Combine($projectDir, $outputPath))
-    $targetFrameworkMoniker = GetProperty $project.Properties 'TargetFrameworkMoniker'
-    $frameworkName = New-Object 'System.Runtime.Versioning.FrameworkName' $targetFrameworkMoniker
-    $targetFrameworkIdentifier = $frameworkName.Identifier
-    $targetFrameworkVersion = $frameworkName.Version
-
-    if ($targetFrameworkIdentifier -in '.NETFramework')
+    $targetFrameworkMonikers = GetProperty $project.Properties 'TargetFrameworkMonikers'
+    if (!$targetFrameworkMonikers)
     {
-        if ($targetFrameworkVersion -lt '4.5')
-        {
-            $frameworkDir = 'net40'
-        }
-        else
-        {
-            $frameworkDir = 'net45'
-        }
-
-        $platformTarget = GetPlatformTarget $project
-        if ($platformTarget -eq 'x86')
-        {
-            $runtimeDir = 'win-x86'
-        }
-        elseif ($platformTarget -in 'AnyCPU', 'x64')
-        {
-            $runtimeDir = 'any'
-        }
-        else
-        {
-            throw "Project '$($project.ProjectName)' has an active platform of '$platformTarget'. Select a different " +
-                'platform and try again.'
-        }
-
-        $exePath = Join-Path $PSScriptRoot "$frameworkDir\$runtimeDir\ef6.exe"
+        $targetFrameworkMonikers = GetProperty $project.Properties 'TargetFrameworkMoniker'
     }
-    elseif ($targetFrameworkIdentifier -eq '.NETCoreApp')
+    foreach ($targetFrameworkMoniker in $targetFrameworkMonikers.Split(';'))
     {
-        $exePath = (Get-Command 'dotnet').Path
+        $frameworkName = New-Object 'System.Runtime.Versioning.FrameworkName' $targetFrameworkMoniker
+        $targetFrameworkIdentifier = $frameworkName.Identifier
+        $targetFrameworkVersion = $frameworkName.Version
 
-        $targetName = GetProperty $project.Properties 'AssemblyName'
-        $depsFile = Join-Path $targetDir ($targetName + '.deps.json')
-        $projectAssetsFile = GetCpsProperty $project 'ProjectAssetsFile'
-        $runtimeConfig = Join-Path $targetDir ($targetName + '.runtimeconfig.json')
-        $runtimeFrameworkVersion = GetCpsProperty $project 'RuntimeFrameworkVersion'
-        $efPath = Join-Path $PSScriptRoot 'netcoreapp3.0\any\ef6.dll'
-
-        $dotnetParams = 'exec', '--depsfile', $depsFile
-
-        if ($projectAssetsFile)
+        if ($targetFrameworkIdentifier -in '.NETFramework')
         {
-            # NB: Don't use Get-Content. It doesn't handle UTF-8 without a signature
-            # NB: Don't use ReadAllLines. ConvertFrom-Json won't work on PowerShell 3.0
-            $projectAssets = [IO.File]::ReadAllText($projectAssetsFile) | ConvertFrom-Json
-            $projectAssets.packageFolders.psobject.Properties.Name |
-                %{ $dotnetParams += '--additionalprobingpath', $_.TrimEnd('\') }
-        }
+            if ($targetFrameworkVersion -lt '4.5')
+            {
+                $frameworkDir = 'net40'
+            }
+            else
+            {
+                $frameworkDir = 'net45'
+            }
 
-        if (Test-Path $runtimeConfig)
+            $platformTarget = GetPlatformTarget $project
+            if ($platformTarget -eq 'x86')
+            {
+                $runtimeDir = 'win-x86'
+            }
+            elseif ($platformTarget -in 'AnyCPU', 'x64')
+            {
+                $runtimeDir = 'any'
+            }
+            else
+            {
+                throw "Project '$($project.ProjectName)' has an active platform of '$platformTarget'. Select a different " +
+                    'platform and try again.'
+            }
+
+            $exePath = Join-Path $PSScriptRoot "$frameworkDir\$runtimeDir\ef6.exe"
+            break
+        }
+        elseif ($targetFrameworkIdentifier -eq '.NETCoreApp')
         {
-            $dotnetParams += '--runtimeconfig', $runtimeConfig
-        }
-        elseif ($runtimeFrameworkVersion)
-        {
-            $dotnetParams += '--fx-version', $runtimeFrameworkVersion
-        }
+            $exePath = (Get-Command 'dotnet').Path
 
-        $dotnetParams += $efPath
+            $targetName = GetProperty $project.Properties 'AssemblyName'
+            $depsFile = Join-Path $targetDir ($targetName + '.deps.json')
+            $projectAssetsFile = GetCpsProperty $project 'ProjectAssetsFile'
+            $runtimeConfig = Join-Path $targetDir ($targetName + '.runtimeconfig.json')
+            $runtimeFrameworkVersion = GetCpsProperty $project 'RuntimeFrameworkVersion'
+            $efPath = Join-Path $PSScriptRoot 'netcoreapp3.0\any\ef6.dll'
 
-        $params = $dotnetParams + $params
+            $dotnetParams = 'exec', '--depsfile', $depsFile
+
+            if ($projectAssetsFile)
+            {
+                # NB: Don't use Get-Content. It doesn't handle UTF-8 without a signature
+                # NB: Don't use ReadAllLines. ConvertFrom-Json won't work on PowerShell 3.0
+                $projectAssets = [IO.File]::ReadAllText($projectAssetsFile) | ConvertFrom-Json
+                $projectAssets.packageFolders.psobject.Properties.Name |
+                    %{ $dotnetParams += '--additionalprobingpath', $_.TrimEnd('\') }
+            }
+
+            if (Test-Path $runtimeConfig)
+            {
+                $dotnetParams += '--runtimeconfig', $runtimeConfig
+            }
+            elseif ($runtimeFrameworkVersion)
+            {
+                $dotnetParams += '--fx-version', $runtimeFrameworkVersion
+            }
+
+            $dotnetParams += $efPath
+
+            $params = $dotnetParams + $params
+            break
+        }
     }
-    else
+    if (!$exePath)
     {
         throw "Project '$($startupProject.ProjectName)' targets framework '$targetFrameworkIdentifier'. The Entity Framework " +
             'Package Manager Console Tools don''t support this framework.'
