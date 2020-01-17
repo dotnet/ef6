@@ -7,11 +7,11 @@
     </Dependency>
     <Dependency Name="Microsoft.NETCore.App.Runtime.win-x64" Version="3.1.2">
       <Uri>https://github.com/dotnet/core-setup</Uri>
-      <Sha>193fb40ae0a6fb0a2ecd63cb63db0a95719dbe8d</Sha>
+      <Sha>76cc488b8c942815d8b4bfe1de803b916667fe37</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Internal" Version="3.1.2-servicing.20064.3">
+    <Dependency Name="Microsoft.NETCore.App.Internal" Version="3.1.2-servicing.20067.1">
       <Uri>https://github.com/dotnet/core-setup</Uri>
-      <Sha>193fb40ae0a6fb0a2ecd63cb63db0a95719dbe8d</Sha>
+      <Sha>76cc488b8c942815d8b4bfe1de803b916667fe37</Sha>
     </Dependency>
     <Dependency Name="System.CodeDom" Version="4.7.0" CoherentParentDependency="Microsoft.NETCore.App.Runtime.win-x64">
       <Uri>https://github.com/dotnet/corefx</Uri>
@@ -25,9 +25,9 @@
       <Uri>https://github.com/dotnet/corefx</Uri>
       <Sha>0f7f38c4fd323b26da10cce95f857f77f0f09b48</Sha>
     </Dependency>
-    <Dependency Name="System.Data.SqlClient" Version="4.8.0" CoherentParentDependency="Microsoft.NETCore.App.Runtime.win-x64">
+    <Dependency Name="System.Data.SqlClient" Version="4.8.1" CoherentParentDependency="Microsoft.NETCore.App.Runtime.win-x64">
       <Uri>https://github.com/dotnet/corefx</Uri>
-      <Sha>0f7f38c4fd323b26da10cce95f857f77f0f09b48</Sha>
+      <Sha>d658fef8c064c2f3ea4f57ab6544abb998ab3b57</Sha>
     </Dependency>
     <!-- Keep this dependency at the bottom of ProductDependencies, else it will be picked as the parent for CoherentParentDependencies -->
     <Dependency Name="Microsoft.NETCore.App.Ref" Version="3.1.0" Pinned="true">
