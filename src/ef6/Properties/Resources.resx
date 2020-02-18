@@ -178,7 +178,7 @@
     <value>Code First Migrations enabled for project {0}.</value>
   </data>
   <data name="EntityFrameworkNotFound" xml:space="preserve">
-    <value>Your target project '{0}' doesn't reference EntityFramework. This package is required for the Entity Framework Core Tools to work. Ensure your target project is correct, install the package, and try again.</value>
+    <value>Your target project '{0}' doesn't reference EntityFramework. This package is required for the Entity Framework 6 Tools to work. Ensure your target project is correct, install the package, and try again.</value>
   </data>
   <data name="GetMigrationsCommand_Intro" xml:space="preserve">
     <value>Retrieving migrations that have been applied to the target database.</value>
