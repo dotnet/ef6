@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="FxCop rules for EntityFramework" Description="This rule set contains the rules for EntityFramework." ToolsVersion="10.0">
-  <IncludeAll Action="Error" />
-  <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
-    <Rule Id="CA1062" Action="None" />
-    <Rule Id="CA2243" Action="None" />
-    <Rule Id="CA1809" Action="None" />
-  </Rules>
-</RuleSet>

@@ -11,7 +11,7 @@ Param(
   [string]$newConnectionString
 )
 
-$appConfigDirectoryPath = "$pwd\test\EntityFramework\FunctionalTests.ProviderAgnostic"
+$appConfigDirectoryPath = "$pwd\test\FunctionalTests.ProviderAgnostic"
 write-host $appConfigDirectoryPath
 
 $sourceConfigPath = "$appConfigDirectoryPath\App.config.$providerName"
