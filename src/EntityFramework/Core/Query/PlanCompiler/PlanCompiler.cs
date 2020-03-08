@@ -6,6 +6,7 @@ using md = System.Data.Entity.Core.Metadata.Edm;
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
     using System.Collections.Generic;
+    using System.Configuration;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Diagnostics;
@@ -43,21 +44,80 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         // <summary>
         // A boolean switch indicating whether we should apply transformation rules regardless of the size of the Iqt.
+        // A boolean value indicating whether we should apply transformation rules regardless of the size of the Iqt.
         // By default, the Enabled property of a boolean switch is set using the value specified in the configuration file.
         // Configuring the switch with a value of 0 sets the Enabled property to false; configuring the switch with a nonzero
         // value to set the Enabled property to true. If the BooleanSwitch constructor cannot find initial switch settings
         // in the configuration file, the Enabled property of the new switch is set to false by default.
         // </summary>
-        private static readonly BooleanSwitch _applyTransformationsRegardlessOfSize =
-            new BooleanSwitch(
-                "System.Data.Entity.Core.EntityClient.IgnoreOptimizationLimit",
-                "The Entity Framework should try to optimize the query regardless of its size");
+        // <remarks>This switch is still in place for backwards-compability. Prefer using the AppSettings value.</remarks>
+        private static readonly BooleanSwitch _legacyApplyTransformationsRegardlessOfSize
+            = new BooleanSwitch(
+            "System.Data.Entity.Core.EntityClient.IgnoreOptimizationLimit",
+            "The Entity Framework should try to optimize the query regardless of its size");
 
+        private static bool? _applyTransformationsRegardlessOfSize;
         // <summary>
-        // Determines the maximum size of the query in terms of Iqt nodes for which we attempt to do transformation rules.
-        // This number is ignored if applyTransformationsRegardlessOfSize is enabled.
+        // A boolean value indicating whether we should apply transformation rules regardless of the size of the Iqt.
+        // By default, the Enabled property of a boolean switch is set using the value specified in the configuration file.
+        // Configuring the switch with a value of 0 sets the Enabled property to false; configuring the switch with a nonzero
+        // value to set the Enabled property to true. If the BooleanSwitch constructor cannot find initial switch settings
+        // in the configuration file, the Enabled property of the new switch is set to false by default.
         // </summary>
-        private const int MaxNodeCountForTransformations = 10000;
+        private static bool applyTransformationsRegardlessOfSize
+        {
+            get
+            {
+                if (!_applyTransformationsRegardlessOfSize.HasValue)
+                {
+                    var appSetting = ConfigurationManager.AppSettings["EntityFramework_EntityClient_IgnoreOptimizationLimit"];
+                    _applyTransformationsRegardlessOfSize = Boolean.TryParse(appSetting, out var value) && value;
+                }
+
+                return _applyTransformationsRegardlessOfSize.Value;
+            }
+        }
+
+        private static bool? _disableTransformationsRegardlessOfSize;
+        // <summary>
+        // A boolean value indicating whether we should not apply transformation rules regardless of the size of the Iqt.
+        // By default, the Enabled property of a boolean switch is set using the value specified in the configuration file.
+        // Configuring the switch with a value of 0 sets the Enabled property to false; configuring the switch with a nonzero
+        // value to set the Enabled property to true. If the BooleanSwitch constructor cannot find initial switch settings
+        // in the configuration file, the Enabled property of the new switch is set to false by default.
+        // </summary>
+        private static bool disableTransformationsRegardlessOfSize
+        {
+            get
+            {
+                if (!_disableTransformationsRegardlessOfSize.HasValue)
+                {
+                    var appSetting = ConfigurationManager.AppSettings["EntityFramework_EntityClient_DisableOptimization"];
+                    _disableTransformationsRegardlessOfSize = Boolean.TryParse(appSetting, out var value) && value;
+                }
+
+                return _disableTransformationsRegardlessOfSize.Value;
+            }
+        }
+
+        private static int? _maxNodeCountForTransformations;
+        // <summary>
+        // An integer value specifying the maximum size of the query in terms of Iqt nodes for which we attempt to do transformation rules.
+        // This number is ignored if applyTransformationsRegardlessOfSize or disableTransformationsRegardlessOfSize is enabled.
+        // </summary>
+        private static int maxNodeCountForTransformations
+        {
+            get
+            {
+                if (!_maxNodeCountForTransformations.HasValue)
+                {
+                    var appSetting = ConfigurationManager.AppSettings["EntityFramework_EntityClient_MaxNodeCountForTransformations"];
+                    _maxNodeCountForTransformations = Int32.TryParse(appSetting, out var value) ? value : 10000;
+                }
+
+                return _maxNodeCountForTransformations.Value;
+            }
+        }
 
         // <summary>
         // The CTree we're compiling a plan for.
@@ -120,13 +180,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 Debug.Fail(message);
 
-                // NOTE: I considered, at great length, whether to have the assertion message text 
+                // NOTE: I considered, at great length, whether to have the assertion message text
                 //       included in the exception we throw; in the end, there really isn't a reliable
                 //       equivalent to the C++ __LINE__ and __FILE__ macros in C# (at least not without
-                //       using the C++ PreProcessor...ick)  The StackTrace object comes close but 
-                //       doesn't handle inlined callers properly for our needs (MethodA() calls MethodB() 
+                //       using the C++ PreProcessor...ick)  The StackTrace object comes close but
+                //       doesn't handle inlined callers properly for our needs (MethodA() calls MethodB()
                 //       calls us, but MethodB() is inlined, so we'll get MethodA() info instead), and
-                //       since these are retail "Asserts" (as in: we're not supposed to get them in our 
+                //       since these are retail "Asserts" (as in: we're not supposed to get them in our
                 //       shipping code, and we're doing this to avoid a null-ref which is even worse) I
                 //       elected to simplify this by just including them as the additional info.
                 throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.AssertionFailed, 0, message);
@@ -281,7 +341,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             //
             // We always need the pre-processor and the codegen phases.
-            // It is generally a good thing to run through the transformation rules, and 
+            // It is generally a good thing to run through the transformation rules, and
             // the projection pruning phases.
             // The "optional" phases are AggregatePushdown, Normalization, NTE, NestPullup and JoinElimination
             //
@@ -486,18 +546,26 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private bool ComputeMayApplyTransformations()
         {
             //
-            // If the nextNodeId is less than MaxNodeCountForTransformations then we don't need to 
-            // calculate the acutal node count, it must be less than  MaxNodeCountForTransformations
+            // No check needed if optimizations are disabled
             //
-            if (_applyTransformationsRegardlessOfSize.Enabled
-                || m_command.NextNodeId < MaxNodeCountForTransformations)
+            if (disableTransformationsRegardlessOfSize)
+            {
+                return false;
+            }
+
+            //
+            // If the nextNodeId is less than MaxNodeCountForTransformations then we don't need to
+            // calculate the actual node count, it must be less than  MaxNodeCountForTransformations
+            //
+            if (applyTransformationsRegardlessOfSize || _legacyApplyTransformationsRegardlessOfSize.Enabled
+                || m_command.NextNodeId < maxNodeCountForTransformations)
             {
                 return true;
             }
 
             //Compute the actual node count
             var actualCount = NodeCounter.Count(m_command.Root);
-            return (actualCount < MaxNodeCountForTransformations);
+            return (actualCount < maxNodeCountForTransformations);
         }
 
         // <summary>
