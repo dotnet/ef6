@@ -69,14 +69,13 @@ stages:
             steps:
               - checkout: self
                 clean: true
-              - powershell: |
-                  SqlLocalDB stop
-                  SqlLocalDB delete
-                  Remove-Item "$env:USERPROFILE\*.mdf"
-                  Remove-Item "$env:USERPROFILE\*.ldf"
-                  SqlLocalDB create
-                  SqlLocalDB start
-                displayName: Cleanup databases
+              - powershell: >
+                  Get-ChildItem -ErrorAction SilentlyContinue -Recurse 'C:\Program Files\Microsoft SQL Server\sqlcmd.exe' |
+                  Sort-Object -Property @{Expression={$_.FullName.Length}; Descending=$true},@{Expression={$_.FullName}; Descending=$true} |
+                  Select-Object -First 1 |
+                  Foreach-Object {"##vso[task.prependpath]$($_.DirectoryName)"}
+              - script: tools\CleanMSSQLLocalDB.cmd
+                displayName: Cleanup LocalDB databases
               - task: NuGetCommand@2
                 displayName: 'Clear NuGet caches'
                 condition: succeeded()
