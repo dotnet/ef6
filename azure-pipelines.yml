@@ -74,6 +74,7 @@ stages:
                   Sort-Object -Property @{Expression={$_.FullName.Length}; Descending=$true},@{Expression={$_.FullName}; Descending=$true} |
                   Select-Object -First 1 |
                   Foreach-Object {Write-Host "##vso[task.prependpath]$($_.DirectoryName)"}
+              - powershell: $env:Path -split ';'
               - script: tools\CleanMSSQLLocalDB.cmd
                 displayName: Cleanup LocalDB databases
               - task: NuGetCommand@2
