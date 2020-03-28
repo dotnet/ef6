@@ -1,7 +1,0 @@
-<#@ Dsl processor="DslDirectiveProcessor" requires="fileName='..\..\Microsoft.Data.Entity.Design.EntityDesigner\DslDefinition.dsl'" #>
-<#
-	// CmdSet Guid must be defined before master template is included
-	// This Guid must be kept synchronized with the CommandSetId Guid in Constants.tt
-	Guid guidCmdSet = new Guid ("11ac0a76-365e-490d-abad-e44e52897c7d");
-#>
-<#@ include file="%DslTemplatesSrc%\DslPackage\GeneratedVSCT.tt" #>
