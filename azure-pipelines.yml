@@ -43,7 +43,7 @@ stages:
         helixRepo: aspnet/EntityFramework6
         jobs:
           - job: Windows
-            timeoutInMinutes: 180
+            timeoutInMinutes: 240
             pool:
               ${{ if eq(variables['System.TeamProject'], 'public') }}:
                 name: NetCorePublic-Pool
