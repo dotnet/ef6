@@ -39,7 +39,7 @@
     
     <PropertyGroup>
         <!-- NuGet command -->
-        <NuGetExePath Condition=" '$(NuGetExePath)' == '' ">$(NuGetToolsPath)\NuGet.exe</NuGetExePath>
+        <NuGetExePath Condition=" '$(NuGetExePath)' == '' ">NuGet.exe</NuGetExePath> <!-- Use version downloaded by previous tasks i.e. NuGet expected on PATH -->
         <PackageSources Condition=" $(PackageSources) == '' ">@(PackageSource)</PackageSources>
         
         <NuGetCommand Condition=" '$(OS)' == 'Windows_NT'">"$(NuGetExePath)"</NuGetCommand>
@@ -52,17 +52,11 @@
         <RequireConsentSwitch Condition=" $(RequireRestoreConsent) == 'true' ">-RequireConsent</RequireConsentSwitch>
         <NonInteractiveSwitch Condition=" '$(VisualStudioVersion)' != '' AND '$(OS)' == 'Windows_NT' ">-NonInteractive</NonInteractiveSwitch>
         
-        <PaddedSolutionDir Condition=" '$(OS)' == 'Windows_NT' AND '$(PackageRestoreOutputDir)' != '' AND '$(DoNotPad)' == ''">"$(PackageRestoreOutputDir) "</PaddedSolutionDir>
-        <PaddedSolutionDir Condition=" '$(OS)' != 'Windows_NT' AND '$(PackageRestoreOutputDir)' != ''">"$(PackageRestoreOutputDir)"</PaddedSolutionDir>
-
-        <PaddedSolutionDir Condition=" '$(PaddedSolutionDir)' == '' AND '$(OS)' == 'Windows_NT' AND '$(DoNotPad)' == ''">"$(SolutionDir) "</PaddedSolutionDir>
-        <PaddedSolutionDir Condition=" '$(PaddedSolutionDir)' == '' AND '$(OS)' != 'Windows_NT' ">"$(SolutionDir)"</PaddedSolutionDir>
-
-        <PaddedSolutionDir Condition=" '$(PaddedSolutionDir)' == '' AND '$(PackageRestoreOutputDir)' != '' AND '$(DoNotPad)' != ''">"$(PackageRestoreOutputDir)"</PaddedSolutionDir>
-        <PaddedSolutionDir Condition=" '$(PaddedSolutionDir)' == '' AND '$(DoNotPad)' != ''">"$(SolutionDir)"</PaddedSolutionDir>
+        <QuotedSolutionDir Condition=" '$(QuotedSolutionDir)' == '' AND '$(PackageRestoreOutputDir)' != ''">"$(PackageRestoreOutputDir)"</QuotedSolutionDir>
+        <QuotedSolutionDir Condition=" '$(QuotedSolutionDir)' == ''">"$(SolutionDir)"</QuotedSolutionDir>
 
         <!-- Commands -->
-        <InstallCommandOptions>$(NonInteractiveSwitch) $(RequireConsentSwitch) $(NoCacheSwitch) $(PreReleaseSwitch) -solutionDir $(PaddedSolutionDir)</InstallCommandOptions>
+        <InstallCommandOptions>$(NonInteractiveSwitch) $(RequireConsentSwitch) $(NoCacheSwitch) $(PreReleaseSwitch) -solutionDir $(QuotedSolutionDir)</InstallCommandOptions>
         <LocalRestoreCommand>$(NuGetCommand) install $(LocalPackageId) -source "$(LocalPackageSource)" $(InstallCommandOptions)</LocalRestoreCommand>
         <RestoreCommand>$(NuGetCommand) install "$(PackagesConfig)" -source "$(PackageSources)" $(InstallCommandOptions)</RestoreCommand>
         <BuildCommand>$(NuGetCommand) pack "$(ProjectPath)" -Properties "Configuration=$(Configuration);Platform=$(Platform)" $(NonInteractiveSwitch) -OutputDirectory "$(PackageOutputDir)" -symbols</BuildCommand>

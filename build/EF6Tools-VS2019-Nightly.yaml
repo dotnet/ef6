@@ -58,6 +58,18 @@ steps:
 
 
 
+- task: NuGetAuthenticate@0
+
+  displayName: 'NuGet Authenticate'
+
+
+
+- task: NuGetToolInstaller@1
+
+  displayName: 'Use NuGet'
+
+
+
 - task: BatchScript@1
 
   displayName: 'Run EFBuild'
@@ -202,13 +214,11 @@ steps:
 
     solution: '$(Build.Repository.LocalPath)\setup\wix\EFToolsWillowMsi.wixproj'
 
-    msbuildLocationMethod: location
-
-    msbuildLocation: 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin'
+    msbuildArchitecture: x64
 
     configuration: '$(BuildConfiguration)'
 
-    msbuildArguments: '/t:Build /v:d'
+    msbuildArguments: '/t:Build /v:d /bl:$(Build.SourcesDirectory)\bin\$(BuildConfiguration)\BuildSingletonMSI.binlog'
 
   timeoutInMinutes: 30
 
