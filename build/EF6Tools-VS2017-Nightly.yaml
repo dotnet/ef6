@@ -24,6 +24,12 @@ steps:
   displayName: Create JobStartDateTime Variable
   enabled: false
 
+- task: NuGetAuthenticate@0
+  displayName: 'NuGet Authenticate'
+
+- task: NuGetToolInstaller@1
+  displayName: 'Use NuGet'
+
 - task: BatchScript@1
   displayName: Run EFBuild
   inputs:
@@ -90,8 +96,8 @@ steps:
     solution: '$(Build.Repository.LocalPath)\setup\wix\EFToolsWillowMsi.wixproj'
     msbuildArchitecture: x64
     configuration: '$(BuildConfiguration)'
-    msbuildArguments: '/t:Build /v:d'
-  timeoutInMinutes: 10
+    msbuildArguments: '/t:Build /v:d /bl:$(Build.SourcesDirectory)\bin\$(BuildConfiguration)\BuildSingletonMSI.binlog'
+  timeoutInMinutes: 30
 
 - task: CopyFiles@2
   displayName: Copy VSIX, MSI and CAB
