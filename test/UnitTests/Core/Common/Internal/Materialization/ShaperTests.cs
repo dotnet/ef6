@@ -210,6 +210,81 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
         }
 
+        public class GetColumnValueWithErrorHandling : TestBase
+        {
+            [Fact]
+            public void GetColumnValueWithErrorHandling_returns_a_int()
+            {
+                var sourceEnumerable = new[] { new object[] { 1 }, new object[] { 2 } };
+
+                var coordinatorFactory = Objects.MockHelper.CreateCoordinatorFactory<Object>();
+
+                var shaper = new Shaper<object>(
+                    MockHelper.CreateDbDataReader(sourceEnumerable),
+                    /*context*/ null,
+                    /*workspace*/ null,
+                    MergeOption.AppendOnly,
+                    /*stateCount*/ 1,
+                    coordinatorFactory,
+                    /*readerOwned*/ false,
+                    /*useSpatialReader*/ false);
+
+                var obj = shaper.GetEnumerator().MoveNext();
+
+                var intValue = shaper.GetColumnValueWithErrorHandling<int>(ordinal: 0);
+                Assert.Equal(sourceEnumerable.First().First(), intValue);
+            }
+            [Fact]
+            public void Throws_exception_with_column_name_for_invalid_cast_reference()
+            {
+                var sourceEnumerable = new[] { new object[] { 1 }, new object[] { 2 } };
+
+                var coordinatorFactory = Objects.MockHelper.CreateCoordinatorFactory<Object>();
+
+                var shaper = new Shaper<object>(
+                    MockHelper.CreateDbDataReader(sourceEnumerable),
+                    /*context*/ null,
+                    /*workspace*/ null,
+                    MergeOption.AppendOnly,
+                    /*stateCount*/ 1,
+                    coordinatorFactory,
+                    /*readerOwned*/ false,
+                    /*useSpatialReader*/ false);
+
+                var obj = shaper.GetEnumerator().MoveNext();
+
+                // column name is mocking via expr "column" + ordinal
+                Assert.Equal(
+                    Strings.Materializer_InvalidColumnCastReference(typeof(int), typeof(DateTime), "column0"),
+                    Assert.Throws<InvalidOperationException>(
+                        () => shaper.GetColumnValueWithErrorHandling<DateTime>(ordinal: 0)).Message);
+            }
+            [Fact]
+            public void Throws_exception_with_column_name_for_nullable_column_cast()
+            {
+                var sourceEnumerable = new[] { new object[] { 1 }, new object[] { 2 } };
+
+                var coordinatorFactory = Objects.MockHelper.CreateCoordinatorFactory<Object>();
+
+                var shaper = new Shaper<object>(
+                    MockHelper.CreateDbDataReader(sourceEnumerable),
+                    /*context*/ null,
+                    /*workspace*/ null,
+                    MergeOption.AppendOnly,
+                    /*stateCount*/ 1,
+                    coordinatorFactory,
+                    /*readerOwned*/ false,
+                    /*useSpatialReader*/ false);
+
+                var obj = shaper.GetEnumerator().MoveNext();
+
+                // column name is mocking via expr "column" + ordinal
+                Assert.Equal(
+                    Strings.Materializer_InvalidColumnCastNullable(typeof(int), typeof(DateTime), "column0"),
+                    Assert.Throws<InvalidOperationException>(
+                        () => shaper.GetColumnValueWithErrorHandling<DateTime?>(ordinal: 0)).Message);
+            }
+        }
         public class GetSpatialColumnValueWithErrorHandling : TestBase
         {
             [Fact]
@@ -311,7 +386,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                     if (throwException)
                     {
                         Assert.Equal(
-                            Strings.Materializer_InvalidCastReference(typeof(DbGeography), typeof(DbGeometry)),
+                            Strings.Materializer_InvalidColumnCastReference(typeof(DbGeography), typeof(DbGeometry), "column0"),
                             Assert.Throws<InvalidOperationException>(
                                 () => shaperMock.Object.GetSpatialColumnValueWithErrorHandling<DbGeometry>(0, spatialType)).Message);
                     }
@@ -325,7 +400,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                     if (throwException)
                     {
                         Assert.Equal(
-                            Strings.Materializer_InvalidCastReference(typeof(DbGeometry), typeof(DbGeography)),
+                            Strings.Materializer_InvalidColumnCastReference(typeof(DbGeometry), typeof(DbGeography), "column0"),
                             Assert.Throws<InvalidOperationException>(
                                 () => shaperMock.Object.GetSpatialColumnValueWithErrorHandling<DbGeography>(0, spatialType)).Message);
                     }

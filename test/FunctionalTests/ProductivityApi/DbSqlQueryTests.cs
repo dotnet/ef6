@@ -614,8 +614,8 @@ namespace ProductivityApiTests
                 var query = context.Database.SqlQuery<UnMappedProduct>("select * from Categories");
 
                 Assert.Throws<InvalidOperationException>(() => query.ToList()).ValidateMessage(
-                    "Materializer_InvalidCastReference", "System.String",
-                    "System.Int32");
+                    "Materializer_InvalidColumnCastReference", "System.String",
+                    "System.Int32", "Id");
             }
         }
 
@@ -628,8 +628,8 @@ namespace ProductivityApiTests
                 var query = context.Database.SqlQuery<UnMappedProduct>("select * from Categories").AsStreaming();
 
                 Assert.Throws<InvalidOperationException>(() => query.ToList()).ValidateMessage(
-                    "Materializer_InvalidCastReference", "System.String",
-                    "System.Int32");
+                    "Materializer_InvalidColumnCastReference", "System.String",
+                    "System.Int32", "Id");
             }
         }
 #pragma warning restore 612, 618
@@ -647,8 +647,8 @@ namespace ProductivityApiTests
                     () => ExceptionHelpers.UnwrapAggregateExceptions(
                         () =>
                             query.ToListAsync().Result)).ValidateMessage(
-                                "Materializer_InvalidCastReference", "System.String",
-                                "System.Int32");
+                                "Materializer_InvalidColumnCastReference", "System.String",
+                                "System.Int32", "Id");
             }
         }
 
@@ -664,8 +664,8 @@ namespace ProductivityApiTests
                     () => ExceptionHelpers.UnwrapAggregateExceptions(
                         () =>
                             query.ToListAsync().Result)).ValidateMessage(
-                                "Materializer_InvalidCastReference", "System.String",
-                                "System.Int32");
+                                "Materializer_InvalidColumnCastReference", "System.String",
+                                "System.Int32", "Id");
             }
         }
 #pragma warning restore 612, 618

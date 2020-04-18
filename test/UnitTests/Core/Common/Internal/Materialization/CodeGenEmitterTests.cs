@@ -6,7 +6,9 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Core.Objects.Internal;
     using System.Data.Entity.Infrastructure;
+    using System.Globalization;
     using System.Linq;
+    using System.Linq.Expressions;
     using Xunit;
 
     public class CodeGenEmitterTests
@@ -72,7 +74,20 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             Assert.NotNull(CodeGenEmitter.Shaper_Context_Options);
             Assert.NotNull(CodeGenEmitter.Shaper_ProxyCreationEnabled);
         }
+        [Fact]
+        public void Emit_EnsureType_Should_Contain_Columnname_In_Exception()
+        {
+            var nonGeneric = typeof(CodeGenEmitter).GetField(nameof(CodeGenEmitter.CodeGenEmitter_BinaryEquals), Reflection.BindingFlags.Static | Reflection.BindingFlags.NonPublic).GetValue(null);
+            var checkedConvert = typeof(CodeGenEmitter).GetField(nameof(CodeGenEmitter.CodeGenEmitter_CheckedConvert), Reflection.BindingFlags.Static | Reflection.BindingFlags.NonPublic);
+            var checkedConvertValue = checkedConvert.GetValue(null);
+            checkedConvert.SetValue(null, nonGeneric, Reflection.BindingFlags.Static, null, CultureInfo.InvariantCulture);
 
+            var ex = Assert.Throws<InvalidOperationException>(() => CodeGenEmitter.Emit_EnsureType(Expression.Constant("11.44$"), typeof(int), "column0"));
+            Assert.Contains("column0", ex.Message);
+            
+            // cleanup
+            checkedConvert.SetValue(null, checkedConvertValue, Reflection.BindingFlags.Static, null, CultureInfo.InvariantCulture);
+        }
         /// <summary>
         /// Not really a unit test because of the complexity of setting up everything the materializer needs.
         /// </summary>
