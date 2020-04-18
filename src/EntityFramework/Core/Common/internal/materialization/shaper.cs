@@ -964,7 +964,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                             var resultType = null == untypedResult ? null : untypedResult.GetType();
                             if (!typeof(T).IsAssignableFrom(resultType))
                             {
-                                throw CreateWrongTypeException(resultType);
+                                var columnName = reader.GetName(ordinal);
+                                throw CreateWrongTypeException(resultType, columnName);
                             }
                         }
                         throw;
@@ -983,7 +984,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             // Creates the exception thrown when the reader returns a value with
             // an incompatible type.
             // </summary>
-            protected abstract Exception CreateWrongTypeException(Type resultType);
+            protected abstract Exception CreateWrongTypeException(Type resultType, string columnName);
         }
 
         private class ColumnErrorHandlingValueReader<TColumn> : ErrorHandlingValueReader<TColumn>
@@ -1003,9 +1004,9 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 return new InvalidOperationException(Strings.Materializer_NullReferenceCast(typeof(TColumn)));
             }
 
-            protected override Exception CreateWrongTypeException(Type resultType)
+            protected override Exception CreateWrongTypeException(Type resultType, string columnName)
             {
-                return EntityUtil.ValueInvalidCast(resultType, typeof(TColumn));
+                return EntityUtil.ValueInvalidCast(resultType, typeof(TColumn), columnName);
             }
         }
 
@@ -1037,12 +1038,12 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                         _typeName, _propertyName, "null"));
             }
 
-            protected override Exception CreateWrongTypeException(Type resultType)
+            protected override Exception CreateWrongTypeException(Type resultType, string columnName)
             {
                 return new InvalidOperationException(
                     Strings.Materializer_SetInvalidValue(
                         Nullable.GetUnderlyingType(typeof(TProperty)) ?? typeof(TProperty),
-                        _typeName, _propertyName, resultType));
+                        _typeName, _propertyName ?? columnName, resultType));
             }
         }
 

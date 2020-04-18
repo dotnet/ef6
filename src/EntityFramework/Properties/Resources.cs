@@ -7119,11 +7119,35 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
+        // A string like "The specified cast from a materialized column '{0}' with type '{1}' to the '{2}' type is not valid."
+        // </summary>
+        internal static string Materializer_InvalidColumnCastReference(object p0, object p1, object p2)
+        {
+            return EntityRes.GetString(EntityRes.Materializer_InvalidColumnCastReference, p0, p1, p2);
+        }
+
+        // <summary>
+        // A string like "The column with the name '{0}' conversion failed, {1}"
+        // </summary>
+        internal static string Materializer_InvalidColumnCastMessage(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.Materializer_InvalidColumnCastMessage, p0, p1);
+        }
+
+        // <summary>
         // A string like "The specified cast from a materialized '{0}' type to a nullable '{1}' type is not valid."
         // </summary>
         internal static string Materializer_InvalidCastNullable(object p0, object p1)
         {
             return EntityRes.GetString(EntityRes.Materializer_InvalidCastNullable, p0, p1);
+        }
+
+        // <summary>
+        // A string like "The specified cast from a materialized column '{0}' with type '{1}' to a nullable '{2}' type is not valid."
+        // </summary>
+        internal static string Materializer_InvalidColumnCastNullable(object p0, object p1, object p2)
+        {
+            return EntityRes.GetString(EntityRes.Materializer_InvalidColumnCastNullable, p0, p1, p2);
         }
 
         // <summary>
@@ -16622,7 +16646,10 @@ namespace System.Data.Entity.Resources
         internal const string Materializer_PropertyIsNotNullableWithName = "Materializer_PropertyIsNotNullableWithName";
         internal const string Materializer_SetInvalidValue = "Materializer_SetInvalidValue";
         internal const string Materializer_InvalidCastReference = "Materializer_InvalidCastReference";
+        internal const string Materializer_InvalidColumnCastReference = "Materializer_InvalidColumnCastReference";
+        internal const string Materializer_InvalidColumnCastMessage = "Materializer_InvalidColumnCastMessage";
         internal const string Materializer_InvalidCastNullable = "Materializer_InvalidCastNullable";
+        internal const string Materializer_InvalidColumnCastNullable = "Materializer_InvalidColumnCastNullable";
         internal const string Materializer_NullReferenceCast = "Materializer_NullReferenceCast";
         internal const string Materializer_RecyclingEntity = "Materializer_RecyclingEntity";
         internal const string Materializer_AddedEntityAlreadyExists = "Materializer_AddedEntityAlreadyExists";

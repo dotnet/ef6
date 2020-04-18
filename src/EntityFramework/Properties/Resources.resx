@@ -2940,8 +2940,17 @@
   <data name="Materializer_InvalidCastReference" xml:space="preserve">
     <value>The specified cast from a materialized '{0}' type to the '{1}' type is not valid.</value>
   </data>
+  <data name="Materializer_InvalidColumnCastReference" xml:space="preserve">
+    <value>The specified cast from a materialized column '{0}' with type '{1}' to the '{2}' type is not valid.</value>
+  </data>
+  <data name="Materializer_InvalidColumnCastMessage" xml:space="preserve">
+    <value>The column with the name '{0}' conversion failed, {1}</value>
+  </data>
   <data name="Materializer_InvalidCastNullable" xml:space="preserve">
     <value>The specified cast from a materialized '{0}' type to a nullable '{1}' type is not valid.</value>
+  </data>
+  <data name="Materializer_InvalidColumnCastNullable" xml:space="preserve">
+    <value>The specified cast from a materialized column '{0}' with type '{1}' to a nullable '{2}' type is not valid.</value>
   </data>
   <data name="Materializer_NullReferenceCast" xml:space="preserve">
     <value>The cast to value type '{0}' failed because the materialized value is null. Either the result type's generic parameter or the query must use a nullable type.</value>

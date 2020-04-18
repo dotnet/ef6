@@ -327,6 +327,25 @@ namespace System.Data.Entity.Core
             }
         }
 
+        internal static InvalidOperationException ValueInvalidCast(Type valueType, Type destinationType, string columnName)
+        {
+            DebugCheck.NotNull(valueType);
+            DebugCheck.NotNull(destinationType);
+            if (destinationType.IsValueType()
+                && destinationType.IsGenericType()
+                && (typeof(Nullable<>) == destinationType.GetGenericTypeDefinition()))
+            {
+                return new InvalidOperationException(
+                    Strings.Materializer_InvalidColumnCastNullable(
+                        valueType, destinationType.GetGenericArguments()[0], columnName));
+            }
+            else
+            {
+                return new InvalidOperationException(
+                    Strings.Materializer_InvalidColumnCastReference(
+                        valueType, destinationType, columnName));
+            }
+        }
         internal static InvalidOperationException ValueInvalidCast(Type valueType, Type destinationType)
         {
             DebugCheck.NotNull(valueType);
