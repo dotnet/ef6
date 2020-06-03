@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="..\SharedAssemblyInfo.cs" />
     <Compile Include="..\EntityFramework\Infrastructure\Design\HandlerBase.cs" />
     <Compile Include="..\EntityFramework\Infrastructure\Design\IReportHandler.cs" />
     <Compile Include="..\EntityFramework\Infrastructure\Design\IResultHandler.cs" />
