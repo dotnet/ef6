@@ -4463,16 +4463,15 @@ namespace System.Data.Entity.Core.Objects
                     reader.Dispose();
                 }
 
-                if (command != null)
-                {
-                    // We need to clear the parameters
-                    // from the command in case we need to retry it
-                    // to avoid getting the Sql parameter is contained in a collection error
-                    command.Parameters.Clear();
-                    command.Dispose();
-                }
-
                 throw;
+            } 
+            finally
+			{
+                // We need to clear the parameters
+                // from the command in case we need to retry it
+                // to avoid getting the Sql parameter is contained in a collection error
+                command?.Parameters.Clear();
+                command?.Dispose();
             }
 
             if (!executionOptions.UserSpecifiedStreaming.Value)
@@ -4829,6 +4828,14 @@ namespace System.Data.Entity.Core.Objects
                 }
 
                 throw;
+            }
+            finally
+            {
+                // We need to clear the parameters
+                // from the command in case we need to retry it
+                // to avoid getting the Sql parameter is contained in a collection error
+                command?.Parameters.Clear();
+                command?.Dispose();
             }
 
             if (!executionOptions.UserSpecifiedStreaming.Value)
