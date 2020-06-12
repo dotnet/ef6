@@ -4466,7 +4466,7 @@ namespace System.Data.Entity.Core.Objects
                 throw;
             } 
             finally
-			{
+            {
                 // We need to clear the parameters
                 // from the command in case we need to retry it
                 // to avoid getting the Sql parameter is contained in a collection error
