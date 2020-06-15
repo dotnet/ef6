@@ -71,7 +71,7 @@
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.15.3.DesignTime" />
     <Reference Include="Microsoft.VisualStudio.OLE.Interop" />
     <Reference Include="Microsoft.VisualStudio.Shell.Design" />
-    <Reference Condition="'$(VisualStudioVersion)' == '16.0'" Include="Microsoft.VisualStudio.Threading, Version=16.5.0.0" />
+    <Reference Condition="'$(VisualStudioVersion)' == '16.0'" Include="Microsoft.VisualStudio.Threading, Version=16.6.0.0" />
     <Reference Include="vslangproj" />
     <Reference Include="vslangproj2" />
     <Reference Include="vslangproj80" />
