@@ -969,7 +969,7 @@ namespace System.Data.Entity.Core.Objects
                 result.Dispose();
 
                 Mock.Get(objectContext).Verify(m => m.ReleaseConnection(), Times.Once());
-                dbCommandMock.Protected().Verify("Dispose", Times.Once(), true);
+                dbCommandMock.Protected().Verify("Dispose", Times.AtLeastOnce(), true);
             }
 
             [Fact]
@@ -1015,7 +1015,7 @@ namespace System.Data.Entity.Core.Objects
                 result.Dispose();
 
                 Mock.Get(objectContext).Verify(m => m.ReleaseConnection(), Times.Once());
-                dbCommandMock.Protected().Verify("Dispose", Times.Once(), true);
+                dbCommandMock.Protected().Verify("Dispose", Times.AtLeastOnce(), true);
             }
 
             [Fact]
