@@ -966,8 +966,6 @@ namespace System.Data.Entity.Core.Objects
                 dbCommandMock.Protected().Verify("ExecuteDbDataReader", Times.Once(), CommandBehavior.SequentialAccess);
                 Assert.True(correctParameters);
 
-                dbCommandMock.Protected().Verify("Dispose", Times.Never(), true);
-
                 result.Dispose();
 
                 Mock.Get(objectContext).Verify(m => m.ReleaseConnection(), Times.Once());
@@ -1013,8 +1011,6 @@ namespace System.Data.Entity.Core.Objects
                 dbCommandMock.VerifySet(m => m.CommandText = "{0} Foo", Times.Once());
                 dbCommandMock.Protected().Verify("ExecuteDbDataReader", Times.Once(), CommandBehavior.Default);
                 Assert.True(correctParameters);
-
-                dbCommandMock.Protected().Verify("Dispose", Times.Never(), true);
 
                 result.Dispose();
 

@@ -4470,7 +4470,7 @@ namespace System.Data.Entity.Core.Objects
                 // We need to clear the parameters
                 // from the command in case we need to retry it
                 // to avoid getting the Sql parameter is contained in a collection error
-                command?.Parameters.Clear();
+                command?.Parameters?.Clear();
                 command?.Dispose();
             }
 
@@ -4818,15 +4818,6 @@ namespace System.Data.Entity.Core.Objects
                     reader.Dispose();
                 }
 
-                if (command != null)
-                {
-                    // We need to clear the parameters
-                    // from the command in case we need to retry it
-                    // to avoid getting the Sql parameter is contained in a collection error
-                    command.Parameters.Clear();
-                    command.Dispose();
-                }
-
                 throw;
             }
             finally
@@ -4834,7 +4825,7 @@ namespace System.Data.Entity.Core.Objects
                 // We need to clear the parameters
                 // from the command in case we need to retry it
                 // to avoid getting the Sql parameter is contained in a collection error
-                command?.Parameters.Clear();
+                command?.Parameters?.Clear();
                 command?.Dispose();
             }
 
