@@ -46,15 +46,14 @@ If you encounter a bug or have a feature request, please use the [Issue Tracker]
 
 ## Daily build
 
-* Added "Customize Reverse Enngineering Templates" project menu item
-**Bug fixes**
+* Added "Customize Reverse Engineering Templates" project menu item
 
 ## Release 0.9.65 (January, 2019)
 
 * About dialog added
 * VSPackage made Async (to support newer VS versions)
 * Support for Visual Studio 2019
-* Support for multiple projects with DbContext using same name - thanks for [PhilPJL](https://github.com/PhilPJL)
+* Support for multiple projects with DbContext using same name - thanks to [PhilPJL](https://github.com/PhilPJL)
 
 ## Release 0.9.35 (July 19, 2017)
 
