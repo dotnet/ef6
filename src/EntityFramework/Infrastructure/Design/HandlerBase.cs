@@ -31,5 +31,11 @@ namespace System.Data.Entity.Infrastructure.Design
 
             return interfaceType.IsAssignableFrom(GetType());
         }
+        
+        public override object InitializeLifetimeService()
+        {
+            // Leaks but fixes https://github.com/dotnet/ef6/issues/96
+            return null;
+        }
     }
 }
