@@ -3,6 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFrameworks>netcoreapp3.0;net40;net45</TargetFrameworks>
+    <CheckEolTargetFramework>False</CheckEolTargetFramework>
     <RootNamespace>System.Data.Entity.Tools</RootNamespace>
     <!--
       This keeps ef6.exe targeting the default version of .NET Core for netcoreapp3.0,
