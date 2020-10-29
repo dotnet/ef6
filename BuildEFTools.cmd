@@ -15,4 +15,4 @@ ECHO "Warning: Cannot find installed VS path."
 
 :BuildStep
 
-msbuild "%~dp0\EFTools.msbuild" /p:RunCodeAnalysisForEFTools=true /v:minimal /maxcpucount /nodeReuse:false %*
+msbuild "%~dp0\EFTools.msbuild" /p:RunCodeAnalysisForEFTools=true /v:minimal /p:Configuration=Release /t:EnableSkipStrongNames;Clean;BuildDesigner /maxcpucount /nodeReuse:false %*

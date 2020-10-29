@@ -18,6 +18,7 @@ namespace Microsoft.VisualStudio.Shell
     ///     tools to register the proper information with Visual Studio.
     /// </devdoc>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
+    [CLSCompliant(false)]
     public sealed class MyProvideMenuResourceAttribute : RegistrationAttribute
     {
         private readonly string _resourceId;
