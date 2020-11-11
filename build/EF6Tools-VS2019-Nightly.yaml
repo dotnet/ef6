@@ -239,7 +239,7 @@ steps:
     PathToPublish: '$(Build.ArtifactStagingDirectory)\BuildDLLs'
     ArtifactName: BuildDLLs
     publishLocation: FilePath
-    TargetPath: '$(DropFileShare)\$(Build.SourceBranchName)\$(Build.BuildId)\VS2019'
+    TargetPath: '$(DropFileShare)\190313_Dev16_MicroBuild_07\$(Build.BuildId)\VS2019'
 
 - task: CopyFiles@2
 
