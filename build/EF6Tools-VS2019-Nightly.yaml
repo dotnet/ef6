@@ -231,7 +231,7 @@ steps:
      EntityFramework*.dll
      EntityFramework*.pdb
      migrate.exe
-    TargetFolder: '$(Build.ArtifactsStagingDirectory)\BuildDLLs'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)\BuildDLLs'
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish EF6 dlls'
