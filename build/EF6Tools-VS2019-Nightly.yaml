@@ -228,9 +228,7 @@ steps:
   inputs:
     SourceFolder: 'bin\$(BuildConfiguration)'
     Contents: |
-     EntityFramework*.dll
-     EntityFramework*.pdb
-     migrate.exe
+     **
     TargetFolder: '$(Build.ArtifactStagingDirectory)\BinDir'
 
 - task: PublishBuildArtifacts@1
