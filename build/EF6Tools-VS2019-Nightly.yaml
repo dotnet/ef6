@@ -231,13 +231,13 @@ steps:
      EntityFramework*.dll
      EntityFramework*.pdb
      migrate.exe
-    TargetFolder: '$(Build.ArtifactStagingDirectory)\BuildDLLs'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)\BinDir'
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish EF6 dlls'
   inputs:
-    PathToPublish: '$(Build.ArtifactStagingDirectory)\BuildDLLs'
-    ArtifactName: BuildDLLs
+    PathToPublish: '$(Build.ArtifactStagingDirectory)\BinDir'
+    ArtifactName: BinDir
     publishLocation: FilePath
     TargetPath: '$(DropFileShare)\190313_Dev16_MicroBuild_07\$(Build.BuildId)\VS2019'
 
