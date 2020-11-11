@@ -226,7 +226,7 @@ steps:
 - task: CopyFiles@2
   displayName: 'Copy EF6 dlls'
   inputs:
-    SourceFolder: 'bin\$(BuildConfiguration)'
+    SourceFolder: 'bin\'
     Contents: |
      **
     TargetFolder: '$(Build.ArtifactStagingDirectory)\BinDir'
