@@ -578,7 +578,7 @@ namespace System.Data.Entity.Migrations
             Assert.Equal(initialCreate.MigrationId, scaffoldedMigration.MigrationId);
         }
 
-        [MigrationsTheory]
+        [MigrationsTheory(Skip = "https://github.com/dotnet/ef6/issues/1786")]
         public void Update_blocks_automatic_migration_when_explicit_source_model()
         {
             ResetDatabase();
