@@ -19,9 +19,12 @@ variables:
       value: ''
 
 trigger:
-  - master
-  - release/*
-  - internal/release/6.*
+  batch: true
+  branches:
+    include:
+      - master
+      - release/*
+      - internal/release/6.*
 
 pr: ['*']
 
@@ -37,7 +40,7 @@ stages:
         enablePublishTestResults: true
         enablePublishUsingPipelines: ${{ variables._PublishUsingPipelines }}
         enableTelemetry: true
-        helixRepo: aspnet/EntityFramework6
+        helixRepo: dotnet/ef6
         jobs:
           - job: Windows
             timeoutInMinutes: 180

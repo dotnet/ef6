@@ -11,25 +11,25 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{6A921F
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet", "NuGet", "{99CFD9EF-C7D4-4E98-AD69-E56C99902B31}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntityFramework.NuGet", "src\NuGet\EntityFramework\EntityFramework.NuGet.csproj", "{347166B4-7C38-47F3-B51A-C8C4A30FB01D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntityFramework.NuGet", "src\EntityFramework.NuGet\EntityFramework.NuGet.csproj", "{347166B4-7C38-47F3-B51A-C8C4A30FB01D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntityFramework", "src\EntityFramework\EntityFramework.csproj", "{E06D1C12-EFE8-4413-A15C-AE01FC158F2F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{24A9C4D1-E189-4D3A-A2D7-36D3ED51D277}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "test\EntityFramework\UnitTests\UnitTests.csproj", "{E8E91C5F-E54C-41B1-AE1B-62E047BF49D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "test\UnitTests\UnitTests.csproj", "{E8E91C5F-E54C-41B1-AE1B-62E047BF49D5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FunctionalTests", "test\EntityFramework\FunctionalTests\FunctionalTests.csproj", "{23330EF8-2593-4B0A-A70F-12E6BE1F46C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FunctionalTests", "test\FunctionalTests\FunctionalTests.csproj", "{23330EF8-2593-4B0A-A70F-12E6BE1F46C4}"
 EndProject
-Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "VBTests", "test\EntityFramework\VBTests\VBTests.vbproj", "{CF1C27F8-D603-4960-BE99-BCF348545368}"
+Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "VBTests", "test\VBTests\VBTests.vbproj", "{CF1C27F8-D603-4960-BE99-BCF348545368}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntityFramework.SqlServer", "src\EntityFramework.SqlServer\EntityFramework.SqlServer.csproj", "{6F4BB80B-5F74-44D3-A77F-0025DFA48C1A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntityFramework.SqlServerCompact", "src\EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.csproj", "{1EF9C524-7122-4677-B111-DD14BB2A9EA2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FunctionalTests.Transitional", "test\EntityFramework\FunctionalTests.Transitional\FunctionalTests.Transitional.csproj", "{3D65611F-E8FB-4A33-9196-7836969D6378}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FunctionalTests.Transitional", "test\FunctionalTests.Transitional\FunctionalTests.Transitional.csproj", "{3D65611F-E8FB-4A33-9196-7836969D6378}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FunctionalTests.ProviderAgnostic", "test\EntityFramework\FunctionalTests.ProviderAgnostic\FunctionalTests.ProviderAgnostic.csproj", "{C0B5124C-0133-4E0B-BF36-A32CE5AD9DAA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FunctionalTests.ProviderAgnostic", "test\FunctionalTests.ProviderAgnostic\FunctionalTests.ProviderAgnostic.csproj", "{C0B5124C-0133-4E0B-BF36-A32CE5AD9DAA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Data.Entity.Build.Tasks", "src\Microsoft.Data.Entity.Build.Tasks\Microsoft.Data.Entity.Build.Tasks.csproj", "{B8DB9CC0-822A-423C-A5BE-28C19F94899B}"
 EndProject
