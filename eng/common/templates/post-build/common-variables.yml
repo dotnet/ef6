@@ -37,7 +37,7 @@ variables:
   - name: PublicRelease_30_Channel_Id
     value: 19
 
-    # .NET Core 3.1 Release
+  # .NET Core 3.1 Release
   - name: PublicRelease_31_Channel_Id
     value: 129
 
