@@ -27,10 +27,10 @@
     <RootNamespace>Microsoft.DbContextPackage</RootNamespace>
     <AssemblyName>EFPowerTools</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-    <StartAction>Program</StartAction>
-    <StartProgram>$(registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\12.0@InstallDir)devenv.exe</StartProgram>
-    <StartArguments>/rootsuffix Exp</StartArguments>
-    <CodeAnalysisRuleSet>..\Strict.ruleset</CodeAnalysisRuleSet>
+	<StartAction>Program</StartAction>
+	<StartProgram Condition="'$(DevEnvDir)' != ''">$(DevEnvDir)devenv.exe</StartProgram>
+	<StartArguments>/rootsuffix Exp</StartArguments>
+	<CodeAnalysisRuleSet>..\Strict.ruleset</CodeAnalysisRuleSet>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
@@ -192,12 +192,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Madskristensen.VisualStudio.SDK">
-      <Version>14.0.81-pre</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.SDK.Analyzers">
-      <Version>15.8.36</Version>
-    </PackageReference>
+	<PackageReference Include="Microsoft.VisualStudio.SDK" Version="15.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers">
       <Version>15.8.209</Version>
     </PackageReference>
