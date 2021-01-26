@@ -44,9 +44,11 @@ If you encounter a bug or have a feature request, please use the [Issue Tracker]
 
 # Release Notes
 
-## Daily build
+## Release 0.9.75 (January, 2020)
 
 * Added "Customize Reverse Engineering Templates" project menu item
+* Improved logging when constructing DbContext
+* Remove support for VS 2015
 
 ## Release 0.9.65 (January, 2019)
 
