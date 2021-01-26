@@ -392,74 +392,82 @@ namespace Microsoft.DbContextPackage
 
             var codeElements = FindClassesInCodeModel(_dte2.SelectedItems.Item(1).ProjectItem.FileCodeModel.CodeElements);
 
-            if (codeElements.Any())
+            try
             {
-                foreach (var codeElement in codeElements)
+
+                if (codeElements.Any())
                 {
-                    var userContextType = resolver.GetType(codeElement.FullName);
-
-                    if (userContextType != null && IsContextType(userContextType, out systemContextType))
+                    foreach (var codeElement in codeElements)
                     {
-                        dynamic contextInfo;
+                        var userContextType = resolver.GetType(codeElement.FullName);
 
-                        var contextInfoType = systemContextType.Assembly.GetType("System.Data.Entity.Infrastructure.DbContextInfo");
-                        if (contextInfoType != null)
+                        if (userContextType != null && IsContextType(userContextType, out systemContextType))
                         {
-                            var startUpProject = GetStartUpProject() ?? project;
-                            Configuration userConfig;
+                            dynamic contextInfo;
 
-                            try
+                            var contextInfoType = systemContextType.Assembly.GetType("System.Data.Entity.Infrastructure.DbContextInfo");
+                            if (contextInfoType != null)
                             {
-                                userConfig = GetUserConfig(startUpProject, systemContextType.Assembly.FullName);
-                            }
-                            catch (Exception ex)
-                            {
-                                LogError(Strings.LoadConfigFailed, ex);
+                                var startUpProject = GetStartUpProject() ?? project;
+                                Configuration userConfig;
 
-                                return null;
-                            }
+                                try
+                                {
+                                    userConfig = GetUserConfig(startUpProject, systemContextType.Assembly.FullName);
+                                }
+                                catch (Exception ex)
+                                {
+                                    LogError(Strings.LoadConfigFailed, ex);
 
-                            SetDataDirectory(startUpProject);
+                                    return null;
+                                }
 
-                            var constructor = contextInfoType.GetConstructor(new[] { typeof(Type), typeof(Configuration) });
+                                SetDataDirectory(startUpProject);
 
-                            if (constructor != null)
-                            {
-                                // Versions 4.3.0 and higher
-                                contextInfo = constructor.Invoke(new object[] { userContextType, userConfig });
+                                var constructor = contextInfoType.GetConstructor(new[] { typeof(Type), typeof(Configuration) });
+
+                                if (constructor != null)
+                                {
+                                    // Versions 4.3.0 and higher
+                                    contextInfo = constructor.Invoke(new object[] { userContextType, userConfig });
+                                }
+                                else
+                                {
+                                    constructor = contextInfoType.GetConstructor(new[] { typeof(Type), typeof(ConnectionStringSettingsCollection) });
+                                    Debug.Assert(constructor != null);
+
+                                    // Versions 4.1.10715 through 4.2.0.0
+                                    contextInfo = constructor.Invoke(new object[] { userContextType, userConfig.ConnectionStrings.ConnectionStrings });
+                                }
                             }
                             else
                             {
-                                constructor = contextInfoType.GetConstructor(new[] { typeof(Type), typeof(ConnectionStringSettingsCollection) });
-                                Debug.Assert(constructor != null);
-
-                                // Versions 4.1.10715 through 4.2.0.0
-                                contextInfo = constructor.Invoke(new object[] { userContextType, userConfig.ConnectionStrings.ConnectionStrings });
+                                // Versions 4.1.10331.0 and lower
+                                throw Error.UnsupportedVersion();
                             }
-                        }
-                        else
-                        {
-                            // Versions 4.1.10331.0 and lower
-                            throw Error.UnsupportedVersion();
-                        }
 
-                        if (contextInfo.IsConstructible)
-                        {
-                            DisableDatabaseInitializer(userContextType, systemContextType);
-
-                            try
+                            if (contextInfo.IsConstructible)
                             {
-                                return contextInfo.CreateInstance();
-                            }
-                            catch (Exception exception)
-                            {
-                                LogError(Strings.CreateContextFailed(userContextType.Name), exception);
+                                DisableDatabaseInitializer(userContextType, systemContextType);
 
-                                return null;
+                                try
+                                {
+                                    return contextInfo.CreateInstance();
+                                }
+                                catch (Exception exception)
+                                {
+                                    LogError(Strings.CreateContextFailed(userContextType.Name), exception);
+
+                                    return null;
+                                }
                             }
                         }
                     }
                 }
+            }
+            catch (Exception gex)
+            { 
+                LogError(Strings.CreateContextFailed("N/A"), gex);
             }
 
             _dte2.StatusBar.Text = Strings.NoContext;
