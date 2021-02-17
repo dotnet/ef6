@@ -578,7 +578,7 @@ namespace System.Data.Entity.Migrations
             Assert.Equal(initialCreate.MigrationId, scaffoldedMigration.MigrationId);
         }
 
-        [MigrationsTheory]
+        [MigrationsTheory(SkipForLocalDb = true, Justification = "Test is too flaky.")]
         public void Update_blocks_automatic_migration_when_explicit_source_model()
         {
             ResetDatabase();
