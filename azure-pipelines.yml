@@ -23,6 +23,7 @@ trigger:
   branches:
     include:
       - master
+      - main
       - release/*
       - internal/release/6.*
 
