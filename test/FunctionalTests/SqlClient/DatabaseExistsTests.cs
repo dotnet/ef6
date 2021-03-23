@@ -13,7 +13,7 @@ namespace System.Data.Entity.SqlServer
 
     public class DatabaseExistsTests : FunctionalTestBase, IDisposable
     {
-        private const string Password = "PLACEHOLDER";
+        private const string Password = "PLACEHOLDERa1";
         private const string NormalUser = "EFUserWithDbVisibility";
         private const string ImpairedUser = "EFUserWithoutDbVisibility";
         private const string DatabaseName = "ItsAMoose";

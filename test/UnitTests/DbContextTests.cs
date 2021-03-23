@@ -444,7 +444,7 @@ namespace ProductivityApiUnitTests
             var connectionString
                 = SimpleConnectionStringWithCredentials<PersistSecurityInfoContext>(
                     "EFTestUser",
-                    "PLACEHOLDER");
+                    "PLACEHOLDERa1");
 
             var context = new PersistSecurityInfoContext(connectionString);
 
@@ -469,7 +469,7 @@ namespace ProductivityApiUnitTests
             var connectionString
                 = SimpleConnectionStringWithCredentials<PersistSecurityInfoContext>(
                     "EFTestUser",
-                    "PLACEHOLDER");
+                    "PLACEHOLDERa1");
 
             var context = new PersistSecurityInfoContext(new SqlConnection(connectionString), true);
 
@@ -502,7 +502,7 @@ namespace ProductivityApiUnitTests
             }.ConnectionString;
 
             var password = new SecureString();
-            foreach (var c in "PLACEHOLDER".ToCharArray())
+            foreach (var c in "PLACEHOLDERa1".ToCharArray())
             {
                 password.AppendChar(c);
             }
@@ -534,7 +534,7 @@ namespace ProductivityApiUnitTests
             var connectionString
                 = SimpleConnectionStringWithCredentials<PersistSecurityInfoContext>(
                     "EFTestUser",
-                    "PLACEHOLDER");
+                    "PLACEHOLDERa1");
 
             var modelBuilder = new DbModelBuilder();
             modelBuilder.Entity<PersistEntity>().ToTable(DateTime.Now.Ticks.ToString());
@@ -573,7 +573,7 @@ namespace ProductivityApiUnitTests
             var connectionString
                 = SimpleConnectionStringWithCredentials<PersistSecurityInfoContext>(
                     "EFTestUser",
-                    "PLACEHOLDER");
+                    "PLACEHOLDERa1");
 
             var context = new PersistSecurityInfoContext(connectionString);
             
@@ -600,7 +600,7 @@ namespace ProductivityApiUnitTests
         {
             EnsureEfTestUserExists();
 
-            var connectionString = SimpleConnectionStringWithCredentials<OneContextToRuleThemAll>("EFTestUser", "PLACEHOLDER");
+            var connectionString = SimpleConnectionStringWithCredentials<OneContextToRuleThemAll>("EFTestUser", "PLACEHOLDERa1");
 
             using (var context = new OneContextToRuleThemAll(connectionString))
             {
@@ -656,7 +656,7 @@ namespace ProductivityApiUnitTests
 
                     if (!loginExists)
                     {
-                        ExecuteNonQuery(connection, "CREATE LOGIN [EFTestUser] WITH PASSWORD=N'PLACEHOLDER'");
+                        ExecuteNonQuery(connection, "CREATE LOGIN [EFTestUser] WITH PASSWORD=N'PLACEHOLDERa1'");
                     }
 
                     var userExists = ExecuteScalarReturnsOne(
@@ -676,7 +676,7 @@ namespace ProductivityApiUnitTests
                         connection,
 @"IF NOT EXISTS (SELECT * FROM sys.server_principals WHERE name = N'EFTestUser')
 BEGIN
-    CREATE LOGIN [EFTestUser] WITH PASSWORD=N'PLACEHOLDER', DEFAULT_DATABASE=[master], DEFAULT_LANGUAGE=[us_english], CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF
+    CREATE LOGIN [EFTestUser] WITH PASSWORD=N'PLACEHOLDERa1', DEFAULT_DATABASE=[master], DEFAULT_LANGUAGE=[us_english], CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF
     EXEC sys.sp_addsrvrolemember @loginame = N'EFTestUser', @rolename = N'sysadmin'
 END");
                 }
