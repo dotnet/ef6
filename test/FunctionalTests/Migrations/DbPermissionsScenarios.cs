@@ -52,7 +52,7 @@ namespace System.Data.Entity.Migrations
             TestDatabase.ExecuteNonQuery(
                 @"IF NOT EXISTS (SELECT * FROM sys.server_principals WHERE name = N'EFDDLAdminOnly')
 BEGIN
-    CREATE LOGIN [EFDDLAdminOnly] WITH PASSWORD=N'Password1', DEFAULT_DATABASE=[MigrationsTest]
+    CREATE LOGIN [EFDDLAdminOnly] WITH PASSWORD=N'PLACEHOLDER', DEFAULT_DATABASE=[MigrationsTest]
 END
 
 USE [MigrationsTest]
@@ -69,7 +69,7 @@ END
                 {
                     IntegratedSecurity = false,
                     UserID = "EFDDLAdminOnly",
-                    Password = "Password1"
+                    Password = "PLACEHOLDER"
                 };
 
             migrator.Configuration.TargetDatabase

@@ -14,7 +14,7 @@ namespace System.Data.Entity.SqlServer
 
     public class DatabaseExistsInInitializerTests : FunctionalTestBase, IDisposable
     {
-        private const string Password = "Password1";
+        private const string Password = "PLACEHOLDER";
         private const string NormalUser = "EFGooseWithDbVisibility";
         private const string ImpairedUser = "EFGooseWithoutDbVisibility";
         private const string DatabaseWithMigrationHistory = "MigratoryGoose";
