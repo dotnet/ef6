@@ -57,7 +57,7 @@ namespace ProductivityApiTests
                     = string.Format(
 @"IF NOT EXISTS (SELECT * FROM sys.server_principals WHERE name = N'EFTestSimpleModelUser')
 BEGIN
-  CREATE LOGIN [EFTestSimpleModelUser] WITH PASSWORD=N'Password1', DEFAULT_DATABASE=[{0}],  CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF
+  CREATE LOGIN [EFTestSimpleModelUser] WITH PASSWORD=N'PLACEHOLDERa1', DEFAULT_DATABASE=[{0}],  CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF
   DENY VIEW ANY DATABASE TO [EFTestSimpleModelUser]
   CREATE USER [EFTestSimpleModelUser] FOR LOGIN [EFTestSimpleModelUser]
   DENY SELECT TO [EFTestSimpleModelUser]
@@ -80,7 +80,7 @@ END", DefaultDbName<SimpleModelContext>());
             {
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = "CREATE LOGIN [EFTestSimpleModelUser] WITH PASSWORD=N'Password1'";
+                    command.CommandText = "CREATE LOGIN [EFTestSimpleModelUser] WITH PASSWORD=N'PLACEHOLDERa1'";
                     command.ExecuteNonQuery();
                 }
 
@@ -344,7 +344,7 @@ END");
             var connectionString
                 = SimpleConnectionStringWithCredentials<NoMasterPermissionContext>(
                     "EFTestSimpleModelUser",
-                    "Password1");
+                    "PLACEHOLDERa1");
 
             using (var context = new NoMasterPermissionContext(connectionString))
             {
@@ -359,7 +359,7 @@ END");
             var connectionString
                 = SimpleConnectionStringWithCredentials<EmptyContext>(
                     "EFTestSimpleModelUser",
-                    "Password1");
+                    "PLACEHOLDERa1");
 
             DatabaseExists_returns_false_for_non_existing_database(
                 () => Database.Exists(connectionString));
@@ -397,7 +397,7 @@ END");
                 using (var context = new AttachedContext(
                     SimpleAttachConnectionStringWithCredentials<AttachedContext>(
                         "EFTestSimpleModelUser",
-                        "Password1")))
+                        "PLACEHOLDERa1")))
                 {
                     Assert.True(context.Database.Exists());
                 }
@@ -428,7 +428,7 @@ END");
             using (var context = new AttachedContext(
                 SimpleAttachConnectionStringWithCredentials<AttachedContext>(
                     "EFTestSimpleModelUser",
-                    "Password1", useInitialCatalog)))
+                    "PLACEHOLDERa1", useInitialCatalog)))
             {
                 Assert.False(context.Database.Exists());
             }
