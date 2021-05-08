@@ -685,7 +685,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         internal void Configure(
             EntityType entityType,
             DbDatabaseMapping databaseMapping,
-            DbProviderManifest providerManifest)
+            DbProviderManifest providerManifest,
+            bool configureDependentKeys = true)
         {
             DebugCheck.NotNull(entityType);
             DebugCheck.NotNull(databaseMapping);
@@ -705,7 +706,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             ConfigurePropertyMappings(databaseMapping, entityType, providerManifest);
             ConfigureIndexes(databaseMapping, entityType);
             ConfigureAssociationMappings(databaseMapping, entityType, providerManifest);
-            ConfigureDependentKeys(databaseMapping, providerManifest);
+            
+            if (configureDependentKeys)
+            {
+                ConfigureDependentKeys(databaseMapping, providerManifest);
+            }
+
             ConfigureModificationStoredProcedures(databaseMapping, entityType, providerManifest);
         }
 
