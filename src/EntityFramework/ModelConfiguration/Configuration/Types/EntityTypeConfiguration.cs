@@ -840,7 +840,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             }
         }
 
-        private static void ConfigureDependentKeys(DbDatabaseMapping databaseMapping, DbProviderManifest providerManifest)
+        internal static void ConfigureDependentKeys(DbDatabaseMapping databaseMapping, DbProviderManifest providerManifest)
         {
             DebugCheck.NotNull(databaseMapping);
             DebugCheck.NotNull(providerManifest);
