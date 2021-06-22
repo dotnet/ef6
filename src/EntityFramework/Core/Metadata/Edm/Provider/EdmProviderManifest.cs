@@ -581,7 +581,8 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
                     PrimitiveTypeKind.String,
                     PrimitiveTypeKind.Binary,
                     PrimitiveTypeKind.Time,
-                    PrimitiveTypeKind.DateTimeOffset
+                    PrimitiveTypeKind.DateTimeOffset,
+                    PrimitiveTypeKind.HierarchyId
                 };
 
             EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddAggregate("Max", type));
