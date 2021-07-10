@@ -539,11 +539,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             new EntityMappingService(databaseMapping).Configure();
 
+            bool configureDependentKeys = false;
+
             foreach (var entityType in databaseMapping.Model.EntityTypes.Where(e => e.GetConfiguration() != null))
             {
                 var entityTypeConfiguration = (EntityTypeConfiguration)entityType.GetConfiguration();
 
-                entityTypeConfiguration.Configure(entityType, databaseMapping, providerManifest);
+                entityTypeConfiguration.Configure(entityType, databaseMapping, providerManifest, false);
+                configureDependentKeys = true;
+            }
+
+            if (configureDependentKeys)
+            {
+                EntityTypeConfiguration.ConfigureDependentKeys(databaseMapping, providerManifest);
             }
         }
 
