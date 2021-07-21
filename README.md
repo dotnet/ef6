@@ -1,6 +1,6 @@
 # Entity Framework 6 Power Tools Community Edition
 
-This is a fork of the "official" [EF 6 repository](https://github.com/aspnet/entityFramework6/), which hosts the Visual Studio 2015 and 2017 version of EF Power Tools. 
+This is a fork of the "official" [EF 6 repository](https://github.com/aspnet/entityFramework6/), which hosts the Visual Studio 2017 and later version of EF Power Tools. 
 
 # What are the Power Tools?
 
@@ -15,14 +15,16 @@ When right-clicking on a file containing a derived DbContext class, the followin
 When right-clicking on an Entity Data Model .edmx  file, the following context menu function is available: 
 1. Generate Views.
 
-If you are looking for Reverse Engineeering tools, I recommend using the [EF Reverse POCO Generator Template](https://marketplace.visualstudio.com/items?itemName=SimonHughes.EntityFrameworkReversePOCOGenerator). You can also use the less advanced ["Code First from Database" feature](http://www.entityframeworktutorial.net/code-first/code-first-from-existing-database.aspx) that is included with the standard Visual Studio tooling for EF 6.
+When right-clicking a project, the following menu function is available:
+1. Customize Reverse Engineer Templates
+
+If you are looking for Reverse Engineeering tools, I recommend using the ["Code First from Database" feature](http://www.entityframeworktutorial.net/code-first/code-first-from-existing-database.aspx) that is included with the standard Visual Studio tooling for EF 6.
 
 A MSDN article about the tool is [available here](https://msdn.microsoft.com/en-us/data/jj593170)
 
 # Downloads/builds
 
 **Release**
-
 
 The Power Tools will remain in "beta" status.
 
@@ -32,7 +34,7 @@ Or just install from Tools, Extensions and Updates in Visual Studio! ![](https:/
 
 **Daily build**
 
-You can download the daily build from [VSIX Gallery](http://vsixgallery.com/extensions/F0A7D01D-4834-44C3-99B2-5907A0701906/extension.vsix). 
+You can download the daily build from [VSIX Gallery](https://www.vsixgallery.com/extensions/F0A7D01D-4834-44C3-99B2-5907A0701906/extension.vsix). 
 
 Install the [VSIX Gallery Nightly builds extension](https://marketplace.visualstudio.com/items?itemName=MadsKristensen.VSIXGallery-nightlybuilds) to get the latest daily build automatically.
 
@@ -87,3 +89,7 @@ The Generate Views option is available when working with Code First and also whe
 When working with Code First, Generate Views option is available when right-clicking on a file that contains a derived DbContext class.
 When working with the EF Designer, Generate Views option is available when right-clicking on the EDMX file.
 Note that, every time you change your model you need to re-generate the pre-compiled views by running the GenerateViews command again.
+
+## Customize Reverse Engineer Templates
+
+This feature lets you customize code generation via reverse engineer T4 templates added to your project.
