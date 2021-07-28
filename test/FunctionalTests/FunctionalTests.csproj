@@ -3,7 +3,7 @@
   <PropertyGroup>
     <RootNamespace>System.Data.Entity</RootNamespace>
     <AssemblyName>EntityFramework.FunctionalTests</AssemblyName>
-    <TargetFrameworks>net452;$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+    <TargetFrameworks>net461;$(DefaultNetCoreTargetFramework)</TargetFrameworks>
     <DefineConstants>$(DefineConstants);EF_FUNCTIONALS</DefineConstants>
     <NoWarn>$(NoWarn);CS0169</NoWarn>
   </PropertyGroup>
@@ -16,12 +16,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net452'">
-    <ProjectReference Include="..\..\src\EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.InternalsVisibleTo.csproj" />
-  </ItemGroup>
-
   <ItemGroup>
-    <ProjectReference Include="..\..\src\EntityFramework.SqlServer\EntityFramework.SqlServer.InternalsVisibleTo.csproj" />
+    <ProjectReference Include="..\..\src\ErikEJ.EntityFramework.SqlServer\ErikEJ.EntityFramework.SqlServer.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net452'">
@@ -55,80 +51,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="TestModels\SpatialTvfsModel\226644SpatialModel.csdl" />
-    <None Remove="TestModels\SpatialTvfsModel\226644SpatialModel.msl" />
-    <None Remove="TestModels\SpatialTvfsModel\226644SpatialModel.ssdl" />
-    <None Remove="TestModels\HierarchyIdTvfsModel\226644HierarchyIdModel.csdl" />
-    <None Remove="TestModels\HierarchyIdTvfsModel\226644HierarchyIdModel.msl" />
-    <None Remove="TestModels\HierarchyIdTvfsModel\226644HierarchyIdModel.ssdl" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="TestModels\SpatialTvfsModel\226644SpatialModel.csdl">
-      <LogicalName>FunctionalTests.ProductivityApi.SpatialTvfsModel.226644SpatialModel.csdl</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TestModels\SpatialTvfsModel\226644SpatialModel.msl">
-      <LogicalName>FunctionalTests.ProductivityApi.SpatialTvfsModel.226644SpatialModel.msl</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TestModels\SpatialTvfsModel\226644SpatialModel.ssdl">
-      <LogicalName>FunctionalTests.ProductivityApi.SpatialTvfsModel.226644SpatialModel.ssdl</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TestModels\HierarchyIdTvfsModel\226644HierarchyIdModel.csdl">
-      <LogicalName>FunctionalTests.ProductivityApi.HierarchyIdTvfsModel.226644HierarchyIdModel.csdl</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TestModels\HierarchyIdTvfsModel\226644HierarchyIdModel.msl">
-      <LogicalName>FunctionalTests.ProductivityApi.HierarchyIdTvfsModel.226644HierarchyIdModel.msl</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TestModels\HierarchyIdTvfsModel\226644HierarchyIdModel.ssdl">
-      <LogicalName>FunctionalTests.ProductivityApi.HierarchyIdTvfsModel.226644HierarchyIdModel.ssdl</LogicalName>
-    </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="TestModels\TemplateModels\CsAdvancedPatterns\CsAdvancedPatterns.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CsAdvancedPatterns.Context.cs</LastGenOutput>
-      <CustomToolNamespace>FunctionalTests.ProductivityApi.TemplateModels.CsAdvancedPatterns</CustomToolNamespace>
-    </None>
-    <None Update="TestModels\TemplateModels\CsAdvancedPatterns\CsAdvancedPatterns.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CsAdvancedPatterns.cs</LastGenOutput>
-      <CustomToolNamespace>FunctionalTests.ProductivityApi.TemplateModels.CsAdvancedPatterns</CustomToolNamespace>
-    </None>
-    <None Update="TestModels\TemplateModels\CsMonsterModel\CsMonsterModel.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CsMonsterModel.Context.cs</LastGenOutput>
-      <CustomToolNamespace>FunctionalTests.ProductivityApi.TemplateModels.CsMonsterModel</CustomToolNamespace>
-    </None>
-    <None Update="TestModels\TemplateModels\CsMonsterModel\CsMonsterModel.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CsMonsterModel.cs</LastGenOutput>
-      <CustomToolNamespace>FunctionalTests.ProductivityApi.TemplateModels.CsMonsterModel</CustomToolNamespace>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="TestModels\TemplateModels\Schemas\AdvancedPatterns.edmx" />
-    <None Remove="TestModels\TemplateModels\Schemas\MonsterModel.csdl" />
-    <None Remove="TestModels\TemplateModels\Schemas\MonsterModel.msl" />
-    <None Remove="TestModels\TemplateModels\Schemas\MonsterModel.ssdl" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="TestModels\TemplateModels\Schemas\AdvancedPatterns.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>AdvancedPatterns.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TestModels\TemplateModels\Schemas\MonsterModel.csdl" />
-    <EmbeddedResource Include="TestModels\TemplateModels\Schemas\MonsterModel.msl" />
-    <EmbeddedResource Include="TestModels\TemplateModels\Schemas\MonsterModel.ssdl" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\FunctionalTests.Transitional\FunctionalTests.Transitional.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Include="..\..\src\Common\TypeExtensions.cs">
       <Link>Utilities\TypeExtensions.cs</Link>
     </Compile>
@@ -147,167 +69,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="TestModels\TemplateModels\CsAdvancedPatterns\AddressMf.cs">
-      <DependentUpon>CsAdvancedPatterns.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsAdvancedPatterns\BuildingDetailMf.cs">
-      <DependentUpon>CsAdvancedPatterns.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsAdvancedPatterns\BuildingMf.cs">
-      <DependentUpon>CsAdvancedPatterns.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsAdvancedPatterns\CsAdvancedPatterns.Context.cs">
-      <DependentUpon>CsAdvancedPatterns.Context.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsAdvancedPatterns\CsAdvancedPatterns.cs">
-      <DependentUpon>CsAdvancedPatterns.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsAdvancedPatterns\CurrentEmployeeMf.cs">
-      <DependentUpon>CsAdvancedPatterns.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsAdvancedPatterns\EmployeeMf.cs">
-      <DependentUpon>CsAdvancedPatterns.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsAdvancedPatterns\MailRoomMf.cs">
-      <DependentUpon>CsAdvancedPatterns.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsAdvancedPatterns\OfficeMf.cs">
-      <DependentUpon>CsAdvancedPatterns.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsAdvancedPatterns\PastEmployeeMf.cs">
-      <DependentUpon>CsAdvancedPatterns.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsAdvancedPatterns\SiteInfoMf.cs">
-      <DependentUpon>CsAdvancedPatterns.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsAdvancedPatterns\WhiteboardMf.cs">
-      <DependentUpon>CsAdvancedPatterns.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsAdvancedPatterns\WorkOrderMf.cs">
-      <DependentUpon>CsAdvancedPatterns.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsMonsterModel\BackOrderLine2Mm.cs">
-      <DependentUpon>CsMonsterModel.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsMonsterModel\BackOrderLineMm.cs">
-      <DependentUpon>CsMonsterModel.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsMonsterModel\BarcodeDetailMm.cs">
-      <DependentUpon>CsMonsterModel.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsMonsterModel\BarcodeMm.cs">
-      <DependentUpon>CsMonsterModel.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsMonsterModel\ComplaintMm.cs">
-      <DependentUpon>CsMonsterModel.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsMonsterModel\ComputerDetailMm.cs">
-      <DependentUpon>CsMonsterModel.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsMonsterModel\ComputerMm.cs">
-      <DependentUpon>CsMonsterModel.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsMonsterModel\ConcurrencyInfoMm.cs">
-      <DependentUpon>CsMonsterModel.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsMonsterModel\ContactDetailsMm.cs">
-      <DependentUpon>CsMonsterModel.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsMonsterModel\CsMonsterModel.Context.cs">
-      <DependentUpon>CsMonsterModel.Context.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsMonsterModel\CsMonsterModel.cs">
-      <DependentUpon>CsMonsterModel.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsMonsterModel\CustomerInfoMm.cs">
-      <DependentUpon>CsMonsterModel.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsMonsterModel\DimensionsMm.cs">
-      <DependentUpon>CsMonsterModel.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsMonsterModel\DiscontinuedProductMm.cs">
-      <DependentUpon>CsMonsterModel.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsMonsterModel\DriverMm.cs">
-      <DependentUpon>CsMonsterModel.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsMonsterModel\IncorrectScanMm.cs">
-      <DependentUpon>CsMonsterModel.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsMonsterModel\LastLoginMm.cs">
-      <DependentUpon>CsMonsterModel.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsMonsterModel\LicenseMm.cs">
-      <DependentUpon>CsMonsterModel.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsMonsterModel\MessageMm.cs">
-      <DependentUpon>CsMonsterModel.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsMonsterModel\OrderLineMm.cs">
-      <DependentUpon>CsMonsterModel.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsMonsterModel\OrderMm.cs">
-      <DependentUpon>CsMonsterModel.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsMonsterModel\OrderNoteMm.cs">
-      <DependentUpon>CsMonsterModel.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsMonsterModel\OrderQualityCheckMm.cs">
-      <DependentUpon>CsMonsterModel.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsMonsterModel\PageViewMm.cs">
-      <DependentUpon>CsMonsterModel.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsMonsterModel\PasswordResetMm.cs">
-      <DependentUpon>CsMonsterModel.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsMonsterModel\ProductDetailMm.cs">
-      <DependentUpon>CsMonsterModel.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsMonsterModel\ProductMm.cs">
-      <DependentUpon>CsMonsterModel.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsMonsterModel\ProductPageViewMm.cs">
-      <DependentUpon>CsMonsterModel.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsMonsterModel\ProductPhotoMm.cs">
-      <DependentUpon>CsMonsterModel.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsMonsterModel\ProductReviewMm.cs">
-      <DependentUpon>CsMonsterModel.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsMonsterModel\ProductWebFeatureMm.cs">
-      <DependentUpon>CsMonsterModel.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsMonsterModel\ResolutionMm.cs">
-      <DependentUpon>CsMonsterModel.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsMonsterModel\RSATokenMm.cs">
-      <DependentUpon>CsMonsterModel.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsMonsterModel\SmartCardMm.cs">
-      <DependentUpon>CsMonsterModel.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsMonsterModel\SupplierInfoMm.cs">
-      <DependentUpon>CsMonsterModel.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsMonsterModel\SupplierLogoMm.cs">
-      <DependentUpon>CsMonsterModel.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsMonsterModel\SupplierMm.cs">
-      <DependentUpon>CsMonsterModel.tt</DependentUpon>
-    </Compile>
-    <Compile Update="TestModels\TemplateModels\CsMonsterModel\SuspiciousActivityMm.cs">
-      <DependentUpon>CsMonsterModel.tt</DependentUpon>
-    </Compile>
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Transactions" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="WrappingProvider\WrappingCommand.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -5,7 +5,6 @@ namespace System.Data.Entity.SqlServer
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.SqlServerCompact;
     using System.Linq;
     using System.Xml;
     using Xunit;
@@ -16,12 +15,6 @@ namespace System.Data.Entity.SqlServer
         public void SqlServer_provider_manifest_supports_parameter_optimization()
         {
             Assert.True(new SqlProviderManifest(SqlProviderManifest.TokenSql11).SupportsParameterOptimizationInSchemaQueries());
-        }
-
-        [Fact]
-        public void SqlCe_provider_manifest_supports_parameter_optimization()
-        {
-            Assert.True(new SqlCeProviderManifest(false).SupportsParameterOptimizationInSchemaQueries());
         }
 
         [Fact]

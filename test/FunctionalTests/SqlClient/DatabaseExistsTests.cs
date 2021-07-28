@@ -11,7 +11,7 @@ namespace System.Data.Entity.SqlServer
     using System.Reflection;
     using Xunit;
 
-    public class DatabaseExistsTests : FunctionalTestBase, IDisposable
+    public class DatabaseExistsTests : IDisposable
     {
         private const string Password = "PLACEHOLDERa1";
         private const string NormalUser = "EFUserWithDbVisibility";
@@ -343,7 +343,7 @@ namespace System.Data.Entity.SqlServer
 
         private static void EnsureDatabaseExists()
         {
-            using (var connection = new SqlConnection(SimpleConnectionString("master")))
+            using (var connection = new SqlConnection(ModelHelpers.SimpleConnectionString("master")))
             {
                 connection.Open();
 
@@ -357,7 +357,7 @@ namespace System.Data.Entity.SqlServer
 
         private void EnsureUserExists(string username, bool allowMasterQuery)
         {
-            using (var connection = new SqlConnection(SimpleConnectionString("master")))
+            using (var connection = new SqlConnection(ModelHelpers.SimpleConnectionString("master")))
             {
                 connection.Open();
 
@@ -386,7 +386,7 @@ namespace System.Data.Entity.SqlServer
                 connection.Close();
             }
 
-            using (var connection = new SqlConnection(SimpleConnectionString(DatabaseName)))
+            using (var connection = new SqlConnection(ModelHelpers.SimpleConnectionString(DatabaseName)))
             {
                 connection.Open();
 

@@ -13,7 +13,7 @@ namespace System.Data.Entity.SqlServer
     /// if the <see cref="SqlException.Errors"/> contains any of the following error numbers:
     /// 40613, 40501, 40197, 10929, 10928, 10060, 10054, 10053, 233, 64 and 20
     /// </remarks>
-    public class SqlAzureExecutionStrategy : DbExecutionStrategy
+    public class MicrosoftSqlAzureExecutionStrategy : DbExecutionStrategy
     {
         /// <summary>
         /// Creates a new instance of <see cref="SqlAzureExecutionStrategy" />.
@@ -21,7 +21,7 @@ namespace System.Data.Entity.SqlServer
         /// <remarks>
         /// The default retry limit is 5, which means that the total amount of time spent between retries is 26 seconds plus the random factor.
         /// </remarks>
-        public SqlAzureExecutionStrategy()
+        public MicrosoftSqlAzureExecutionStrategy()
         {
         }
 
@@ -31,7 +31,7 @@ namespace System.Data.Entity.SqlServer
         /// </summary>
         /// <param name="maxRetryCount"> The maximum number of retry attempts. </param>
         /// <param name="maxDelay"> The maximum delay in milliseconds between retries. </param>
-        public SqlAzureExecutionStrategy(int maxRetryCount, TimeSpan maxDelay)
+        public MicrosoftSqlAzureExecutionStrategy(int maxRetryCount, TimeSpan maxDelay)
             :base(maxRetryCount, maxDelay)
         {
         }

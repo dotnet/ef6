@@ -13,7 +13,6 @@ namespace System.Data.Entity.SqlServer
     using System.Data.Entity.SqlServer.Resources;
     using System.Data.Entity.Utilities;
     using System.Data.SqlClient;
-    using System.Data.SqlServerCe;
     using System.Linq;
     using Moq;
     using Moq.Protected;
