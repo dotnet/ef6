@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="CodeFirstDatabaseSchema" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="SupplierWithLocation">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Location" Type="geography" Nullable="true" />
+  </EntityType>
+  <EntityType Name="WidgetWithGeometry">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="SomeGeometry" Type="geometry" Nullable="true" />
+    <Property Name="NotGeometry" Type="nvarchar" Nullable="false" MaxLength="16" />
+    <Property Name="SomeMoreGeometry" Type="geometry" Nullable="true" />
+  </EntityType>
+  <EntityType Name="WidgetWithLineString">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AGeometricLineString" Type="geometry" Nullable="true" />
+  </EntityType>
+  <EntityType Name="WidgetWithPolygon">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AGeometricPolygon" Type="geometry" Nullable="true" />
+  </EntityType>
+  <EntityContainer Name="CodeFirstDatabase">
+    <EntitySet Name="SupplierWithLocation" EntityType="Self.SupplierWithLocation" Schema="dbo" Table="SupplierWithLocations" />
+    <EntitySet Name="WidgetWithGeometry" EntityType="Self.WidgetWithGeometry" Schema="dbo" Table="WidgetWithGeometries" />
+    <EntitySet Name="WidgetWithLineString" EntityType="Self.WidgetWithLineString" Schema="dbo" Table="WidgetWithLineString" />
+    <EntitySet Name="WidgetWithPolygon" EntityType="Self.WidgetWithPolygon" Schema="dbo" Table="WidgetWithPolygon" />
+  </EntityContainer>
+  <Function Name="fx_SuppliersWithinRange" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="miles" Type="int" Mode="In" />
+    <Parameter Name="location" Type="geography" Mode="In" />
+    <ReturnType>
+      <CollectionType>
+        <RowType>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" Nullable="true" />
+          <Property Name="Location" Type="geography" Nullable="true" />
+        </RowType>
+      </CollectionType>
+    </ReturnType>
+  </Function>
+  <Function Name="fx_SupplierLocationsWithinRange" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="miles" Type="int" Mode="In" />
+    <Parameter Name="location" Type="geography" Mode="In" />
+    <ReturnType>
+      <CollectionType>
+        <RowType>
+          <Property Name="Location" Type="geography" Nullable="true" />
+        </RowType>
+      </CollectionType>
+    </ReturnType>
+  </Function>
+</Schema>

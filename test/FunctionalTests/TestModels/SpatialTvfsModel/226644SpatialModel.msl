@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="CodeFirstDatabase" CdmEntityContainer="SpatialNorthwindContext">
+    <EntitySetMapping Name="Suppliers">
+      <EntityTypeMapping TypeName="ProductivityApiTests.SupplierWithLocation">
+        <MappingFragment StoreEntitySet="SupplierWithLocation">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Location" ColumnName="Location" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Widgets">
+      <EntityTypeMapping TypeName="ProductivityApiTests.WidgetWithGeometry">
+        <MappingFragment StoreEntitySet="WidgetWithGeometry">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="SomeGeometry" ColumnName="SomeGeometry" />
+          <ComplexProperty Name="Complex" TypeName="ProductivityApiTests.ComplexWithGeometry">
+            <ScalarProperty Name="NotGeometry" ColumnName="NotGeometry" />
+            <ScalarProperty Name="SomeMoreGeometry" ColumnName="SomeMoreGeometry" />
+          </ComplexProperty>
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="LineStringWidgets">
+      <EntityTypeMapping TypeName="ProductivityApiTests.WidgetWithLineString">
+        <MappingFragment StoreEntitySet="WidgetWithLineString">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="AGeometricLineString" ColumnName="AGeometricLineString" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PolygonWidgets">
+      <EntityTypeMapping TypeName="ProductivityApiTests.WidgetWithPolygon">
+        <MappingFragment StoreEntitySet="WidgetWithPolygon">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="AGeometricPolygon" ColumnName="AGeometricPolygon" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionName="CodeFirstDatabaseSchema.fx_SuppliersWithinRange" FunctionImportName="SuppliersWithinRange">
+      <ResultMapping>
+        <EntityTypeMapping TypeName="ProductivityApiTests.SupplierWithLocation">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Location" ColumnName="Location" />
+        </EntityTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionName="CodeFirstDatabaseSchema.fx_SuppliersWithinRange" FunctionImportName="SuppliersWithinRangeUsingPoint">
+      <ResultMapping>
+        <EntityTypeMapping TypeName="ProductivityApiTests.SupplierWithLocation">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Location" ColumnName="Location" />
+        </EntityTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionName="CodeFirstDatabaseSchema.fx_SupplierLocationsWithinRange" FunctionImportName="SupplierLocationsWithinRange"/>
+  </EntityContainerMapping>
+</Mapping>

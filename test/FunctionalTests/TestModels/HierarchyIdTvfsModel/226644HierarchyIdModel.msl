@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="CodeFirstDatabase" CdmEntityContainer="HierarchyIdNorthwindContext">
+    <EntitySetMapping Name="Suppliers">
+      <EntityTypeMapping TypeName="ProductivityApiTests.SupplierWithHierarchyId">
+        <MappingFragment StoreEntitySet="SupplierWithHierarchyId">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Path" ColumnName="Path" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Widgets">
+      <EntityTypeMapping TypeName="ProductivityApiTests.WidgetWithHierarchyId">
+        <MappingFragment StoreEntitySet="WidgetWithHierarchyId">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="SomeHierarchyId" ColumnName="SomeHierarchyId" />
+          <ComplexProperty Name="Complex" TypeName="ProductivityApiTests.ComplexWithHierarchyId">
+            <ScalarProperty Name="NotHierarchyId" ColumnName="NotHierarchyId" />
+            <ScalarProperty Name="SomeMoreHierarchyId" ColumnName="SomeMoreHierarchyId" />
+          </ComplexProperty>
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionName="CodeFirstDatabaseSchema.fx_SuppliersWithinRange" FunctionImportName="SuppliersWithinRange">
+      <ResultMapping>
+        <EntityTypeMapping TypeName="ProductivityApiTests.SupplierWithHierarchyId">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Path" ColumnName="Path" />
+        </EntityTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionName="CodeFirstDatabaseSchema.fx_SupplierHierarchyIdsWithinRange" FunctionImportName="SupplierHierarchyIdsWithinRange"/>
+  </EntityContainerMapping>
+</Mapping>
