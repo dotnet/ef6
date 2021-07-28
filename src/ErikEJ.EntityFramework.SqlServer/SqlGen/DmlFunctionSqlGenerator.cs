@@ -7,7 +7,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.SqlServer.Utilities;
-    using System.Data.SqlClient;
+    using Microsoft.Data.SqlClient;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Text;

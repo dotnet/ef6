@@ -18,7 +18,7 @@ namespace System.Data.Entity.SqlServer
     using System.Data.Entity.SqlServer.Resources;
     using System.Data.Entity.SqlServer.SqlGen;
     using System.Data.Entity.SqlServer.Utilities;
-    using System.Data.SqlClient;
+    using Microsoft.Data.SqlClient;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -34,25 +34,25 @@ namespace System.Data.Entity.SqlServer
     /// The services resolved are:
     /// Requests for <see cref="IDbConnectionFactory" /> are resolved to a Singleton instance of
     /// <see cref="System.Data.Entity.Infrastructure.LocalDbConnectionFactory" /> to create connections to LocalDB by default.
-    /// Requests for <see cref="Func{IDbExecutionStrategy}" /> for the invariant name "System.Data.SqlClient"
+    /// Requests for <see cref="Func{IDbExecutionStrategy}" /> for the invariant name "Microsoft.Data.SqlClient"
     /// for any server name are resolved to a delegate that returns a <see cref="DefaultSqlExecutionStrategy" />
     /// to provide a non-retrying policy for SQL Server.
-    /// Requests for <see cref="MigrationSqlGenerator" /> for the invariant name "System.Data.SqlClient" are
-    /// resolved to <see cref="SqlServerMigrationSqlGenerator" /> instances to provide default Migrations SQL
+    /// Requests for <see cref="MigrationSqlGenerator" /> for the invariant name "Microsoft.Data.SqlClient" are
+    /// resolved to <see cref="MicrosoftSqlServerMigrationSqlGenerator" /> instances to provide default Migrations SQL
     /// generation for SQL Server.
-    /// Requests for <see cref="DbSpatialServices" /> for the invariant name "System.Data.SqlClient" are
-    /// resolved to a Singleton instance of <see cref="SqlSpatialServices" /> to provide default spatial
+    /// Requests for <see cref="DbSpatialServices" /> for the invariant name "Microsoft.Data.SqlClient" are
+    /// resolved to a Singleton instance of <see cref="MicrosoftSqlSpatialServices" /> to provide default spatial
     /// services for SQL Server.
     /// </remarks>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-    public sealed class SqlProviderServices : DbProviderServices
+    public sealed class MicrosoftSqlProviderServices : DbProviderServices
     {
         /// <summary>
         /// This is the well-known string using in configuration files and code-based configuration as
         /// the "provider invariant name" used to specify Microsoft SQL Server for ADO.NET and
         /// Entity Framework provider services.
         /// </summary>
-        public const string ProviderInvariantName = "System.Data.SqlClient";
+        public const string ProviderInvariantName = "Microsoft.Data.SqlClient";
 
         private ConcurrentDictionary<string, SqlProviderManifest> _providerManifests =
             new ConcurrentDictionary<string, SqlProviderManifest>();
@@ -60,7 +60,7 @@ namespace System.Data.Entity.SqlServer
         // <summary>
         // Private constructor to ensure only Singleton instance is created.
         // </summary>
-        private SqlProviderServices()
+        private MicrosoftSqlProviderServices()
         {
             AddDependencyResolver(new SingletonDependencyResolver<IDbConnectionFactory>(new LocalDbConnectionFactory()));
 
@@ -70,7 +70,7 @@ namespace System.Data.Entity.SqlServer
 
             AddDependencyResolver(
                 new SingletonDependencyResolver<Func<MigrationSqlGenerator>>(
-                    () => new SqlServerMigrationSqlGenerator(), ProviderInvariantName));
+                    () => new MicrosoftSqlServerMigrationSqlGenerator(), ProviderInvariantName));
 
             AddDependencyResolver(
                 new SingletonDependencyResolver<TableExistenceChecker>(
@@ -80,7 +80,7 @@ namespace System.Data.Entity.SqlServer
             // or if a key was provided and the invariant name matches.
             AddDependencyResolver(
                 new SingletonDependencyResolver<DbSpatialServices>(
-                    SqlSpatialServices.Instance,
+                    MicrosoftSqlSpatialServices.Instance,
                     k =>
                     {
                         if (k == null)
@@ -98,7 +98,7 @@ namespace System.Data.Entity.SqlServer
         // <summary>
         // Singleton object
         // </summary>
-        private static readonly SqlProviderServices _providerInstance = new SqlProviderServices();
+        private static readonly MicrosoftSqlProviderServices _providerInstance = new MicrosoftSqlProviderServices();
 
         private static bool _truncateDecimalsToScale = true;
         private static bool _useScopeIdentity = true;
@@ -107,7 +107,7 @@ namespace System.Data.Entity.SqlServer
         /// <summary>
         /// The Singleton instance of the SqlProviderServices type.
         /// </summary>
-        public static SqlProviderServices Instance
+        public static MicrosoftSqlProviderServices Instance
         {
             get { return _providerInstance; }
         }
@@ -513,7 +513,7 @@ namespace System.Data.Entity.SqlServer
         protected override DbSpatialServices DbGetSpatialServices(string versionHint)
         {
             return SupportsSpatial(versionHint)
-                       ? SqlSpatialServices.Instance
+                       ? MicrosoftSqlSpatialServices.Instance
                        : null;
         }
 

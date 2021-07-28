@@ -17,7 +17,7 @@ namespace System.Data.Entity.SqlServer
     using System.Data.Entity.SqlServer.Resources;
     using System.Data.Entity.SqlServer.SqlGen;
     using System.Data.Entity.SqlServer.Utilities;
-    using System.Data.SqlClient;
+    using Microsoft.Data.SqlClient;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -31,7 +31,7 @@ namespace System.Data.Entity.SqlServer
     /// that can be run against a Microsoft SQL Server database.
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-    public class SqlServerMigrationSqlGenerator : MigrationSqlGenerator
+    public class MicrosoftSqlServerMigrationSqlGenerator : MigrationSqlGenerator
     {
         private const string BatchTerminator = "GO";
 
@@ -269,7 +269,7 @@ namespace System.Data.Entity.SqlServer
         /// <returns> An empty connection for the current provider. </returns>
         protected virtual DbConnection CreateConnection()
         {
-            return DbConfiguration.DependencyResolver.GetService<DbProviderFactory>("System.Data.SqlClient").CreateConnection();
+            return DbConfiguration.DependencyResolver.GetService<DbProviderFactory>("Microsoft.Data.SqlClient").CreateConnection();
         }
 
         /// <summary>

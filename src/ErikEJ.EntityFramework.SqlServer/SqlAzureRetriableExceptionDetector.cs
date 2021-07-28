@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.SqlServer
 {
-    using System.Data.SqlClient;
+    using Microsoft.Data.SqlClient;
     using System.Diagnostics.CodeAnalysis;
 
     // <summary>

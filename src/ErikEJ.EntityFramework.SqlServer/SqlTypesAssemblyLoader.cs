@@ -101,8 +101,8 @@ namespace System.Data.Entity.SqlServer
         {
             Assembly sqlTypesAssembly = null;
             var candidateAssemblies =
-                SqlProviderServices.SqlServerTypesAssemblyName != null
-                    ? new[] { SqlProviderServices.SqlServerTypesAssemblyName }
+                MicrosoftSqlProviderServices.SqlServerTypesAssemblyName != null
+                    ? new[] { MicrosoftSqlProviderServices.SqlServerTypesAssemblyName }
                     : _preferredSqlTypesAssemblies;
 
             foreach (var assemblyFullName in candidateAssemblies)

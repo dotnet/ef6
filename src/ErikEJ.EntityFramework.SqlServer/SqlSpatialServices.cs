@@ -15,20 +15,20 @@ namespace System.Data.Entity.SqlServer
     /// Entity Framework with Microsoft SQL Server.
     /// </summary>
     [Serializable]
-    public class SqlSpatialServices : DbSpatialServices
+    public class MicrosoftSqlSpatialServices : DbSpatialServices
     {
-        internal static readonly SqlSpatialServices Instance = new SqlSpatialServices();
+        internal static readonly MicrosoftSqlSpatialServices Instance = new MicrosoftSqlSpatialServices();
 
-        private static Dictionary<string, SqlSpatialServices> _otherSpatialServices;
+        private static Dictionary<string, MicrosoftSqlSpatialServices> _otherSpatialServices;
 
         [NonSerialized]
         private readonly SqlTypesAssemblyLoader _loader;
 
-        internal SqlSpatialServices()
+        internal MicrosoftSqlSpatialServices()
         {
         }
 
-        internal SqlSpatialServices(SqlTypesAssemblyLoader loader)
+        internal MicrosoftSqlSpatialServices(SqlTypesAssemblyLoader loader)
         {
             _loader = loader;
         }
@@ -45,7 +45,7 @@ namespace System.Data.Entity.SqlServer
         // this be done in a way that ensures that the underlying SqlTypesAssembly value is also atomized,
         // since that's caching compilation.
         // Relies on SqlTypesAssembly to verify that the assembly is appropriate.
-        private static bool TryGetSpatialServiceFromAssembly(Assembly assembly, out SqlSpatialServices services)
+        private static bool TryGetSpatialServiceFromAssembly(Assembly assembly, out MicrosoftSqlSpatialServices services)
         {
             if (_otherSpatialServices == null
                 || !_otherSpatialServices.TryGetValue(assembly.FullName, out services))
@@ -60,9 +60,9 @@ namespace System.Data.Entity.SqlServer
                         {
                             if (_otherSpatialServices == null)
                             {
-                                _otherSpatialServices = new Dictionary<string, SqlSpatialServices>(1);
+                                _otherSpatialServices = new Dictionary<string, MicrosoftSqlSpatialServices>(1);
                             }
-                            services = new SqlSpatialServices(new SqlTypesAssemblyLoader(sqlAssembly));
+                            services = new MicrosoftSqlSpatialServices(new SqlTypesAssemblyLoader(sqlAssembly));
                             _otherSpatialServices.Add(assembly.FullName, services);
                         }
                         else
@@ -124,7 +124,7 @@ namespace System.Data.Entity.SqlServer
             var providerValueType = providerValue.GetType();
             if (providerValueType != expectedSpatialType)
             {
-                SqlSpatialServices otherServices;
+                MicrosoftSqlSpatialServices otherServices;
                 if (TryGetSpatialServiceFromAssembly(providerValue.GetType().Assembly(), out otherServices))
                 {
                     if (expectedSpatialType == SqlTypes.SqlGeographyType)
