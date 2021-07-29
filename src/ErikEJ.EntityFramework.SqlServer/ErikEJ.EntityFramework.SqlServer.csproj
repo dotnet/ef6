@@ -7,7 +7,22 @@
     <TargetFrameworks>net461;netstandard2.1</TargetFrameworks>
     <Description>ErikEJ.EntityFramework.SqlServer.dll</Description>
     <AssemblyVersion>6.0.0.0</AssemblyVersion>
+	<AssemblyName>ErikEJ.EntityFramework.SqlServer</AssemblyName>
     <DefineConstants>$(DefineConstants);SQLSERVER;INTERNALS_INVISIBLE</DefineConstants>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
+
+	  <PackageId>ErikEJ.EntityFramework.SqlServer</PackageId>
+	  <PackageVersion>0.1-alpha1</PackageVersion>
+	  <Authors>ErikEJ</Authors>
+	  <Description>SQL Server provider for EF6, using the Microsoft.Data.SqlClient ADO.NET provider.</Description>
+	  <PackageProjectUrl>https://github.com/ErikEJ/EF6CommunityPowerTools</PackageProjectUrl>
+	  <PackageReleaseNotes>Alpha</PackageReleaseNotes>
+	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
+	  <MinClientVersion>5.0</MinClientVersion>
+	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	  <PublishRepositoryUrl>true</PublishRepositoryUrl>
+
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
