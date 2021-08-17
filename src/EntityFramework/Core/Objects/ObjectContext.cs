@@ -42,6 +42,8 @@ namespace System.Data.Entity.Core.Objects
 #endif
     using System.Transactions;
     using System.Collections.ObjectModel;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// ObjectContext is the top-level object that encapsulates a connection between the CLR and the database,
@@ -3612,6 +3614,141 @@ namespace System.Data.Entity.Core.Objects
                     releaseConnectionOnSuccess: !executionOptions.UserSpecifiedStreaming.Value));
         }
 
+#if !NET40
+
+        /// <summary>
+        /// Executes a stored procedure or function that is defined in the data source and mapped in the conceptual model, with the specified parameters. Returns a typed
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" />
+        /// .
+        /// </summary>
+        /// <returns>
+        /// An <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" /> for the data that is returned by the stored procedure.
+        /// </returns>
+        /// <param name="functionName">The name of the stored procedure or function. The name can include the container name, such as &lt;Container Name&gt;.&lt;Function Name&gt;. When the default container name is known, only the function name is required.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <param name="parameters">
+        /// An array of <see cref="T:System.Data.Entity.Core.Objects.ObjectParameter" /> objects. If output parameters are used, 
+        /// their values will not be available until the results have been read completely. This is due to the underlying behavior 
+        /// of DbDataReader, see http://go.microsoft.com/fwlink/?LinkID=398589 for more details.
+        /// </param>
+        /// <typeparam name="TElement">
+        /// The entity type of the <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" /> returned when the function is executed against the data source. This type must implement
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.DataClasses.IEntityWithChangeTracker" />
+        /// .
+        /// </typeparam>
+        /// <exception cref="T:System.ArgumentException"> function  is null or empty or function  is not found.</exception>
+        /// <exception cref="T:System.InvalidOperationException">The entity reader does not support this  function or there is a type mismatch on the reader and the  function .</exception>
+        public Task<ObjectResult<TElement>> ExecuteFunctionAsync<TElement>(string functionName, CancellationToken cancellationToken = default, params ObjectParameter[] parameters)
+        {
+            Check.NotNull(parameters, "parameters");
+
+            return ExecuteFunctionAsync<TElement>(functionName, MergeOption.AppendOnly, cancellationToken, parameters);
+        }
+
+
+        /// <summary>
+        /// Executes the given stored procedure or function that is defined in the data source and expressed in the conceptual model, with the specified parameters, and merge option. Returns a typed
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" />
+        /// .
+        /// </summary>
+        /// <returns>
+        /// An <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" /> for the data that is returned by the stored procedure.
+        /// </returns>
+        /// <param name="functionName">The name of the stored procedure or function. The name can include the container name, such as &lt;Container Name&gt;.&lt;Function Name&gt;. When the default container name is known, only the function name is required.</param>
+        /// <param name="mergeOption">
+        /// The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> to use when executing the query.
+        /// </param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <param name="parameters">
+        /// An array of <see cref="T:System.Data.Entity.Core.Objects.ObjectParameter" /> objects. If output parameters are used, 
+        /// their values will not be available until the results have been read completely. This is due to the underlying behavior 
+        /// of DbDataReader, see http://go.microsoft.com/fwlink/?LinkID=398589 for more details.
+        /// </param>
+        /// <typeparam name="TElement">
+        /// The entity type of the <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" /> returned when the function is executed against the data source. This type must implement
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.DataClasses.IEntityWithChangeTracker" />
+        /// .
+        /// </typeparam>
+        /// <exception cref="T:System.ArgumentException"> function  is null or empty or function  is not found.</exception>
+        /// <exception cref="T:System.InvalidOperationException">The entity reader does not support this  function or there is a type mismatch on the reader and the  function .</exception>
+        public virtual Task<ObjectResult<TElement>> ExecuteFunctionAsync<TElement>(
+            string functionName, MergeOption mergeOption, CancellationToken cancellationToken = default, params ObjectParameter[] parameters)
+        {
+            Check.NotNull(parameters, "parameters");
+            Check.NotEmpty(functionName, "functionName");
+            return ExecuteFunctionAsync<TElement>(functionName, new ExecutionOptions(mergeOption), cancellationToken, parameters);
+        }
+
+        /// <summary>
+        /// Executes the given function on the default container.
+        /// </summary>
+        /// <typeparam name="TElement"> Element type for function results. </typeparam>
+        /// <param name="functionName">
+        /// Name of function. May include container (e.g. ContainerName.FunctionName) or just function name when DefaultContainerName is known.
+        /// </param>
+        /// <param name="executionOptions"> The options for executing this function. </param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <param name="parameters"> 
+        /// The parameter values to use for the function. If output parameters are used, their values 
+        /// will not be available until the results have been read completely. This is due to the underlying 
+        /// behavior of DbDataReader, see http://go.microsoft.com/fwlink/?LinkID=398589 for more details.
+        /// </param>
+        /// <returns>An object representing the result of executing this function.</returns>
+        /// <exception cref="ArgumentException"> If function is null or empty </exception>
+        /// <exception cref="InvalidOperationException">
+        /// If function is invalid (syntax,
+        /// does not exist, refers to a function with return type incompatible with T)
+        /// </exception>
+        public virtual Task<ObjectResult<TElement>> ExecuteFunctionAsync<TElement>(
+            string functionName, ExecutionOptions executionOptions, CancellationToken cancellationToken = default, params ObjectParameter[] parameters)
+        {
+            Check.NotNull(parameters, "parameters");
+            Check.NotEmpty(functionName, "functionName");
+
+            AsyncMonitor.EnsureNotEntered();
+
+            EdmFunction functionImport;
+            var entityCommand = CreateEntityCommandForFunctionImport(functionName, out functionImport, parameters);
+            var returnTypeCount = Math.Max(1, functionImport.ReturnParameters.Count);
+            var expectedEdmTypes = new EdmType[returnTypeCount];
+            expectedEdmTypes[0] = MetadataHelper.GetAndCheckFunctionImportReturnType<TElement>(functionImport, 0, MetadataWorkspace);
+            for (var i = 1; i < returnTypeCount; i++)
+            {
+                if (!MetadataHelper.TryGetFunctionImportReturnType(functionImport, i, out expectedEdmTypes[i]))
+                {
+                    throw EntityUtil.ExecuteFunctionCalledWithNonReaderFunction(functionImport);
+                }
+            }
+
+            var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection, MetadataWorkspace);
+
+            if (executionStrategy.RetriesOnFailure
+                && executionOptions.UserSpecifiedStreaming.HasValue && executionOptions.UserSpecifiedStreaming.Value)
+            {
+                throw new InvalidOperationException(Strings.ExecutionStrategy_StreamingNotSupported(executionStrategy.GetType().Name));
+            }
+
+            if (!executionOptions.UserSpecifiedStreaming.HasValue)
+            {
+                executionOptions = new ExecutionOptions(executionOptions.MergeOption, !executionStrategy.RetriesOnFailure);
+            }
+
+            var startLocalTransaction = !executionOptions.UserSpecifiedStreaming.Value
+                                        && _options.EnsureTransactionsForFunctionsAndCommands;
+            return executionStrategy.ExecuteAsync(
+                () => ExecuteInTransactionAsync(
+                    () => CreateFunctionObjectResultAsync<TElement>(entityCommand, functionImport.EntitySets, expectedEdmTypes, executionOptions, cancellationToken),
+                    executionStrategy, startLocalTransaction: startLocalTransaction,
+                    releaseConnectionOnSuccess: !executionOptions.UserSpecifiedStreaming.Value,
+                    cancellationToken),
+                cancellationToken);
+        }
+#endif
+
         /// <summary>Executes a stored procedure or function that is defined in the data source and expressed in the conceptual model; discards any results returned from the function; and returns the number of rows affected by the execution.</summary>
         /// <returns>The number of rows affected.</returns>
         /// <param name="functionName">The name of the stored procedure or function. The name can include the container name, such as &lt;Container Name&gt;.&lt;Function Name&gt;. When the default container name is known, only the function name is required.</param>
@@ -3640,6 +3777,39 @@ namespace System.Data.Entity.Core.Objects
                     releaseConnectionOnSuccess: true));
         }
 
+#if !NET40
+        /// <summary>Executes a stored procedure or function that is defined in the data source and expressed in the conceptual model; discards any results returned from the function; and returns the number of rows affected by the execution.</summary>
+        /// <returns>The number of rows affected.</returns>
+        /// <param name="functionName">The name of the stored procedure or function. The name can include the container name, such as &lt;Container Name&gt;.&lt;Function Name&gt;. When the default container name is known, only the function name is required.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+        /// <param name="parameters">
+        /// An array of <see cref="T:System.Data.Entity.Core.Objects.ObjectParameter" /> objects. If output parameters are used, 
+        /// their values will not be available until the results have been read completely. This is due to the underlying 
+        /// behavior of DbDataReader, see http://go.microsoft.com/fwlink/?LinkID=398589 for more details.
+        /// </param>
+        /// <exception cref="T:System.ArgumentException"> function  is null or empty or function  is not found.</exception>
+        /// <exception cref="T:System.InvalidOperationException">The entity reader does not support this  function or there is a type mismatch on the reader and the  function .</exception>
+        public virtual Task<int> ExecuteFunctionAsync(string functionName, CancellationToken cancellationToken = default, params ObjectParameter[] parameters)
+        {
+            Check.NotNull(parameters, "parameters");
+            Check.NotEmpty(functionName, "functionName");
+
+            AsyncMonitor.EnsureNotEntered();
+
+            EdmFunction functionImport;
+            var entityCommand = CreateEntityCommandForFunctionImport(functionName, out functionImport, parameters);
+
+            var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection, MetadataWorkspace);
+            return executionStrategy.ExecuteAsync(
+                () => ExecuteInTransactionAsync(
+                    () => ExecuteFunctionCommandAsync(entityCommand, cancellationToken), executionStrategy,
+                    startLocalTransaction: _options.EnsureTransactionsForFunctionsAndCommands,
+                    releaseConnectionOnSuccess: true,
+                    cancellationToken),
+                cancellationToken);
+        }
+#endif
+
         private static int ExecuteFunctionCommand(EntityCommand entityCommand)
         {
             // Prepare the command before calling ExecuteNonQuery, so that exceptions thrown during preparation are not wrapped in EntityCommandExecutionException
@@ -3659,6 +3829,28 @@ namespace System.Data.Entity.Core.Objects
                 throw;
             }
         }
+
+#if !NET40
+        private static async Task<int> ExecuteFunctionCommandAsync(EntityCommand entityCommand, CancellationToken cancellationToken)
+        {
+            // Prepare the command before calling ExecuteNonQuery, so that exceptions thrown during preparation are not wrapped in EntityCommandExecutionException
+            entityCommand.Prepare();
+
+            try
+            {
+                return await entityCommand.ExecuteNonQueryAsync(cancellationToken);
+            }
+            catch (Exception e)
+            {
+                if (e.IsCatchableEntityExceptionType())
+                {
+                    throw new EntityCommandExecutionException(Strings.EntityClient_CommandExecutionFailed, e);
+                }
+
+                throw;
+            }
+        }
+#endif
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
@@ -3761,6 +3953,73 @@ namespace System.Data.Entity.Core.Objects
             return MaterializedDataRecord<TElement>(
                 entityCommand, storeReader, 0, entitySets, edmTypes, shaperFactory, executionOptions.MergeOption, executionOptions.UserSpecifiedStreaming.Value);
         }
+
+#if !NET40
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope",
+            Justification = "Reader disposed by the returned ObjectResult")]
+        private async Task<ObjectResult<TElement>> CreateFunctionObjectResultAsync<TElement>(
+            EntityCommand entityCommand, ReadOnlyCollection<EntitySet> entitySets, EdmType[] edmTypes,
+            ExecutionOptions executionOptions, CancellationToken cancellationToken)
+        {
+            DebugCheck.NotNull(edmTypes);
+            Debug.Assert(edmTypes.Length > 0);
+
+            var commandDefinition = entityCommand.GetCommandDefinition();
+
+            // get store data reader
+            DbDataReader storeReader = null;
+            try
+            {
+                storeReader = await commandDefinition.ExecuteStoreCommandsAsync(
+                    entityCommand, executionOptions.UserSpecifiedStreaming.Value
+                        ? CommandBehavior.Default
+                        : CommandBehavior.SequentialAccess,
+                    cancellationToken);
+            }
+            catch (Exception e)
+            {
+                if (e.IsCatchableEntityExceptionType())
+                {
+                    throw new EntityCommandExecutionException(Strings.EntityClient_CommandExecutionFailed, e);
+                }
+
+                throw;
+            }
+
+            ShaperFactory<TElement> shaperFactory = null;
+            if (!executionOptions.UserSpecifiedStreaming.Value)
+            {
+                BufferedDataReader bufferedReader = null;
+                try
+                {
+                    var storeItemCollection = (StoreItemCollection)MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
+                    var providerServices = DbConfiguration.DependencyResolver.GetService<DbProviderServices>(storeItemCollection.ProviderInvariantName);
+
+                    shaperFactory = _translator.TranslateColumnMap<TElement>(
+                        commandDefinition.CreateColumnMap(storeReader, 0),
+                        MetadataWorkspace, null, executionOptions.MergeOption, false, valueLayer: false);
+                    bufferedReader = new BufferedDataReader(storeReader);
+                    await bufferedReader.InitializeAsync(
+                        storeItemCollection.ProviderManifestToken, providerServices, shaperFactory.ColumnTypes,
+                        shaperFactory.NullableColumns, cancellationToken);
+                    storeReader = bufferedReader;
+                }
+                catch (Exception)
+                {
+                    if (bufferedReader != null)
+                    {
+                        bufferedReader.Dispose();
+                    }
+
+                    throw;
+                }
+            }
+
+            return MaterializedDataRecord<TElement>(
+                entityCommand, storeReader, 0, entitySets, edmTypes, shaperFactory, executionOptions.MergeOption, executionOptions.UserSpecifiedStreaming.Value);
+        }
+
+#endif
 
         // <summary>
         // Get the materializer for the resultSetIndexth result set of storeReader.
