@@ -46,11 +46,11 @@ stages:
             timeoutInMinutes: 180
             pool:
               ${{ if eq(variables['System.TeamProject'], 'public') }}:
-                name: NetCorePublic-Pool
-                queue: BuildPool.Server.Amd64.VS2017.Open
+                name: NetCore1ESPool-Public
+                demands: ImageOverride -equals Build.Server.Amd64.VS2017.Open
               ${{ if ne(variables['System.TeamProject'], 'public') }}:
-                name: NetCoreInternal-Pool
-                queue: BuildPool.Server.Amd64.VS2017
+                name: NetCore1ESPool-Internal
+                demands: ImageOverride -equals Build.Server.Amd64.VS2017
             variables:
               - _InternalBuildArgs: ''
               - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
