@@ -44,10 +44,10 @@ stages:
             pool:
               ${{ if eq(variables['System.TeamProject'], 'public') }}:
                 name: NetCore1ESPool-Svc-Public
-                demands: ImageOverride -equals Build.Server.Amd64.VS2017.Open
+                demands: ImageOverride -equals Build.Server.Amd64.VS2019.Open
               ${{ if ne(variables['System.TeamProject'], 'public') }}:
                 name: NetCore1ESPool-Svc-Internal
-                demands: ImageOverride -equals Build.Server.Amd64.VS2017
+                demands: ImageOverride -equals Build.Server.Amd64.VS2019
             variables:
               - _InternalBuildArgs: ''
               - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
@@ -113,4 +113,4 @@ stages:
     parameters:
       # Symbol validation isn't being very reliable lately. This should be enabled back
       # once this issue is resolved: https://github.com/dotnet/arcade/issues/2871
-      enableSymbolValidation: false 
+      enableSymbolValidation: false
