@@ -70,6 +70,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 switch (linq.Method.Name)
                 {
                     case "Contains":
+                    case "InStringSplitCommaSeparated":
                         {
                             if (linq.Method.GetParameters().Count() == 1
                                 && linq.Method.ReturnType.Equals(typeof(bool)))
@@ -77,7 +78,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
                                 Type[] genericArguments;
                                 if (linq.Method.IsImplementationOfGenericInterfaceMethod(typeof(ICollection<>), out genericArguments))
                                 {
-                                    return ContainsTranslator.TranslateContains(parent, linq.Object, linq.Arguments[0]);
+                                    var useStringSplit = linq.Method.Name == "InStringSplitCommaSeparated";
+                                    return ContainsTranslator.TranslateContains(parent, linq.Object, linq.Arguments[0], useStringSplit);
                                 }
                             }
                             break;
@@ -2723,7 +2725,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
 
                 internal static DbExpression TranslateContains(
-                    ExpressionConverter parent, Expression sourceExpression, Expression valueExpression)
+                    ExpressionConverter parent, Expression sourceExpression, Expression valueExpression, bool canUseStringSplit = false)
                 {
                     var source = parent.NormalizeSetSource(parent.TranslateExpression(sourceExpression));
                     var value = parent.TranslateExpression(valueExpression);
@@ -2766,7 +2768,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                                                         : EqualsPattern.Store;
 
                                 constantCqt = providerSupportsInExpression
-                                                  ? DbExpressionBuilder.CreateInExpression(value, constantArguments)
+                                                  ? DbExpressionBuilder.CreateInExpression(value, constantArguments, canUseStringSplit)
                                                   : TranslateContainsHelper(
                                                       parent, value, constantArguments, equalsPattern, sourceArgumentType,
                                                       valueExpression.Type);

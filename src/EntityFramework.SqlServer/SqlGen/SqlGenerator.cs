@@ -1953,19 +1953,32 @@ namespace System.Data.Entity.SqlServer.SqlGen
             result.Append(e.Item.Accept(this));
             result.Append(" IN (");
 
-            var first = true;
-            foreach (var item in e.List)
+            if (e.UseStringSplit)
             {
-                if (first)
+                var paramRefExpr = e.List[0] as DbParameterReferenceExpression;
+                if (paramRefExpr == null)
                 {
-                    first = false;
-                }
-                else
-                {
-                    result.Append(", ");
+                    throw new InvalidOperationException("Invalid STRING_SPLIT operation.");
                 }
 
-                result.Append(item.Accept(this));
+                result.Append($"SELECT value FROM STRING_SPLIT(@{paramRefExpr.ParameterName}, ',')");
+            }
+            else
+            {
+                var first = true;
+                foreach (var item in e.List)
+                {
+                    if (first)
+                    {
+                        first = false;
+                    }
+                    else
+                    {
+                        result.Append(", ");
+                    }
+
+                    result.Append(item.Accept(this));
+                }
             }
 
             result.Append(")");

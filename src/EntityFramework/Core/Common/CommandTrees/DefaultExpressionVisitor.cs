@@ -745,7 +745,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
                 ||
                 !ReferenceEquals(expression.List, newList))
             {
-                result = CqtBuilder.CreateInExpression(newItem, newList);
+                result = CqtBuilder.CreateInExpression(newItem, newList, expression.UseStringSplit);
             }
 
             NotifyIfChanged(expression, result);

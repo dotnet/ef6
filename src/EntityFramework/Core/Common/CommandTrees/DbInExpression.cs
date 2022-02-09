@@ -16,8 +16,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     {
         private readonly DbExpression _item;
         private readonly DbExpressionList _list;
+        private readonly bool _useStringSplit;
 
-        internal DbInExpression(TypeUsage booleanResultType, DbExpression item, DbExpressionList list)
+        internal DbInExpression(TypeUsage booleanResultType, DbExpression item, DbExpressionList list, bool useStringSplit)
             : base(DbExpressionKind.In, booleanResultType)
         {
             DebugCheck.NotNull(item);
@@ -29,6 +30,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
             _item = item;
             _list = list;
+            _useStringSplit = useStringSplit;
         }
 
         /// <summary>
@@ -46,6 +48,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             get { return _list; }
         }
+
+        /// <summary>
+        /// Gets if we can use STRING_SPLIT to implement the expression.
+        /// </summary>
+        public bool UseStringSplit => _useStringSplit;
 
         /// <summary>
         /// The visitor pattern method for expression visitors that do not produce a result value.

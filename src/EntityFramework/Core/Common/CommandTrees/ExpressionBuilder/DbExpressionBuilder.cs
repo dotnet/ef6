@@ -959,6 +959,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </summary>
         /// <param name="expression"> A DbExpression to be matched. </param>
         /// <param name="list"> A list of DbConstantExpression to test for a match. </param>
+        /// <param name="useStringSplit"> Should STRING_SPLIT() be used to implement the expression?</param>
         /// <returns>
         /// A new DbInExpression with the specified arguments.
         /// </returns>
@@ -974,7 +975,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// is different than the result type of an expression from
         /// <paramref name="list" />.
         /// </exception>
-        public static DbInExpression In(this DbExpression expression, IList<DbConstantExpression> list)
+        public static DbInExpression In(this DbExpression expression, IList<DbConstantExpression> list, bool useStringSplit = false)
         {
             Check.NotNull(expression, "expression");
             Check.NotNull(list, "list");
@@ -992,12 +993,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
                 internalList.Add(item);
             }
 
-            return CreateInExpression(expression, internalList);
+            return CreateInExpression(expression, internalList, useStringSplit);
         }
 
-        internal static DbInExpression CreateInExpression(DbExpression item, IList<DbExpression> list)
+        internal static DbInExpression CreateInExpression(DbExpression item, IList<DbExpression> list, bool useStringSplit)
         {
-            return new DbInExpression(_booleanType, item, new DbExpressionList(list));
+            return new DbInExpression(_booleanType, item, new DbExpressionList(list), useStringSplit);
         }
 
         /// <summary>

@@ -1026,7 +1026,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                             list.Add(VisitChild(n, i));
                         }
 
-                        condExpr = DbExpressionBuilder.CreateInExpression(left, list);
+                        condExpr = DbExpressionBuilder.CreateInExpression(left, list, false);
                     }
                     break;
 
