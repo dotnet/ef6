@@ -7,11 +7,11 @@
     </Dependency>
     <Dependency Name="Microsoft.NETCore.App.Runtime.win-x64" Version="3.1.25">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-core-setup</Uri>
-      <Sha>f60eb2fbdc72f46c694a7287cd9dfc1abe757484</Sha>
+      <Sha>669de1a9f81c6a28f659b0ee38fc0d3e4781144d</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Internal" Version="3.1.25-servicing.22213.1">
+    <Dependency Name="Microsoft.NETCore.App.Internal" Version="3.1.25-servicing.22213.5">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-core-setup</Uri>
-      <Sha>f60eb2fbdc72f46c694a7287cd9dfc1abe757484</Sha>
+      <Sha>669de1a9f81c6a28f659b0ee38fc0d3e4781144d</Sha>
     </Dependency>
     <Dependency Name="System.CodeDom" Version="4.7.0" CoherentParentDependency="Microsoft.NETCore.App.Runtime.win-x64">
       <Uri>https://github.com/dotnet/corefx</Uri>
