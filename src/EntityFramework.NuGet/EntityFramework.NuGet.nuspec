@@ -39,6 +39,10 @@
     <file src="../../artifacts/bin/ef6/x86/$Configuration$/net40/ef6.pdb" target="tools/net40/win-x86/" />
     <file src="../../artifacts/bin/ef6/x86/$Configuration$/net45/ef6.exe" target="tools/net45/win-x86/" />
     <file src="../../artifacts/bin/ef6/x86/$Configuration$/net45/ef6.pdb" target="tools/net45/win-x86/" />
+    <file src="../../artifacts/bin/ef6/ARM64/$Configuration$/net40/ef6.exe" target="tools/net40/win-arm64/" />
+    <file src="../../artifacts/bin/ef6/ARM64/$Configuration$/net40/ef6.pdb" target="tools/net40/win-arm64/" />
+    <file src="../../artifacts/bin/ef6/ARM64/$Configuration$/net45/ef6.exe" target="tools/net45/win-arm64/" />
+    <file src="../../artifacts/bin/ef6/ARM64/$Configuration$/net45/ef6.pdb" target="tools/net45/win-arm64/" />
     <file src="../../artifacts/bin/EntityFramework.SqlServer/$Configuration$/net40/EntityFramework.SqlServer.dll" target="lib/net40/" />
     <file src="../../artifacts/bin/EntityFramework.SqlServer/$Configuration$/net40/EntityFramework.SqlServer.xml" target="lib/net40/" />
     <file src="../../artifacts/bin/EntityFramework.SqlServer/$Configuration$/net45/EntityFramework.SqlServer.dll" target="lib/net45/" />

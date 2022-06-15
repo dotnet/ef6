@@ -841,6 +841,10 @@ function EF6($project, $startupProject, $workingDir, $params)
         {
             $runtimeDir = 'win-x86'
         }
+        elseif ($platformTarget -eq 'ARM64')
+        {
+            $runtimeDir = 'win-arm64'
+        }
         elseif ($platformTarget -in 'AnyCPU', 'x64')
         {
             $runtimeDir = 'any'
