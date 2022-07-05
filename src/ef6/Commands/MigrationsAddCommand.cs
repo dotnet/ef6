@@ -35,6 +35,10 @@ namespace System.Data.Entity.Tools.Commands
             {
                 throw new CommandException(string.Format(MyResources.MissingArgument, _name.Name));
             }
+            if (_name.Name.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
+            {
+                throw new CommandException("Invalid migration name. Names must not contain any invalid characters, e.g [-,/,:]");
+            }
         }
 
         protected override int Execute()
