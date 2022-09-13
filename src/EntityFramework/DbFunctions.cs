@@ -1766,5 +1766,21 @@ namespace System.Data.Entity
 
             throw new NotSupportedException(Strings.ELinq_DbFunctionDirectCall);
         }
+
+        /// <summary>
+        /// When used as part of a LINQ to Entities query, this method acts as an operator that ensures the input
+        /// is treated as a non-Unicode string.
+        /// </summary>
+        /// <remarks>
+        /// You cannot call this function directly. This function can only appear within a LINQ to Entities query.
+        /// This function impacts the way the LINQ query is translated to a query that can be run in the database.
+        /// </remarks>
+        /// <param name="value"> The input string. </param>
+        /// <param name="size"> The input string. </param>
+        /// <returns> The input string treated as a non-Unicode string. </returns>
+        public static string CustomType(string value, int size)
+        {
+            return value;
+        }
     }
 }

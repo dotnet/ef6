@@ -224,6 +224,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                         new HierarchyIdMethodCallTranslator(),
                         new HasFlagTranslator(),
                         new ToStringTranslator(),
+                        new CustomTypeFunctionTranslator()
                     };
             }
 
@@ -1001,6 +1002,56 @@ namespace System.Data.Entity.Core.Objects.ELinq
 #pragma warning restore 612,618
                 }
             }
+
+            internal sealed class CustomTypeFunctionTranslator : CallTranslator
+            {
+                internal CustomTypeFunctionTranslator()
+                    : base(GetMethods()) { }
+
+                // Translation:
+                //   object.AsUnicode() -> object (In its TypeUsage, the unicode facet value is set to true explicitly)
+                //   object.AsNonUnicode() -> object (In its TypeUsage, the unicode facet is set to false)
+                internal override CqtExpression Translate(ExpressionConverter parent, MethodCallExpression call)
+                {
+                    var argument = parent.TranslateExpression(call.Arguments[0]);
+                    var argument2 = parent.TranslateExpression(call.Arguments[1]);
+                    DbExpression recreatedArgument;
+                    var updatedType = argument.ResultType.ShallowCopy(
+                        new FacetValues
+                        {
+                            MaxLength = (int)(argument2 as DbConstantExpression).Value,
+                            FixedLength = true,
+                            Unicode = true
+                        });
+
+                    switch (argument.ExpressionKind)
+                    {
+                        case DbExpressionKind.Constant:
+                            recreatedArgument = updatedType.Constant(((DbConstantExpression)argument).Value);
+                            break;
+                        case DbExpressionKind.ParameterReference:
+                            recreatedArgument = updatedType.Parameter(((DbParameterReferenceExpression)argument).ParameterName);
+                            break;
+                        case DbExpressionKind.Null:
+                            recreatedArgument = updatedType.Null();
+                            break;
+                        default:
+                            throw new NotSupportedException(Strings.ELinq_UnsupportedAsUnicodeAndAsNonUnicode(call.Method));
+                    }
+                    return recreatedArgument;
+                }
+
+                private static IEnumerable<MethodInfo> GetMethods()
+                {
+                    yield return
+                        typeof(DbFunctions).GetDeclaredMethod(CustomType, typeof(string), typeof(int));
+                    yield return
+#pragma warning disable 612,618
+                        typeof(EntityFunctions).GetDeclaredMethod(CustomType, typeof(string), typeof(int));
+#pragma warning restore 612,618
+                }
+            }
+
             #region System.Enum method translators
             internal sealed class HasFlagTranslator : CallTranslator
             {

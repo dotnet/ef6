@@ -1750,5 +1750,10 @@ namespace System.Data.Entity.Core.Objects
         {
             return value;
         }
+
+        public static string CustomType(string value, int size)
+        {
+            return value;
+        }
     }
 }
