@@ -224,7 +224,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                         new HierarchyIdMethodCallTranslator(),
                         new HasFlagTranslator(),
                         new ToStringTranslator(),
-                        new CustomTypeFunctionTranslator()
+                        new AsStringFunctionTranslator()
                     };
             }
 
@@ -472,12 +472,12 @@ namespace System.Data.Entity.Core.Objects.ELinq
             }
 
             private sealed class ObjectQueryBuilderToListTranslator : ObjectQueryBuilderCallTranslator
-	        {
-	            internal ObjectQueryBuilderToListTranslator()
-	                : base("ToList", SequenceMethod.ToList)
-	            {
-	            }
-	        }
+            {
+                internal ObjectQueryBuilderToListTranslator()
+                    : base("ToList", SequenceMethod.ToList)
+                {
+                }
+            }
 
             private sealed class ObjectQueryIncludeTranslator : ObjectQueryCallTranslator
             {
@@ -945,9 +945,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     DbExpression recreatedArgument;
                     var updatedType = argument.ResultType.ShallowCopy(
                         new FacetValues
-                            {
-                                Unicode = _isUnicode
-                            });
+                        {
+                            Unicode = _isUnicode
+                        });
 
                     switch (argument.ExpressionKind)
                     {
@@ -1003,25 +1003,24 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
             }
 
-            internal sealed class CustomTypeFunctionTranslator : CallTranslator
+            internal sealed class AsStringFunctionTranslator : CallTranslator
             {
-                internal CustomTypeFunctionTranslator()
+                internal AsStringFunctionTranslator()
                     : base(GetMethods()) { }
 
-                // Translation:
-                //   object.AsUnicode() -> object (In its TypeUsage, the unicode facet value is set to true explicitly)
-                //   object.AsNonUnicode() -> object (In its TypeUsage, the unicode facet is set to false)
                 internal override CqtExpression Translate(ExpressionConverter parent, MethodCallExpression call)
                 {
                     var argument = parent.TranslateExpression(call.Arguments[0]);
                     var argument2 = parent.TranslateExpression(call.Arguments[1]);
+                    var argument3 = parent.TranslateExpression(call.Arguments[2]);
+                    var argument4 = parent.TranslateExpression(call.Arguments[3]);
                     DbExpression recreatedArgument;
                     var updatedType = argument.ResultType.ShallowCopy(
                         new FacetValues
                         {
                             MaxLength = (int)(argument2 as DbConstantExpression).Value,
-                            FixedLength = true,
-                            Unicode = true
+                            FixedLength = (bool)(argument3 as DbConstantExpression).Value,
+                            Unicode = (bool)(argument4 as DbConstantExpression).Value,
                         });
 
                     switch (argument.ExpressionKind)
@@ -1036,7 +1035,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                             recreatedArgument = updatedType.Null();
                             break;
                         default:
-                            throw new NotSupportedException(Strings.ELinq_UnsupportedAsUnicodeAndAsNonUnicode(call.Method));
+                            throw new NotSupportedException(Strings.ELinq_UnsupportedAsString(call.Method));
                     }
                     return recreatedArgument;
                 }
@@ -1044,10 +1043,10 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 private static IEnumerable<MethodInfo> GetMethods()
                 {
                     yield return
-                        typeof(DbFunctions).GetDeclaredMethod(CustomType, typeof(string), typeof(int));
+                        typeof(DbFunctions).GetDeclaredMethod(AsString, typeof(string), typeof(int), typeof(bool), typeof(bool));
                     yield return
 #pragma warning disable 612,618
-                        typeof(EntityFunctions).GetDeclaredMethod(CustomType, typeof(string), typeof(int));
+                        typeof(EntityFunctions).GetDeclaredMethod(AsString, typeof(string), typeof(int), typeof(bool), typeof(bool));
 #pragma warning restore 612,618
                 }
             }
@@ -1063,20 +1062,20 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 {
                 }
 
-                [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly", Scope = "member", 
+                [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly", Scope = "member",
                     Justification = "The argument name passed to ArgumentNullException matches the name of the argument of the HasFlag method being translated.")]
                 private static CqtExpression TranslateHasFlag(ExpressionConverter parent,
                      LinqExpression sourceExpression, LinqExpression valueExpression)
                 {
-                    if (valueExpression.NodeType == ExpressionType.Constant && 
+                    if (valueExpression.NodeType == ExpressionType.Constant &&
                         ((ConstantExpression)valueExpression).Value == null)
                     {
                         throw new ArgumentNullException("flag");
                     }
-                   
-                    var dbValueExp = parent.TranslateExpression(valueExpression);                    
-                    var dbSourceExp = parent.TranslateExpression(sourceExpression);   
-                 
+
+                    var dbValueExp = parent.TranslateExpression(valueExpression);
+                    var dbSourceExp = parent.TranslateExpression(sourceExpression);
+
                     if (dbSourceExp.ResultType.EdmType != dbValueExp.ResultType.EdmType)
                     {
                         throw new NotSupportedException(
@@ -1563,7 +1562,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                         var newArrayExpression = call.Arguments[0] as NewArrayExpression;
                         if (newArrayExpression != null)
                         {
-                            args = ((NewArrayExpression)call.Arguments[0]).Expressions.ToArray();    
+                            args = ((NewArrayExpression)call.Arguments[0]).Expressions.ToArray();
                         }
                         else
                         {
@@ -1593,7 +1592,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
             internal sealed class ToStringTranslator : CallTranslator
             {
-                private static readonly MethodInfo[] _methods = 
+                private static readonly MethodInfo[] _methods =
                 {
                         typeof(string).GetDeclaredMethod("ToString"),
                         typeof(byte).GetDeclaredMethod("ToString"),
@@ -1620,7 +1619,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 internal override CqtExpression Translate(ExpressionConverter parent, MethodCallExpression call)
                 {
                     return StringTranslatorUtil.ConvertToString(parent, call.Object);
-                }                                
+                }
             }
 
             internal abstract class TrimBaseTranslator : CallTranslator

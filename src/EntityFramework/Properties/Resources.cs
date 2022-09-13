@@ -2999,6 +2999,14 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
+        // A string like "The method '{0}' is only supported in LINQ to Entities when the argument is a string variable or literal."
+        // </summary>
+        internal static string ELinq_UnsupportedAsString(object p0)
+        {
+            return EntityRes.GetString(EntityRes.ELinq_UnsupportedAsString, p0);
+        }
+
+        // <summary>
         // A string like "Cannot compare elements of type '{0}'. Only primitive types, enumeration types and entity types are supported."
         // </summary>
         internal static string ELinq_UnsupportedComparison(object p0)
@@ -16107,6 +16115,7 @@ namespace System.Data.Entity.Resources
         internal const string ELinq_UnsupportedVBDatePartNonConstantInterval = "ELinq_UnsupportedVBDatePartNonConstantInterval";
         internal const string ELinq_UnsupportedVBDatePartInvalidInterval = "ELinq_UnsupportedVBDatePartInvalidInterval";
         internal const string ELinq_UnsupportedAsUnicodeAndAsNonUnicode = "ELinq_UnsupportedAsUnicodeAndAsNonUnicode";
+        internal const string ELinq_UnsupportedAsString = "ELinq_UnsupportedAsString";
         internal const string ELinq_UnsupportedComparison = "ELinq_UnsupportedComparison";
         internal const string ELinq_UnsupportedRefComparison = "ELinq_UnsupportedRefComparison";
         internal const string ELinq_UnsupportedRowComparison = "ELinq_UnsupportedRowComparison";

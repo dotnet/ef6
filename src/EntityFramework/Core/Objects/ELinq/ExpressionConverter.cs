@@ -112,7 +112,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         private const string Like = "Like";
         private const string AsUnicode = "AsUnicode";
         private const string AsNonUnicode = "AsNonUnicode";
-        private const string CustomType = "CustomType";
+        private const string AsString = "AsString";
 
         #endregion
 

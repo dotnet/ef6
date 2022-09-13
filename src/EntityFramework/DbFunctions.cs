@@ -1768,17 +1768,18 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// When used as part of a LINQ to Entities query, this method acts as an operator that ensures the input
-        /// is treated as a non-Unicode string.
+        /// When used as part of a LINQ to Entities query, this method acts as an operator that can customize the string parameter (MaxLength, IsFixedLength, IsUnicode) .
         /// </summary>
         /// <remarks>
         /// You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         /// This function impacts the way the LINQ query is translated to a query that can be run in the database.
         /// </remarks>
         /// <param name="value"> The input string. </param>
-        /// <param name="size"> The input string. </param>
-        /// <returns> The input string treated as a non-Unicode string. </returns>
-        public static string CustomType(string value, int size)
+        /// <param name="maxLength"> The maximum length of the string parameter. </param>
+        /// <param name="isFixedLength"> A value indicating wether the string parameter will be typed as fixed length or not. </param>
+        /// <param name="isUnicode"> A value indicating wether the string parameter will be typed as unicode or not. </param>
+        /// <returns> The input value. </returns>
+        public static string AsString(string value, int maxLength = 8000, bool isFixedLength = false, bool isUnicode = false)
         {
             return value;
         }

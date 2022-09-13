@@ -1386,6 +1386,9 @@
   <data name="ELinq_UnsupportedAsUnicodeAndAsNonUnicode" xml:space="preserve">
     <value>The method '{0}' is only supported in LINQ to Entities when the argument is a string variable or literal.</value>
   </data>
+  <data name="ELinq_UnsupportedAsString" xml:space="preserve">
+    <value>The method '{0}' is only supported in LINQ to Entities when the argument is a string variable or literal.</value>
+  </data>
   <data name="ELinq_UnsupportedComparison" xml:space="preserve">
     <value>Cannot compare elements of type '{0}'. Only primitive types, enumeration types and entity types are supported.</value>
   </data>
