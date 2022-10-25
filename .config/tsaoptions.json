@@ -1,12 +1,12 @@
 {
-  "areaPath": "DevDiv\\ASP.NET Core",
-  "codebaseName": "AspNetCore",
+  "areaPath": "DevDiv\\Entity Framework",
+  "codebaseName": "ef6",
   "instanceUrl": "https://devdiv.visualstudio.com/",
   "iterationPath": "DevDiv",
   "notificationAliases": [
     "aspnetcore-build@microsoft.com"
   ],
   "projectName": "DEVDIV",
-  "repositoryName": "AspNetCore",
+  "repositoryName": "ef6",
   "template": "TFSDEVDIV"
 }
