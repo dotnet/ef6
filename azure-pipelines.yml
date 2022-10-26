@@ -79,7 +79,7 @@ stages:
               enableSbom: false
               # CodeQL3000 extends build duration.
               timeoutInMinutes: 240
-            ${{ else }:
+            ${{ else }}:
               timeoutInMinutes: 180
             variables:
               - _InternalBuildArgs: ''
