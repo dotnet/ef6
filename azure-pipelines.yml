@@ -3,9 +3,6 @@ schedules:
   displayName: "Run CodeQL3000 weekly, Monday at 2:00 AM PDT"
   branches:
     include:
-    - release/2.1
-    - release/6.0
-    - release/7.0
     - main
   always: true
 
