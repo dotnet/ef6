@@ -17,7 +17,11 @@ namespace System.Data.Entity.SqlServer
     using System.Data.Entity.SqlServer.Resources;
     using System.Data.Entity.SqlServer.SqlGen;
     using System.Data.Entity.SqlServer.Utilities;
+#if MDS
+    using Microsoft.Data.SqlClient;
+#else
     using System.Data.SqlClient;
+#endif
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -31,7 +35,11 @@ namespace System.Data.Entity.SqlServer
     /// that can be run against a Microsoft SQL Server database.
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
+#if MDS
+    public class MicrosoftSqlServerMigrationSqlGenerator : MigrationSqlGenerator
+#else
     public class SqlServerMigrationSqlGenerator : MigrationSqlGenerator
+#endif
     {
         private const string BatchTerminator = "GO";
 

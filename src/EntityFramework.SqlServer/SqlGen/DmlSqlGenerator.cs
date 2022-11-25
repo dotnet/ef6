@@ -9,7 +9,11 @@ namespace System.Data.Entity.SqlServer.SqlGen
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.SqlServer.Resources;
     using System.Data.Entity.SqlServer.Utilities;
+#if MDS
+    using Microsoft.Data.SqlClient;
+#else
     using System.Data.SqlClient;
+#endif
     using System.Diagnostics;
     using System.Globalization;
     using System.Linq;
@@ -596,9 +600,13 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 // SqlClient will silently truncate data when SqlParameter.Size < |SqlParameter.Value|.
                 const bool preventTruncation = true;
 
+#if MDS
+                var parameter = MicrosoftSqlProviderServices.CreateSqlParameter(
+                    name ?? GetParameterName(_parameters.Count), type, ParameterMode.In, value, preventTruncation, _sqlGenerator.SqlVersion);
+#else
                 var parameter = SqlProviderServices.CreateSqlParameter(
                     name ?? GetParameterName(_parameters.Count), type, ParameterMode.In, value, preventTruncation, _sqlGenerator.SqlVersion);
-
+#endif
                 _parameters.Add(parameter);
 
                 return parameter;

@@ -2,7 +2,11 @@
 
 namespace System.Data.Entity.SqlServer
 {
+#if MDS
+    using Microsoft.Data.SqlClient;
+#else
     using System.Data.SqlClient;
+#endif
     using System.Diagnostics.CodeAnalysis;
 
     // <summary>

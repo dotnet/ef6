@@ -3,8 +3,11 @@
 namespace System.Data.Entity.SqlServer
 {
     using System.Data.Entity.Infrastructure;
+#if MDS
+    using Microsoft.Data.SqlClient;
+#else
     using System.Data.SqlClient;
-
+#endif
     /// <summary>
     /// An <see cref="IDbExecutionStrategy"/> that retries actions that throw exceptions caused by SQL Azure transient failures.
     /// </summary>
@@ -13,7 +16,11 @@ namespace System.Data.Entity.SqlServer
     /// if the <see cref="SqlException.Errors"/> contains any of the following error numbers:
     /// 40613, 40501, 40197, 10929, 10928, 10060, 10054, 10053, 233, 64 and 20
     /// </remarks>
+#if MDS
+    public class MicrosoftSqlAzureExecutionStrategy : DbExecutionStrategy
+#else
     public class SqlAzureExecutionStrategy : DbExecutionStrategy
+#endif
     {
         /// <summary>
         /// Creates a new instance of <see cref="SqlAzureExecutionStrategy" />.
@@ -21,7 +28,11 @@ namespace System.Data.Entity.SqlServer
         /// <remarks>
         /// The default retry limit is 5, which means that the total amount of time spent between retries is 26 seconds plus the random factor.
         /// </remarks>
+#if MDS
+        public MicrosoftSqlAzureExecutionStrategy()
+#else
         public SqlAzureExecutionStrategy()
+#endif
         {
         }
 
@@ -31,8 +42,12 @@ namespace System.Data.Entity.SqlServer
         /// </summary>
         /// <param name="maxRetryCount"> The maximum number of retry attempts. </param>
         /// <param name="maxDelay"> The maximum delay in milliseconds between retries. </param>
+#if MDS
+        public MicrosoftSqlAzureExecutionStrategy(int maxRetryCount, TimeSpan maxDelay)
+#else
         public SqlAzureExecutionStrategy(int maxRetryCount, TimeSpan maxDelay)
-            :base(maxRetryCount, maxDelay)
+#endif
+            : base(maxRetryCount, maxDelay)
         {
         }
 

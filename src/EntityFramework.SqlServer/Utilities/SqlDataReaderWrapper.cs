@@ -3,7 +3,11 @@
 namespace System.Data.Entity.SqlServer.Utilities
 {
     using System.Collections;
+#if MDS
+    using Microsoft.Data.SqlClient;
+#else
     using System.Data.SqlClient;
+#endif
     using System.Data.SqlTypes;
     using System.IO;
 #if !NET40
