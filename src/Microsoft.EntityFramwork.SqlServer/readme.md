@@ -2,9 +2,16 @@
 
 This Entity Framework 6 provider is a replacement provider for the built-in SQL Server provider. 
 
-This provider depends on the modern Microsoft.Data.SqlClient ADO.NET provider, see my [blog post here](https://erikej.github.io/ef6/sqlserver/2021/08/08/ef6-microsoft-data-sqlclient.html) for why that can be desirable.
+This provider depends on the modern [Microsoft.Data.SqlClient] ADO.NET provider, which includes the following advantages over the currently used driver:
 
-The latest build of this package is available from [NuGet](https://www.nuget.org/packages/ErikEJ.EntityFramework.SqlServer/)
+- Current client receiving full support in contrast to `System.Data.SqlClient`, which is in maintenance mode
+- Suports new SQL Server features, including support for the SQL Server 2022 enchanced client protocol
+- Supports most Azure Active Directory authentication methods
+- Supports Always Encrypted with .NET
+
+Notice that this provider is a runtime-only update, and will not work with the existing Visual Studio tooling.
+
+The latest build of this package is available from NuGet (Link TBD)
 
 ## Configuration
 
@@ -46,7 +53,7 @@ You can also use XML/App.Config based configuration:
     </configSections>
     <entityFramework>
         <providers>		
-            <provider invariantName="Microsoft.Data.SqlClient" type="System.Data.Entity.SqlServer.MicrosoftSqlProviderServices, ErikEJ.EntityFramework.SqlServer" />
+            <provider invariantName="Microsoft.Data.SqlClient" type="System.Data.Entity.SqlServer.MicrosoftSqlProviderServices, Microsoft.EntityFramework.SqlServer" />
         </providers>
     </entityFramework>
     <system.data>
@@ -94,11 +101,9 @@ In order to use the provider in an existing solution, a few code changes are req
 
 `using System.Data.SqlClient;` => `using Microsoft.Data.SqlClient;`
 
-The following classes have been renamed to avoid conflicts with classes in the existing SQL Server provider:
+The following classes have been renamed to avoid conflicts with classes that uses `System.Data.SqlClient` in the existing SQL Server provider:
 
 `SqlAzureExecutionStrategy` => `MicrosoftSqlAzureExecutionStrategy`
-
-`SqlConnectionFactory` => `MicrosoftSqlConnectionFactory`
 
 `SqlDbConfiguration` => `MicrosoftSqlDbConfiguration`
 
@@ -108,6 +113,10 @@ The following classes have been renamed to avoid conflicts with classes in the e
 
 `SqlSpatialServices` => `MicrosoftSqlSpatialServices`
 
+`SqlConnectionFactory` => `MicrosoftSqlConnectionFactory`
+
+`LocalDbConnectionFactory` => `MicrosoftLocalDbConnectionFactory`
+
 ## Known issues
 
 **EntityFramework.dll installed in GAC**
@@ -116,33 +125,14 @@ If an older version of EntityFramework.dll is installed in the .NET Framework GA
 
 `The 'PrimitiveTypeKind' attribute is invalid - The value 'HierarchyId' is invalid according to its datatype`
 
-Solution is to remove the .dll from the GAC, see [this for more info](https://github.com/ErikEJ/EntityFramework6PowerTools/issues/93#issuecomment-1063269072)
+Solution is to remove the .dll from the GAC.
 
 ## Feedback
 
-Please report any issues, questions and suggestions [here](https://github.com/ErikEJ/EntityFramework6PowerTools/issues)
+Please report any issues, questions and suggestions to TBD
 
 ## Release notes
 
-### 6.6.2
+### 6.5.0-preview1
 
-- Uses Microsoft.SqlServer.Types 160.1000.6
-- Requires .NET Framework 4.6.2
-
-### 6.6.1
-
-- Uses Microsoft.Data.SqlClient 5.0.1
-
-### 6.6.0
-
-- Uses Microsoft.Data.SqlClient 5.0.0
-- Added support for spatial on .NET (Core) with new Microsoft.SqlServer.Types package
-
-### 6.5.0
-
-- Uses Microsoft.Data.SqlClient 4.0.1
-- Removed duplicate spatial and Sql functions classes
-
-### 6.4.x
-
-- Uses Microsoft.Data.SqlClient 2.1.4
+- Initial preview

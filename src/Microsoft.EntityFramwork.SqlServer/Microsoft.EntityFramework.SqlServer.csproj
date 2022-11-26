@@ -6,7 +6,7 @@
 	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <TargetFrameworks>net462;netstandard2.1</TargetFrameworks>
     <AssemblyVersion>6.0.0.0</AssemblyVersion>
-	<AssemblyName>ErikEJ.EntityFramework.SqlServer</AssemblyName>
+	<AssemblyName>Microsoft.EntityFramework.SqlServer</AssemblyName>
     <DefineConstants>$(DefineConstants);SQLSERVER;INTERNALS_INVISIBLE;MDS</DefineConstants>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>

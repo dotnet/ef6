@@ -28,8 +28,28 @@ namespace System.Data.Entity.SqlServer
     using System.Globalization;
     using System.IO;
 
-    //TODO MDS Update: fix XML comments
-
+#if MDS
+    /// <summary>
+    /// The DbProviderServices implementation for the Microsoft.Data.SqlClient provider for SQL Server.
+    /// </summary>
+    /// <remarks>
+    /// Note that instance of this type also resolve additional provider services for Microsoft SQL Server
+    /// when this type is registered as an EF provider either using an entry in the application's config file
+    /// or through code-based registration in <see cref="DbConfiguration" />.
+    /// The services resolved are:
+    /// Requests for <see cref="IDbConnectionFactory" /> are resolved to a Singleton instance of
+    /// <see cref="System.Data.Entity.Infrastructure.MicrosoftLocalDbConnectionFactory" /> to create connections to LocalDB by default.
+    /// Requests for <see cref="Func{IDbExecutionStrategy}" /> for the invariant name "Microsoft.Data.SqlClient"
+    /// for any server name are resolved to a delegate that returns a <see cref="DefaultSqlExecutionStrategy" />
+    /// to provide a non-retrying policy for SQL Server.
+    /// Requests for <see cref="MigrationSqlGenerator" /> for the invariant name "Microsoft.Data.SqlClient" are
+    /// resolved to <see cref="MicrosoftSqlServerMigrationSqlGenerator" /> instances to provide default Migrations SQL
+    /// generation for SQL Server.
+    /// Requests for <see cref="DbSpatialServices" /> for the invariant name "Microsoft.Data.SqlClient" are
+    /// resolved to a Singleton instance of <see cref="MicrosoftSqlSpatialServices" /> to provide default spatial
+    /// services for SQL Server.
+    /// </remarks>
+#else
     /// <summary>
     /// The DbProviderServices implementation for the SqlClient provider for SQL Server.
     /// </summary>
@@ -50,6 +70,7 @@ namespace System.Data.Entity.SqlServer
     /// resolved to a Singleton instance of <see cref="SqlSpatialServices" /> to provide default spatial
     /// services for SQL Server.
     /// </remarks>
+#endif
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
 #if MDS
     public sealed class MicrosoftSqlProviderServices : DbProviderServices
@@ -79,9 +100,7 @@ namespace System.Data.Entity.SqlServer
         private SqlProviderServices()
 #endif
         {
-            //TODO MDS Update: Create MicrosoftLocalDbConnectionFactory()
-
-            AddDependencyResolver(new SingletonDependencyResolver<IDbConnectionFactory>(new LocalDbConnectionFactory()));
+            AddDependencyResolver(new SingletonDependencyResolver<IDbConnectionFactory>(new MicrosoftLocalDbConnectionFactory()));
 
             AddDependencyResolver(
                 new ExecutionStrategyResolver<DefaultSqlExecutionStrategy>(
