@@ -133,6 +133,6 @@ Please report any issues, questions and suggestions to TBD
 
 ## Release notes
 
-### 6.5.0-preview1
+### 6.5.0-preview.1
 
 - Initial preview
