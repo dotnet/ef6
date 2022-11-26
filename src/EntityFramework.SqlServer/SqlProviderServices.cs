@@ -100,8 +100,11 @@ namespace System.Data.Entity.SqlServer
         private SqlProviderServices()
 #endif
         {
+#if MDS
             AddDependencyResolver(new SingletonDependencyResolver<IDbConnectionFactory>(new MicrosoftLocalDbConnectionFactory()));
-
+#else
+            AddDependencyResolver(new SingletonDependencyResolver<IDbConnectionFactory>(new LocalDbConnectionFactory()));
+#endif
             AddDependencyResolver(
                 new ExecutionStrategyResolver<DefaultSqlExecutionStrategy>(
                     ProviderInvariantName, null, () => new DefaultSqlExecutionStrategy()));
