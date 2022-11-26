@@ -16,7 +16,6 @@
 	<Description>SQL Server provider for Entity Framework 6 with the Microsoft.Data.SqlClient ADO.NET provider.</Description>
 	<PackageProjectUrl>https://github.com/dotnet/ef6</PackageProjectUrl>
 	<PackageReleaseNotes>preview 1</PackageReleaseNotes>
-	<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	<MinClientVersion>5.0</MinClientVersion>
 	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	<PackageReadmeFile>readme.md</PackageReadmeFile>
