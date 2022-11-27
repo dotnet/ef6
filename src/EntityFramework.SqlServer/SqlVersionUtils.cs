@@ -100,9 +100,10 @@ namespace System.Data.Entity.SqlServer
             {
                 switch (versionHint)
                 {
+#if !MDS
                     case SqlProviderManifest.TokenSql8:
                         return SqlVersion.Sql8;
-
+#endif
                     case SqlProviderManifest.TokenSql9:
                         return SqlVersion.Sql9;
 
