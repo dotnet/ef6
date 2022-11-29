@@ -17,7 +17,7 @@ namespace System.Data.Entity.SqlServer
     using System.Data.Entity.SqlServer.Resources;
     using System.Data.Entity.SqlServer.SqlGen;
     using System.Data.Entity.SqlServer.Utilities;
-#if MDS
+#if USES_MICROSOFT_DATA_SQLCLIENT
     using Microsoft.Data.SqlClient;
 #else
     using System.Data.SqlClient;
@@ -35,7 +35,7 @@ namespace System.Data.Entity.SqlServer
     /// that can be run against a Microsoft SQL Server database.
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-#if MDS
+#if USES_MICROSOFT_DATA_SQLCLIENT
     public class MicrosoftSqlServerMigrationSqlGenerator : MigrationSqlGenerator
 #else
     public class SqlServerMigrationSqlGenerator : MigrationSqlGenerator
@@ -277,7 +277,7 @@ namespace System.Data.Entity.SqlServer
         /// <returns> An empty connection for the current provider. </returns>
         protected virtual DbConnection CreateConnection()
         {
-#if MDS
+#if USES_MICROSOFT_DATA_SQLCLIENT
             return DbConfiguration.DependencyResolver.GetService<DbProviderFactory>("Microsoft.Data.SqlClient").CreateConnection();
 #else
             return DbConfiguration.DependencyResolver.GetService<DbProviderFactory>("System.Data.SqlClient").CreateConnection();

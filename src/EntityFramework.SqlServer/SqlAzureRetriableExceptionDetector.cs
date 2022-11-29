@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.SqlServer
 {
-#if MDS
+#if USES_MICROSOFT_DATA_SQLCLIENT
     using Microsoft.Data.SqlClient;
 #else
     using System.Data.SqlClient;

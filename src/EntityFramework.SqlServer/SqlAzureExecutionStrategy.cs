@@ -3,7 +3,7 @@
 namespace System.Data.Entity.SqlServer
 {
     using System.Data.Entity.Infrastructure;
-#if MDS
+#if USES_MICROSOFT_DATA_SQLCLIENT
     using Microsoft.Data.SqlClient;
 #else
     using System.Data.SqlClient;
@@ -16,7 +16,7 @@ namespace System.Data.Entity.SqlServer
     /// if the <see cref="SqlException.Errors"/> contains any of the following error numbers:
     /// 40613, 40501, 40197, 10929, 10928, 10060, 10054, 10053, 233, 64 and 20
     /// </remarks>
-#if MDS
+#if USES_MICROSOFT_DATA_SQLCLIENT
     public class MicrosoftSqlAzureExecutionStrategy : DbExecutionStrategy
 #else
     public class SqlAzureExecutionStrategy : DbExecutionStrategy
@@ -28,7 +28,7 @@ namespace System.Data.Entity.SqlServer
         /// <remarks>
         /// The default retry limit is 5, which means that the total amount of time spent between retries is 26 seconds plus the random factor.
         /// </remarks>
-#if MDS
+#if USES_MICROSOFT_DATA_SQLCLIENT
         public MicrosoftSqlAzureExecutionStrategy()
 #else
         public SqlAzureExecutionStrategy()
@@ -42,7 +42,7 @@ namespace System.Data.Entity.SqlServer
         /// </summary>
         /// <param name="maxRetryCount"> The maximum number of retry attempts. </param>
         /// <param name="maxDelay"> The maximum delay in milliseconds between retries. </param>
-#if MDS
+#if USES_MICROSOFT_DATA_SQLCLIENT
         public MicrosoftSqlAzureExecutionStrategy(int maxRetryCount, TimeSpan maxDelay)
 #else
         public SqlAzureExecutionStrategy(int maxRetryCount, TimeSpan maxDelay)

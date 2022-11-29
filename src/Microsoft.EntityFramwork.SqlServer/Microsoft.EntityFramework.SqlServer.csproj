@@ -7,7 +7,7 @@
     <TargetFrameworks>net462;netstandard2.1</TargetFrameworks>
     <AssemblyVersion>6.0.0.0</AssemblyVersion>
 	<AssemblyName>Microsoft.EntityFramework.SqlServer</AssemblyName>
-    <DefineConstants>$(DefineConstants);SQLSERVER;INTERNALS_INVISIBLE;MDS</DefineConstants>
+    <DefineConstants>$(DefineConstants);SQLSERVER;INTERNALS_INVISIBLE;USES_MICROSOFT_DATA_SQLCLIENT</DefineConstants>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
 	<PackageId>Microsoft.EntityFramework.SqlServer</PackageId>

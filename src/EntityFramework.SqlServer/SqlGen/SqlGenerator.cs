@@ -12,7 +12,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
     using System.Data.Entity.Spatial;
     using System.Data.Entity.SqlServer.Resources;
     using System.Data.Entity.SqlServer.Utilities;
-#if MDS
+#if USES_MICROSOFT_DATA_SQLCLIENT
     using Microsoft.Data.SqlClient;
 #else
     using System.Data.SqlClient;

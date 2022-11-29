@@ -15,13 +15,13 @@ namespace System.Data.Entity.SqlServer
     /// Entity Framework with Microsoft SQL Server.
     /// </summary>
     [Serializable]
-#if MDS
+#if USES_MICROSOFT_DATA_SQLCLIENT
     public class MicrosoftSqlSpatialServices : DbSpatialServices
 #else
     public class SqlSpatialServices : DbSpatialServices
 #endif
     {
-#if MDS
+#if USES_MICROSOFT_DATA_SQLCLIENT
         internal static readonly MicrosoftSqlSpatialServices Instance = new MicrosoftSqlSpatialServices();
 
         private static Dictionary<string, MicrosoftSqlSpatialServices> _otherSpatialServices;
@@ -30,10 +30,11 @@ namespace System.Data.Entity.SqlServer
         
         private static Dictionary<string, SqlSpatialServices> _otherSpatialServices;
 #endif
+
         [NonSerialized]
         private readonly SqlTypesAssemblyLoader _loader;
 
-#if MDS
+#if USES_MICROSOFT_DATA_SQLCLIENT
         internal MicrosoftSqlSpatialServices()
         {
         }
@@ -52,6 +53,7 @@ namespace System.Data.Entity.SqlServer
             _loader = loader;
         }
 #endif
+
         /// <inheritdoc />
         public override bool NativeTypesAvailable
         {
@@ -64,7 +66,7 @@ namespace System.Data.Entity.SqlServer
         // this be done in a way that ensures that the underlying SqlTypesAssembly value is also atomized,
         // since that's caching compilation.
         // Relies on SqlTypesAssembly to verify that the assembly is appropriate.
-#if MDS
+#if USES_MICROSOFT_DATA_SQLCLIENT
         private static bool TryGetSpatialServiceFromAssembly(Assembly assembly, out MicrosoftSqlSpatialServices services)
 #else
         private static bool TryGetSpatialServiceFromAssembly(Assembly assembly, out SqlSpatialServices services)
@@ -81,7 +83,7 @@ namespace System.Data.Entity.SqlServer
                         SqlTypesAssembly sqlAssembly;
                         if (SqlTypesAssemblyLoader.DefaultInstance.TryGetSqlTypesAssembly(assembly, out sqlAssembly))
                         {
-#if MDS
+#if USES_MICROSOFT_DATA_SQLCLIENT
                             if (_otherSpatialServices == null)
                             {
                                 _otherSpatialServices = new Dictionary<string, MicrosoftSqlSpatialServices>(1);
@@ -155,7 +157,7 @@ namespace System.Data.Entity.SqlServer
             var providerValueType = providerValue.GetType();
             if (providerValueType != expectedSpatialType)
             {
-#if MDS
+#if USES_MICROSOFT_DATA_SQLCLIENT
                 MicrosoftSqlSpatialServices otherServices;
 #else
                 SqlSpatialServices otherServices;
