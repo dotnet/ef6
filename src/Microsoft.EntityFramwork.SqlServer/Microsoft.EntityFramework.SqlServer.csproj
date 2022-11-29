@@ -18,6 +18,7 @@
 	<PackageReleaseNotes>preview 1</PackageReleaseNotes>
 	<MinClientVersion>5.0</MinClientVersion>
 	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IsPackable>true</IsPackable>
 	<PackageReadmeFile>readme.md</PackageReadmeFile>
 	<PublishRepositoryUrl>true</PublishRepositoryUrl>
 	<EmbedUntrackedSources>true</EmbedUntrackedSources>
