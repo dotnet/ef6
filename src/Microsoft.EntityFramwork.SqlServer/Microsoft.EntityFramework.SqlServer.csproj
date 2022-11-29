@@ -13,6 +13,7 @@
 	<PackageId>Microsoft.EntityFramework.SqlServer</PackageId>
 	<PackageVersion>6.5.0-preview.1</PackageVersion>
 	<Authors>Microsoft</Authors>
+	<Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
 	<Description>SQL Server provider for Entity Framework 6 with the Microsoft.Data.SqlClient ADO.NET provider.</Description>
 	<PackageProjectUrl>https://github.com/dotnet/ef6</PackageProjectUrl>
 	<PackageReleaseNotes>preview 1</PackageReleaseNotes>
