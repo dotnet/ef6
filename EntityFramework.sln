@@ -43,7 +43,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntityFramework.SqlServer.I
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntityFramework.SqlServerCompact.InternalsVisibleTo", "src\EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.InternalsVisibleTo.csproj", "{0E08516E-89A5-4C72-BBE2-59AFCD4EF55D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.EntityFramework.SqlServer", "src\Microsoft.EntityFramwork.SqlServer\Microsoft.EntityFramework.SqlServer.csproj", "{5DA074AC-B4E8-4D81-8B60-EF618BB3FC6B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.EntityFramework.SqlServer", "src\Microsoft.EntityFramework.SqlServer\Microsoft.EntityFramework.SqlServer.csproj", "{B3CB15BE-EAEC-426D-856D-FE0F5DE5F282}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -107,10 +107,10 @@ Global
 		{0E08516E-89A5-4C72-BBE2-59AFCD4EF55D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E08516E-89A5-4C72-BBE2-59AFCD4EF55D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0E08516E-89A5-4C72-BBE2-59AFCD4EF55D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5DA074AC-B4E8-4D81-8B60-EF618BB3FC6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5DA074AC-B4E8-4D81-8B60-EF618BB3FC6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5DA074AC-B4E8-4D81-8B60-EF618BB3FC6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5DA074AC-B4E8-4D81-8B60-EF618BB3FC6B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3CB15BE-EAEC-426D-856D-FE0F5DE5F282}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3CB15BE-EAEC-426D-856D-FE0F5DE5F282}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3CB15BE-EAEC-426D-856D-FE0F5DE5F282}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3CB15BE-EAEC-426D-856D-FE0F5DE5F282}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

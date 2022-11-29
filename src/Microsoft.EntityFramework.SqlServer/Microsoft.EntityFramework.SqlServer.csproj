@@ -8,8 +8,6 @@
     <AssemblyVersion>6.0.0.0</AssemblyVersion>
 	<AssemblyName>Microsoft.EntityFramework.SqlServer</AssemblyName>
     <DefineConstants>$(DefineConstants);SQLSERVER;INTERNALS_INVISIBLE;USES_MICROSOFT_DATA_SQLCLIENT</DefineConstants>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
 	<PackageId>Microsoft.EntityFramework.SqlServer</PackageId>
 	<PackageVersion>6.5.0-preview.1</PackageVersion>
 	<Authors>Microsoft</Authors>
@@ -18,7 +16,7 @@
 	<PackageProjectUrl>https://github.com/dotnet/ef6</PackageProjectUrl>
 	<PackageReleaseNotes>preview 1</PackageReleaseNotes>
 	<MinClientVersion>5.0</MinClientVersion>
-	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <IsPackable>true</IsPackable>
 	<PackageReadmeFile>readme.md</PackageReadmeFile>
 	<PublishRepositoryUrl>true</PublishRepositoryUrl>
