@@ -1,27 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <RootNamespace>System.Data.Entity.SqlServer</RootNamespace>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
-	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <TargetFrameworks>net462;netstandard2.1</TargetFrameworks>
-    <AssemblyVersion>6.0.0.0</AssemblyVersion>
-	<AssemblyName>Microsoft.EntityFramework.SqlServer</AssemblyName>
-    <DefineConstants>$(DefineConstants);SQLSERVER;INTERNALS_INVISIBLE;USES_MICROSOFT_DATA_SQLCLIENT</DefineConstants>
-	<PackageId>Microsoft.EntityFramework.SqlServer</PackageId>
-	<PackageVersion>6.5.0-preview.1</PackageVersion>
-	<Authors>Microsoft</Authors>
-	<Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
-	<Description>SQL Server provider for Entity Framework 6 with the Microsoft.Data.SqlClient ADO.NET provider.</Description>
-	<PackageProjectUrl>https://github.com/dotnet/ef6</PackageProjectUrl>
-	<PackageReleaseNotes>preview 1</PackageReleaseNotes>
-	<MinClientVersion>5.0</MinClientVersion>
-	<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <IsPackable>true</IsPackable>
-	<PackageReadmeFile>readme.md</PackageReadmeFile>
-	<PublishRepositoryUrl>true</PublishRepositoryUrl>
-	<EmbedUntrackedSources>true</EmbedUntrackedSources>
-	<DebugType>embedded</DebugType>
+	  <RootNamespace>System.Data.Entity.SqlServer</RootNamespace>
+	  <GenerateDocumentationFile>True</GenerateDocumentationFile>
+	  <TargetFrameworks>net462;netstandard2.1</TargetFrameworks>
+	  <Description>SQL Server provider for Entity Framework 6 with the Microsoft.Data.SqlClient ADO.NET provider.</Description>
+	  <AssemblyVersion>6.0.0.0</AssemblyVersion>
+	  <DefineConstants>$(DefineConstants);SQLSERVER;INTERNALS_INVISIBLE;USES_MICROSOFT_DATA_SQLCLIENT</DefineConstants>
+	  <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
