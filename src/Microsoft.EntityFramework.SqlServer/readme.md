@@ -2,16 +2,16 @@
 
 This Entity Framework 6 provider is a replacement provider for the built-in SQL Server provider. 
 
-This provider depends on the modern [Microsoft.Data.SqlClient] ADO.NET provider, which includes the following advantages over the currently used driver:
+This provider depends on the modern [Microsoft.Data.SqlClient](https://github.com/dotnet/SqlClient) ADO.NET provider, which includes the following advantages over the currently used driver:
 
 - Current client receiving full support in contrast to `System.Data.SqlClient`, which is in maintenance mode
-- Suports new SQL Server features, including support for the SQL Server 2022 enchanced client protocol
+- Suports new SQL Server features, including support for the SQL Server 2022 enchanced client protocol (TDS8)
 - Supports most Azure Active Directory authentication methods
 - Supports Always Encrypted with .NET
 
-Notice that this provider is a runtime-only update, and will not work with the existing Visual Studio tooling.
+Notice that this provider is a runtime only update, and will not work with the existing Visual Studio tooling.
 
-The latest build of this package is available from NuGet (Link TBD)
+The latest build of this package is available from [NuGet](https://www.nuget.org/packages/Microsoft.EntityFramework.SqlServer)
 
 ## Configuration
 
@@ -20,15 +20,15 @@ There are various ways to configure Entity Framework to use this provider.
 You can register the provider in code using an attribute:
 
 ````csharp
-    [DbConfigurationType(typeof(MicrosoftSqlDbConfiguration))]
-    public class SchoolContext : DbContext
+[DbConfigurationType(typeof(MicrosoftSqlDbConfiguration))]
+public class SchoolContext : DbContext
+{
+    public SchoolContext() : base()
     {
-        public SchoolContext() : base()
-        {
-        }
-
-        public DbSet<Student> Students { get; set; }
     }
+
+    public DbSet<Student> Students { get; set; }
+}
 ````
 If you have multiple classes inheriting from DbContext in your solution, add the DbConfigurationType attribute to all of them.
 
@@ -43,7 +43,7 @@ SetProviderServices(MicrosoftSqlProviderServices.ProviderInvariantName, Microsof
 // Optional
 SetExecutionStrategy(MicrosoftSqlProviderServices.ProviderInvariantName, () => new MicrosoftSqlAzureExecutionStrategy());
 ````
-You can also use XML/App.Config based configuration:
+You can also use App.Config based configuration:
 
 ````xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -66,7 +66,7 @@ You can also use XML/App.Config based configuration:
     </system.data>
 </configuration>
 ````
-If you use App.Config with a .NET Core / .NET 5 or later app, you must register the DbProviderFactory in code once:
+If you use App.Config with a .NET 6 or later app, you must register the DbProviderFactory in code once:
 
 ````csharp
 DbProviderFactories.RegisterFactory(MicrosoftSqlProviderServices.ProviderInvariantName, Microsoft.Data.SqlClient.SqlClientFactory.Instance);
@@ -85,7 +85,7 @@ If you use an EDMX file, update the `Provider` name:
 
 > In order to use the EDMX file with the Visual Studio designer, you must switch the provider name back to `System.Data.SqlClient`
 
-Also update the provider name inside the EntityConnection connection string:
+Also update the provider name inside the EntityConnection connection string - `provider=Microsoft.Data.SqlClient`
 
 ````xml
  <add 

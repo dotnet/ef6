@@ -8,6 +8,7 @@ namespace System.Data.Entity.SqlServer
 #else
     using System.Data.SqlClient;
 #endif
+
     /// <summary>
     /// An <see cref="IDbExecutionStrategy"/> that retries actions that throw exceptions caused by SQL Azure transient failures.
     /// </summary>
