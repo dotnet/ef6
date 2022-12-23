@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.SqlServer;
 using System.Linq;
 using Xunit;
 
@@ -19,7 +18,7 @@ namespace MicrsoftSqlProviderSmokeTest
             {
                 ctx.Database.ExecuteSqlCommand("SELECT 1");
                 
-                var students = ctx.Students.Where(s => "erik" == SqlFunctions.UserName()).ToList();              
+                var students = ctx.Students.Where(s => "erik" == System.Data.Entity.SqlServer.SqlFunctions.UserName()).ToList();              
                 
                 var stud = new Student() { StudentName = "Bill" };
 
@@ -37,6 +36,17 @@ namespace MicrsoftSqlProviderSmokeTest
                 Assert.True(students.Count > 0);
                 Assert.True(ctx.Database.Connection as SqlConnection != null);
             }
+        }
+
+        [Fact]
+        public void Microsoft_Data_SqlClient_Types_Are_Present_And_Correct()
+        {
+            Assert.NotNull(typeof(System.Data.Entity.SqlServer.MicrosoftSqlAzureExecutionStrategy));
+            Assert.NotNull(typeof(System.Data.Entity.SqlServer.MicrosoftSqlConnectionFactory));
+            Assert.NotNull(typeof(System.Data.Entity.SqlServer.MicrosoftSqlDbConfiguration));
+            Assert.NotNull(typeof(System.Data.Entity.SqlServer.MicrosoftSqlProviderServices));
+            Assert.NotNull(typeof(System.Data.Entity.SqlServer.MicrosoftSqlServerMigrationSqlGenerator));
+            Assert.NotNull(typeof(System.Data.Entity.SqlServer.MicrosoftSqlSpatialServices));
         }
     }
 
@@ -61,7 +71,7 @@ namespace MicrsoftSqlProviderSmokeTest
         public ICollection<Student> Students { get; set; }
     }
 
-    [DbConfigurationType(typeof(MicrosoftSqlDbConfiguration))]
+    [DbConfigurationType(typeof(System.Data.Entity.SqlServer.MicrosoftSqlDbConfiguration))]
     public class SchoolContext : DbContext
     {
         public SchoolContext(string connectionString) : base(connectionString)
