@@ -41,12 +41,37 @@ namespace MicrsoftSqlProviderSmokeTest
         [Fact]
         public void Microsoft_Data_SqlClient_Types_Are_Present_And_Correct()
         {
-            Assert.NotNull(typeof(System.Data.Entity.SqlServer.MicrosoftSqlAzureExecutionStrategy));
-            Assert.NotNull(typeof(System.Data.Entity.SqlServer.MicrosoftSqlConnectionFactory));
-            Assert.NotNull(typeof(System.Data.Entity.SqlServer.MicrosoftSqlDbConfiguration));
-            Assert.NotNull(typeof(System.Data.Entity.SqlServer.MicrosoftSqlProviderServices));
-            Assert.NotNull(typeof(System.Data.Entity.SqlServer.MicrosoftSqlServerMigrationSqlGenerator));
-            Assert.NotNull(typeof(System.Data.Entity.SqlServer.MicrosoftSqlSpatialServices));
+            var newAssembly = System.Data.Entity.SqlServer.MicrosoftSqlProviderServices.Instance.GetType().Assembly;
+
+            Assert.NotNull(newAssembly.GetType("System.Data.Entity.SqlServer.MicrosoftSqlAzureExecutionStrategy"));
+            Assert.Null(newAssembly.GetType("System.Data.Entity.SqlServer.SqlAzureExecutionStrategy"));
+
+            Assert.NotNull(newAssembly.GetType("System.Data.Entity.SqlServer.MicrosoftSqlProviderServices"));
+            Assert.Null(newAssembly.GetType("System.Data.Entity.SqlServer.SqlProviderServices"));
+
+            Assert.NotNull(newAssembly.GetType("System.Data.Entity.SqlServer.MicrosoftSqlServerMigrationSqlGenerator"));
+            Assert.Null(newAssembly.GetType("System.Data.Entity.SqlServer.SqlServerMigrationSqlGenerator"));
+
+            Assert.NotNull(newAssembly.GetType("System.Data.Entity.SqlServer.MicrosoftSqlSpatialServices"));
+            Assert.Null(newAssembly.GetType("System.Data.Entity.SqlServer.SqlSpatialServices"));
+
+            Assert.NotNull(newAssembly.GetType("System.Data.Entity.Infrastructure.MicrosoftSqlConnectionFactory"));
+
+            Assert.NotNull(newAssembly.GetType("System.Data.Entity.Infrastructure.MicrosoftLocalDbConnectionFactory"));
+
+            var oldAssembly = System.Data.Entity.SqlServer.SqlProviderServices.Instance.GetType().Assembly;
+
+            Assert.Null(oldAssembly.GetType("System.Data.Entity.SqlServer.MicrosoftSqlAzureExecutionStrategy"));
+            Assert.NotNull(oldAssembly.GetType("System.Data.Entity.SqlServer.SqlAzureExecutionStrategy"));
+
+            Assert.Null(oldAssembly.GetType("System.Data.Entity.SqlServer.MicrosoftSqlProviderServices"));
+            Assert.NotNull(oldAssembly.GetType("System.Data.Entity.SqlServer.SqlProviderServices"));
+
+            Assert.Null(oldAssembly.GetType("System.Data.Entity.SqlServer.MicrosoftSqlServerMigrationSqlGenerator"));
+            Assert.NotNull(oldAssembly.GetType("System.Data.Entity.SqlServer.SqlServerMigrationSqlGenerator"));
+
+            Assert.Null(oldAssembly.GetType("System.Data.Entity.SqlServer.MicrosoftSqlSpatialServices"));
+            Assert.NotNull(oldAssembly.GetType("System.Data.Entity.SqlServer.SqlSpatialServices"));
         }
     }
 

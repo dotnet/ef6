@@ -1,12 +1,11 @@
-﻿namespace System.Data.Entity.SqlServer
+﻿namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Common;
     using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Infrastructure.Interception;
     using Microsoft.Data.SqlClient;
     using System.Diagnostics.CodeAnalysis;
-    using System.Data.Entity.Infrastructure;
-
+ 
     /// <summary>
     /// Instances of this class are used to create DbConnection objects for
     /// SQL Server based on a given database name or connection string. By default, the connection is
