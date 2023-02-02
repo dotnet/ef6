@@ -494,7 +494,11 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
         private static bool IsValidScopeIdentityColumnType(TypeUsage typeUsage)
         {
+#if USES_MICROSOFT_DATA_SQLCLIENT
+            if (!MicrosoftSqlProviderServices.UseScopeIdentity)
+#else
             if (!SqlProviderServices.UseScopeIdentity) 
+#endif
             {
                 return false;
             }

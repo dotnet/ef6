@@ -23,29 +23,41 @@ namespace System.Data.Entity.SqlServer
     public class SqlAzureExecutionStrategy : DbExecutionStrategy
 #endif
     {
+#if USES_MICROSOFT_DATA_SQLCLIENT
+        /// <summary>
+        /// Creates a new instance of <see cref="MicrosoftSqlAzureExecutionStrategy" />.
+        /// </summary>
+        /// <remarks>
+        /// The default retry limit is 5, which means that the total amount of time spent between retries is 26 seconds plus the random factor.
+        /// </remarks>
+        public MicrosoftSqlAzureExecutionStrategy()
+#else
         /// <summary>
         /// Creates a new instance of <see cref="SqlAzureExecutionStrategy" />.
         /// </summary>
         /// <remarks>
         /// The default retry limit is 5, which means that the total amount of time spent between retries is 26 seconds plus the random factor.
         /// </remarks>
-#if USES_MICROSOFT_DATA_SQLCLIENT
-        public MicrosoftSqlAzureExecutionStrategy()
-#else
         public SqlAzureExecutionStrategy()
 #endif
         {
         }
 
+#if USES_MICROSOFT_DATA_SQLCLIENT
+        /// <summary>
+        /// Creates a new instance of <see cref="MicrosoftSqlAzureExecutionStrategy" /> with the specified limits for
+        /// number of retries and the delay between retries.
+        /// </summary>
+        /// <param name="maxRetryCount"> The maximum number of retry attempts. </param>
+        /// <param name="maxDelay"> The maximum delay in milliseconds between retries. </param>
+        public MicrosoftSqlAzureExecutionStrategy(int maxRetryCount, TimeSpan maxDelay)
+#else
         /// <summary>
         /// Creates a new instance of <see cref="SqlAzureExecutionStrategy" /> with the specified limits for
         /// number of retries and the delay between retries.
         /// </summary>
         /// <param name="maxRetryCount"> The maximum number of retry attempts. </param>
         /// <param name="maxDelay"> The maximum delay in milliseconds between retries. </param>
-#if USES_MICROSOFT_DATA_SQLCLIENT
-        public MicrosoftSqlAzureExecutionStrategy(int maxRetryCount, TimeSpan maxDelay)
-#else
         public SqlAzureExecutionStrategy(int maxRetryCount, TimeSpan maxDelay)
 #endif
             : base(maxRetryCount, maxDelay)

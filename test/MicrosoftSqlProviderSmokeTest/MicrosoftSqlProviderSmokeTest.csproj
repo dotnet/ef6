@@ -10,6 +10,7 @@
   </ItemGroup>	
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\EntityFramework.SqlServer\EntityFramework.SqlServer.csproj" />
     <ProjectReference Include="..\..\src\Microsoft.EntityFramework.SqlServer\Microsoft.EntityFramework.SqlServer.csproj" />
   </ItemGroup>
 
