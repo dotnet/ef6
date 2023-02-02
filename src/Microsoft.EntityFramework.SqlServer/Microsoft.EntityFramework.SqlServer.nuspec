@@ -7,10 +7,10 @@
     <dependencies>
       <group>
         <dependency id="EntityFramework" version="$Version$" exclude="Build,Analyzers" />
-        <dependency id="Microsoft.Data.SqlClient" version="5.1.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Data.SqlClient" version="$MicrosoftDataSqlClientVersion$" exclude="Build,Analyzers" />
       </group>
       <group targetFramework=".NETStandard2.1">
-        <dependency id="Microsoft.SqlServer.Types" version="160.1000.6" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.SqlServer.Types" version="$MicrosoftSqlServerTypesXplatVersion$" exclude="Build,Analyzers" />
       </group>
     </dependencies>
   </metadata>

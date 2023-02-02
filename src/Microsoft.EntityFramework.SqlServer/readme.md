@@ -66,7 +66,7 @@ You can also use App.Config based configuration:
     </system.data>
 </configuration>
 ````
-If you use App.Config with a .NET 6 or later app, you must register the DbProviderFactory in code once:
+If you use App.Config with a .NET 6 or later app, you must remove the `<system.data>` section above and register the DbProviderFactory in code once:
 
 ````csharp
 DbProviderFactories.RegisterFactory(MicrosoftSqlProviderServices.ProviderInvariantName, Microsoft.Data.SqlClient.SqlClientFactory.Instance);
@@ -126,10 +126,6 @@ If an older version of EntityFramework.dll is installed in the .NET Framework GA
 `The 'PrimitiveTypeKind' attribute is invalid - The value 'HierarchyId' is invalid according to its datatype`
 
 Solution is to remove the .dll from the GAC.
-
-## Feedback
-
-Please report any issues, questions and suggestions to TBD
 
 ## Release notes
 

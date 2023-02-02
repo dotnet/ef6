@@ -11,6 +11,13 @@
 	  <NuspecFile>$(MSBuildThisFileDirectory)$(MSBuildProjectName).nuspec</NuspecFile>
   </PropertyGroup>
 
+   <ItemGroup>
+      <NuspecProperty Include="Configuration=$(Configuration)" />
+      <NuSpecProperty Include="MicrosoftDataSqlClientVersion=$(MicrosoftDataSqlClientVersion)" />
+	  <NuspecProperty Include="NeutralLanguage=$(NeutralLanguage)" />
+	  <NuspecProperty Include="MicrosoftSqlServerTypesXplatVersion=$(MicrosoftSqlServerTypesXplatVersion)" />	   
+   </ItemGroup>	
+
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
@@ -103,6 +110,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EntityFramework\EntityFramework.csproj" />
+    <ProjectReference Include="..\Microsoft.Data.Entity.Build.Tasks\Microsoft.Data.Entity.Build.Tasks.csproj" />
   </ItemGroup>
 
   <ItemGroup>
