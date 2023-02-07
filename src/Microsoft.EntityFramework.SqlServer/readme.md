@@ -125,7 +125,7 @@ If an older version of EntityFramework.dll is installed in the .NET Framework GA
 
 `The 'PrimitiveTypeKind' attribute is invalid - The value 'HierarchyId' is invalid according to its datatype`
 
-Solution is to remove the .dll from the GAC.
+Solution is to remove the .dll from the GAC. EF6 assemblies should never be installed in the GAC.
 
 ## Release notes
 
