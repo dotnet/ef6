@@ -15,7 +15,7 @@ This plan focuses on stability of the codebase and compatibility of new versions
 
 ## Entity Framework Core
 
-Entity Framework Core (EF Core) is a lightweight and extensible version of Entity Framework and continues to be actively developed on [the EFCore GitHUb repo](https://github.com/dotnet/efcore). EF Core is developed exclusively for modern .NET and does not run on .NET Framework. EF Core includes [many improvements and new features over EF6](https://docs.microsoft.com/ef/efcore-and-ef6/). EF Core has a different architecture to EF6 and takes a very different approach to its internals--for example, EF Core does not support a visual designer or EDMX files. However, most EF6 projects can be ported to EF Core with some amount of work--see [Port from EF6 to EF Core](https://docs.microsoft.com/ef/efcore-and-ef6/porting/) for a guide.
+Entity Framework Core (EF Core) is a lightweight and extensible version of Entity Framework and continues to be actively developed on [the EFCore GitHub repo](https://github.com/dotnet/efcore). EF Core is developed exclusively for modern .NET and does not run on .NET Framework. EF Core includes [many improvements and new features over EF6](https://docs.microsoft.com/ef/efcore-and-ef6/). EF Core has a different architecture to EF6 and takes a very different approach to its internals--for example, EF Core does not support a visual designer or EDMX files. However, most EF6 projects can be ported to EF Core with some amount of work--see [Port from EF6 to EF Core](https://docs.microsoft.com/ef/efcore-and-ef6/porting/) for a guide.
 
 ## Forks
 
@@ -37,4 +37,4 @@ The code for the EF6 Tools for VS (including the visual designer) can be found i
 
 ## EF6 PowerTools
 
-The EF6 PowerTools is a community-driven project with its own [github repo](https://github.com/ErikEJ/EntityFramework6PowerTools).
+The EF6 PowerTools is a community-driven project with its own [GitHub repo](https://github.com/ErikEJ/EntityFramework6PowerTools).

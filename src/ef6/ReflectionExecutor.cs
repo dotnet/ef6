@@ -14,7 +14,6 @@ namespace System.Data.Entity.Tools
         private readonly object _executor;
         private readonly Type _resultHandlerType;
 
-        // TODO: Use configurationFile. Blocked by dotnet/corefx#32095
         public ReflectionExecutor(
             string assembly,
             string dataDirectory,
@@ -24,6 +23,15 @@ namespace System.Data.Entity.Tools
         {
             _applicationBase = Path.GetFullPath(
                     Path.Combine(Directory.GetCurrentDirectory(), Path.GetDirectoryName(assembly)));
+
+            if (string.IsNullOrEmpty(configurationFile))
+            {
+                configurationFile = Path.GetFileNameWithoutExtension(assembly) + ".config";
+            }
+            if (File.Exists(configurationFile))
+            {
+                AppDomain.CurrentDomain.SetData("APP_CONFIG_FILE", configurationFile);
+            }
 
             if (dataDirectory != null)
             {

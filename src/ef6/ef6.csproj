@@ -3,6 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFrameworks>netcoreapp3.0;net40;net45</TargetFrameworks>
+    <RuntimeIdentifiers>win-arm64</RuntimeIdentifiers>
     <CheckEolTargetFramework>False</CheckEolTargetFramework>
     <RootNamespace>System.Data.Entity.Tools</RootNamespace>
     <!--
@@ -55,8 +56,9 @@
     </EmbeddedResource>
   </ItemGroup>
 
-  <Target Name="BuildX86" AfterTargets="Build" Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework' And '$(Platform)' != 'x86'">
+  <Target Name="BuildOtherPlatforms" AfterTargets="Build" Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework' And '$(Platform)' == 'AnyCPU'">
     <MSBuild Projects="$(MSBuildProjectFullPath)" Properties="TargetFramework=$(TargetFramework);Platform=x86;Configuration=$(Configuration)" Targets="Build" />
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Properties="TargetFramework=$(TargetFramework);Platform=ARM64;Configuration=$(Configuration)" Targets="Build" />
   </Target>
 
 </Project>
