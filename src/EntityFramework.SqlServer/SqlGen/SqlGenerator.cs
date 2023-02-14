@@ -12,7 +12,11 @@ namespace System.Data.Entity.SqlServer.SqlGen
     using System.Data.Entity.Spatial;
     using System.Data.Entity.SqlServer.Resources;
     using System.Data.Entity.SqlServer.Utilities;
+#if USES_MICROSOFT_DATA_SQLCLIENT
+    using Microsoft.Data.SqlClient;
+#else
     using System.Data.SqlClient;
+#endif
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -2576,9 +2580,13 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 input.Select.Skip = new SkipClause(HandleCountExpression(e.Count));
 
                 // Add the ORDER BY part.
+#if USES_MICROSOFT_DATA_SQLCLIENT
+                if (MicrosoftSqlProviderServices.UseRowNumberOrderingInOffsetQueries)
+#else
                 if (SqlProviderServices.UseRowNumberOrderingInOffsetQueries)
-                {
-                    input.OrderBy.Append("row_number() OVER (ORDER BY ");
+#endif
+                { 
+                input.OrderBy.Append("row_number() OVER (ORDER BY ");
                     AddSortKeys(input.OrderBy, e.SortOrder);
                     input.OrderBy.Append(")");
                 }

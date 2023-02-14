@@ -4,7 +4,11 @@ namespace System.Data.Entity.SqlServer
 {
     using System.Data.Common;
     using System.Data.Entity.SqlServer.Resources;
+#if USES_MICROSOFT_DATA_SQLCLIENT
+    using Microsoft.Data.SqlClient;
+#else
     using System.Data.SqlClient;
+#endif
 
     internal class SqlProviderUtilities
     {

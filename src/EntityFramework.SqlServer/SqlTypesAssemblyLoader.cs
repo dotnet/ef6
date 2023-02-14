@@ -100,10 +100,17 @@ namespace System.Data.Entity.SqlServer
         private SqlTypesAssembly BindToLatest()
         {
             Assembly sqlTypesAssembly = null;
+#if USES_MICROSOFT_DATA_SQLCLIENT
+            var candidateAssemblies =
+                MicrosoftSqlProviderServices.SqlServerTypesAssemblyName != null
+                    ? new[] { MicrosoftSqlProviderServices.SqlServerTypesAssemblyName }
+                    : _preferredSqlTypesAssemblies;
+#else
             var candidateAssemblies =
                 SqlProviderServices.SqlServerTypesAssemblyName != null
                     ? new[] { SqlProviderServices.SqlServerTypesAssemblyName }
                     : _preferredSqlTypesAssemblies;
+#endif
 
             foreach (var assemblyFullName in candidateAssemblies)
             {

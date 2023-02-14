@@ -9,7 +9,11 @@ namespace System.Data.Entity.SqlServer.SqlGen
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.SqlServer.Resources;
     using System.Data.Entity.SqlServer.Utilities;
+#if USES_MICROSOFT_DATA_SQLCLIENT
+    using Microsoft.Data.SqlClient;
+#else
     using System.Data.SqlClient;
+#endif
     using System.Diagnostics;
     using System.Globalization;
     using System.Linq;
@@ -490,7 +494,11 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
         private static bool IsValidScopeIdentityColumnType(TypeUsage typeUsage)
         {
+#if USES_MICROSOFT_DATA_SQLCLIENT
+            if (!MicrosoftSqlProviderServices.UseScopeIdentity)
+#else
             if (!SqlProviderServices.UseScopeIdentity) 
+#endif
             {
                 return false;
             }
@@ -596,8 +604,13 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 // SqlClient will silently truncate data when SqlParameter.Size < |SqlParameter.Value|.
                 const bool preventTruncation = true;
 
+#if USES_MICROSOFT_DATA_SQLCLIENT
+                var parameter = MicrosoftSqlProviderServices.CreateSqlParameter(
+                    name ?? GetParameterName(_parameters.Count), type, ParameterMode.In, value, preventTruncation, _sqlGenerator.SqlVersion);
+#else
                 var parameter = SqlProviderServices.CreateSqlParameter(
                     name ?? GetParameterName(_parameters.Count), type, ParameterMode.In, value, preventTruncation, _sqlGenerator.SqlVersion);
+#endif
 
                 _parameters.Add(parameter);
 

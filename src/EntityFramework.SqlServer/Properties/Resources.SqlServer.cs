@@ -506,12 +506,19 @@ namespace System.Data.Entity.SqlServer.Resources
         private static EntityRes loader;
         private readonly ResourceManager resources;
 
+#if USES_MICROSOFT_DATA_SQLCLIENT
+        private EntityRes()
+        {
+            resources = new ResourceManager(
+                "System.Data.Entity.SqlServer.Properties.Resources.SqlServer", typeof(System.Data.Entity.SqlServer.MicrosoftSqlProviderServices).Assembly());
+        }
+#else
         private EntityRes()
         {
             resources = new ResourceManager(
                 "System.Data.Entity.SqlServer.Properties.Resources.SqlServer", typeof(System.Data.Entity.SqlServer.SqlProviderServices).Assembly());
         }
-
+#endif
         private static EntityRes GetLoader()
         {
             if (loader == null)

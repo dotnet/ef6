@@ -18,6 +18,7 @@
     <MicrosoftBuildUtilitiesCoreVersion>16.0.461</MicrosoftBuildUtilitiesCoreVersion>
     <MicrosoftSqlServerCompactVersion>4.0.8876.1</MicrosoftSqlServerCompactVersion>
     <MicrosoftSqlServerTypesVersion>14.0.1016.290</MicrosoftSqlServerTypesVersion>
+    <MicrosoftSqlServerTypesXplatVersion>160.1000.6</MicrosoftSqlServerTypesXplatVersion>
     <MoqVersion>4.7.145</MoqVersion>
     <MySqlDataEntityVersion>6.7.2-beta-ef6</MySqlDataEntityVersion>
     <MicrosoftCSharpVersion>4.7.0</MicrosoftCSharpVersion>
@@ -25,6 +26,7 @@
     <SystemComponentModelAnnotationsVersion>4.7.0</SystemComponentModelAnnotationsVersion>
     <SystemConfigurationConfigurationManagerVersion>4.7.0</SystemConfigurationConfigurationManagerVersion>
     <SystemDataSqlClientVersion>4.8.5</SystemDataSqlClientVersion>
+    <MicrosoftDataSqlClientVersion>5.1.0</MicrosoftDataSqlClientVersion>
     <MicrosoftNETCoreAppInternalPackageVersion>3.1.0-rtm.19565.2</MicrosoftNETCoreAppInternalPackageVersion>
     <MicrosoftNETCoreAppRefPackageVersion>3.1.0</MicrosoftNETCoreAppRefPackageVersion>
     <MicrosoftNETCoreAppRuntimewinx64PackageVersion>3.1.1</MicrosoftNETCoreAppRuntimewinx64PackageVersion>
