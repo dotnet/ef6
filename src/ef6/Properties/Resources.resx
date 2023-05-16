@@ -270,4 +270,7 @@
   <data name="VerboseDescription" xml:space="preserve">
     <value>Show verbose output.</value>
   </data>
+  <data name="ConnectionLeaseTime" xml:space="preserve">
+    <value>Specifies the lease timeout for remote connections.</value>
+  </data>
 </root>

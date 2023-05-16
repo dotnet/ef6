@@ -13,11 +13,15 @@ using MyResources = System.Data.Entity.Tools.Properties.Resources;
 
 namespace System.Data.Entity.Tools.Commands
 {
+    using System.Linq;
+    using System.Runtime.Remoting.Lifetime;
+
     internal abstract class ProjectCommandBase : EFCommandBase
     {
         protected CommandOption Assembly { get; private set; }
         protected CommandOption Config { get; private set; }
         protected CommandOption ConnectionProvider { get; private set; }
+        protected CommandOption ConnectionLeaseTime { get; private set; }
         protected CommandOption ConnectionString { get; private set; }
         protected CommandOption ConnectionStringName { get; private set; }
         protected CommandOption DataDir { get; private set; }
@@ -36,6 +40,7 @@ namespace System.Data.Entity.Tools.Commands
             ConnectionStringName = command.Option("--connection-string-name <NAME>", MyResources.ConnectionStringNameDescription);
             ConnectionString = command.Option("--connection-string <STRING>", MyResources.ConnectionStringDescription);
             ConnectionProvider = command.Option("--connection-provider <NAME>", MyResources.ConnectionProviderDescription);
+            ConnectionLeaseTime = command.Option("--LeaseTime <SECONDS>", MyResources.ConnectionLeaseTime);
 
             base.Configure(command);
         }
@@ -43,6 +48,18 @@ namespace System.Data.Entity.Tools.Commands
         protected override void Validate()
         {
             base.Validate();
+
+            if (ConnectionLeaseTime.HasValue())
+            {
+                if (int.TryParse(ConnectionLeaseTime.Values.First(), out var leaseSeconds))
+                {
+                    LifetimeServices.LeaseTime = TimeSpan.FromSeconds(leaseSeconds);
+                }
+                else
+                {
+                    throw new CommandException(string.Format("Wrong parameter format.", Assembly.LongName));
+                }
+            }
 
             if (!Assembly.HasValue())
             {
