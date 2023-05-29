@@ -3,9 +3,7 @@
 
   <ItemGroup>
     <!-- Remove xunit.analyzers due to noise -->
-    <PackageReference Remove="xunit" />
-    <PackageReference Include="xunit.core" Version="$(XUnitVersion)" />
-    <PackageReference Include="xunit.assert" Version="$(XUnitVersion)" />
+    <PackageReference Remove="xunit.analyzers" />
     <!-- Fix transitive System.Net.Http reference from xunit -->
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
   </ItemGroup>
