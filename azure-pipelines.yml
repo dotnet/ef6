@@ -80,6 +80,7 @@ stages:
             ${{ else }}:
               timeoutInMinutes: 180
             variables:
+              - _AdditionalBuildArgs: ''
               - _InternalBuildArgs: ''
               - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
                 - group: DotNet-Blob-Feed
