@@ -125,6 +125,7 @@ namespace System.Data.Entity.Validation
             }
         }
 
+#if NET452
         [Fact]
         public void DbEntityValidationException_serialization_and_deserialization()
         {
@@ -183,6 +184,7 @@ namespace System.Data.Entity.Validation
                 }
             }
         }
+#endif
 
         [Fact] // CodePlex 1107
         public void Deserialized_exception_can_be_serialized_and_deserialized_again()

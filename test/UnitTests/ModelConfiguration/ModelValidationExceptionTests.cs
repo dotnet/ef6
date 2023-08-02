@@ -47,6 +47,7 @@ namespace System.Data.Entity.ModelConfiguration
             Assert.Equal(inner, e.InnerException);
         }
 
+#if NET452
         internal static T BinarySerialization<T>(T obj)
         {
             IFormatter formatter = new BinaryFormatter();
@@ -58,5 +59,6 @@ namespace System.Data.Entity.ModelConfiguration
             var newObject = (T)formatter.Deserialize(memoryStream);
             return newObject;
         }
+#endif
     }
 }

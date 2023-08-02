@@ -2,7 +2,8 @@
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
   <PropertyGroup>
-    <TargetFrameworks>net45;net40;$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+    <TargetFrameworks>net45;net40;netcoreapp3.0</TargetFrameworks>
+    <CheckEolTargetFramework>False</CheckEolTargetFramework>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <IncludeSource>false</IncludeSource>
     <IsPackable>True</IsPackable>
@@ -18,7 +19,6 @@
 
   <ItemGroup>
     <NuspecProperty Include="Configuration=$(Configuration)" />
-    <NuspecProperty Include="DefaultNetCoreTargetFramework=$(DefaultNetCoreTargetFramework)" />
     <NuspecProperty Include="NeutralLanguage=$(NeutralLanguage)" />
     <NuspecProperty Include="MicrosoftCSharpVersion=$(MicrosoftCSharpVersion)" />
     <NuspecProperty Include="SystemCodeDomVersion=$(SystemCodeDomVersion)" />
@@ -28,7 +28,7 @@
     <NuspecProperty Include="IntermediateOutputPath=$(IntermediateOutputPath)" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == '$(DefaultNetCoreTargetFramework)'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
     <ProjectReference Include="..\Microsoft.Data.Entity.Build.Tasks\Microsoft.Data.Entity.Build.Tasks.csproj" />
   </ItemGroup>
 
