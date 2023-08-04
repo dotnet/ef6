@@ -63,6 +63,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="..\EntityFramework.SqlServer\Properties\Resources.SqlServer.cs" />
     <Compile Remove="..\EntityFramework.SqlServer\SqlFunctions.cs" />
     <Compile Remove="..\EntityFramework.SqlServer\SqlHierarchyIdFunctions.cs" />
     <Compile Remove="..\EntityFramework.SqlServer\SqlSpatialFunctions.cs" />
@@ -119,6 +120,22 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
     <PackageReference Include="Microsoft.SqlServer.Types" Version="$(MicrosoftSqlServerTypesXplatVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.SqlServer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.SqlServer.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Resources.SqlServer.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Resources.SqlServer.cs</LastGenOutput>
+      <CustomToolNamespace>System.Data.Entity.SqlServer</CustomToolNamespace>
+    </None>
   </ItemGroup>
 	
  </Project>
