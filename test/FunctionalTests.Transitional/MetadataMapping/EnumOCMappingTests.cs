@@ -230,6 +230,7 @@ namespace System.Data.Entity.MetadataMapping
                 assembly.FullName);
         }
 
+#if !NET8_0_OR_GREATER
         [Fact]
         public void Can_load_entity_with_property_of_enum_type_from_different_assembly()
         {
@@ -282,6 +283,7 @@ namespace System.Data.Entity.MetadataMapping
                 "EnumModel.Entity:EnumModel.Entity",
                 workspace.GetMap("EnumModel.Entity", DataSpace.OSpace, DataSpace.OCSpace).Identity);
         }
+#endif
 
         #endregion
 

@@ -256,6 +256,7 @@ namespace System.Data.Entity.ProductivityApi
             }
         }
 
+#if NET452
         [Fact]
         public void Serializing_an_entity_that_overrides_GetHashCode_shouldnt_shouldnt_throw()
         {
@@ -270,5 +271,6 @@ namespace System.Data.Entity.ProductivityApi
                 formatter.Serialize(stream, skuProxy);
             }
         }
+#endif
     }
 }

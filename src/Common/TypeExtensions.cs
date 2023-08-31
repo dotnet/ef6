@@ -694,6 +694,7 @@ namespace System.Data.Entity.Utilities
 #endif
         }
 
+#if !EF_FUNCTIONALS
         public static bool IsSerializable(this Type type)
         {
             DebugCheck.NotNull(type);
@@ -703,6 +704,7 @@ namespace System.Data.Entity.Utilities
             return type.GetTypeInfo().IsSerializable;
 #endif
         }
+#endif
 
         public static bool IsGenericParameter(this Type type)
         {
