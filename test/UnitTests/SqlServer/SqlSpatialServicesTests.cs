@@ -206,6 +206,7 @@ namespace System.Data.Entity.SqlServer
             Assert.Same(sqlTypesAssembly, new SqlSpatialServices(mockLoader.Object).SqlTypes);
         }
 
+#if NET452
         [Fact]
         public void SqlSpatialServices_can_be_serialized()
         {
@@ -227,5 +228,6 @@ namespace System.Data.Entity.SqlServer
                 Assert.True(typeName.StartsWith(SQL2012GeometryNamePrefix, StringComparison.Ordinal));
             }
         }
+#endif
     }
 }

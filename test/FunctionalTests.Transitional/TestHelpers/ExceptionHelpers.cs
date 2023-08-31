@@ -188,6 +188,7 @@ namespace System.Data.Entity
             return null;
         }
 
+#if NET452
         /// <summary>
         /// Serializes and de-serializes the given exception and returns the de-serialized instance.
         /// </summary>
@@ -201,6 +202,7 @@ namespace System.Data.Entity
 
             return (TException)formatter.Deserialize(stream);
         }
+#endif
 
         /// <summary>
         /// Asserts the specified condition to be true and throws exception if it is not.
