@@ -21,7 +21,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             Assert.NotNull(EntityWrapperFactory.CreateWrapperDelegateTypedWithoutRelationshipsMethod);
         }
 
-#if NET452
+#if NETFRAMEWORK
         public class MarkAsNotSerializable : TestBase
         {
             [Fact]

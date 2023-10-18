@@ -38,7 +38,7 @@ namespace System.Data.Entity.WrappingProvider
             RegisterAdoNetProvider(typeof(SqlClientFactory));
         }
 
-#if NET452
+#if NETFRAMEWORK
         [Fact]
         public void Wrapping_provider_can_be_found_using_net40_style_table_lookup_even_after_first_asking_for_non_wrapped_provider()
         {
@@ -330,7 +330,7 @@ namespace System.Data.Entity.WrappingProvider
 
         private static void RegisterAdoNetProvider(Type providerFactoryType)
         {
-#if NET452
+#if NETFRAMEWORK
             var row = _providerTable.NewRow();
             row["Name"] = "SqlClient Data Provider";
             row["Description"] = ".Net Framework Data Provider for SqlServer";

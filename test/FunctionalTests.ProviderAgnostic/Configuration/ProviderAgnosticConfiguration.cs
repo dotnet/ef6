@@ -7,7 +7,7 @@ namespace System.Data.Entity.Configuration
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.SqlServer;
 
-#if NET452
+#if NETFRAMEWORK
     using System.Runtime.Remoting.Messaging;
     using MySql.Data.MySqlClient;
 #else
@@ -16,7 +16,7 @@ namespace System.Data.Entity.Configuration
 
     public class ProviderAgnosticConfiguration : DbConfiguration
     {
-#if NET452
+#if NETFRAMEWORK
         private static readonly string _providerInvariantName = ConfigurationManager.AppSettings["ProviderInvariantName"];
         private static readonly string _baseConnectionString = ConfigurationManager.AppSettings["BaseConnectionString"];
 #else
@@ -27,7 +27,7 @@ namespace System.Data.Entity.Configuration
 
         public ProviderAgnosticConfiguration()
         {
-#if NET452
+#if NETFRAMEWORK
             SetHistoryContext(
                 "MySql.Data.MySqlClient",
                 (connection, defaultSchema) => new MySqlHistoryContext(connection, defaultSchema));
@@ -43,7 +43,7 @@ namespace System.Data.Entity.Configuration
                     SetDefaultConnectionFactory(new SqlConnectionFactory(_baseConnectionString));
                     break;
 
-#if NET452
+#if NETFRAMEWORK
                 case "MySql.Data.MySqlClient" :
                     SetDefaultConnectionFactory(new MySqlConnectionFactory());
                     break;
@@ -58,7 +58,7 @@ namespace System.Data.Entity.Configuration
 
         public static bool SuspendExecutionStrategy
         {
-#if NET452
+#if NETFRAMEWORK
             get => (bool?)CallContext.LogicalGetData("SuspendExecutionStrategy") ?? false;
             set => CallContext.LogicalSetData("SuspendExecutionStrategy", value);
 #else

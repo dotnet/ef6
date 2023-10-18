@@ -1,13 +1,13 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-#if NET452
+#if NETFRAMEWORK
 
 namespace System.Data.Entity.Migrations
 {
     using Xunit;
 
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
-#if NET452
+#if NETFRAMEWORK
     [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
 #endif
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]

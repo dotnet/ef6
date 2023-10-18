@@ -206,7 +206,7 @@ namespace System.Data.Entity.SqlServer
             Assert.Same(sqlTypesAssembly, new SqlSpatialServices(mockLoader.Object).SqlTypes);
         }
 
-#if NET452
+#if NETFRAMEWORK
         [Fact]
         public void SqlSpatialServices_can_be_serialized()
         {

@@ -18,7 +18,7 @@ namespace System.Data.Entity.Migrations
     using Xunit;
 
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
-#if NET452
+#if NETFRAMEWORK
     [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
 #endif
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
@@ -263,7 +263,7 @@ namespace System.Data.Entity.Migrations
             }
         }
 
-#if NET452
+#if NETFRAMEWORK
         [MigrationsTheory]
         public void Scripting_upgrade_from_earlier_version_should_maintain_variable_uniqueness()
         {
@@ -440,7 +440,7 @@ namespace System.Data.Entity.Migrations
             Assert.False(TableExists("dbo." + HistoryContext.DefaultTableName));
         }
 
-#if NET452
+#if NETFRAMEWORK
         [MigrationsTheory]
         public void Can_upgrade_from_5_and_existing_code_auto_migrations_still_work()
         {

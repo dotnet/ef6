@@ -329,7 +329,7 @@ namespace System.Data.Entity.TestModels.FantasyModel
                     Name = "Province2",
                 };
 
-#if NET452
+#if NETFRAMEWORK
             province1.Shape = DbGeometry.FromText("POINT(1 1)", DbGeometry.DefaultCoordinateSystemId);
             province2.Shape = DbGeometry.FromText("POINT(2 2)", DbGeometry.DefaultCoordinateSystemId);
 #endif

@@ -862,7 +862,7 @@ namespace System.Data.Entity.Update
                 });
         }
 
-#if NET452
+#if NETFRAMEWORK
         [Fact]
         [UseDefaultExecutionStrategy]
         public void Insert_update_delete_entity_with_spatial_property()

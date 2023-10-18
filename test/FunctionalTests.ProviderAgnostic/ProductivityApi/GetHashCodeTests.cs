@@ -256,7 +256,7 @@ namespace System.Data.Entity.ProductivityApi
             }
         }
 
-#if NET452
+#if NETFRAMEWORK
         [Fact]
         public void Serializing_an_entity_that_overrides_GetHashCode_shouldnt_shouldnt_throw()
         {

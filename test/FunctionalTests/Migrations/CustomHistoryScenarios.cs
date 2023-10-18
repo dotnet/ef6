@@ -11,17 +11,17 @@ namespace System.Data.Entity.Migrations
     using System.Linq;
     using Xunit;
 
-#if NET452
+#if NETFRAMEWORK
     using System.Data.SqlServerCe;
 #endif
 
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
-#if NET452
+#if NETFRAMEWORK
     [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
 #endif
     public class CustomHistoryScenarios : DbTestCase
     {
-#if NET452
+#if NETFRAMEWORK
         private class NonStandardColumnWidthsContext : HistoryContext
         {
             public NonStandardColumnWidthsContext(DbConnection existingConnection, string defaultSchema)
@@ -121,7 +121,7 @@ namespace System.Data.Entity.Migrations
         {
         }
 
-#if NET452
+#if NETFRAMEWORK
         [MigrationsTheory]
         public void Can_auto_update_after_explicit_update_when_custom_history_factory()
         {
@@ -256,7 +256,7 @@ namespace System.Data.Entity.Migrations
             Assert.Throws<EntityCommandExecutionException>(() => migrator.Update());
         }
 
-#if NET452
+#if NETFRAMEWORK
         [MigrationsTheory]
         public void Explicit_update_when_factory_changed_move_should_fail()
         {
@@ -369,7 +369,7 @@ namespace System.Data.Entity.Migrations
             Assert.Empty(migrator.GetPendingMigrations());
         }
 
-#if NET452
+#if NETFRAMEWORK
         [MigrationsTheory]
         public void Can_use_per_provider_factory()
         {
