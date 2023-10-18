@@ -120,7 +120,7 @@ namespace FunctionalTests
             public virtual string RoleId2 { get; set; }
         }
 
-#if NET452
+#if NETFRAMEWORK
         [Fact]
         public void Sql_ce_should_get_explicit_max_lengths_for_string_and_binary_properties_by_convention()
         {

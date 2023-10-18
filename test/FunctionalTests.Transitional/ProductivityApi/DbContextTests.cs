@@ -39,7 +39,7 @@ namespace ProductivityApiTests
             }
         }
 
-#if NET452
+#if NETFRAMEWORK
         [Fact]
         public void Can_replace_connection_with_different_provider()
         {
