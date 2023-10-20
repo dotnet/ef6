@@ -920,7 +920,7 @@ namespace System.Data.Entity.Interception
             }
         }
 
-#if NET452
+#if NETFRAMEWORK
         [Fact]
         public void TransactionHandler_is_disposed_even_if_the_context_is_not()
         {

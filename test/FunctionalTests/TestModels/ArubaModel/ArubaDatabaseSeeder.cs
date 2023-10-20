@@ -117,7 +117,7 @@ namespace System.Data.Entity.TestModels.ArubaModel
                     c38_shortenum = (ArubaShortEnum)(i % 3)
                 };
 
-#if NET452
+#if NETFRAMEWORK
                 allTypes.c31_geography = DbGeography.FromText(string.Format("POINT ({0}.0 {0}.0)", i % 8), 4326);
                 allTypes.c32_geometry = DbGeometry.FromText(string.Format("POINT (1{0}.0 2{0}.0)", i % 8), 32768);
                 allTypes.c36_geometry_linestring = DbGeometry.FromText(string.Format("LINESTRING (1{0} 2{0}, 1{1} 2{0}, 1{1} 2{1}, 1{0} 2{1}, 1{0} 2{0})", i % 5 + 2, i % 5 + 4), 32768);
@@ -171,7 +171,7 @@ namespace System.Data.Entity.TestModels.ArubaModel
                         Arch = "Machine Config Architecture " + i,
                         Host = "Machine Config Host " + i,
                         Lang = "Machine Config Language " + i,
-#if NET452
+#if NETFRAMEWORK
                         Location = DbGeography.FromText(string.Format("POINT ({0}.0 {0}.0)", i), 4326),
 #endif
                         OS = "Machine Config Operating System " + i % 5,
@@ -268,7 +268,7 @@ namespace System.Data.Entity.TestModels.ArubaModel
                     Name = "Run Name" + i,
                     Purpose = i + 10,
                     Tasks = new List<ArubaTask>(),
-#if NET452
+#if NETFRAMEWORK
                     Geometry = DbGeometry.FromText(string.Format("POINT (1{0}.0 2{1}.0)", i % 8, 8 - i % 8), 32768),
 #endif
                 };

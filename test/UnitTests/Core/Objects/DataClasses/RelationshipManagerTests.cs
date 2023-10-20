@@ -657,7 +657,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
         }
 
-#if NET452
+#if NETFRAMEWORK
         private static T SerializeAndDeserialize<T>(T instance)
         {
             var stream = new MemoryStream();

@@ -47,7 +47,7 @@ namespace System.Data.Entity.ModelConfiguration
             Assert.Equal(inner, e.InnerException);
         }
 
-#if NET452
+#if NETFRAMEWORK
         internal static T BinarySerialization<T>(T obj)
         {
             IFormatter formatter = new BinaryFormatter();

@@ -4,7 +4,7 @@ namespace System.Data.Entity
 {
     using System.Data.Entity.Migrations;
 
-#if NET452
+#if NETFRAMEWORK
     using System.Data.SqlServerCe;
 #endif
 
@@ -27,7 +27,7 @@ namespace System.Data.Entity
 
         public static bool IsSqlCe(this DbContext context)
         {
-#if NET452
+#if NETFRAMEWORK
             return context.Database.Connection is SqlCeConnection;
 #else
             return false;

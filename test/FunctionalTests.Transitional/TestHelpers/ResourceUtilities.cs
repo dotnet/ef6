@@ -32,7 +32,7 @@ namespace System.Data.Entity
         /// so you should put all your resources under 'Resources' directory within a project)
         /// and appends '.gz' to it. You should use gzip to produce compressed files.
         /// </remarks>
-#if NET452
+#if NETFRAMEWORK
         [SecuritySafeCritical]
         // Calling File.Create demands FileIOPermission (Write flag) for the file path to which the resource is extracted.
         [PermissionSet(SecurityAction.Assert, Unrestricted = true)]

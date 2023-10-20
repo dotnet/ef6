@@ -26,7 +26,7 @@ namespace System.Data.Entity
     {
         static TestBase()
         {
-#if NET452
+#if NETFRAMEWORK
             SqlServerTypes.Utilities.LoadNativeAssemblies(
                 Path.GetDirectoryName(typeof(FunctionalTestBase).Assembly.Location));
 #endif
@@ -160,7 +160,7 @@ namespace System.Data.Entity
         }
 
         public const string SystemComponentModelDataAnnotationsResourceTable
-#if NET452
+#if NETFRAMEWORK
             = "System.ComponentModel.DataAnnotations.Resources.DataAnnotationsResources";
 #else
             = "FxResources.System.ComponentModel.Annotations.SR";
@@ -581,7 +581,7 @@ namespace System.Data.Entity
 
         #endregion
 
-#if NET452
+#if NETFRAMEWORK
         public static void RunTestInAppDomain(Type testType)
         {
             var domain = AppDomain.CreateDomain("TestAppDomain", null, AppDomain.CurrentDomain.SetupInformation);

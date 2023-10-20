@@ -125,7 +125,7 @@ namespace System.Data.Entity.Validation
             }
         }
 
-#if NET452
+#if NETFRAMEWORK
         [Fact]
         public void DbEntityValidationException_serialization_and_deserialization()
         {

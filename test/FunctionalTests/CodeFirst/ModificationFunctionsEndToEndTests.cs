@@ -48,7 +48,7 @@ namespace System.Data.Entity.CodeFirst
                         using (var context = new GearsOfWarStoredProceduresContext())
                         {
                             var city = context.Cities.OrderBy(c => c.Name).First();
-#if NET452
+#if NETFRAMEWORK
                             city.Location = DbGeography.FromText("POINT(12 23)", DbGeography.DefaultCoordinateSystemId);
 #endif
                             context.SaveChanges();
@@ -78,7 +78,7 @@ namespace System.Data.Entity.CodeFirst
                             var squad = context.Squads.OrderBy(s => s.Id).First();
                             var weapon = context.Weapons.OrderBy(w => w.Id).First();
 
-#if NET452
+#if NETFRAMEWORK
                             Assert.Equal(12, city.Location.Longitude);
                             Assert.Equal(23, city.Location.Latitude);
 #endif
@@ -194,7 +194,7 @@ namespace System.Data.Entity.CodeFirst
 
                             city.Name = "Changed City";
                             creature.Details.Attributes.Mana = 123;
-#if NET452
+#if NETFRAMEWORK
                             province.Shape = DbGeometry.FromText("POINT(23 45)", DbGeometry.DefaultCoordinateSystemId);
 #endif
                             npc.Name = "Changed NPC Name";
@@ -213,7 +213,7 @@ namespace System.Data.Entity.CodeFirst
 
                             Assert.Equal("Changed City", city.Name);
                             Assert.Equal(123, creature.Details.Attributes.Mana);
-#if NET452
+#if NETFRAMEWORK
                             Assert.Equal(23, province.Shape.XCoordinate);
                             Assert.Equal(45, province.Shape.YCoordinate);
 #endif

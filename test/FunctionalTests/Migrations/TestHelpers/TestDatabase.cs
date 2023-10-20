@@ -10,7 +10,7 @@ namespace System.Data.Entity.Migrations
     using System.Data.SqlClient;
     using System.IO;
 
-#if NET452
+#if NETFRAMEWORK
     using System.Data.Entity.SqlServerCompact;
     using System.Data.SqlServerCe;
 #endif
@@ -195,7 +195,7 @@ namespace System.Data.Entity.Migrations
         }
     }
 
-#if NET452
+#if NETFRAMEWORK
     public class SqlCeTestDatabase : TestDatabase
     {
         private readonly string _name;

@@ -48,7 +48,7 @@ namespace System.Data.Entity.Query.LinqToEntities
             }
         }
         
-#if NET452
+#if NETFRAMEWORK
         [Fact]
         public void OrderBy_ThenBy_Skip_lifted_above_type_filter()
         {

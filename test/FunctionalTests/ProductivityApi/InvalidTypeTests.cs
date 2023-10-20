@@ -127,7 +127,7 @@ namespace ProductivityApiTests
             }
         }
 
-#if NET452
+#if NETFRAMEWORK
         [Fact]
         public void Set_throws_only_when_used_if_type_derives_from_valid_type()
         {

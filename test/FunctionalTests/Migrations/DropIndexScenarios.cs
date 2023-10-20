@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Migrations
 {
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
-#if NET452
+#if NETFRAMEWORK
     [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
 #endif
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]

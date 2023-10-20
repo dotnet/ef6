@@ -17,7 +17,7 @@ namespace System.Data.Entity.Objects
 
     public class AttributeBasedOCLoading : FunctionalTestBase
     {
-#if NET452
+#if NETFRAMEWORK
         [Fact]
         public void O_space_types_are_discovered_when_using_attribute_based_mapping()
         {

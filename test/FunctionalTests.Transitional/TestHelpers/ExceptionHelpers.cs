@@ -188,7 +188,7 @@ namespace System.Data.Entity
             return null;
         }
 
-#if NET452
+#if NETFRAMEWORK
         /// <summary>
         /// Serializes and de-serializes the given exception and returns the de-serialized instance.
         /// </summary>

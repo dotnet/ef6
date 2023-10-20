@@ -55,7 +55,7 @@ namespace System.Data.Entity.Migrations
                 case DatabaseProvider.SqlClient:
                     testDatabase = new SqlTestDatabase(databaseName);
                     break;
-#if NET452
+#if NETFRAMEWORK
                 case DatabaseProvider.SqlServerCe:
                     testDatabase = new SqlCeTestDatabase(databaseName);
                     break;

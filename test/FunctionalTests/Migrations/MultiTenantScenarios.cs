@@ -8,7 +8,7 @@ namespace System.Data.Entity.Migrations
     using Xunit;
 
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
-#if NET452
+#if NETFRAMEWORK
     [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
 #endif
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
@@ -73,7 +73,7 @@ namespace System.Data.Entity.Migrations
             }
         }
 
-#if NET452
+#if NETFRAMEWORK
         [MigrationsTheory]
         public void Can_update_when_explicit_migrations()
         {
@@ -164,7 +164,7 @@ namespace System.Data.Entity.Migrations
             Assert.True(TableExists("TenantBs"));
         }
 
-#if NET452
+#if NETFRAMEWORK
         [MigrationsTheory]
         [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
         [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]

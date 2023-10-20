@@ -10,7 +10,7 @@ namespace System.Data.Entity.Migrations
     using Xunit;
 
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
-#if NET452
+#if NETFRAMEWORK
     [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
 #endif
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
@@ -39,7 +39,7 @@ namespace System.Data.Entity.Migrations
             }
         }
 
-#if NET452
+#if NETFRAMEWORK
         [MigrationsTheory]
         public void Database_not_deleted_when_at_least_one_good_migration()
         {
@@ -85,7 +85,7 @@ namespace System.Data.Entity.Migrations
             Assert.True(generatedMigration.MigrationId.Contains("Migration"));
         }
 
-#if NET452
+#if NETFRAMEWORK
         [MigrationsTheory]
         public void Generate_should_emit_null_source_when_last_migration_was_explicit()
         {
@@ -127,7 +127,7 @@ namespace System.Data.Entity.Migrations
                                   .Contains("Resources.GetString(\"Source\")"));
         }
 
-#if NET452
+#if NETFRAMEWORK
         [MigrationsTheory]
         public void Update_should_execute_pending_custom_scripts()
         {
@@ -161,7 +161,7 @@ namespace System.Data.Entity.Migrations
             Assert.True(generatedMigration.UserCode.Length > 300);
         }
 
-#if NET452
+#if NETFRAMEWORK
         [MigrationsTheory]
         public void Update_down_when_target_migration_id_valid_should_migrate_to_target_version_without_timestamp_part()
         {
@@ -330,7 +330,7 @@ namespace System.Data.Entity.Migrations
             Assert.Equal(4, Regex.Matches(generatedMigration.UserCode, "CreateTable").Count);
         }
 
-#if NET452
+#if NETFRAMEWORK
         [MigrationsTheory]
         public void Can_generate_and_update_against_empty_source_model()
         {
@@ -375,7 +375,7 @@ namespace System.Data.Entity.Migrations
             WhenNotSqlCe(() => Assert.True(generatedMigration.UserCode.Contains("RenameColumn")));
         }
 
-#if NET452
+#if NETFRAMEWORK
         [MigrationsTheory]
         public void Can_update_generate_update_when_empty_target_database()
         {
@@ -440,7 +440,7 @@ namespace System.Data.Entity.Migrations
             Assert.False(TableExists("MigrationsBlogs"));
         }
 
-#if NET452
+#if NETFRAMEWORK
         [MigrationsTheory]
         public void Can_update_multiple_migrations_having_a_trailing_automatic_migration()
         {
@@ -526,7 +526,7 @@ namespace System.Data.Entity.Migrations
             Assert.Null(scaffoldedMigration);
         }
 
-#if NET452
+#if NETFRAMEWORK
         [MigrationsTheory]
         public void ScaffoldInitialCreate_should_return_scaffolded_migration_when_db_initialized()
         {
@@ -666,7 +666,7 @@ namespace System.Data.Entity.Migrations
             AssertHistoryContextDoesNotExist();
         }
 
-#if NET452
+#if NETFRAMEWORK
         [MigrationsTheory]
         public void Update_down_when_explicit_should_migrate_to_target_version()
         {

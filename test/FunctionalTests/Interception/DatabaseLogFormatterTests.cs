@@ -108,7 +108,7 @@ namespace System.Data.Entity.Interception
             _resourceVerifier.VerifyMatch("CommandLogFailed", logLines[3], new AnyValueParameter(), exception.Message, "");
         }
 
-#if NET452
+#if NETFRAMEWORK
         [Fact]
         public void DatabaseLogFormatter_is_disposed_even_if_the_context_is_not()
         {

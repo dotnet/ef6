@@ -5,7 +5,7 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.Model;
 
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
-#if NET452
+#if NETFRAMEWORK
     [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
 #endif
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
@@ -24,7 +24,7 @@ namespace System.Data.Entity.Migrations
             }
         }
 
-#if NET452
+#if NETFRAMEWORK
         [MigrationsTheory]
         public void Can_create_simple_index()
         {
@@ -86,7 +86,7 @@ namespace System.Data.Entity.Migrations
             }
         }
 
-#if NET452
+#if NETFRAMEWORK
         [MigrationsTheory]
         public void Can_create_clustered_index()
         {

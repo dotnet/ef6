@@ -215,7 +215,7 @@ namespace ProductivityApiTests
             VerifySetsAreInitialized<SimpleModelContextWithNoData>(DbCompiledModelContents.DontMatch);
         }
 
-#if NET452
+#if NETFRAMEWORK
         [Fact]
         public void Model_Tweaking_is_ignored_when_using_model_ctor_on_DbContext()
         {
@@ -583,7 +583,7 @@ namespace ProductivityApiTests
                 "DbContext_ConnectionStringNotFound", "NonexistentConnectionString");
         }
 
-#if NET452
+#if NETFRAMEWORK
         [Fact]
         public void DbContext_caches_models_for_two_providers()
         {

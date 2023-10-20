@@ -387,7 +387,7 @@ namespace System.Data.Entity.Metadata
             </Schema>";
 
 
-#if NET452
+#if NETFRAMEWORK
         [Fact] // CodePlex 2051
         public void Can_load_model_after_assembly_version_of_types_changes()
         {

@@ -17,7 +17,7 @@ namespace FunctionalTests
     using FunctionalTests.Model;
     using Xunit;
 
-#if NET452
+#if NETFRAMEWORK
     using System.Windows.Media;
 #endif
 
@@ -336,7 +336,7 @@ namespace FunctionalTests
             Assert.Equal("Foo1", databaseMapping.Model.Containers.Single().EntitySets.Last().Name);
         }
 
-#if NET452
+#if NETFRAMEWORK
         [Fact]
         public void Build_model_for_type_with_framework_type()
         {

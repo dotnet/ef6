@@ -90,7 +90,7 @@ namespace System.Data.Entity.TestModels.GearsOfWarModel
                 Name = "Hanover",
             };
 
-#if NET452
+#if NETFRAMEWORK
             jacinto.Location = DbGeography.FromText("POINT(1 1)", DbGeography.DefaultCoordinateSystemId);
             ephyra.Location = DbGeography.FromText("POINT(2 2)", DbGeography.DefaultCoordinateSystemId);
             hanover.Location = DbGeography.FromText("POINT(3 3)", DbGeography.DefaultCoordinateSystemId);

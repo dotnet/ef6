@@ -26,7 +26,7 @@ namespace ProductivityApiTests
 
         #region Positive SqlCeConnectionFactory tests
 
-#if NET452
+#if NETFRAMEWORK
         [Fact]
         public void SqlCeConnectionFactory_creates_a_SQL_CE_connection_from_a_database_name()
         {
@@ -62,7 +62,7 @@ namespace ProductivityApiTests
 
         #region Negative SqlCeConnectionFactory tests
 
-#if NET452
+#if NETFRAMEWORK
         [Fact]
         public void SqlCeConnectionFactory_throws_when_a_connection_with_bad_database_path_is_used()
         {

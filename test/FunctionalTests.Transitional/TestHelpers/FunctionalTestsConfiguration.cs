@@ -7,7 +7,7 @@ namespace System.Data.Entity.TestHelpers
     using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.SqlServer;
     using System.Linq;
-#if NET452
+#if NETFRAMEWORK
     using System.Data.Entity.SqlServerCompact;
 #endif
 
@@ -62,7 +62,7 @@ namespace System.Data.Entity.TestHelpers
 
         public FunctionalTestsConfiguration()
         {
-#if NET452
+#if NETFRAMEWORK
             SetProviderServices(SqlCeProviderServices.ProviderInvariantName, SqlCeProviderServices.Instance);
 #endif
             SetProviderServices(SqlProviderServices.ProviderInvariantName, SqlProviderServices.Instance);
