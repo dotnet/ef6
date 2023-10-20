@@ -355,7 +355,7 @@ namespace System.Data.Entity.Validation
             builder.Protected()
                 .Setup<PropertyValidator>(
                     "BuildPropertyValidator", ItExpr.IsAny<PropertyInfo>(), ItExpr.IsAny<EdmProperty>(), ItExpr.IsAny<bool>())
-                .Throws<XunitException>();
+                .Throws<TestMockXunitException>();
 
             object entity = new EntityWithComplexType();
             using (var ctx = new SelfPopulatingContext(entity))
@@ -375,7 +375,7 @@ namespace System.Data.Entity.Validation
             var builder = MockHelper.CreateMockEntityValidatorBuilder();
             builder.Protected()
                 .Setup<PropertyValidator>("BuildPropertyValidator", ItExpr.IsAny<PropertyInfo>())
-                .Throws<XunitException>();
+                .Throws<TestMockXunitException>();
 
             builder.Protected()
                 .Setup<PropertyValidator>(
@@ -599,7 +599,7 @@ namespace System.Data.Entity.Validation
             builder.Protected()
                 .Setup<IEnumerable<IValidator>>(
                     "BuildFacetValidators", ItExpr.IsAny<PropertyInfo>(), ItExpr.IsAny<EdmMember>(), ItExpr.IsAny<IEnumerable<Attribute>>())
-                .Throws<XunitException>();
+                .Throws<TestMockXunitException>();
 
             Assert.Null(builder.Object.BuildPropertyValidatorBase(typeof(EntityWithComplexType).GetDeclaredProperty("ID")));
         }
@@ -632,7 +632,7 @@ namespace System.Data.Entity.Validation
             builder.Protected()
                 .Setup<IEnumerable<IValidator>>(
                     "BuildFacetValidators", ItExpr.IsAny<PropertyInfo>(), ItExpr.IsAny<EdmMember>(), ItExpr.IsAny<IEnumerable<Attribute>>())
-                .Throws<XunitException>();
+                .Throws<TestMockXunitException>();
 
             var validator = builder.Object.BuildPropertyValidatorBase(typeof(EntityWithComplexType).GetDeclaredProperty("ID"));
 
@@ -815,6 +815,13 @@ namespace System.Data.Entity.Validation
 
                 Assert.False(validators.Any());
             }
+        }
+    }
+
+    class TestMockXunitException : XunitException
+    {
+        public TestMockXunitException() : base("")
+        {
         }
     }
 }
