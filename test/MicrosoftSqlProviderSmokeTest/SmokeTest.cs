@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Core;
 using System.Linq;
 using Xunit;
 
@@ -72,6 +73,21 @@ namespace MicrsoftSqlProviderSmokeTest
 
             Assert.Null(oldAssembly.GetType("System.Data.Entity.SqlServer.MicrosoftSqlSpatialServices"));
             Assert.NotNull(oldAssembly.GetType("System.Data.Entity.SqlServer.SqlSpatialServices"));
+        }
+
+        [Fact]
+        public void CanLoadResourceString()
+        {
+            var connectionString = "Data Source=(localdb)\\mssqllocaldb;Initial Catalog=School;Integrated Security=True;Encrypt=false";
+
+            using (var ctx = new SchoolContext(new SqlConnection(connectionString)))
+            {
+                string sql = "RAISERROR(49918, 16, 1, 'Cannot process request. Not enough resources to process request.');";
+
+                var ex = Assert.Throws<EntityException>(() => ctx.Database.ExecuteSqlCommand(sql));
+
+                Assert.True(ex.InnerException is SqlException);
+            }
         }
     }
 
