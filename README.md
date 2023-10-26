@@ -19,7 +19,7 @@ Entity Framework Core (EF Core) is a lightweight and extensible version of Entit
 
 ## Forks
 
-The EF6 code is published under the [Apache License 2.0](https://github.com/dotnet/ef6/blob/main/LICENSE.txt). This means it is permissible to [fork the code](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/about-forks) and build custom versions of EF6. Making changes in a fork is one way to work around any issues or add new features without impacting the stability of the main branch and releases. Indeed, there are commercial third-party forks of EF6 available for a fee that add new features to EF6. (Microsoft does not endorse or provide support for any forked versions of EF6.)
+The EF6 code is published under the [MIT](https://github.com/dotnet/ef6/blob/main/LICENSE.txt). This means it is permissible to [fork the code](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/about-forks) and build custom versions of EF6. Making changes in a fork is one way to work around any issues or add new features without impacting the stability of the main branch and releases. Indeed, there are commercial third-party forks of EF6 available for a fee that add new features to EF6. (Microsoft does not endorse or provide support for any forked versions of EF6.)
 
 Note that a fork is not needed to use EF6 on .NET Core and modern .NET platforms; the existing EF6 packages already support this. 
 
