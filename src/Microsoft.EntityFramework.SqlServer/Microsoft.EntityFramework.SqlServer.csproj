@@ -63,6 +63,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="..\EntityFramework.SqlServer\Properties\Resources.SqlServer.resx" Link="Properties\%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="..\EntityFramework.SqlServer\SqlFunctions.cs" />
     <Compile Remove="..\EntityFramework.SqlServer\SqlHierarchyIdFunctions.cs" />
     <Compile Remove="..\EntityFramework.SqlServer\SqlSpatialFunctions.cs" />
