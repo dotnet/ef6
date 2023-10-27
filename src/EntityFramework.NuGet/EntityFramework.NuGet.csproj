@@ -2,7 +2,7 @@
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
   <PropertyGroup>
-    <TargetFrameworks>net45;net40;netcoreapp3.0</TargetFrameworks>
+    <TargetFrameworks>net45;net40;net6.0</TargetFrameworks>
     <CheckEolTargetFramework>False</CheckEolTargetFramework>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <IncludeSource>false</IncludeSource>
@@ -28,7 +28,7 @@
     <NuspecProperty Include="IntermediateOutputPath=$(IntermediateOutputPath)" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
     <ProjectReference Include="..\Microsoft.Data.Entity.Build.Tasks\Microsoft.Data.Entity.Build.Tasks.csproj" />
   </ItemGroup>
 
