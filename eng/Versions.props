@@ -26,6 +26,6 @@
     <SystemComponentModelAnnotationsVersion>4.7.0</SystemComponentModelAnnotationsVersion>
     <SystemConfigurationConfigurationManagerVersion>4.7.0</SystemConfigurationConfigurationManagerVersion>
     <SystemDataSqlClientVersion>4.8.5</SystemDataSqlClientVersion>
-    <MicrosoftDataSqlClientVersion>5.1.1</MicrosoftDataSqlClientVersion>
+    <MicrosoftDataSqlClientVersion>5.1.2</MicrosoftDataSqlClientVersion>
   </PropertyGroup>
 </Project>
