@@ -48,7 +48,7 @@ namespace System.Data.Entity.Infrastructure.Pluralization
                     "information", "rice", "tobacco", "aircraft", "rabies", "scabies", "diabetes",
                     "traffic", "cotton", "corn", "millet", "rice", "hay", "hemp", "tobacco", "cabbage",
                     "okra", "broccoli", "asparagus", "lettuce", "beef", "pork", "venison", "bison",
-                    "mutton", "cattle", "offspring", "molasses", "shambles", "shingles"
+                    "mutton", "cattle", "offspring", "molasses", "shambles", "shingles", "specs"
                 };
 
         private readonly Dictionary<string, string> _irregularVerbList =
