@@ -81,7 +81,6 @@ stages:
             variables:
               - _InternalBuildArgs: ''
               - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
-                - group: DotNet-Blob-Feed
                 - _SignType: real
                 - _InternalBuildArgs: /p:DotNetSignType=$(_SignType)
                                       /p:TeamName=$(_TeamName)
