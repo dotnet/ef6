@@ -12,6 +12,7 @@
   </PropertyGroup>
 
    <ItemGroup>
+      <NuSpecProperty Include="AzureIdentityVersion=$(AzureIdentityVersion)" /> 
       <NuspecProperty Include="Configuration=$(Configuration)" />
       <NuSpecProperty Include="MicrosoftDataSqlClientVersion=$(MicrosoftDataSqlClientVersion)" />
 	  <NuspecProperty Include="NeutralLanguage=$(NeutralLanguage)" />
@@ -109,7 +110,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="$(MicrosoftDataSqlClientVersion)" />
+	  <PackageReference Include="Azure.Identity" Version="$(AzureIdentityVersion)" />
+	  <PackageReference Include="Microsoft.Data.SqlClient" Version="$(MicrosoftDataSqlClientVersion)" />
   </ItemGroup>
 
   <ItemGroup>

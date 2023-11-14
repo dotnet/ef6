@@ -26,6 +26,11 @@
     <SystemComponentModelAnnotationsVersion>4.7.0</SystemComponentModelAnnotationsVersion>
     <SystemConfigurationConfigurationManagerVersion>4.7.0</SystemConfigurationConfigurationManagerVersion>
     <SystemDataSqlClientVersion>4.8.5</SystemDataSqlClientVersion>
+    <!--
+        When a release of Microsoft.Data.SqlClient that depends on a newer version  
+        of Azure.Identity is available, this dependency can be removed.
+    -->
+    <AzureIdentityVersion>1.10.4</AzureIdentityVersion>
     <MicrosoftDataSqlClientVersion>5.1.1</MicrosoftDataSqlClientVersion>
   </PropertyGroup>
 </Project>
