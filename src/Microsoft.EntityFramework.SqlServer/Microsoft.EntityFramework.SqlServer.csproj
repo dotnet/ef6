@@ -110,8 +110,8 @@
   </ItemGroup>
 
   <ItemGroup>
-	  <PackageReference Include="Azure.Identity" Version="$(AzureIdentityVersion)" />
-	  <PackageReference Include="Microsoft.Data.SqlClient" Version="$(MicrosoftDataSqlClientVersion)" />
+    <PackageReference Include="Azure.Identity" Version="$(AzureIdentityVersion)" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="$(MicrosoftDataSqlClientVersion)" />
   </ItemGroup>
 
   <ItemGroup>
