@@ -4,7 +4,5 @@
   <ItemGroup>
     <!-- Remove xunit.analyzers due to noise -->
     <PackageReference Remove="xunit.analyzers" />
-    <!-- Fix transitive System.Net.Http reference from xunit -->
-    <PackageReference Include="System.Net.Http" Version="4.3.4" />
   </ItemGroup>
 </Project>

@@ -22,10 +22,10 @@
     <MoqVersion>4.7.145</MoqVersion>
     <MySqlDataEntityVersion>6.7.2-beta-ef6</MySqlDataEntityVersion>
     <MicrosoftCSharpVersion>4.7.0</MicrosoftCSharpVersion>
-    <SystemCodeDomVersion>4.7.0</SystemCodeDomVersion>
-    <SystemComponentModelAnnotationsVersion>4.7.0</SystemComponentModelAnnotationsVersion>
-    <SystemConfigurationConfigurationManagerVersion>4.7.0</SystemConfigurationConfigurationManagerVersion>
+    <SystemCodeDomVersion>6.0.0</SystemCodeDomVersion>
+    <SystemComponentModelAnnotationsVersion>5.0.0</SystemComponentModelAnnotationsVersion>
+    <SystemConfigurationConfigurationManagerVersion>6.0.1</SystemConfigurationConfigurationManagerVersion>
     <SystemDataSqlClientVersion>4.8.5</SystemDataSqlClientVersion>
-    <MicrosoftDataSqlClientVersion>5.1.1</MicrosoftDataSqlClientVersion>
+    <MicrosoftDataSqlClientVersion>5.1.2</MicrosoftDataSqlClientVersion>
   </PropertyGroup>
 </Project>
