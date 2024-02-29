@@ -67,6 +67,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="..\EntityFramework.SqlServer\Properties\AssemblyInfo.cs" />
     <Compile Remove="..\EntityFramework.SqlServer\SqlFunctions.cs" />
     <Compile Remove="..\EntityFramework.SqlServer\SqlHierarchyIdFunctions.cs" />
     <Compile Remove="..\EntityFramework.SqlServer\SqlSpatialFunctions.cs" />
