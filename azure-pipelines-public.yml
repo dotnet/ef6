@@ -1,0 +1,119 @@
+variables:
+  - name: _BuildConfig
+    value: Release
+  - name: _TeamName
+    value: AspNetCore
+  - name: DOTNET_SKIP_FIRST_TIME_EXPERIENCE
+    value: true
+  - name: _PublishUsingPipelines
+    value: true
+  - name: _DotNetArtifactsCategory
+    value: ASPNETENTITYFRAMEWORK6
+  - ${{ if ne(variables['System.TeamProject'], 'public') }}:
+    - group: DotNet-MSRC-Storage
+    - name: _InternalRuntimeDownloadArgs
+      value: /p:DotNetRuntimeSourceFeed=https://dotnetclimsrc.blob.core.windows.net/dotnet
+             /p:DotNetRuntimeSourceFeedKey=$(dotnetclimsrc-read-sas-token-base64)
+  - ${{ if eq(variables['System.TeamProject'], 'public') }}:
+    - name: _InternalRuntimeDownloadArgs
+      value: ''
+
+trigger:
+  batch: true
+  branches:
+    include:
+      - main
+      - release/*
+      - internal/release/6.*
+
+pr: ['*']
+
+stages:
+- stage: build
+  displayName: Build
+  jobs:
+    - template: eng/common/templates/jobs/jobs.yml
+      parameters:
+        enableMicrobuild: true
+        enablePublishBuildArtifacts: true
+        enablePublishBuildAssets: true
+        enablePublishTestResults: true
+        enablePublishUsingPipelines: ${{ variables._PublishUsingPipelines }}
+        enableTelemetry: true
+        helixRepo: dotnet/ef6
+        jobs:
+          - job: Windows
+            timeoutInMinutes: 180
+            pool:
+              ${{ if eq(variables['System.TeamProject'], 'public') }}:
+                name: NetCore-Svc-Public
+                demands: ImageOverride -equals 1es-windows-2019-open
+              ${{ if ne(variables['System.TeamProject'], 'public') }}:
+                name: NetCore1ESPool-Svc-Internal
+                demands: ImageOverride -equals 1es-windows-2019
+            variables:
+              - _InternalBuildArgs: ''
+              - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
+                - group: DotNet-Blob-Feed
+                - _SignType: real
+                - _PublishBlobFeedUrl: https://dotnetfeed.blob.core.windows.net/aspnet-entityframework6/index.json
+                - _DotNetPublishToBlobFeed: true
+                - _InternalBuildArgs: /p:DotNetSignType=$(_SignType)
+                                      /p:TeamName=$(_TeamName)
+                                      /p:DotNetPublishBlobFeedKey=$(dotnetfeed-storage-access-key-1)
+                                      /p:DotNetPublishBlobFeedUrl=$(_PublishBlobFeedUrl)
+                                      /p:DotNetPublishToBlobFeed=$(_DotNetPublishToBlobFeed)
+                                      /p:OfficialBuildId=$(BUILD.BUILDNUMBER)
+                                      /p:DotNetPublishUsingPipelines=$(_PublishUsingPipelines)
+                                      /p:DotNetArtifactsCategory=$(_DotNetArtifactsCategory)
+            steps:
+              - checkout: self
+                clean: true
+              - powershell: >
+                  Get-ChildItem -ErrorAction SilentlyContinue -Recurse 'C:\Program Files\Microsoft SQL Server\sqlcmd.exe' |
+                  Sort-Object -Property @{Expression={$_.FullName.Length}; Descending=$true},@{Expression={$_.FullName}; Descending=$true} |
+                  Select-Object -First 1 |
+                  Foreach-Object {Write-Host "##vso[task.prependpath]$($_.DirectoryName)"}
+                displayName: Add SqlCmd to path
+              - script: tools\CleanMSSQLLocalDB.cmd
+                displayName: Cleanup LocalDB databases
+              - task: NuGetCommand@2
+                displayName: 'Clear NuGet caches'
+                condition: succeeded()
+                inputs:
+                  command: custom
+                  arguments: 'locals all -clear'
+              - ${{ if ne(variables['System.TeamProject'], 'public') }}:
+                - task: PowerShell@2
+                  displayName: Setup Private Feeds Credentials
+                  inputs:
+                    filePath: $(Build.SourcesDirectory)/eng/common/SetupNugetSources.ps1
+                    arguments: -ConfigFile $(Build.SourcesDirectory)/NuGet.config -Password $Env:Token
+                  env:
+                    Token: $(dn-bot-dnceng-artifact-feeds-rw)
+              - script: eng\common\cibuild.cmd -configuration $(_BuildConfig) -prepareMachine $(_InternalBuildArgs) $(_InternalRuntimeDownloadArgs)
+                name: Build
+              - task: PublishBuildArtifacts@1
+                displayName: Upload TestResults
+                condition: always()
+                continueOnError: true
+                inputs:
+                  pathtoPublish: artifacts/TestResults/$(_BuildConfig)/
+                  artifactName: $(Agent.Os)_$(Agent.JobName) TestResults
+                  artifactType: Container
+                  parallel: true
+              - task: PublishBuildArtifacts@1
+                displayName: Upload artifacts
+                condition: and(succeeded(), eq(variables['system.pullrequest.isfork'], false))
+                inputs:
+                  pathtoPublish: 'artifacts/packages/'
+                  artifactName: packages
+                  artifactType: Container
+                  parallel: true
+
+- ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
+  - template: eng\common\templates\post-build\post-build.yml
+    parameters:
+      # Symbol validation isn't being very reliable lately. This should be enabled back
+      # once this issue is resolved: https://github.com/dotnet/arcade/issues/2871
+      enableSymbolValidation: false
