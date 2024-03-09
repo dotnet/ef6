@@ -17,6 +17,7 @@ namespace System.Data.Entity.Migrations.Utilities
         public EmptyContextTests(DatabaseProviderFixture databaseProviderFixture)
             : base(databaseProviderFixture)
         {
+            databaseProviderFixture.DatabaseName = nameof(EmptyContextTests);
         }
 
         [MigrationsTheory]

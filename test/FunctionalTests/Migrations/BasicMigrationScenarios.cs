@@ -19,6 +19,7 @@ namespace System.Data.Entity.Migrations
         public BasicMigrationScenarios(DatabaseProviderFixture databaseProviderFixture)
             : base(databaseProviderFixture)
         {
+            databaseProviderFixture.DatabaseName = nameof(BasicMigrationScenarios);
         }
 
         private class ErrorContext : DbContext

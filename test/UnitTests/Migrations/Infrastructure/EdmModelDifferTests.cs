@@ -33,6 +33,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         public EdmModelDifferTests(DatabaseProviderFixture databaseProviderFixture)
             : base(databaseProviderFixture)
         {
+            databaseProviderFixture.DatabaseName = nameof(EdmModelDifferTests);
         }
 
         #region Table Renames

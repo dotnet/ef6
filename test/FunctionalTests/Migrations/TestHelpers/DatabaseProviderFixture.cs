@@ -7,8 +7,6 @@ namespace System.Data.Entity.Migrations
 
     public class DatabaseProviderFixture
     {
-        public const string DefaultDatabaseName = "MigrationsTest";
-
         private readonly Dictionary<DatabaseProvider, TestDatabase> _testDatabases = new Dictionary<DatabaseProvider, TestDatabase>();
 
         private readonly Dictionary<ProgrammingLanguage, MigrationCodeGenerator> _codeGenerators =
@@ -19,12 +17,6 @@ namespace System.Data.Entity.Migrations
 
         public DatabaseProviderFixture()
         {
-            foreach (DatabaseProvider provider in Enum.GetValues(typeof(DatabaseProvider)))
-            {
-                _testDatabases[provider] = InitializeTestDatabase(provider, DefaultDatabaseName);
-            }
-            _testDatabases[DatabaseProvider.SqlClient] = InitializeTestDatabase(DatabaseProvider.SqlClient, DefaultDatabaseName);
-
             _codeGenerators[ProgrammingLanguage.CSharp] = new CSharpMigrationCodeGenerator();
             _migrationCompilers[ProgrammingLanguage.CSharp] = new MigrationCompiler("cs");
 
@@ -32,9 +24,22 @@ namespace System.Data.Entity.Migrations
             _migrationCompilers[ProgrammingLanguage.VB] = new MigrationCompiler("vb");
         }
 
+        public string DatabaseName { get; set; } = "MigrationsTest";
+
         public Dictionary<DatabaseProvider, TestDatabase> TestDatabases
         {
-            get { return _testDatabases; }
+            get
+            {
+                if (_testDatabases.Count == 0)
+                {
+                    foreach (DatabaseProvider provider in Enum.GetValues(typeof(DatabaseProvider)))
+                    {
+                        _testDatabases[provider] = InitializeTestDatabase(provider, DatabaseName);
+                    }
+                }
+
+                return _testDatabases;
+            }
         }
 
         public Dictionary<ProgrammingLanguage, MigrationCodeGenerator> CodeGenerators

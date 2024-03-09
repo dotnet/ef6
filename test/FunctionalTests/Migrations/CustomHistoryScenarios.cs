@@ -119,6 +119,7 @@ namespace System.Data.Entity.Migrations
         public CustomHistoryScenarios(DatabaseProviderFixture databaseProviderFixture)
             : base(databaseProviderFixture)
         {
+            databaseProviderFixture.DatabaseName = nameof(CustomHistoryScenarios);
         }
 
 #if NETFRAMEWORK

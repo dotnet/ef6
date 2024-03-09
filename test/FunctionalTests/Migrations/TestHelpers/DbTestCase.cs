@@ -331,6 +331,8 @@ namespace System.Data.Entity.Migrations
             get { return TestDatabase.Info; }
         }
 
+        protected DatabaseProviderFixture Fixture => _databaseProviderFixture;
+
         public DbTestCase(DatabaseProviderFixture databaseProviderFixture)
         {
             _databaseProviderFixture = databaseProviderFixture;

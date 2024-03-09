@@ -25,6 +25,7 @@ namespace System.Data.Entity.Migrations
         public AutoAndGenerateTestCase(DatabaseProviderFixture databaseProviderFixture)
             : base(databaseProviderFixture)
         {
+            databaseProviderFixture.DatabaseName = "AutoAndGenerateScenarios";
         }
 
         protected bool UpDataLoss { get; set; }

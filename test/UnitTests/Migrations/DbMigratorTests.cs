@@ -28,6 +28,7 @@ namespace System.Data.Entity.Migrations
         public DbMigratorTests(DatabaseProviderFixture databaseProviderFixture)
             : base(databaseProviderFixture)
         {
+            databaseProviderFixture.DatabaseName = nameof(DbMigratorTests);
         }
 
         [MigrationsTheory]
@@ -60,7 +61,9 @@ namespace System.Data.Entity.Migrations
             WhenNotSqlCe(
                 () =>
                 Assert.Equal(
-                    @"'MigrationsTest' (DataSource: .\SQLEXPRESS, Provider: System.Data.SqlClient, Origin: Explicit)",
+                    "'"
+                    + Fixture.DatabaseName
+                    + @"' (DataSource: .\SQLEXPRESS, Provider: System.Data.SqlClient, Origin: Explicit)",
                     migrator.TargetDatabase));
 
             WhenSqlCe(
@@ -68,9 +71,11 @@ namespace System.Data.Entity.Migrations
                 Assert.Equal(
                     "'"
                     + AppDomain.CurrentDomain.BaseDirectory
-                    + @"\MigrationsTest.sdf' (DataSource: "
+                    + "\\" + Fixture.DatabaseName
+                    + ".sdf' (DataSource: "
                     + AppDomain.CurrentDomain.BaseDirectory
-                    + @"\MigrationsTest.sdf, Provider: System.Data.SqlServerCe.4.0, Origin: Explicit)",
+                    + "\\" + Fixture.DatabaseName
+                    + ".sdf, Provider: System.Data.SqlServerCe.4.0, Origin: Explicit)",
                     migrator.TargetDatabase));
         }
 
@@ -381,6 +386,7 @@ namespace System.Data.Entity.Migrations
         public DbMigratorTests_ContextConstruction(DatabaseProviderFixture databaseProviderFixture)
             : base(databaseProviderFixture)
         {
+            databaseProviderFixture.DatabaseName = nameof(DbMigratorTests_ContextConstruction);
         }
 
         private class NuGetContext : DbContext
@@ -416,6 +422,7 @@ namespace System.Data.Entity.Migrations
         public DbMigratorTests_DatabaseInitialization(DatabaseProviderFixture databaseProviderFixture)
             : base(databaseProviderFixture)
         {
+            databaseProviderFixture.DatabaseName = nameof(DbMigratorTests_DatabaseInitialization);
         }
 
         public class CustomInitizalzer : IDatabaseInitializer<DoNotInitContext>
@@ -468,6 +475,7 @@ namespace System.Data.Entity.Migrations
         public DbMigratorTests_SqlClientOnly(DatabaseProviderFixture databaseProviderFixture)
             : base(databaseProviderFixture)
         {
+            databaseProviderFixture.DatabaseName = nameof(DbMigratorTests_SqlClientOnly);
         }
 
         [MigrationsTheory]
@@ -523,6 +531,7 @@ namespace System.Data.Entity.Migrations
         public ExecuteStatements(DatabaseProviderFixture databaseProviderFixture)
             : base(databaseProviderFixture)
         {
+            databaseProviderFixture.DatabaseName = nameof(ExecuteStatements);
         }
 
         [Fact]

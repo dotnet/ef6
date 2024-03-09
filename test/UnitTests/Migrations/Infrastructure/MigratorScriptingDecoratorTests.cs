@@ -11,6 +11,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         public MigratorScriptingDecoratorTests(DatabaseProviderFixture databaseProviderFixture)
             : base(databaseProviderFixture)
         {
+            databaseProviderFixture.DatabaseName = nameof(MigratorScriptingDecoratorTests);
         }
 
         [MigrationsTheory]
