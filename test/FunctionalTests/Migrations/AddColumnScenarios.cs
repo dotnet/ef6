@@ -22,6 +22,7 @@ namespace System.Data.Entity.Migrations
         public AddColumnScenarios(DatabaseProviderFixture databaseProviderFixture)
             : base(databaseProviderFixture)
         {
+            databaseProviderFixture.DatabaseName = nameof(AddColumnScenarios);
         }
 
         private class AddColumnMigration : DbMigration

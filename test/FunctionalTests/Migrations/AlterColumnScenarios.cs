@@ -22,6 +22,7 @@ namespace System.Data.Entity.Migrations
         public AlterColumnScenarios(DatabaseProviderFixture databaseProviderFixture)
             : base(databaseProviderFixture)
         {
+            databaseProviderFixture.DatabaseName = nameof(AlterColumnScenarios);
         }
 
         private class AlterColumnWithDefault : DbMigration

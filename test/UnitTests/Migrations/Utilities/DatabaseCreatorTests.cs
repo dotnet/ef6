@@ -11,6 +11,7 @@ namespace System.Data.Entity.Migrations.Utilities
         public DatabaseCreatorTests(DatabaseProviderFixture databaseProviderFixture)
             : base(databaseProviderFixture)
         {
+            databaseProviderFixture.DatabaseName = nameof(DatabaseCreatorTests);
         }
 
         [MigrationsTheory]
