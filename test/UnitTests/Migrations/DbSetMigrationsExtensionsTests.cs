@@ -15,6 +15,7 @@ namespace System.Data.Entity.Migrations
         public DbSetMigrationsExtensionsTests(DatabaseProviderFixture databaseProviderFixture)
             : base(databaseProviderFixture)
         {
+            databaseProviderFixture.DatabaseName = nameof(DbSetMigrationsExtensionsTests);
         }
 
         public class FakeDbSet<TEntity>

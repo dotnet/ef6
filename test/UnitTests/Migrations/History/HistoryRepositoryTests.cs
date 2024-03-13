@@ -28,6 +28,7 @@ namespace System.Data.Entity.Migrations.History
         public HistoryRepositoryTests(DatabaseProviderFixture databaseProviderFixture)
             : base(databaseProviderFixture)
         {
+            databaseProviderFixture.DatabaseName = nameof(HistoryRepositoryTests);
         }
 
         [Fact]
@@ -349,7 +350,7 @@ namespace System.Data.Entity.Migrations.History
         {
             var historyRepository
                 = new HistoryRepository(Mock.Of<InternalContextForMock>(), 
-                    ConnectionString.Replace(DatabaseProviderFixture.DefaultDatabaseName, "NoSuchDatabase"), 
+                    ConnectionString.Replace(Fixture.DatabaseName, "NoSuchDatabase"), 
                     ProviderFactory, 
                     "MyKey",
                     null, 
@@ -451,7 +452,7 @@ namespace System.Data.Entity.Migrations.History
         {
             var historyRepository
                 = new HistoryRepository(Mock.Of<InternalContextForMock>(), 
-                    ConnectionString.Replace(DatabaseProviderFixture.DefaultDatabaseName, "NoSuchDatabase"),
+                    ConnectionString.Replace(Fixture.DatabaseName, "NoSuchDatabase"),
                     ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
             Assert.False(historyRepository.GetPendingMigrations(Enumerable.Empty<string>()).Any());
@@ -558,7 +559,7 @@ namespace System.Data.Entity.Migrations.History
         {
             var historyRepository
                 = new HistoryRepository(Mock.Of<InternalContextForMock>(), 
-                    ConnectionString.Replace(DatabaseProviderFixture.DefaultDatabaseName, "NoSuchDatabase"),
+                    ConnectionString.Replace(Fixture.DatabaseName, "NoSuchDatabase"),
                     ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
             var modelBuilder = new DbModelBuilder();
@@ -770,7 +771,7 @@ namespace System.Data.Entity.Migrations.History
         {
             var historyRepository
                 = new HistoryRepository(Mock.Of<InternalContextForMock>(), 
-                    ConnectionString.Replace(DatabaseProviderFixture.DefaultDatabaseName, "NoSuchDatabase"),
+                    ConnectionString.Replace(Fixture.DatabaseName, "NoSuchDatabase"),
                     ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
             Assert.False(historyRepository.Exists());

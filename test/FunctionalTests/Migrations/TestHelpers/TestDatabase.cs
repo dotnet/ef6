@@ -6,13 +6,12 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.SqlServer;
     using System.Data.Entity.TestHelpers;
-    using System.Data.Entity.Utilities;
     using System.Data.SqlClient;
-    using System.IO;
 
 #if NETFRAMEWORK
     using System.Data.Entity.SqlServerCompact;
     using System.Data.SqlServerCe;
+    using System.IO;
 #endif
 
     public abstract class TestDatabase
@@ -120,7 +119,7 @@ namespace System.Data.Entity.Migrations
                   DECLARE constraint_cursor CURSOR FOR
                   SELECT constraint_name, table_schema, table_name
                   FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS 
-                  WHERE constraint_catalog = 'MigrationsTest'
+                  WHERE constraint_catalog = '" + _name + @"'
                   AND constraint_type = 'FOREIGN KEY'
                  
                   OPEN constraint_cursor;
