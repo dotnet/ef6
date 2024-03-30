@@ -31,12 +31,16 @@ extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
   parameters:
     featureFlags:
-      autoBaseline: true
+      autoBaseline: false
     sdl:
       sourceAnalysisPool:
         name: $(DncEngInternalBuildPool)
         image: 1es-windows-2022
         os: windows
+      baseline:
+        baselineFile: $(Build.SourcesDirectory)\.config\guardian\.gdnbaselines
+      binskim:
+        scanOutputDirectoryOnly: true
     customBuildTags:
     - ES365AIMigrationTooling
     stages:
