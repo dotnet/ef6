@@ -3,6 +3,7 @@
   <metadata>
     $CommonMetadataElements$
     <language>$NeutralLanguage$</language>
+	<readme>README.md</readme>  
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="System.ComponentModel.DataAnnotations" targetFramework=".NETFramework4.0, .NETFramework4.5" />
     </frameworkAssemblies>
@@ -54,5 +55,6 @@
     <file src="buildTransitive\**\*" target="buildTransitive/" />
     <file src="content\**\*" target="content/" />
     <file src="tools\**\*" target="tools/" />
+	<file src="../../README.md" target="\" />  
   </files>
 </package>
