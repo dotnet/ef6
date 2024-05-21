@@ -55,6 +55,6 @@
     <file src="buildTransitive\**\*" target="buildTransitive/" />
     <file src="content\**\*" target="content/" />
     <file src="tools\**\*" target="tools/" />
-    <file src="../../README.md" target="\" />  
+    <file src="../../README.md" target="/" />  
   </files>
 </package>
