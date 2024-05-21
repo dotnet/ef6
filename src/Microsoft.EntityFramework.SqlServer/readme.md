@@ -36,7 +36,7 @@ Or you can use the SetConfiguration method before any data access calls:
 ````csharp
  DbConfiguration.SetConfiguration(new MicrosoftSqlDbConfiguration());
 ````
-Or you can add the following lines to your existing DbConfiguration class:
+Or add the following lines to your existing derived DbConfiguration class:
 ````csharp
 SetProviderFactory(MicrosoftSqlProviderServices.ProviderInvariantName, Microsoft.Data.SqlClient.SqlClientFactory.Instance);
 SetProviderServices(MicrosoftSqlProviderServices.ProviderInvariantName, MicrosoftSqlProviderServices.Instance);
