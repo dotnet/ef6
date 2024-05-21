@@ -1,6 +1,6 @@
 # Entity Framework 6
 
-Entity Framework 6 (EF6) is an object-relational mapper that enables .NET Framework, .NET Core, and modern .NET developers to work with relational data using domain-specific objects. It eliminates the need for most of the data-access code that developers usually need to write.
+Entity Framework 6 (EF6) is a tried and tested object-relational mapper for .NET with many years of feature development and stabilization. It eliminates the need for most of the data-access code that developers usually need to write.
 
 ## Status and Support
 
@@ -16,12 +16,6 @@ This plan focuses on stability of the codebase and compatibility of new versions
 ## Entity Framework Core
 
 Entity Framework Core (EF Core) is a lightweight and extensible version of Entity Framework and continues to be actively developed on [the EFCore GitHub repo](https://github.com/dotnet/efcore). EF Core is developed exclusively for modern .NET and does not run on .NET Framework. EF Core includes [many improvements and new features over EF6](https://docs.microsoft.com/ef/efcore-and-ef6/). EF Core has a different architecture to EF6 and takes a very different approach to its internals--for example, EF Core does not support a visual designer or EDMX files. However, most EF6 projects can be ported to EF Core with some amount of work--see [Port from EF6 to EF Core](https://docs.microsoft.com/ef/efcore-and-ef6/porting/) for a guide.
-
-## Forks
-
-The EF6 code is published under the [MIT](https://github.com/dotnet/ef6/blob/main/LICENSE.txt). This means it is permissible to [fork the code](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/about-forks) and build custom versions of EF6. Making changes in a fork is one way to work around any issues or add new features without impacting the stability of the main branch and releases. Indeed, there are commercial third-party forks of EF6 available for a fee that add new features to EF6. (Microsoft does not endorse or provide support for any forked versions of EF6.)
-
-Note that a fork is not needed to use EF6 on .NET Core and modern .NET platforms; the existing EF6 packages already support this. 
 
 ## Getting help
 
