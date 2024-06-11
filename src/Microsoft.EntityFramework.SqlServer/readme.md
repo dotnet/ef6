@@ -9,7 +9,7 @@ This provider depends on the modern [Microsoft.Data.SqlClient](https://github.co
 - Supports most Azure Active Directory authentication methods
 - Supports Always Encrypted with .NET
 
-Notice that this provider is a runtime only update, and will not work with the existing Visual Studio tooling.
+Notice that this provider is a runtime only update and will not work with the existing Visual Studio tooling.
 
 The latest build of this package is available from [NuGet](https://www.nuget.org/packages/Microsoft.EntityFramework.SqlServer)
 
@@ -36,7 +36,7 @@ Or you can use the SetConfiguration method before any data access calls:
 ````csharp
  DbConfiguration.SetConfiguration(new MicrosoftSqlDbConfiguration());
 ````
-Or you can add the following lines to your existing DbConfiguration class:
+Or add the following lines to your existing derived DbConfiguration class:
 ````csharp
 SetProviderFactory(MicrosoftSqlProviderServices.ProviderInvariantName, Microsoft.Data.SqlClient.SqlClientFactory.Instance);
 SetProviderServices(MicrosoftSqlProviderServices.ProviderInvariantName, MicrosoftSqlProviderServices.Instance);
@@ -97,7 +97,7 @@ Also update the provider name inside the EntityConnection connection string - `p
 
 ## Code changes
 
-In order to use the provider in an existing solution, a few code changes are required (as needed).
+To use the provider in an existing solution, a few code changes are required (as needed).
 
 `using System.Data.SqlClient;` => `using Microsoft.Data.SqlClient;`
 
@@ -121,6 +121,26 @@ The following classes have been renamed to avoid conflicts with classes that use
 
 ## Known issues
 
+**Azure App Service with .NET Framework and connection strings configuration**
+
+If you use Azure App Service with .NET Framework and the [connection strings configuration feature](https://learn.microsoft.com/azure/app-service/configure-common?tabs=portal#configure-connection-strings), you can encounter runtime issues, as the `ProviderName` connection string setting in this scenario is hardcoded to `System.Data.SqlClient`.
+
+Solution is to use a derived MicrosoftSqlDbConfiguration class like this:
+
+```csharp
+public class AppServiceConfiguration : MicrosoftSqlDbConfiguration
+{
+    public AppServiceConfiguration()
+    {
+        SetProviderFactory("System.Data.SqlClient", Microsoft.Data.SqlClient.SqlClientFactory.Instance);
+        SetProviderServices("System.Data.SqlClient", MicrosoftSqlProviderServices.Instance);
+        SetExecutionStrategy("System.Data.SqlClient", () => new MicrosoftSqlAzureExecutionStrategy());
+    }
+}
+```
+
+Then use this derived class in the code-based configuration described above.
+
 **EntityFramework.dll installed in GAC**
 
 If an older version of EntityFramework.dll is installed in the .NET Framework GAC (Global Assembly Cache), you might get this error:
@@ -131,6 +151,6 @@ Solution is to remove the .dll from the GAC. EF6 assemblies should never be inst
 
 ## Release notes
 
-### 6.5.0-preview.1
+### 6.5.0-preview2
 
 - Initial preview
