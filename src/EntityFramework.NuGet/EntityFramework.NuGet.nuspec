@@ -51,10 +51,10 @@
     <file src="../../artifacts/bin/EntityFramework.SqlServer/$Configuration$/netstandard2.1/EntityFramework.SqlServer.dll" target="lib/netstandard2.1/" />
     <file src="../../artifacts/bin/EntityFramework.SqlServer/$Configuration$/netstandard2.1/EntityFramework.SqlServer.xml" target="lib/netstandard2.1/" />
     <file src="../../artifacts/bin/Microsoft.Data.Entity.Build.Tasks/$Configuration$/netstandard2.0/Microsoft.Data.Entity.Build.Tasks.dll" target="build/" />
-    <file src="build/**/*" target="build/" />
-    <file src="buildTransitive/**/*" target="buildTransitive/" />
-    <file src="content/**/*" target="content/" />
-    <file src="tools/**/*" target="tools/" />
+    <file src="build\**\*" target="build/" />
+    <file src="buildTransitive\**\*" target="buildTransitive/" />
+    <file src="content\**\*" target="content/" />
+    <file src="tools\**\*" target="tools/" />
     <file src="../../README.md" target="/" />  
   </files>
 </package>
