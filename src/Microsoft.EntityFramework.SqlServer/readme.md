@@ -151,6 +151,10 @@ Solution is to remove the .dll from the GAC. EF6 assemblies should never be inst
 
 ## Release notes
 
+### 6.5.1
+
+- Fixes a packaging issue with the EntityFramework package
+
 ### 6.5.0
 
 - Final release (no code changes since 6.5.0-preview2)
