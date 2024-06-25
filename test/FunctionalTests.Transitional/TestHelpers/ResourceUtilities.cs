@@ -87,7 +87,11 @@ namespace System.Data.Entity
                             var destinationStream = new FileStream(name, FileMode.Create, FileAccess.Write))
                         {
                             var sourceBuffer = new byte[sourceStream.Length];
+#if NETFRAMEWORK
                             sourceStream.Read(sourceBuffer, 0, sourceBuffer.Length);
+#else
+                            sourceStream.ReadExactly(sourceBuffer, 0, sourceBuffer.Length);
+#endif
                             destinationStream.Write(sourceBuffer, 0, sourceBuffer.Length);
                         }
                     }
