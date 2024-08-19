@@ -765,6 +765,7 @@ namespace System.Data.Entity.Core.Common.Utils
             if (schemaVersion < XmlConstants.EdmVersionForV2)
             {
                 // v1 and v1.1 use old hash to remain compatible
+                // codeql[cs/weak-crypto] MD5CryptoServiceProvider is not used for cryptography/security purposes and we do it only for v1 and v1.1 for compatibility reasons.
                 hashAlgorithm = new MD5CryptoServiceProvider();
             }
             else
