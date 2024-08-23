@@ -116,7 +116,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                         NullableGuidProp = Guid.NewGuid(),
                         NullableShortProp = (short)(i + 1),
                         NullableIntProp = i + 2,
-                        NullableLongProp = i +3,
+                        NullableLongProp = i + 3,
                         NullableByteProp = (byte)(i & 255),
                         NullableBoolProp = i % 2 == 0,
                         NullableDecimalProp = (decimal)(i + 0.1),
@@ -127,7 +127,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                         NullableDateTimeOffsetProp = DateTimeOffset.Now,
                         NullableTimeSpanProp = DateTimeOffset.UtcNow.Offset
                     };
-                    db.Entities.Add(blog); 
+                    db.Entities.Add(blog);
                 }
             }
         }
@@ -199,8 +199,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     Assert.Equal("a" + projection.Entity.EnumProp + "b", projection.EnumProp);
                     //DateTime.ToString() uses DB localization settings, unknown expected
                     Assert.True(
-                        projection.DateTimeProp.StartsWith("a") && 
-                        projection.DateTimeProp.EndsWith("b") && 
+                        projection.DateTimeProp.StartsWith("a") &&
+                        projection.DateTimeProp.EndsWith("b") &&
                         projection.DateTimeProp.Contains(projection.Entity.DateTimeProp.Year.ToString()));
                     Assert.True(
                         projection.DateTimeOffsetProp.StartsWith("a") &&
@@ -222,18 +222,18 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 var projections = db.Entities.Select(b => new
                 {
                     Entity = b,
-                    StringProp = string.Concat("a" , b.StringProp , "b"),
-                    BoolProp = string.Concat("a" , b.BoolProp , "b"),
-                    GuidProp = string.Concat("a" , b.GuidProp , "b"),
-                    ByteProp = string.Concat("a" , b.ByteProp , "b"),
-                    ShortProp = string.Concat("a" , b.ShortProp , "b"),
-                    IntProp = string.Concat("a" , b.IntProp , "b"),
-                    LongProp = string.Concat("a" , b.LongProp , "b"),
-                    DoubleProp = string.Concat("a" , b.DoubleProp , "b"),
-                    FloatProp = string.Concat("a" , b.FloatProp , "b"),
-                    DecimalProp = string.Concat("a" , b.DecimalProp , "b"),
-                    EnumProp = string.Concat("a" , b.EnumProp , "b"),
-                    DateTimeProp = string.Concat("a",b.DateTimeProp,"b"),
+                    StringProp = string.Concat("a", b.StringProp, "b"),
+                    BoolProp = string.Concat("a", b.BoolProp, "b"),
+                    GuidProp = string.Concat("a", b.GuidProp, "b"),
+                    ByteProp = string.Concat("a", b.ByteProp, "b"),
+                    ShortProp = string.Concat("a", b.ShortProp, "b"),
+                    IntProp = string.Concat("a", b.IntProp, "b"),
+                    LongProp = string.Concat("a", b.LongProp, "b"),
+                    DoubleProp = string.Concat("a", b.DoubleProp, "b"),
+                    FloatProp = string.Concat("a", b.FloatProp, "b"),
+                    DecimalProp = string.Concat("a", b.DecimalProp, "b"),
+                    EnumProp = string.Concat("a", b.EnumProp, "b"),
+                    DateTimeProp = string.Concat("a", b.DateTimeProp, "b"),
                     DateTimeOffsetProp = string.Concat("a", b.DateTimeOffsetProp, "b"),
                     TimeSpanProp = string.Concat("a", b.TimeSpanProp, "b")
                 }).ToArray();
@@ -322,17 +322,17 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 var projections = db.Entities.Select(b => new
                 {
                     Entity = b,
-                    StringProp = string.Concat("a" , (string)null , "b"),
-                    BoolProp = string.Concat("a" , (bool?)null , "b"),
-                    GuidProp = string.Concat("a" , (Guid?)null , "b"),
-                    ByteProp = string.Concat("a" , (byte?)null , "b"),
+                    StringProp = string.Concat("a", (string)null, "b"),
+                    BoolProp = string.Concat("a", (bool?)null, "b"),
+                    GuidProp = string.Concat("a", (Guid?)null, "b"),
+                    ByteProp = string.Concat("a", (byte?)null, "b"),
                     ShortProp = string.Concat("a", (short?)null, "b"),
-                    IntProp = string.Concat("a" , (int?)null , "b"),
-                    LongProp = string.Concat("a" , (long?)null , "b"),
-                    DoubleProp = string.Concat("a" , (double?)null , "b"),
-                    FloatProp = string.Concat("a" , (float?)null , "b"),
+                    IntProp = string.Concat("a", (int?)null, "b"),
+                    LongProp = string.Concat("a", (long?)null, "b"),
+                    DoubleProp = string.Concat("a", (double?)null, "b"),
+                    FloatProp = string.Concat("a", (float?)null, "b"),
                     DecimalProp = string.Concat("a", (decimal?)null, "b"),
-                    EnumProp = string.Concat("a",(SomeEnum?)null,"b"),
+                    EnumProp = string.Concat("a", (SomeEnum?)null, "b"),
                     DateTimeProp = string.Concat("a", (DateTime?)null, "b"),
                     DateTimeOffsetProp = string.Concat("a", (DateTimeOffset?)null, "b"),
                     TimeSpanProp = string.Concat("a", (TimeSpan?)null, "b"),
@@ -521,7 +521,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     .Select(b => new
                     {
                         Entity = b,
-                        BoolProp = string.Concat((string)null , b.NullableBoolProp , "b"),
+                        BoolProp = string.Concat((string)null, b.NullableBoolProp, "b"),
                         GuidProp = string.Concat((string)null, b.NullableGuidProp, "b"),
                         ByteProp = string.Concat((string)null, b.NullableByteProp, "b"),
                         ShortProp = string.Concat((string)null, b.NullableShortProp, "b"),
@@ -569,7 +569,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             using (var db = new StringConcatContext())
             {
                 var actualSql = db.Entities.Select(
-                    e => string.Concat(3, SomeEnum.SomeA, "xyz", e.DateTimeProp, (short)42)).ToString();
+                    e => string.Concat(new object[] { 3, SomeEnum.SomeA, "xyz", e.DateTimeProp, (short)42 })).ToString();
 
                 Assert.Equal(@"SELECT 
      CAST( 3 AS nvarchar(max)) + N'SomeA' + N'xyz' +  CAST( [Extent1].[DateTimeProp] AS nvarchar(max)) +  CAST( cast(42 as smallint) AS nvarchar(max)) AS [C1]
@@ -583,7 +583,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             using (var db = new StringConcatContext())
             {
                 var actualSql = db.Entities.Select(
-                    e => string.Concat("3", "SomeEnum.SomeA", "xyz", e.StringProp, "abc", e.StringProp)).ToString();
+                    e => string.Concat(new string[] { "3", "SomeEnum.SomeA", "xyz", e.StringProp, "abc", e.StringProp })).ToString();
 
                 Assert.Equal(@"SELECT 
     N'3' + N'SomeEnum.SomeA' + N'xyz' + CASE WHEN ([Extent1].[StringProp] IS NULL) THEN N'' ELSE [Extent1].[StringProp] END + N'abc' + CASE WHEN ([Extent1].[StringProp] IS NULL) THEN N'' ELSE [Extent1].[StringProp] END AS [C1]
@@ -593,7 +593,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
         [Fact]
         public void Issue1904_StringConcatMethod_can_handle_arguments_created_explicitly_as_object_array()
-        {          
+        {
             using (var db = new StringConcatContext())
             {
                 var args = new object[] { 3, SomeEnum.SomeA, "xyz", (short)42 };
@@ -610,7 +610,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         {
             using (var db = new StringConcatContext())
             {
-                var args = new [] { "3", "SomeEnum.SomeA", "xyz", "42" };
+                var args = new[] { "3", "SomeEnum.SomeA", "xyz", "42" };
                 var actualSql = db.Entities.Select(e => string.Concat(args)).ToString();
 
                 Assert.Equal(@"SELECT 
@@ -646,7 +646,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     .Select(
                         b => new
                         {
-                            ConcatMethod = string.Concat(b.StringProp, b.BoolProp, b.EnumProp, b.GuidProp),
+                            ConcatMethod = string.Concat(new object[] { b.StringProp, b.BoolProp, b.EnumProp, b.GuidProp }),
                             ConcatPlus = b.StringProp + b.BoolProp + b.EnumProp + b.GuidProp,
                         });
 
@@ -668,7 +668,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     .Select(
                         b => new
                         {
-                            ConcatMethod = string.Concat(b.StringProp, b.StringProp, b.StringProp, "x", b.StringProp),
+                            ConcatMethod = string.Concat(new string[] { b.StringProp, b.StringProp, b.StringProp, "x", b.StringProp }),
                             ConcatPlus = b.StringProp + b.StringProp + b.StringProp + "x" + b.StringProp,
                         });
 
