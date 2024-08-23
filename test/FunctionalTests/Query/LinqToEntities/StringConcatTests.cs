@@ -569,7 +569,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             using (var db = new StringConcatContext())
             {
                 var actualSql = db.Entities.Select(
-                    e => string.Concat(3, SomeEnum.SomeA, "xyz", e.DateTimeProp, (short)42)).ToString();
+                    e => string.Concat(new object[] { 3, SomeEnum.SomeA, "xyz", e.DateTimeProp, (short)42 })).ToString();
 
                 Assert.Equal(@"SELECT 
      CAST( 3 AS nvarchar(max)) + N'SomeA' + N'xyz' +  CAST( [Extent1].[DateTimeProp] AS nvarchar(max)) +  CAST( cast(42 as smallint) AS nvarchar(max)) AS [C1]
@@ -583,7 +583,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             using (var db = new StringConcatContext())
             {
                 var actualSql = db.Entities.Select(
-                    e => string.Concat("3", "SomeEnum.SomeA", "xyz", e.StringProp, "abc", e.StringProp)).ToString();
+                    e => string.Concat(new string[] { "3", "SomeEnum.SomeA", "xyz", e.StringProp, "abc", e.StringProp })).ToString();
 
                 Assert.Equal(@"SELECT 
     N'3' + N'SomeEnum.SomeA' + N'xyz' + CASE WHEN ([Extent1].[StringProp] IS NULL) THEN N'' ELSE [Extent1].[StringProp] END + N'abc' + CASE WHEN ([Extent1].[StringProp] IS NULL) THEN N'' ELSE [Extent1].[StringProp] END AS [C1]
@@ -646,7 +646,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     .Select(
                         b => new
                         {
-                            ConcatMethod = string.Concat(b.StringProp, b.BoolProp, b.EnumProp, b.GuidProp),
+                            ConcatMethod = string.Concat(new object[] { b.StringProp, b.BoolProp, b.EnumProp, b.GuidProp }),
                             ConcatPlus = b.StringProp + b.BoolProp + b.EnumProp + b.GuidProp,
                         });
 
@@ -668,7 +668,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     .Select(
                         b => new
                         {
-                            ConcatMethod = string.Concat(b.StringProp, b.StringProp, b.StringProp, "x", b.StringProp),
+                            ConcatMethod = string.Concat(new string[] { b.StringProp, b.StringProp, b.StringProp, "x", b.StringProp }),
                             ConcatPlus = b.StringProp + b.StringProp + b.StringProp + "x" + b.StringProp,
                         });
 
