@@ -28,6 +28,6 @@
     <SystemComponentModelAnnotationsVersion>5.0.0</SystemComponentModelAnnotationsVersion>
     <SystemConfigurationConfigurationManagerVersion>6.0.1</SystemConfigurationConfigurationManagerVersion>
     <SystemDataSqlClientVersion>4.8.6</SystemDataSqlClientVersion>
-    <MicrosoftDataSqlClientVersion>5.1.5</MicrosoftDataSqlClientVersion>
+    <MicrosoftDataSqlClientVersion>5.1.6</MicrosoftDataSqlClientVersion>
   </PropertyGroup>
 </Project>
