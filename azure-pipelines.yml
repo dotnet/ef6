@@ -100,8 +100,20 @@ extends:
                   Token: $(dn-bot-dnceng-artifact-feeds-rw)
               - script: eng\common\cibuild.cmd -configuration $(_BuildConfig) -prepareMachine $(_InternalBuildArgs) $(_InternalRuntimeDownloadArgs) $(_AdditionalBuildArgs)
                 name: Build
+              - task: CopyFiles@2
+                displayName: 'Copy binaries for publishing'
+                inputs:
+                  Contents: |
+                    artifacts/bin/**/?(*.dll|*.exe|*.pdb)
+                    !artifacts/bin/*Tests/**
+                  TargetFolder: $(Agent.TempDirectory)/BinArtifacts
             templateContext:
               outputs:
+              - output: pipelineArtifact
+                displayName: Publish binaries for BinSkim
+                condition: always()
+                path: $(Agent.TempDirectory)/BinArtifacts/
+                artifact: BinArtifacts
               - output: pipelineArtifact
                 displayName: Upload TestResults
                 condition: always()
