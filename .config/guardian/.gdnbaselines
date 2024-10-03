@@ -1,59 +1,37 @@
 {
-  "hydrated": true,
+  "hydrated": false,
   "properties": {
     "helpUri": "https://eng.ms/docs/microsoft-security/security/azure-security/cloudai-security-fundamentals-engineering/security-integration/guardian-wiki/microsoft-guardian/general/baselines",
-    "hydrationStatus": "This file contains identifying data. It is **NOT** safe to check into your repo. To dehydrate this file, run `guardian dehydrate --help` and follow the guidance."
+    "hydrationStatus": "This file does not contain identifying data. It is safe to check into your repo. To hydrate this file with identifying data, run `guardian hydrate --help` and follow the guidance."
   },
   "version": "1.0.0",
   "baselines": {
     "default": {
       "name": "default",
-      "createdDate": "2024-03-15 01:14:23Z",
-      "lastUpdatedDate": "2024-03-15 01:14:23Z"
+      "createdDate": "2024-09-23 14:17:50Z",
+      "lastUpdatedDate": "2024-09-23 14:17:50Z"
     }
   },
   "results": {
-    "31128318971be3d77cbd3aaf7b6a06d65b1874334a143ee500c7fccb5aa89427": {
-      "signature": "31128318971be3d77cbd3aaf7b6a06d65b1874334a143ee500c7fccb5aa89427",
+    "b7470c34cf14a9c8808cdb2fdcd29e532fece8b3b014e5541e9df9b4919c8ae3": {
+      "signature": "b7470c34cf14a9c8808cdb2fdcd29e532fece8b3b014e5541e9df9b4919c8ae3",
       "alternativeSignatures": [
-        "9106dc3b9a335702dc4feeeed54285f07d8a06494f38fc23167f6158793928dc"
+        "61e0925497248204d08eac72b06e0185a81c754095edaf3e2c769f889568e3f9"
       ],
-      "target": "eng/common/SetupNugetSources.ps1",
-      "line": 38,
       "memberOf": [
         "default"
       ],
-      "tool": "psscriptanalyzer",
-      "ruleId": "PSAvoidUsingUsernameAndPasswordParams",
-      "createdDate": "2024-03-15 01:14:23Z"
+      "createdDate": "2024-09-23 14:17:50Z"
     },
-    "992b26983b997813a410dfc25048f3b218c6fc02fc14a5c2ad431ec8e022ac79": {
-      "signature": "992b26983b997813a410dfc25048f3b218c6fc02fc14a5c2ad431ec8e022ac79",
+    "e4becf49e6390642f332601723cda343d5d5fac1e28932b9166b3bed0877e05c": {
+      "signature": "e4becf49e6390642f332601723cda343d5d5fac1e28932b9166b3bed0877e05c",
       "alternativeSignatures": [
-        "23e97da32b7142c282727c96d07fd5ce6aefd6ef26f02e91cb471eb7863542f8"
+        "5d53317f53c58032b1dd0f9daa7a62e7861cae09b03c8ba2a23434ebe7252956"
       ],
-      "target": "eng/common/SetupNugetSources.ps1",
-      "line": 56,
       "memberOf": [
         "default"
       ],
-      "tool": "psscriptanalyzer",
-      "ruleId": "PSAvoidUsingUsernameAndPasswordParams",
-      "createdDate": "2024-03-15 01:14:23Z"
-    },
-    "53b10a5fb6059b0b229ad32c6278123a5603386f65d9e1c5684a2333f2e1dc62": {
-      "signature": "53b10a5fb6059b0b229ad32c6278123a5603386f65d9e1c5684a2333f2e1dc62",
-      "alternativeSignatures": [
-        "cd7b0b0937cfa32a98962a528bd99ede0181ae41a609df430f35fd30763166c4"
-      ],
-      "target": "eng/common/SetupNugetSources.ps1",
-      "line": 88,
-      "memberOf": [
-        "default"
-      ],
-      "tool": "psscriptanalyzer",
-      "ruleId": "PSAvoidUsingUsernameAndPasswordParams",
-      "createdDate": "2024-03-15 01:14:23Z"
+      "createdDate": "2024-09-23 14:17:50Z"
     }
   }
 }
