@@ -32,6 +32,7 @@ extends:
   parameters:
     featureFlags:
       autoBaseline: false
+      usePrefastVersion3: true
     sdl:
       sourceAnalysisPool:
         name: $(DncEngInternalBuildPool)
@@ -41,6 +42,7 @@ extends:
         baselineFile: $(Build.SourcesDirectory)\.config\guardian\.gdnbaselines
       binskim:
         scanOutputDirectoryOnly: true
+        preReleaseVersion: '4.3.1'
       policheck:
         enabled: true
       tsa:
