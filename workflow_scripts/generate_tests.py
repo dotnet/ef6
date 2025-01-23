@@ -1,9 +1,30 @@
 import os
 import openai
 import re
+import logging
+import sys
+from datetime import datetime
+
+# Set up logging
+log_dir = os.path.join(os.getenv("GITHUB_WORKSPACE", "."), "logs")
+os.makedirs(log_dir, exist_ok=True)
+log_file = os.path.join(log_dir, f"test_generation_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log")
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler(log_file),
+        logging.StreamHandler(sys.stdout)
+    ]
+)
 
 # Set up OpenAI API key (assumed to be stored as an environment variable)
-openai.api_key = os.getenv("OPEN_AI_KEY")
+api_key = os.getenv("OPEN_AI_KEY")
+if not api_key:
+    logging.error("OPEN_AI_KEY environment variable not found")
+    sys.exit(1)
+openai.api_key = api_key
 
 # Mapping of file extensions to programming languages
 EXTENSION_LANGUAGE_MAP = {
@@ -58,6 +79,8 @@ def get_language_from_extension(file_extension):
 
 def generate_unit_tests(file_content, language):
     """Generate unit test code using OpenAI's GPT model."""
+    logging.info(f"Generating unit tests for {language} code")
+    
     system_prompt = (
         f"You are an expert {language} developer specializing in unit test creation. "
         f"When given {language} code, you will generate comprehensive unit tests that: \n"
@@ -71,7 +94,6 @@ def generate_unit_tests(file_content, language):
         f"Output only the unit test code, without any explanations or markdown formatting."
     )
 
-    # Escape the backticks inside the user prompt to avoid breaking the code block
     user_prompt = f"""
                     Generate comprehensive unit test cases for the following {language} code: {language}
 
@@ -111,28 +133,41 @@ def generate_unit_tests(file_content, language):
 
                     Generate tests that would be suitable for a production codebase.
                     """
-    response = openai.ChatCompletion.create(
-    model="gpt-4o",
-    messages=[
-        {"role": "system", "content": system_prompt},
-        {"role": "user", "content": user_prompt}
-    ],
-    max_tokens=1500,
-    temperature=0.5
-    )
+    try:
+        logging.debug("Making API call to OpenAI")
+        response = openai.ChatCompletion.create(
+            model="gpt-4o", 
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt}
+            ],
+            max_tokens=1500,
+            temperature=0.5
+        )
+        logging.debug(f"OpenAI API response status: {response.choices[0].finish_reason}")
+        
+        assistant_response = response.choices[0].message.content
+        logging.debug(f"Response length: {len(assistant_response)} characters")
 
-    assistant_response = response.choices[0].message.content
+        # Extract code between ``` and ```
+        code_blocks = re.findall(r'```[^\n]*\n(.*?)```', assistant_response, re.DOTALL)
 
-    # Extract code between ``` and ```
-    code_blocks = re.findall(r'```[^\n]*\n(.*?)```', assistant_response, re.DOTALL)
+        if code_blocks:
+            test_code = code_blocks[0]
+            logging.info("Successfully extracted code block from response")
+        else:
+            # If no code blocks are found, assume the assistant returned only code
+            test_code = assistant_response
+            logging.info("No code blocks found, using entire response as test code")
 
-    if code_blocks:
-        test_code = code_blocks[0]
-    else:
-        # If no code blocks are found, assume the assistant returned only code
-        test_code = assistant_response
+        return test_code.strip()
 
-    return test_code.strip()
+    except openai.error.OpenAIError as e:
+        logging.error(f"OpenAI API error: {str(e)}")
+        raise
+    except Exception as e:
+        logging.error(f"Unexpected error in generate_unit_tests: {str(e)}")
+        raise
 
 def write_unit_test_file(test_file_path, test_code):
     """Write the generated unit tests to the specified test file."""
@@ -170,58 +205,83 @@ def get_test_file_name(original_file_name, language):
 
 def process_repository(repo_path):
     """Scan the repo, generate unit tests, and write them to test files."""
+    logging.info(f"Starting repository processing at path: {repo_path}")
+    
     # Create a tests folder in the root of the repository if it doesn't exist
     tests_folder = os.path.join(repo_path, 'tests')
     os.makedirs(tests_folder, exist_ok=True)
+    logging.info(f"Created/verified tests folder at: {tests_folder}")
 
     # Get all code files in the repo (excluding the tests folder itself)
     code_files = get_code_files(repo_path)
+    logging.info(f"Found {len(code_files)} code files to process")
 
-    for code_file in code_files:
-        print(f"Processing {code_file}...")
-        file_content = read_file_content(code_file)
+    for index, code_file in enumerate(code_files, 1):
+        logging.info(f"Processing file {index}/{len(code_files)}: {code_file}")
+        try:
+            file_content = read_file_content(code_file)
 
-        # Skip empty files
-        if not file_content.strip():
+            # Skip empty files
+            if not file_content.strip():
+                logging.warning(f"Skipping empty file: {code_file}")
+                continue
+
+            # Determine the programming language
+            _, ext = os.path.splitext(code_file)
+            language = get_language_from_extension(ext)
+
+            if not language:
+                logging.warning(f"Could not determine language for file {code_file}. Skipping.")
+                continue
+
+            # Create a language-specific folder for tests
+            language_folder = os.path.join(tests_folder, language)
+            os.makedirs(language_folder, exist_ok=True)
+            logging.debug(f"Created/verified language folder at: {language_folder}")
+
+            # Create a test file name based on the original file name and language conventions
+            original_file_name = os.path.basename(code_file)
+            test_file_name = get_test_file_name(original_file_name, language)
+            logging.debug(f"Generated test file name: {test_file_name}")
+
+            # Create the test file path in the language folder
+            test_file_path = os.path.join(language_folder, test_file_name)
+
+            # Check if the test file already exists
+            if os.path.exists(test_file_path):
+                logging.info(f"Test file {test_file_path} already exists. Skipping.")
+                continue
+
+            # Generate unit tests using OpenAI
+            try:
+                test_code = generate_unit_tests(file_content, language)
+                # Write the generated tests to a new file in the language folder
+                write_unit_test_file(test_file_path, test_code)
+                logging.info(f"Successfully generated and wrote tests for {code_file}")
+            except Exception as e:
+                logging.error(f"Failed to generate tests for {code_file}: {str(e)}")
+                continue
+
+        except Exception as e:
+            logging.error(f"Error processing file {code_file}: {str(e)}")
             continue
 
-        # Determine the programming language
-        _, ext = os.path.splitext(code_file)
-        language = get_language_from_extension(ext)
-
-        if not language:
-            print(f"Could not determine language for file {code_file}. Skipping.")
-            continue
-
-        # Create a language-specific folder for tests
-        language_folder = os.path.join(tests_folder, language)
-        os.makedirs(language_folder, exist_ok=True)
-
-        # Create a test file name based on the original file name and language conventions
-        original_file_name = os.path.basename(code_file)
-        test_file_name = get_test_file_name(original_file_name, language)
-
-        # Create the test file path in the language folder
-        test_file_path = os.path.join(language_folder, test_file_name)
-
-        # Check if the test file already exists
-        if os.path.exists(test_file_path):
-            print(f"Test file {test_file_path} already exists. Skipping.")
-            continue
-
-        # Generate unit tests using OpenAI
-        test_code = generate_unit_tests(file_content, language)
-
-        # Write the generated tests to a new file in the language folder
-        write_unit_test_file(test_file_path, test_code)
-
-    print(f"Unit tests generation complete. Tests are stored in the 'tests' folder inside {repo_path}.")
+    logging.info(f"Unit tests generation complete. Tests are stored in the 'tests' folder inside {repo_path}.")
 
 
 if __name__ == "__main__":
-    # Automatically detect the repository path using GITHUB_WORKSPACE environment variable
-    repo_path = os.getenv("GITHUB_WORKSPACE", ".")
-    if os.path.exists(repo_path):
-        process_repository(repo_path)
-    else:
-        print("Invalid repository path.")
+    logging.info("Starting test generation script")
+    try:
+        # Automatically detect the repository path using GITHUB_WORKSPACE environment variable
+        repo_path = os.getenv("GITHUB_WORKSPACE", ".")
+        logging.info(f"Repository path: {repo_path}")
+        
+        if os.path.exists(repo_path):
+            process_repository(repo_path)
+        else:
+            logging.error(f"Invalid repository path: {repo_path}")
+            sys.exit(1)
+    except Exception as e:
+        logging.error(f"Fatal error: {str(e)}")
+        sys.exit(1)
+    logging.info("Test generation script completed")
