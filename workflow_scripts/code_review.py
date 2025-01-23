@@ -200,68 +200,43 @@ def review_code_with_rag(files):
         relevant_context = "\n".join([doc.page_content for doc in similar_docs])
         
         prompt_template = f"""
-        As a senior software engineer, review the following code change in `{file_name}`:
+        You are a senior C#/.NET software engineer with 10+ years of experience. Provide a concise, conversational review comment for the following code change in `{file_name}`, focusing on maintainability, performance, and security:
 
         ```diff
         {patch}
         ```
 
-        Similar code patterns for reference:
+        When relevant, reference similar code or patterns from this context:
+
         ```diff
         {relevant_context}
         ```
 
-        Focus your review on:
-        1. Code quality and best practices
-        2. Performance implications
-        3. Security concerns
-        4. Error handling
-        5. Potential edge cases
+        ---
 
-        For each issue found, format your response using this template:
+        #### **Review Guidelines**
 
-        Location: <file>:<line>
-        Problem: <clear description of the issue>
-        
-        Fix:
-        ```<language>
-        // Before
-        <problematic code>
+        1. **Line Identification**  
+        - Pinpoint the exact line of concern in a code block.
 
-        // After 
-        <fixed code>
-        ```
+        2. **Suggested Improvement**  
+        - Offer a corrected version of that line or a short, actionable list of changes.  
+        - Keep the explanation brief, avoiding overly detailed justifications.
 
-        Impact:
-        - <bullet points describing risks and consequences>
-        
-        Testing:
-        1. <specific test scenarios>
-        2. <edge cases to verify>
+        3. **Reasoning & Relevance**  
+        - State why the change is necessary (e.g., C#/.NET best practices, performance enhancements, security considerations).  
+        - Reference `{relevant_context}` if it helps illustrate or reinforce your point.
 
-        Example response:
+        4. **Common C# Pitfalls**  
+        - Watch for potential `NullReferenceException` issues.  
+        - Check for proper exception handling (avoid empty `catch` blocks, use specific exception types).  
+        - Validate resource disposal (implement `IDisposable` correctly).  
+        - Look out for performance pitfalls (e.g., expensive LINQ operations in tight loops).  
+        - Ensure thread safety (particularly with static members and shared states).
 
-        Location: user_auth.js:45
-        Problem: Unsafe password comparison using == instead of constant-time comparison
-        
-        Fix:
-        ```js
-        // Before
-        if (userPassword == storedPassword)
+        ---
 
-        // After
-        if (await bcrypt.compare(userPassword, storedPassword))
-        ```
-
-        Impact:
-        - Timing attack vulnerability
-        - Potential credential exposure
-        
-        Testing:
-        1. Add timing attack prevention tests
-        2. Verify password comparison in edge cases
-
-        Please provide multiple issues if found, each following this exact template format.
+        Your goal is to save the development team time—ideally 3 hours per week per developer by highlighting the most important improvements quickly and clearly. authentication attempts to monitor potential security threats.
         """
 
         try:
