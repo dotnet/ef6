@@ -54,18 +54,31 @@ EXTENSION_LANGUAGE_MAP = {
 }
 
 def get_code_files(repo_path):
-    """Recursively get all code files from the repository."""
+    """Get code files from the review directory."""
+    review_dir = os.path.join(repo_path, 'review')
+    
+    # Check if review directory exists
+    if not os.path.exists(review_dir):
+        logging.error("Review directory not found. Please create a 'review' directory and add files to be processed.")
+        return []
+    
     code_files = []
-    for root, dirs, files in os.walk(repo_path):
-        # Exclude the tests folder and workflow_scripts folder
+    for root, dirs, files in os.walk(review_dir):
+        # Still exclude tests folder if it exists within review
         if 'tests' in dirs:
             dirs.remove('tests')
         if 'workflow_scripts' in dirs:
             dirs.remove('workflow_scripts')
+            
         for file in files:
             ext = os.path.splitext(file)[1]
             if ext in EXTENSION_LANGUAGE_MAP:
                 code_files.append(os.path.join(root, file))
+    
+    if not code_files:
+        logging.error("No code files found in the review directory. Please add files to be processed.")
+        return []
+        
     return code_files
 
 def read_file_content(file_path):
@@ -214,6 +227,10 @@ def process_repository(repo_path):
 
     # Get all code files in the repo (excluding the tests folder itself)
     code_files = get_code_files(repo_path)
+    if not code_files:
+        logging.info("No files to process. Workflow completed.")
+        sys.exit(0)
+
     logging.info(f"Found {len(code_files)} code files to process")
 
     for index, code_file in enumerate(code_files, 1):
