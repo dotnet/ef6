@@ -22,7 +22,14 @@ EXTENSION_LANGUAGE_MAP = {
     '.php': 'PHP',
     '.swift': 'Swift',
     '.kt': 'Kotlin',
-    '.kts': 'Kotlin'
+    '.kts': 'Kotlin',
+    '.cs': 'C#',
+    '.csx': 'C#',
+    '.vb': 'VB.NET',
+    '.vbproj': 'VB.NET',
+    '.vbhtml': 'VB.NET',
+    '.vbcsproj': 'VB.NET',
+    '.vbxml': 'VB.NET',
 }
 
 def get_code_files(repo_path):
@@ -154,6 +161,8 @@ def get_test_file_name(original_file_name, language):
     elif language == 'Swift':
         test_file_name = f"{base_name}Tests{ext}"
     elif language == 'Kotlin':
+        test_file_name = f"{base_name}Test{ext}"
+    elif language == 'VB.NET':
         test_file_name = f"{base_name}Test{ext}"
     else:
         test_file_name = f"{base_name}_test{ext}"
