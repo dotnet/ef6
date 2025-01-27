@@ -3,6 +3,8 @@ import openai
 import re
 import logging
 import sys
+import json
+import requests
 from datetime import datetime
 
 # Set up logging
@@ -53,33 +55,80 @@ EXTENSION_LANGUAGE_MAP = {
     '.vbxml': 'VB.NET',
 }
 
-def get_code_files(repo_path):
-    """Get code files from the review directory."""
-    review_dir = os.path.join(repo_path, 'review')
-    
-    # Check if review directory exists
-    if not os.path.exists(review_dir):
-        logging.error("Review directory not found. Please create a 'review' directory and add files to be processed.")
-        return []
-    
-    code_files = []
-    for root, dirs, files in os.walk(review_dir):
-        # Still exclude tests folder if it exists within review
-        if 'tests' in dirs:
-            dirs.remove('tests')
-        if 'workflow_scripts' in dirs:
-            dirs.remove('workflow_scripts')
-            
-        for file in files:
-            ext = os.path.splitext(file)[1]
-            if ext in EXTENSION_LANGUAGE_MAP:
-                code_files.append(os.path.join(root, file))
-    
-    if not code_files:
-        logging.error("No code files found in the review directory. Please add files to be processed.")
-        return []
+def get_pr_details():
+    """Retrieve GitHub event data."""
+    event_path = os.getenv('GITHUB_EVENT_PATH')
+    try:
+        with open(event_path, 'r') as f:
+            event_data = json.load(f)
         
-    return code_files
+        repo = os.getenv('GITHUB_REPOSITORY')
+        pr_number = event_data['pull_request']['number']
+        sha = event_data['pull_request']['head']['sha']
+        
+        logging.info(f"Repository: {repo}")
+        logging.info(f"Pull Request Number: {pr_number}")
+        logging.info(f"SHA: {sha}")
+        
+        return repo, pr_number, sha
+    except Exception as e:
+        logging.error(f"Error fetching PR details: {str(e)}")
+        raise
+
+def get_pr_diff():
+    """Fetch PR diff for specific files."""
+    repo, pr_number, _ = get_pr_details()
+    try:
+        url = f"https://api.github.com/repos/{repo}/pulls/{pr_number}/files"
+        headers = {
+            'Authorization': f"Bearer {os.getenv('GITHUB_TOKEN')}",
+            'Accept': 'application/vnd.github.v3+json',
+        }
+        
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        files = response.json()
+        
+        # Filter files based on supported extensions
+        changed_files = []
+        for file in files:
+            filename = file["filename"]
+            ext = os.path.splitext(filename)[1]
+            if ext in EXTENSION_LANGUAGE_MAP:
+                changed_files.append({
+                    "filename": filename,
+                    "status": file["status"],
+                    "additions": file["additions"],
+                    "deletions": file["deletions"]
+                })
+        
+        logging.info(f"Fetched PR diff for {len(changed_files)} supported code files.")
+        return changed_files
+    except Exception as e:
+        logging.error(f"Error fetching PR diff: {str(e)}")
+        raise
+
+def get_code_files(repo_path):
+    """Get code files that have been changed in the PR."""
+    try:
+        changed_files = get_pr_diff()
+        if not changed_files:
+            logging.info("No changed files found in the PR.")
+            return []
+        
+        code_files = []
+        for file_info in changed_files:
+            file_path = os.path.join(repo_path, file_info['filename'])
+            if os.path.exists(file_path):
+                code_files.append(file_path)
+            else:
+                logging.warning(f"File {file_path} from PR diff not found in workspace.")
+        
+        return code_files
+        
+    except Exception as e:
+        logging.error(f"Error getting PR files: {str(e)}")
+        return []
 
 def read_file_content(file_path):
     """Read the content of a file."""
