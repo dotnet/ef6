@@ -198,7 +198,7 @@ def generate_unit_tests(file_content, language):
                     """
     try:
         logging.debug("Making API call to OpenAI")
-        response = openai.ChatCompletion.create(
+        response = openai.chat.completions.create(
             model="gpt-4o", 
             messages=[
                 {"role": "system", "content": system_prompt},
