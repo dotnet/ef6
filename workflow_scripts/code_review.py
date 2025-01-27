@@ -227,6 +227,11 @@ def review_code_with_rag(files):
     return grouped_comments
 
 def post_line_comment(repo, pr_number, file_name, position, comment):
+    # Skip files in tests directory or with "test" in the name
+    if "tests/" in file_name.lower() or "test" in file_name.lower():
+        logger.info(f"Skipping comment on test file: {file_name}")
+        return None
+        
     url = f"https://api.github.com/repos/{repo}/pulls/{pr_number}/comments"
     headers = {
         'Authorization': f"Bearer {os.getenv('PERSONAL_GITHUB_TOKEN')}",
