@@ -57,7 +57,7 @@ jobs:
       - name: Commit and push generated tests
         if: steps.git_status.outputs.changes_detected == 'true'
         run: |
-          git commit -m "Add generated unit tests by AI"
+          git commit -m "Unit Tests Added by Aitra"
           git push origin HEAD:${{ github.head_ref }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
