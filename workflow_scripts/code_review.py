@@ -10,6 +10,7 @@ from langchain_pinecone import PineconeVectorStore
 from langchain_text_splitters import CharacterTextSplitter
 from pinecone import Pinecone, ServerlessSpec  # Import ServerlessSpec for Pinecone
 from openai import OpenAI
+from prompt import CODE_REVIEW_PROMPT
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -199,53 +200,18 @@ def review_code_with_rag(files):
         similar_docs = vectorstore.similarity_search(patch, k=5)
         relevant_context = "\n".join([doc.page_content for doc in similar_docs])
         
-        prompt_template = f"""
-        You are a senior C#/.NET software engineer. Review the following code change in `{file_name}`, focusing on maintainability, performance, and security. Format each comment using this template:
-
-        [Line X] Issue Title
-        - Current: <problematic code>
-        - Suggested: <improved code>
-        - Why: Brief explanation focused on C#/.NET best practices, performance, or security
-        
-        Example issue:
-        
-        [Line 42] Potential NullReferenceException
-        - Current: var result = user.Profile.Name.ToUpper();
-        - Suggested: var result = user?.Profile?.Name?.ToUpper() ?? string.Empty;
-        - Why: Use null conditional operators to safely handle potential null values in property chains
-
-        Code to review:
-        ```diff
-        {patch}
-        ```
-
-        Relevant context:
-        ```diff
-        {relevant_context}
-        ```
-
-        Guidelines:
-        1. Focus on high-impact issues only
-        2. Be direct and specific - no introductory text
-        3. Check for:
-           - NullReferenceException risks
-           - Exception handling (avoid empty catches)
-           - Resource disposal (IDisposable)
-           - Performance (LINQ in loops, etc)
-           - Thread safety (static/shared state)
-           - Security vulnerabilities (e.g., SQL injection, XSS)
-           - Code readability and maintainability
-           - Performance (LINQ in loops, etc)
-        4. Reference context code if relevant
-        5. Keep explanations under 2 sentences
-        """
+        prompt = CODE_REVIEW_PROMPT.format(
+            file_name=file_name,
+            patch=patch,
+            relevant_context=relevant_context
+        )
 
         try:
             completion = openai_client.chat.completions.create(
                 model="gpt-4o",
                 messages=[
                     {"role": "system", "content": "You are a senior software engineer with 10+ years of experience in code review and software architecture. You excel at identifying code quality issues, security vulnerabilities, and performance bottlenecks. Your feedback is always actionable, backed by concrete examples and industry best practices. You communicate technical concepts clearly and concisely, focusing on high-impact issues that matter most for code maintainability and reliability. You have deep expertise in secure coding practices, performance optimization, and scalable system design."},
-                    {"role": "user", "content": prompt_template},
+                    {"role": "user", "content": prompt},
                 ],
             )
             

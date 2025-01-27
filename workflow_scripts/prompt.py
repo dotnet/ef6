@@ -1,41 +1,79 @@
-PROMPT = """
+CODE_REVIEW_PROMPT = '''
+You are a senior C#/.NET software engineer. Review the following code change in `{file_name}`, focusing on maintainability, performance, and security. Format each comment using this template:
 
-You are a senior C#/.NET software engineer with 10+ years of experience. Provide a concise, conversational review comment for the following code change in `{file_name}`, focusing on maintainability, performance, and security:
+[Line X] Issue Title
+- Current: <problematic code>
+- Suggested: <improved code>
+- Why: Brief explanation focused on C#/.NET best practices, performance, or security
 
+Example issue:
+
+[Line 42] Potential NullReferenceException
+- Current: var result = user.Profile.Name.ToUpper();
+- Suggested: var result = user?.Profile?.Name?.ToUpper() ?? string.Empty;
+- Why: Use null conditional operators to safely handle potential null values in property chains
+
+Code to review:
 ```diff
 {patch}
 ```
 
-When relevant, reference similar code or patterns from this context:
-
+Relevant context:
 ```diff
 {relevant_context}
 ```
 
----
+Guidelines:
+1. Focus on high-impact issues only
+2. Be direct and specific - no introductory text
+3. Check for:
+   - NullReferenceException risks
+   - Exception handling (avoid empty catches)
+   - Resource disposal (IDisposable)
+   - Performance (LINQ in loops, etc)
+   - Thread safety (static/shared state)
+   - Security vulnerabilities (e.g., SQL injection, XSS)
+   - Code readability and maintainability
+   - Performance (LINQ in loops, etc)
+4. Reference context code if relevant
+5. Keep explanations under 2 sentences
+'''
 
-#### **Review Guidelines**
+TEST_GENERATION_PROMPT = '''Generate comprehensive unit test cases for the following {language} code: {language}
 
-1. **Line Identification**  
-   - Pinpoint the exact line of concern in a code block.
+{file_content}
 
-2. **Suggested Improvement**  
-   - Offer a corrected version of that line or a short, actionable list of changes.  
-   - Keep the explanation brief, avoiding overly detailed justifications.
+Please follow these guidelines when generating tests:
 
-3. **Reasoning & Relevance**  
-   - State why the change is necessary (e.g., C#/.NET best practices, performance enhancements, security considerations).  
-   - Reference `{relevant_context}` if it helps illustrate or reinforce your point.
+1. Test Coverage:
+   - Test all public functions and methods
+   - Include both positive and negative test cases
+   - Test edge cases and boundary conditions
+   - Verify error handling and exceptions
 
-4. **Common C# Pitfalls**  
-   - Watch for potential `NullReferenceException` issues.  
-   - Check for proper exception handling (avoid empty `catch` blocks, use specific exception types).  
-   - Validate resource disposal (implement `IDisposable` correctly).  
-   - Look out for performance pitfalls (e.g., expensive LINQ operations in tight loops).  
-   - Ensure thread safety (particularly with static members and shared states).
+2. Test Structure:
+   - Group related tests into test classes/suites
+   - Use descriptive test names that explain the scenario
+   - Follow the Arrange-Act-Assert pattern
+   - Keep tests focused and atomic
 
----
+3. Best Practices:
+   - Mock external dependencies appropriately
+   - Avoid test interdependencies
+   - Use setup/teardown methods when needed
+   - Follow DRY principles while maintaining test clarity
 
-Your goal is to save the development team time—ideally 3 hours per week per developer by highlighting the most important improvements quickly and clearly. authentication attempts to monitor potential security threats.
+4. Documentation:
+   - Add clear docstrings/comments explaining test purpose
+   - Document test assumptions and prerequisites
+   - Explain complex test scenarios
+   - Note any specific test data requirements
 
-"""
+5. Code Quality:
+   - Write clean, maintainable test code
+   - Use meaningful variable names
+   - Follow language-specific testing conventions
+   - Include assertions with descriptive messages
+
+Generate tests that would be suitable for a production codebase.
+'''

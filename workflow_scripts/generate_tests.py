@@ -6,6 +6,7 @@ import sys
 import json
 from datetime import datetime
 from github import Github
+from prompt import TEST_GENERATION_PROMPT
 
 # Set up logging
 log_dir = os.path.join(os.getenv("GITHUB_WORKSPACE", "."), "logs")
@@ -157,45 +158,11 @@ def generate_unit_tests(file_content, language):
         f"Output only the unit test code, without any explanations or markdown formatting."
     )
 
-    user_prompt = f"""
-                    Generate comprehensive unit test cases for the following {language} code: {language}
+    user_prompt = TEST_GENERATION_PROMPT.format(
+        language=language,
+        file_content=file_content
+    )
 
-                    {file_content}
-
-                    Please follow these guidelines when generating tests:
-
-                    1. Test Coverage:
-                       - Test all public functions and methods
-                       - Include both positive and negative test cases
-                       - Test edge cases and boundary conditions
-                       - Verify error handling and exceptions
-
-                    2. Test Structure:
-                       - Group related tests into test classes/suites
-                       - Use descriptive test names that explain the scenario
-                       - Follow the Arrange-Act-Assert pattern
-                       - Keep tests focused and atomic
-
-                    3. Best Practices:
-                       - Mock external dependencies appropriately
-                       - Avoid test interdependencies
-                       - Use setup/teardown methods when needed
-                       - Follow DRY principles while maintaining test clarity
-
-                    4. Documentation:
-                       - Add clear docstrings/comments explaining test purpose
-                       - Document test assumptions and prerequisites
-                       - Explain complex test scenarios
-                       - Note any specific test data requirements
-
-                    5. Code Quality:
-                       - Write clean, maintainable test code
-                       - Use meaningful variable names
-                       - Follow language-specific testing conventions
-                       - Include assertions with descriptive messages
-
-                    Generate tests that would be suitable for a production codebase.
-                    """
     try:
         logging.debug("Making API call to OpenAI")
         response = openai.chat.completions.create(
