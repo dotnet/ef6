@@ -4,8 +4,8 @@ import re
 import logging
 import sys
 import json
-import requests
 from datetime import datetime
+from github import Github
 
 # Set up logging
 log_dir = os.path.join(os.getenv("GITHUB_WORKSPACE", "."), "logs")
@@ -27,6 +27,13 @@ if not api_key:
     logging.error("OPEN_AI_KEY environment variable not found")
     sys.exit(1)
 openai.api_key = api_key
+
+# Initialize GitHub client
+github_token = os.getenv('GITHUB_TOKEN')
+if not github_token:
+    logging.error("GITHUB_TOKEN environment variable not found")
+    sys.exit(1)
+github_client = Github(github_token)
 
 # Mapping of file extensions to programming languages
 EXTENSION_LANGUAGE_MAP = {
@@ -62,44 +69,38 @@ def get_pr_details():
         with open(event_path, 'r') as f:
             event_data = json.load(f)
         
-        repo = os.getenv('GITHUB_REPOSITORY')
+        repo_full_name = os.getenv('GITHUB_REPOSITORY')
         pr_number = event_data['pull_request']['number']
         sha = event_data['pull_request']['head']['sha']
         
-        logging.info(f"Repository: {repo}")
+        logging.info(f"Repository: {repo_full_name}")
         logging.info(f"Pull Request Number: {pr_number}")
         logging.info(f"SHA: {sha}")
         
-        return repo, pr_number, sha
+        return repo_full_name, pr_number, sha
     except Exception as e:
         logging.error(f"Error fetching PR details: {str(e)}")
         raise
 
 def get_pr_diff():
-    """Fetch PR diff for specific files."""
-    repo, pr_number, _ = get_pr_details()
+    """Fetch PR diff for specific files using PyGitHub."""
+    repo_full_name, pr_number, _ = get_pr_details()
     try:
-        url = f"https://api.github.com/repos/{repo}/pulls/{pr_number}/files"
-        headers = {
-            'Authorization': f"Bearer {os.getenv('PERSONAL_GITHUB_TOKEN')}",
-            'Accept': 'application/vnd.github.v3+json',
-        }
+        # Get repository and pull request objects
+        repo = github_client.get_repo(repo_full_name)
+        pull_request = repo.get_pull(pr_number)
         
-        response = requests.get(url, headers=headers)
-        response.raise_for_status()
-        files = response.json()
-        
-        # Filter files based on supported extensions
+        # Get files changed in the PR
         changed_files = []
-        for file in files:
-            filename = file["filename"]
+        for file in pull_request.get_files():
+            filename = file.filename
             ext = os.path.splitext(filename)[1]
             if ext in EXTENSION_LANGUAGE_MAP:
                 changed_files.append({
                     "filename": filename,
-                    "status": file["status"],
-                    "additions": file["additions"],
-                    "deletions": file["deletions"]
+                    "status": file.status,
+                    "additions": file.additions,
+                    "deletions": file.deletions
                 })
         
         logging.info(f"Fetched PR diff for {len(changed_files)} supported code files.")

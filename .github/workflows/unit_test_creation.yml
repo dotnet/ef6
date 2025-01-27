@@ -28,14 +28,14 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install openai==0.27.2
+          pip install openai PyGitHub 
 
       # Step 4: Run Unit Test Generator Script
       - name: Run Unit Test Generator
         run: python workflow_scripts/generate_tests.py
         env:
           OPEN_AI_KEY: ${{ secrets.OPEN_AI_KEY }}
-
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # Step 5: Configure Git
       - name: Configure Git
         run: |
