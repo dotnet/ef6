@@ -81,7 +81,7 @@ def get_pr_diff():
     try:
         url = f"https://api.github.com/repos/{repo}/pulls/{pr_number}/files"
         headers = {
-            'Authorization': f"Bearer {os.getenv('GITHUB_TOKEN')}",
+            'Authorization': f"Bearer {os.getenv('PERSONAL_GITHUB_TOKEN')}",
             'Accept': 'application/vnd.github.v3+json',
         }
         
