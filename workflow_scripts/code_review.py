@@ -233,26 +233,15 @@ def post_line_comment(repo, pr_number, file_name, position, comment):
         'Content-Type': 'application/json',
         'Accept': 'application/vnd.github.v3+json'
     }
-    
-    # Get the files to find the diff_hunk
-    files = get_pr_diff()
-    file_data = next((f for f in files if f["filename"] == file_name), None)
-    
-    if not file_data or "diff_hunk" not in file_data:
-        logger.error(f"Could not find diff data for file {file_name}")
-        raise ValueError(f"Missing diff data for file {file_name}")
-
     payload = {
         "body": comment,
         "commit_id": get_pr_details()[2],
         "path": file_name,
-        "line": position,  # The actual line number in the file
         "side": "RIGHT",
-        "diff_hunk": file_data["diff_hunk"]  # Include the diff_hunk from the file data
+        "position": position  # This is relative to the diff, not the line number
     }
 
-    logger.info(f"Attempting to post comment on {file_name} at position {position}")
-    logger.debug(f"Payload: {json.dumps(payload, indent=2)}")
+    logger.info(f"Attempting to post comment on {file_name} at position {position}: {comment}")
 
     try:
         response = requests.post(url, headers=headers, json=payload)
