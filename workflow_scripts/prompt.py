@@ -1,6 +1,8 @@
 CODE_REVIEW_PROMPT = '''
 You are a senior C#/.NET software engineer. Review the following code change in `{file_name}`, focusing on maintainability, performance, and security. Format each comment using this template:
 
+All code in the output should be in a code block, with the language specified.
+
 [Line X] Issue Title
 - Current: <problematic code>
 - Suggested: <improved code>
