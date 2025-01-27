@@ -5,7 +5,6 @@ on:
     workflows: ["Aitra - Unit Test Generation"]
     types:
       - completed
-    branches: [main]
 
 jobs:
   test:
