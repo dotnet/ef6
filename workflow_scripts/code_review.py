@@ -202,12 +202,17 @@ def review_code_with_rag(files):
         prompt_template = f"""
         You are a senior C#/.NET software engineer. Review the following code change in `{file_name}`, focusing on maintainability, performance, and security. Format each comment using this template:
 
-        ```
         [Line X] Issue Title
         - Current: <problematic code>
         - Suggested: <improved code>
         - Why: Brief explanation focused on C#/.NET best practices, performance, or security
-        ```
+        
+        Example issue:
+        
+        [Line 42] Potential NullReferenceException
+        - Current: var result = user.Profile.Name.ToUpper();
+        - Suggested: var result = user?.Profile?.Name?.ToUpper() ?? string.Empty;
+        - Why: Use null conditional operators to safely handle potential null values in property chains
 
         Code to review:
         ```diff
@@ -228,6 +233,9 @@ def review_code_with_rag(files):
            - Resource disposal (IDisposable)
            - Performance (LINQ in loops, etc)
            - Thread safety (static/shared state)
+           - Security vulnerabilities (e.g., SQL injection, XSS)
+           - Code readability and maintainability
+           - Performance (LINQ in loops, etc)
         4. Reference context code if relevant
         5. Keep explanations under 2 sentences
         """
