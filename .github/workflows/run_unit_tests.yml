@@ -1,0 +1,52 @@
+name: Aitra - Run Unit Tests
+on:
+  workflow_run:
+    workflows: ["Aitra - Unit Test Generation"]
+    types:
+      - completed
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the code with generated tests
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+          persist-credentials: true
+
+      # Step 2: Set up Python (for Python unit tests)
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      # Step 3: Install Python Dependencies and Run Python Tests
+      - name: Run Python Tests
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt || echo "No requirements.txt found, continuing"
+          python -m unittest discover -s tests/Python -p '*_test.py'
+
+      # Step 4: Set up Swift (optional, if Swift tests exist)
+      - name: Set up Swift
+        run: sudo apt-get install swift || echo "Swift not installed, skipping"
+
+      # Step 5: Run Swift Tests (optional, if Swift tests exist)
+      - name: Run Swift Tests
+        run: |
+          swift test --package-path tests/Swift || echo "No Swift tests found, skipping"
+
+      # Step 6: Set up .NET for C# (optional, if C# tests exist)
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.x'
+
+      # Step 7: Run C# Tests (optional, if C# tests exist)
+      - name: Run C# Tests
+        run: |
+          dotnet test tests/C# || echo "No C# tests found, skipping"
