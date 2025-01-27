@@ -1,52 +1,58 @@
-name: Aitra - Run Unit Tests
+name: Aitra - Run C# Unit Tests
+
 on:
   workflow_run:
     workflows: ["Aitra - Unit Test Generation"]
     types:
       - completed
+    branches: [main]
 
 jobs:
-  run-tests:
+  test:
+    name: Run .NET Tests
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }} # Only run if test generation was successful
 
     steps:
-      # Step 1: Checkout the code with generated tests
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
-          ref: ${{ github.head_ref }}
+          ref: ${{ github.event.workflow_run.head_branch }} # Checkout the PR branch
           fetch-depth: 0
-          persist-credentials: true
 
-      # Step 2: Set up Python (for Python unit tests)
-      - name: Set up Python
-        uses: actions/setup-python@v2
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
         with:
-          python-version: '3.x'
+          dotnet-version: "6.0.x" # Adjust version as needed
 
-      # Step 3: Install Python Dependencies and Run Python Tests
-      - name: Run Python Tests
+      - name: Install dependencies
         run: |
-          pip install --upgrade pip
-          pip install -r requirements.txt || echo "No requirements.txt found, continuing"
-          python -m unittest discover -s tests/Python -p '*_test.py'
+          cd tests
+          dotnet restore
 
-      # Step 4: Set up Swift (optional, if Swift tests exist)
-      - name: Set up Swift
-        run: sudo apt-get install swift || echo "Swift not installed, skipping"
-
-      # Step 5: Run Swift Tests (optional, if Swift tests exist)
-      - name: Run Swift Tests
+      - name: Build
         run: |
-          swift test --package-path tests/Swift || echo "No Swift tests found, skipping"
+          cd tests
+          dotnet build --configuration Release --no-restore
 
-      # Step 6: Set up .NET for C# (optional, if C# tests exist)
-      - name: Set up .NET
-        uses: actions/setup-dotnet@v1
+      - name: Run tests
+        run: |
+          cd tests
+          dotnet test --no-restore --verbosity normal --logger "trx;LogFileName=test-results.trx" --collect:"XPlat Code Coverage"
+
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
         with:
-          dotnet-version: '6.x'
+          name: .NET Test Results
+          path: tests/**/test-results.trx
+          reporter: dotnet-trx
+          fail-on-error: true
 
-      # Step 7: Run C# Tests (optional, if C# tests exist)
-      - name: Run C# Tests
-        run: |
-          dotnet test tests/C# || echo "No C# tests found, skipping"
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          directory: tests/
+          fail_ci_if_error: true
+          flags: unittests
+          name: codecov-umbrella
+          verbose: true

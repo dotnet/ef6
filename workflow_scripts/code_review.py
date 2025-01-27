@@ -200,43 +200,36 @@ def review_code_with_rag(files):
         relevant_context = "\n".join([doc.page_content for doc in similar_docs])
         
         prompt_template = f"""
-        You are a senior C#/.NET software engineer with 10+ years of experience. Provide a concise, conversational review comment for the following code change in `{file_name}`, focusing on maintainability, performance, and security:
+        You are a senior C#/.NET software engineer. Review the following code change in `{file_name}`, focusing on maintainability, performance, and security. Format each comment using this template:
 
+        ```
+        [Line X] Issue Title
+        - Current: <problematic code>
+        - Suggested: <improved code>
+        - Why: Brief explanation focused on C#/.NET best practices, performance, or security
+        ```
+
+        Code to review:
         ```diff
         {patch}
         ```
 
-        When relevant, reference similar code or patterns from this context:
-
+        Relevant context:
         ```diff
         {relevant_context}
         ```
 
-        ---
-
-        #### **Review Guidelines**
-
-        1. **Line Identification**  
-        - Pinpoint the exact line of concern in a code block.
-
-        2. **Suggested Improvement**  
-        - Offer a corrected version of that line or a short, actionable list of changes.  
-        - Keep the explanation brief, avoiding overly detailed justifications.
-
-        3. **Reasoning & Relevance**  
-        - State why the change is necessary (e.g., C#/.NET best practices, performance enhancements, security considerations).  
-        - Reference `{relevant_context}` if it helps illustrate or reinforce your point.
-
-        4. **Common C# Pitfalls**  
-        - Watch for potential `NullReferenceException` issues.  
-        - Check for proper exception handling (avoid empty `catch` blocks, use specific exception types).  
-        - Validate resource disposal (implement `IDisposable` correctly).  
-        - Look out for performance pitfalls (e.g., expensive LINQ operations in tight loops).  
-        - Ensure thread safety (particularly with static members and shared states).
-
-        ---
-
-        Your goal is to save the development team time—ideally 3 hours per week per developer by highlighting the most important improvements quickly and clearly. authentication attempts to monitor potential security threats.
+        Guidelines:
+        1. Focus on high-impact issues only
+        2. Be direct and specific - no introductory text
+        3. Check for:
+           - NullReferenceException risks
+           - Exception handling (avoid empty catches)
+           - Resource disposal (IDisposable)
+           - Performance (LINQ in loops, etc)
+           - Thread safety (static/shared state)
+        4. Reference context code if relevant
+        5. Keep explanations under 2 sentences
         """
 
         try:
