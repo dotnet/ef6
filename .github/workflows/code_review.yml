@@ -3,7 +3,7 @@ name: Aitra - Code Review
 on:
   workflow_dispatch:
   pull_request:
-   types: [opened, synchronize]
+    types: [opened, synchronize]
 
 jobs:
   code-review:
@@ -15,13 +15,13 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.x'
+          python-version: "3.x"
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install PyGitHub openai langchain langchain-community langchain-openai langchain-pinecone tiktoken pinecone-client
-          
+          pip install PyGitHub==2.1.1 openai==1.12.0 langchain==0.1.4 langchain-community==0.0.13 langchain-openai==0.0.5 langchain-pinecone==0.0.2 tiktoken==0.5.2 pinecone-client==3.0.2
+
       - name: Run Code Reviewer
         run: python workflow_scripts/code_review.py
         env:
