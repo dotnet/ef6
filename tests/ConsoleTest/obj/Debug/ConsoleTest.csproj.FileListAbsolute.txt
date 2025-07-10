@@ -1,0 +1,118 @@
+D:\Projects\EntityFramework6\tests\ConsoleTest\bin\Debug\NUnit3.TestAdapter.dll
+D:\Projects\EntityFramework6\tests\ConsoleTest\bin\Debug\NUnit3.TestAdapter.pdb
+D:\Projects\EntityFramework6\tests\ConsoleTest\bin\Debug\nunit.engine.dll
+D:\Projects\EntityFramework6\tests\ConsoleTest\bin\Debug\nunit.engine.api.dll
+D:\Projects\EntityFramework6\tests\ConsoleTest\bin\Debug\nunit.engine.core.dll
+D:\Projects\EntityFramework6\tests\ConsoleTest\bin\Debug\testcentric.engine.metadata.dll
+D:\Projects\EntityFramework6\tests\ConsoleTest\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll
+D:\Projects\EntityFramework6\tests\ConsoleTest\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
+D:\Projects\EntityFramework6\tests\ConsoleTest\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll
+D:\Projects\EntityFramework6\tests\ConsoleTest\bin\Debug\ConsoleTest.exe.config
+D:\Projects\EntityFramework6\tests\ConsoleTest\bin\Debug\ConsoleTest.exe
+D:\Projects\EntityFramework6\tests\ConsoleTest\bin\Debug\ConsoleTest.pdb
+D:\Projects\EntityFramework6\tests\ConsoleTest\bin\Debug\EntityFramework.dll
+D:\Projects\EntityFramework6\tests\ConsoleTest\bin\Debug\EntityFramework.SqlServer.dll
+D:\Projects\EntityFramework6\tests\ConsoleTest\bin\Debug\nunit.framework.dll
+D:\Projects\EntityFramework6\tests\ConsoleTest\bin\Debug\Xugu.Data.EntityFramework.dll
+D:\Projects\EntityFramework6\tests\ConsoleTest\bin\Debug\Xugu.EntityFramework.CodeFirst.Tests.dll
+D:\Projects\EntityFramework6\tests\ConsoleTest\bin\Debug\XuguClient.dll
+D:\Projects\EntityFramework6\tests\ConsoleTest\bin\Debug\Xugu.EntityFramework.Basic.Tests.dll
+D:\Projects\EntityFramework6\tests\ConsoleTest\bin\Debug\Xugu.Data.EntityFramework.pdb
+D:\Projects\EntityFramework6\tests\ConsoleTest\bin\Debug\Xugu.Data.EntityFramework.dll.config
+D:\Projects\EntityFramework6\tests\ConsoleTest\bin\Debug\Xugu.EntityFramework.CodeFirst.Tests.pdb
+D:\Projects\EntityFramework6\tests\ConsoleTest\bin\Debug\Xugu.EntityFramework.CodeFirst.Tests.dll.config
+D:\Projects\EntityFramework6\tests\ConsoleTest\bin\Debug\EntityFramework.xml
+D:\Projects\EntityFramework6\tests\ConsoleTest\bin\Debug\EntityFramework.SqlServer.xml
+D:\Projects\EntityFramework6\tests\ConsoleTest\bin\Debug\nunit.framework.xml
+D:\Projects\EntityFramework6\tests\ConsoleTest\bin\Debug\XuguClient.pdb
+D:\Projects\EntityFramework6\tests\ConsoleTest\bin\Debug\Xugu.EntityFramework.Basic.Tests.pdb
+D:\Projects\EntityFramework6\tests\ConsoleTest\bin\Debug\Xugu.EntityFramework.Basic.Tests.dll.config
+D:\Projects\EntityFramework6\tests\ConsoleTest\obj\Debug\ConsoleTest.csproj.AssemblyReference.cache
+D:\Projects\EntityFramework6\tests\ConsoleTest\obj\Debug\ConsoleTest.csproj.CoreCompileInputs.cache
+D:\Projects\EntityFramework6\tests\ConsoleTest\obj\Debug\ConsoleTest.csproj.CopyComplete
+D:\Projects\EntityFramework6\tests\ConsoleTest\obj\Debug\ConsoleTest.exe
+D:\Projects\EntityFramework6\tests\ConsoleTest\obj\Debug\ConsoleTest.pdb
+D:\Projects\EntityFramework6\tests\ConsoleTest\obj\Debug\ConsoleTest.Migrations.initdatabase.resources
+D:\Projects\EntityFramework6\tests\ConsoleTest\obj\Debug\ConsoleTest.csproj.GenerateResource.cache
+D:\Projects\EntityFramework6 - 副本 (2)\tests\ConsoleTest\bin\Debug\NUnit3.TestAdapter.dll
+D:\Projects\EntityFramework6 - 副本 (2)\tests\ConsoleTest\bin\Debug\NUnit3.TestAdapter.pdb
+D:\Projects\EntityFramework6 - 副本 (2)\tests\ConsoleTest\bin\Debug\nunit.engine.dll
+D:\Projects\EntityFramework6 - 副本 (2)\tests\ConsoleTest\bin\Debug\nunit.engine.api.dll
+D:\Projects\EntityFramework6 - 副本 (2)\tests\ConsoleTest\bin\Debug\nunit.engine.core.dll
+D:\Projects\EntityFramework6 - 副本 (2)\tests\ConsoleTest\bin\Debug\testcentric.engine.metadata.dll
+D:\Projects\EntityFramework6 - 副本 (2)\tests\ConsoleTest\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll
+D:\Projects\EntityFramework6 - 副本 (2)\tests\ConsoleTest\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
+D:\Projects\EntityFramework6 - 副本 (2)\tests\ConsoleTest\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll
+D:\Projects\EntityFramework6 - 副本 (2)\tests\ConsoleTest\bin\Debug\ConsoleTest.exe.config
+D:\Projects\EntityFramework6 - 副本 (2)\tests\ConsoleTest\bin\Debug\ConsoleTest.exe
+D:\Projects\EntityFramework6 - 副本 (2)\tests\ConsoleTest\bin\Debug\ConsoleTest.pdb
+D:\Projects\EntityFramework6 - 副本 (2)\tests\ConsoleTest\bin\Debug\EntityFramework.dll
+D:\Projects\EntityFramework6 - 副本 (2)\tests\ConsoleTest\bin\Debug\EntityFramework.SqlServer.dll
+D:\Projects\EntityFramework6 - 副本 (2)\tests\ConsoleTest\bin\Debug\nunit.framework.dll
+D:\Projects\EntityFramework6 - 副本 (2)\tests\ConsoleTest\bin\Debug\Xugu.Data.EntityFramework.dll
+D:\Projects\EntityFramework6 - 副本 (2)\tests\ConsoleTest\bin\Debug\Xugu.EntityFramework.CodeFirst.Tests.dll
+D:\Projects\EntityFramework6 - 副本 (2)\tests\ConsoleTest\bin\Debug\XuguClient.dll
+D:\Projects\EntityFramework6 - 副本 (2)\tests\ConsoleTest\bin\Debug\Xugu.EntityFramework.Basic.Tests.dll
+D:\Projects\EntityFramework6 - 副本 (2)\tests\ConsoleTest\bin\Debug\Xugu.Data.EntityFramework.pdb
+D:\Projects\EntityFramework6 - 副本 (2)\tests\ConsoleTest\bin\Debug\Xugu.Data.EntityFramework.dll.config
+D:\Projects\EntityFramework6 - 副本 (2)\tests\ConsoleTest\bin\Debug\Xugu.EntityFramework.CodeFirst.Tests.pdb
+D:\Projects\EntityFramework6 - 副本 (2)\tests\ConsoleTest\bin\Debug\Xugu.EntityFramework.CodeFirst.Tests.dll.config
+D:\Projects\EntityFramework6 - 副本 (2)\tests\ConsoleTest\bin\Debug\EntityFramework.xml
+D:\Projects\EntityFramework6 - 副本 (2)\tests\ConsoleTest\bin\Debug\EntityFramework.SqlServer.xml
+D:\Projects\EntityFramework6 - 副本 (2)\tests\ConsoleTest\bin\Debug\nunit.framework.xml
+D:\Projects\EntityFramework6 - 副本 (2)\tests\ConsoleTest\bin\Debug\XuguClient.pdb
+D:\Projects\EntityFramework6 - 副本 (2)\tests\ConsoleTest\bin\Debug\Xugu.EntityFramework.Basic.Tests.pdb
+D:\Projects\EntityFramework6 - 副本 (2)\tests\ConsoleTest\bin\Debug\Xugu.EntityFramework.Basic.Tests.dll.config
+D:\Projects\EntityFramework6 - 副本 (2)\tests\ConsoleTest\obj\Debug\ConsoleTest.csproj.AssemblyReference.cache
+D:\Projects\EntityFramework6 - 副本 (2)\tests\ConsoleTest\obj\Debug\ConsoleTest.csproj.CoreCompileInputs.cache
+D:\Projects\EntityFramework6 - 副本 (2)\tests\ConsoleTest\obj\Debug\ConsoleTest.csproj.CopyComplete
+D:\Projects\EntityFramework6 - 副本 (2)\tests\ConsoleTest\obj\Debug\ConsoleTest.exe
+D:\Projects\EntityFramework6 - 副本 (2)\tests\ConsoleTest\obj\Debug\ConsoleTest.pdb
+D:\Projects\EntityFramework6 - 副本 (2)\tests\ConsoleTest\obj\Debug\ConsoleTest.Migrations.InitDatabase.resources
+D:\Projects\EntityFramework6 - 副本 (2)\tests\ConsoleTest\obj\Debug\ConsoleTest.csproj.GenerateResource.cache
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\bin\Debug\NUnit3.TestAdapter.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\bin\Debug\NUnit3.TestAdapter.pdb
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\bin\Debug\nunit.engine.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\bin\Debug\nunit.engine.api.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\bin\Debug\nunit.engine.core.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\bin\Debug\testcentric.engine.metadata.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\bin\Debug\ConsoleTest.exe.config
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\bin\Debug\ConsoleTest.exe
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\bin\Debug\ConsoleTest.pdb
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\bin\Debug\EntityFramework.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\bin\Debug\EntityFramework.SqlServer.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\bin\Debug\nunit.framework.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\bin\Debug\Xugu.Data.EntityFramework.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\bin\Debug\Xugu.EntityFramework.CodeFirst.Tests.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\bin\Debug\XuguClient.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\bin\Debug\Xugu.EntityFramework.Basic.Tests.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\bin\Debug\Xugu.Data.EntityFramework.pdb
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\bin\Debug\Xugu.Data.EntityFramework.dll.config
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\bin\Debug\Xugu.EntityFramework.CodeFirst.Tests.pdb
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\bin\Debug\Xugu.EntityFramework.CodeFirst.Tests.dll.config
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\bin\Debug\EntityFramework.xml
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\bin\Debug\EntityFramework.SqlServer.xml
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\bin\Debug\nunit.framework.xml
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\bin\Debug\XuguClient.pdb
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\bin\Debug\Xugu.EntityFramework.Basic.Tests.pdb
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\bin\Debug\Xugu.EntityFramework.Basic.Tests.dll.config
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\obj\Debug\ConsoleTest.csproj.AssemblyReference.cache
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\obj\Debug\ConsoleTest.csproj.CoreCompileInputs.cache
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\obj\Debug\ConsoleTest.csproj.CopyComplete
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\obj\Debug\ConsoleTest.exe
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\obj\Debug\ConsoleTest.pdb
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\obj\Debug\ConsoleTest.Migrations.InitDatabase.resources
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\obj\Debug\ConsoleTest.csproj.GenerateResource.cache
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\obj\Debug\ConsoleTest.Migrations.AddForeignKey.resources
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\obj\Debug\ConsoleTest.Migrations.renamecolname.resources
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\obj\Debug\ConsoleTest.Migrations.renamecolnametwo.resources
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\obj\Debug\ConsoleTest.Migrations.renamecolname3.resources
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\obj\Debug\ConsoleTest.Migrations.CreateOne.resources
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\obj\Debug\ConsoleTest.Migrations.OneToOne.resources
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\obj\Debug\ConsoleTest.Migrations.TestGuidIdentity.resources
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\bin\Debug\zh-Hans\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.resources.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\bin\Debug\zh-Hans\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.resources.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\ConsoleTest\bin\Debug\zh-Hans\Microsoft.VisualStudio.TestPlatform.TestFramework.resources.dll

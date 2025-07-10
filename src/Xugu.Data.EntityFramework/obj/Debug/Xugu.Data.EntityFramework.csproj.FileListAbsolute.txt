@@ -1,0 +1,68 @@
+D:\Projects\EntityFramework6\src\Xugu.Data.EntityFramework\bin\Debug\Xugu.Data.EntityFramework.dll.config
+D:\Projects\EntityFramework6\src\Xugu.Data.EntityFramework\bin\Debug\Xugu.Data.EntityFramework.dll
+D:\Projects\EntityFramework6\src\Xugu.Data.EntityFramework\bin\Debug\Xugu.Data.EntityFramework.pdb
+D:\Projects\EntityFramework6\src\Xugu.Data.EntityFramework\bin\Debug\EntityFramework.dll
+D:\Projects\EntityFramework6\src\Xugu.Data.EntityFramework\bin\Debug\EntityFramework.SqlServer.dll
+D:\Projects\EntityFramework6\src\Xugu.Data.EntityFramework\bin\Debug\XuguClient.dll
+D:\Projects\EntityFramework6\src\Xugu.Data.EntityFramework\bin\Debug\EntityFramework.xml
+D:\Projects\EntityFramework6\src\Xugu.Data.EntityFramework\bin\Debug\EntityFramework.SqlServer.xml
+D:\Projects\EntityFramework6\src\Xugu.Data.EntityFramework\bin\Debug\XuguClient.pdb
+D:\Projects\EntityFramework6\src\Xugu.Data.EntityFramework\obj\Debug\Xugu.Data.EntityFramework.Properties.Resources.resources
+D:\Projects\EntityFramework6\src\Xugu.Data.EntityFramework\obj\Debug\Xugu.Data.EntityFramework.Resources.resources
+D:\Projects\EntityFramework6\src\Xugu.Data.EntityFramework\obj\Debug\Xugu.Data.EntityFramework.csproj.GenerateResource.cache
+D:\Projects\EntityFramework6\src\Xugu.Data.EntityFramework\obj\Debug\Xugu.Data.EntityFramework.csproj.CoreCompileInputs.cache
+D:\Projects\EntityFramework6\src\Xugu.Data.EntityFramework\obj\Debug\Xugu.Data.EntityFramework.csproj.CopyComplete
+D:\Projects\EntityFramework6\src\Xugu.Data.EntityFramework\obj\Debug\Xugu.Data.EntityFramework.dll
+D:\Projects\EntityFramework6\src\Xugu.Data.EntityFramework\obj\Debug\Xugu.Data.EntityFramework.pdb
+D:\Projects\EntityFramework6\src\Xugu.Data.EntityFramework\obj\Debug\Xugu.Data.EntityFramework.csproj.AssemblyReference.cache
+D:\Projects\EntityFramework6 - 副本 (2)\src\Xugu.Data.EntityFramework\bin\Debug\Xugu.Data.EntityFramework.dll.config
+D:\Projects\EntityFramework6 - 副本 (2)\src\Xugu.Data.EntityFramework\bin\Debug\Xugu.Data.EntityFramework.dll
+D:\Projects\EntityFramework6 - 副本 (2)\src\Xugu.Data.EntityFramework\bin\Debug\Xugu.Data.EntityFramework.pdb
+D:\Projects\EntityFramework6 - 副本 (2)\src\Xugu.Data.EntityFramework\bin\Debug\EntityFramework.dll
+D:\Projects\EntityFramework6 - 副本 (2)\src\Xugu.Data.EntityFramework\bin\Debug\EntityFramework.SqlServer.dll
+D:\Projects\EntityFramework6 - 副本 (2)\src\Xugu.Data.EntityFramework\bin\Debug\XuguClient.dll
+D:\Projects\EntityFramework6 - 副本 (2)\src\Xugu.Data.EntityFramework\bin\Debug\EntityFramework.xml
+D:\Projects\EntityFramework6 - 副本 (2)\src\Xugu.Data.EntityFramework\bin\Debug\EntityFramework.SqlServer.xml
+D:\Projects\EntityFramework6 - 副本 (2)\src\Xugu.Data.EntityFramework\bin\Debug\XuguClient.pdb
+D:\Projects\EntityFramework6 - 副本 (2)\src\Xugu.Data.EntityFramework\obj\Debug\Xugu.Data.EntityFramework.csproj.AssemblyReference.cache
+D:\Projects\EntityFramework6 - 副本 (2)\src\Xugu.Data.EntityFramework\obj\Debug\Xugu.Data.EntityFramework.Properties.Resources.resources
+D:\Projects\EntityFramework6 - 副本 (2)\src\Xugu.Data.EntityFramework\obj\Debug\Xugu.Data.EntityFramework.Resources.resources
+D:\Projects\EntityFramework6 - 副本 (2)\src\Xugu.Data.EntityFramework\obj\Debug\Xugu.Data.EntityFramework.csproj.GenerateResource.cache
+D:\Projects\EntityFramework6 - 副本 (2)\src\Xugu.Data.EntityFramework\obj\Debug\Xugu.Data.EntityFramework.csproj.CoreCompileInputs.cache
+D:\Projects\EntityFramework6 - 副本 (2)\src\Xugu.Data.EntityFramework\obj\Debug\Xugu.Data.EntityFramework.csproj.CopyComplete
+D:\Projects\EntityFramework6 - 副本 (2)\src\Xugu.Data.EntityFramework\obj\Debug\Xugu.Data.EntityFramework.dll
+D:\Projects\EntityFramework6 - 副本 (2)\src\Xugu.Data.EntityFramework\obj\Debug\Xugu.Data.EntityFramework.pdb
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\src\Xugu.Data.EntityFramework\bin\Debug\Xugu.Data.EntityFramework.dll.config
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\src\Xugu.Data.EntityFramework\bin\Debug\Xugu.Data.EntityFramework.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\src\Xugu.Data.EntityFramework\bin\Debug\Xugu.Data.EntityFramework.pdb
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\src\Xugu.Data.EntityFramework\bin\Debug\EntityFramework.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\src\Xugu.Data.EntityFramework\bin\Debug\EntityFramework.SqlServer.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\src\Xugu.Data.EntityFramework\bin\Debug\XuguClient.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\src\Xugu.Data.EntityFramework\bin\Debug\EntityFramework.xml
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\src\Xugu.Data.EntityFramework\bin\Debug\EntityFramework.SqlServer.xml
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\src\Xugu.Data.EntityFramework\bin\Debug\XuguClient.pdb
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\src\Xugu.Data.EntityFramework\obj\Debug\Xugu.Data.EntityFramework.Properties.Resources.resources
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\src\Xugu.Data.EntityFramework\obj\Debug\Xugu.Data.EntityFramework.Resources.resources
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\src\Xugu.Data.EntityFramework\obj\Debug\Xugu.Data.EntityFramework.csproj.GenerateResource.cache
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\src\Xugu.Data.EntityFramework\obj\Debug\Xugu.Data.EntityFramework.csproj.CoreCompileInputs.cache
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\src\Xugu.Data.EntityFramework\obj\Debug\Xugu.Data.EntityFramework.csproj.CopyComplete
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\src\Xugu.Data.EntityFramework\obj\Debug\Xugu.Data.EntityFramework.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\src\Xugu.Data.EntityFramework\obj\Debug\Xugu.Data.EntityFramework.pdb
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\src\Xugu.Data.EntityFramework\obj\Debug\Xugu.Data.EntityFramework.csproj.AssemblyReference.cache
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\src\Xugu.Data.EntityFramework\bin\Debug\Xugu.Data.EntityFramework.dll.config
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\src\Xugu.Data.EntityFramework\bin\Debug\Xugu.Data.EntityFramework.dll
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\src\Xugu.Data.EntityFramework\bin\Debug\Xugu.Data.EntityFramework.pdb
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\src\Xugu.Data.EntityFramework\bin\Debug\EntityFramework.dll
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\src\Xugu.Data.EntityFramework\bin\Debug\EntityFramework.SqlServer.dll
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\src\Xugu.Data.EntityFramework\bin\Debug\XuguClient.dll
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\src\Xugu.Data.EntityFramework\bin\Debug\EntityFramework.xml
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\src\Xugu.Data.EntityFramework\bin\Debug\EntityFramework.SqlServer.xml
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\src\Xugu.Data.EntityFramework\bin\Debug\XuguClient.pdb
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\src\Xugu.Data.EntityFramework\obj\Debug\Xugu.Data.EntityFramework.csproj.AssemblyReference.cache
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\src\Xugu.Data.EntityFramework\obj\Debug\Xugu.Data.EntityFramework.Properties.Resources.resources
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\src\Xugu.Data.EntityFramework\obj\Debug\Xugu.Data.EntityFramework.Resources.resources
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\src\Xugu.Data.EntityFramework\obj\Debug\Xugu.Data.EntityFramework.csproj.GenerateResource.cache
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\src\Xugu.Data.EntityFramework\obj\Debug\Xugu.Data.EntityFramework.csproj.CoreCompileInputs.cache
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\src\Xugu.Data.EntityFramework\obj\Debug\Xugu.Data.EntityFramework.csproj.CopyComplete
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\src\Xugu.Data.EntityFramework\obj\Debug\Xugu.Data.EntityFramework.dll
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\src\Xugu.Data.EntityFramework\obj\Debug\Xugu.Data.EntityFramework.pdb

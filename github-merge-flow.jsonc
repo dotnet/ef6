@@ -1,9 +1,0 @@
-// IMPORTANT: This file is read by the merge flow from main branch only. 
-{
-    "merge-flow-configurations": {
-        "release/6.5":{
-            "MergeToBranch": "main",
-            "ExtraSwitches": "-QuietComments"
-        }
-    }
-}

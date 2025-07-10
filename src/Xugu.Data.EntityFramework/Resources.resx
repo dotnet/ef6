@@ -1,0 +1,684 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="BadVersionFormat" xml:space="preserve">
+    <value>Version string not in acceptable format</value>
+  </data>
+  <data name="NamedPipeNoSeek" xml:space="preserve">
+    <value>NamedPipeStream does not support seeking</value>
+  </data>
+  <data name="StreamAlreadyClosed" xml:space="preserve">
+    <value>The stream has already been closed</value>
+  </data>
+  <data name="BufferCannotBeNull" xml:space="preserve">
+    <value>The buffer cannot be null</value>
+  </data>
+  <data name="BufferNotLargeEnough" xml:space="preserve">
+    <value>The buffer is not large enough</value>
+  </data>
+  <data name="OffsetCannotBeNegative" xml:space="preserve">
+    <value>The offset cannot be negative</value>
+  </data>
+  <data name="CountCannotBeNegative" xml:space="preserve">
+    <value>Count cannot be negative</value>
+  </data>
+  <data name="StreamNoRead" xml:space="preserve">
+    <value>The stream does not support reading</value>
+  </data>
+  <data name="NamedPipeNoSetLength" xml:space="preserve">
+    <value>NamedPipeStream doesn't support SetLength</value>
+  </data>
+  <data name="StreamNoWrite" xml:space="preserve">
+    <value>The stream does not support writing</value>
+  </data>
+  <data name="ErrorCreatingSocket" xml:space="preserve">
+    <value>Error creating socket connection</value>
+  </data>
+  <data name="SocketNoSeek" xml:space="preserve">
+    <value>Socket streams do not support seeking</value>
+  </data>
+  <data name="UnixSocketsNotSupported" xml:space="preserve">
+    <value>Unix sockets are not supported on Windows</value>
+  </data>
+  <data name="OffsetMustBeValid" xml:space="preserve">
+    <value>Offset must be a valid position in buffer</value>
+  </data>
+  <data name="CSNoSetLength" xml:space="preserve">
+    <value>SetLength is not a valid operation on CompressedStream</value>
+  </data>
+  <data name="FromIndexMustBeValid" xml:space="preserve">
+    <value>From index must be a valid index inside the from buffer</value>
+  </data>
+  <data name="FromAndLengthTooBig" xml:space="preserve">
+    <value>From index and length use more bytes than from contains</value>
+  </data>
+  <data name="IndexMustBeValid" xml:space="preserve">
+    <value>Index must be a valid position in the buffer</value>
+  </data>
+  <data name="IndexAndLengthTooBig" xml:space="preserve">
+    <value>Index and length use more bytes than to has room for</value>
+  </data>
+  <data name="PasswordMustHaveLegalChars" xml:space="preserve">
+    <value>Password must be valid and contain length characters</value>
+  </data>
+  <data name="ParameterCannotBeNegative" xml:space="preserve">
+    <value>Parameter cannot have a negative value</value>
+  </data>
+  <data name="ConnectionMustBeOpen" xml:space="preserve">
+    <value>Connection must be valid and open</value>
+  </data>
+  <data name="DataReaderOpen" xml:space="preserve">
+    <value>There is already an open DataReader associated with this Connection which must be closed first.</value>
+  </data>
+  <data name="SPNotSupported" xml:space="preserve">
+    <value>Stored procedures are not supported on this version of Xugu</value>
+  </data>
+  <data name="ConnectionNotSet" xml:space="preserve">
+    <value>The connection property has not been set or is null.</value>
+  </data>
+  <data name="ConnectionNotOpen" xml:space="preserve">
+    <value>The connection is not open.</value>
+  </data>
+  <data name="AdapterIsNull" xml:space="preserve">
+    <value>Improper XuguCommandBuilder state: adapter is null</value>
+  </data>
+  <data name="AdapterSelectIsNull" xml:space="preserve">
+    <value>Improper XuguCommandBuilder state: adapter's SelectCommand is null</value>
+  </data>
+  <data name="CBMultiTableNotSupported" xml:space="preserve">
+    <value>XuguCommandBuilder does not support multi-table statements</value>
+  </data>
+  <data name="CBNoKeyColumn" xml:space="preserve">
+    <value>XuguCommandBuilder cannot operate on tables with no unique or key columns</value>
+  </data>
+  <data name="ParameterCannotBeNull" xml:space="preserve">
+    <value>Parameter cannot be null</value>
+  </data>
+  <data name="ChaosNotSupported" xml:space="preserve">
+    <value>Chaos isolation level is not supported </value>
+  </data>
+  <data name="ParameterIsInvalid" xml:space="preserve">
+    <value>Parameter is invalid.</value>
+  </data>
+  <data name="ConnectionAlreadyOpen" xml:space="preserve">
+    <value>The connection is already open.</value>
+  </data>
+  <data name="KeywordNotSupported" xml:space="preserve">
+    <value>Option not supported.</value>
+  </data>
+  <data name="WriteToStreamFailed" xml:space="preserve">
+    <value>Writing to the stream failed.</value>
+  </data>
+  <data name="ReadFromStreamFailed" xml:space="preserve">
+    <value>Reading from the stream has failed.</value>
+  </data>
+  <data name="QueryTooLarge" xml:space="preserve">
+    <value>Packets larger than max_allowed_packet are not allowed.</value>
+  </data>
+  <data name="UnableToExecuteSP" xml:space="preserve">
+    <value>Unable to execute stored procedure '{0}'.</value>
+  </data>
+  <data name="ProcAndFuncSameName" xml:space="preserve">
+    <value>same name are not supported.</value>
+  </data>
+  <data name="KeywordNoNull" xml:space="preserve">
+    <value>Keyword does not allow null values.</value>
+  </data>
+  <data name="ImproperValueFormat" xml:space="preserve">
+    <value>Value has an unsupported format.</value>
+  </data>
+  <data name="InvalidProcName" xml:space="preserve">
+    <value>Procedure or function '{0}' cannot be found in database '{1}'.</value>
+  </data>
+  <data name="HardProcQuery" xml:space="preserve">
+    <value>Retrieving procedure metadata for {0} from server.</value>
+  </data>
+  <data name="SoftProcQuery" xml:space="preserve">
+    <value>Retrieving procedure metadata for {0} from procedure cache.</value>
+  </data>
+  <data name="ConnectionBroken" xml:space="preserve">
+    <value>Connection unexpectedly terminated.</value>
+  </data>
+  <data name="IncorrectTransmission" xml:space="preserve">
+    <value>An incorrect response was received from the server.</value>
+  </data>
+  <data name="CancelNotSupported" xml:space="preserve">
+    <value>Canceling an active query is only supported on Xugu 5.0.0 and above. </value>
+  </data>
+  <data name="Timeout" xml:space="preserve">
+    <value>Timeout expired.  The timeout period elapsed prior to completion of the operation or the server is not responding.</value>
+  </data>
+  <data name="CancelNeeds50" xml:space="preserve">
+    <value>Canceling an executing query requires Xugu 5.0 or higher.</value>
+  </data>
+  <data name="NoNestedTransactions" xml:space="preserve">
+    <value>Nested transactions are not supported.</value>
+  </data>
+  <data name="CommandTextNotInitialized" xml:space="preserve">
+    <value>The CommandText property has not been properly initialized.</value>
+  </data>
+  <data name="UnableToParseFK" xml:space="preserve">
+    <value>There was an error parsing the foreign key definition.</value>
+  </data>
+  <data name="PerfMonCategoryHelp" xml:space="preserve">
+    <value>This category includes a series of counters for Xugu</value>
+  </data>
+  <data name="PerfMonCategoryName" xml:space="preserve">
+    <value>.NET Data Provider for Xugu</value>
+  </data>
+  <data name="PerfMonHardProcHelp" xml:space="preserve">
+    <value>The number of times a procedures metadata had to be queried from the server.</value>
+  </data>
+  <data name="PerfMonHardProcName" xml:space="preserve">
+    <value>Hard Procedure Queries</value>
+  </data>
+  <data name="PerfMonSoftProcHelp" xml:space="preserve">
+    <value>The number of times a procedures metadata was retrieved from the client-side cache.</value>
+  </data>
+  <data name="PerfMonSoftProcName" xml:space="preserve">
+    <value>Soft Procedure Queries</value>
+  </data>
+  <data name="WrongParameterName" xml:space="preserve">
+    <value>Parameter '{0}' is not found but a parameter with the name '{1}' is found. Parameter names must include the leading parameter marker.</value>
+  </data>
+  <data name="UnableToConnectToHost" xml:space="preserve">
+    <value>Unable to connect to any of the specified Xugu hosts.</value>
+  </data>
+  <data name="UnableToRetrieveParameters" xml:space="preserve">
+    <value>Unable to retrieve stored procedure metadata for routine '{0}'.  Either grant  SELECT privilege to Xugu.proc for this user or use "check parameters=false" with  your connection string.</value>
+  </data>
+  <data name="NextResultIsClosed" xml:space="preserve">
+    <value>Invalid attempt to call NextResult when the reader is closed.</value>
+  </data>
+  <data name="NoBodiesAndTypeNotSet" xml:space="preserve">
+    <value>When calling stored procedures and 'Use Procedure Bodies' is false, all parameters must have their type explicitly set.</value>
+  </data>
+  <data name="TimeoutGettingConnection" xml:space="preserve">
+    <value>error connecting: Timeout expired.  The timeout period elapsed prior to obtaining a connection from the pool.  This may have occurred because all pooled connections were in use and max pool size was reached.</value>
+  </data>
+  <data name="ParameterAlreadyDefined" xml:space="preserve">
+    <value>Parameter '{0}' has already been defined.</value>
+  </data>
+  <data name="ParameterMustBeDefined" xml:space="preserve">
+    <value>Parameter '{0}' must be defined.</value>
+  </data>
+  <data name="ObjectDisposed" xml:space="preserve">
+    <value>The object is not open or has been disposed.</value>
+  </data>
+  <data name="MultipleConnectionsInTransactionNotSupported" xml:space="preserve">
+    <value>Multiple simultaneous connections or connections with different connection strings inside the same transaction are not currently supported.</value>
+  </data>
+  <data name="DistributedTxnNotSupported" xml:space="preserve">
+    <value>Xugu Connector/NET does not currently support distributed transactions.</value>
+  </data>
+  <data name="FatalErrorDuringExecute" xml:space="preserve">
+    <value>Fatal error encountered during command execution.</value>
+  </data>
+  <data name="FatalErrorDuringRead" xml:space="preserve">
+    <value>Fatal error encountered during data read.</value>
+  </data>
+  <data name="FatalErrorReadingResult" xml:space="preserve">
+    <value>Fatal error encountered attempting to read the resultset.</value>
+  </data>
+  <data name="RoutineNotFound" xml:space="preserve">
+    <value>Routine '{0}' cannot be found. Either check the spelling or make sure you have sufficient rights to execute the routine.</value>
+  </data>
+  <data name="ParameterNotFoundDuringPrepare" xml:space="preserve">
+    <value>Parameter '{0}' was not found during prepare.</value>
+  </data>
+  <data name="ValueNotSupportedForGuid" xml:space="preserve">
+    <value>The requested column value could not be treated as or conveted to a Guid.</value>
+  </data>
+  <data name="UnableToDeriveParameters" xml:space="preserve">
+    <value>Unable to derive stored routine parameters.  The 'Parameters' information schema table is not available and access to the stored procedure body has been disabled.</value>
+  </data>
+  <data name="DefaultEncodingNotFound" xml:space="preserve">
+    <value>The default connection encoding was not found. Please report this as a bug along with your connection string and system details.</value>
+  </data>
+  <data name="GetHostEntryFailed" xml:space="preserve">
+    <value>Call to GetHostEntry failed after {0} while querying for hostname '{1}': SocketErrorCode={2}, ErrorCode={3}, NativeErrorCode={4}.</value>
+  </data>
+  <data name="UnableToEnumerateUDF" xml:space="preserve">
+    <value>An error occured attempting to enumerate the user-defined functions.  Do you have SELECT privileges on the Xugu.func table?</value>
+  </data>
+  <data name="DataNotInSupportedFormat" xml:space="preserve">
+    <value>The given value was not in a supported format.</value>
+  </data>
+  <data name="NoServerSSLSupport" xml:space="preserve">
+    <value>The host {0} does not support SSL connections.</value>
+  </data>
+  <data name="CouldNotFindColumnName" xml:space="preserve">
+    <value>Could not find specified column in results: {0}</value>
+  </data>
+  <data name="InvalidColumnOrdinal" xml:space="preserve">
+    <value>You have specified an invalid column ordinal.</value>
+  </data>
+  <data name="ReadingPriorColumnUsingSeqAccess" xml:space="preserve">
+    <value>Invalid attempt to read a prior column using SequentialAccess</value>
+  </data>
+  <data name="AttemptToAccessBeforeRead" xml:space="preserve">
+    <value>Invalid attempt to access a field before calling Read()</value>
+  </data>
+  <data name="UnableToStartSecondAsyncOp" xml:space="preserve">
+    <value>Unable to start a second async operation while one is running.</value>
+  </data>
+  <data name="MoreThanOneOPRow" xml:space="preserve">
+    <value>INTERNAL ERROR:  More than one output parameter row detected.</value>
+  </data>
+  <data name="InvalidValueForBoolean" xml:space="preserve">
+    <value>'{0}' is an illegal value for a boolean option.</value>
+  </data>
+  <data name="ServerTooOld" xml:space="preserve">
+    <value>Connector/NET no longer supports server versions prior to 5.0</value>
+  </data>
+  <data name="InvalidConnectionStringValue" xml:space="preserve">
+    <value>The requested value '{0}' is invalid for the given keyword '{1}'.</value>
+  </data>
+  <data name="TraceCloseConnection" xml:space="preserve">
+    <value>{0}: Connection Closed</value>
+  </data>
+  <data name="TraceOpenConnection" xml:space="preserve">
+    <value>{0}: Connection Opened: connection string = '{1}'</value>
+  </data>
+  <data name="TraceQueryOpened" xml:space="preserve">
+    <value>{0}: Query Opened: {2}</value>
+  </data>
+  <data name="TraceResult" xml:space="preserve">
+    <value>{0}: Resultset Opened: field(s) = {1}, affected rows = {2}, inserted id = {3}</value>
+  </data>
+  <data name="TraceQueryDone" xml:space="preserve">
+    <value>{0}: Query Closed</value>
+  </data>
+  <data name="TraceSetDatabase" xml:space="preserve">
+    <value>{0}: Set Database: {1}</value>
+  </data>
+  <data name="TraceUAWarningBadIndex" xml:space="preserve">
+    <value>{0}: Usage Advisor Warning: Query is using a bad index</value>
+  </data>
+  <data name="TraceUAWarningNoIndex" xml:space="preserve">
+    <value>{0}: Usage Advisor Warning: Query does not use an index</value>
+  </data>
+  <data name="TraceResultClosed" xml:space="preserve">
+    <value>{0}: Resultset Closed. Total rows={1}, skipped rows={2}, size (bytes)={3}</value>
+  </data>
+  <data name="TraceUAWarningSkippedRows" xml:space="preserve">
+    <value>{0}: Usage Advisor Warning: Skipped {2} rows. Consider a more focused query.</value>
+  </data>
+  <data name="TraceUAWarningSkippedColumns" xml:space="preserve">
+    <value>{0}: Usage Advisor Warning: The following columns were not accessed: {2}</value>
+  </data>
+  <data name="TraceUAWarningFieldConversion" xml:space="preserve">
+    <value>{0}: Usage Advisor Warning: The field '{2}' was converted to the following types: {3}</value>
+  </data>
+  <data name="TraceOpenResultError" xml:space="preserve">
+    <value>{0}: Error encountered attempting to open result: Number={1}, Message={2}</value>
+  </data>
+  <data name="TraceFetchError" xml:space="preserve">
+    <value>{0}: Error encountered during row fetch. Number = {1}, Message={2}</value>
+  </data>
+  <data name="TraceWarning" xml:space="preserve">
+    <value>{0}: Xugu Warning: Level={1}, Code={2}, Message={3}</value>
+  </data>
+  <data name="TraceErrorMoreThanMaxValueConnections" xml:space="preserve">
+    <value>Unable to trace.  There are more than Int32.MaxValue connections in use.</value>
+  </data>
+  <data name="TraceStatementPrepared" xml:space="preserve">
+    <value>{0}: Statement prepared: sql='{1}', statement id={2}</value>
+  </data>
+  <data name="TraceStatementClosed" xml:space="preserve">
+    <value>{0}: Statement closed: statement id = {1}</value>
+  </data>
+  <data name="TraceStatementExecuted" xml:space="preserve">
+    <value>{0}: Statement executed: statement id = {1}</value>
+  </data>
+  <data name="UnableToEnableQueryAnalysis" xml:space="preserve">
+    <value>Unable to enable query analysis.  Be sure the Xugu.Data.EMTrace assembly is properly located and registered.</value>
+  </data>
+  <data name="TraceQueryNormalized" xml:space="preserve">
+    <value>{0}: Query Normalized: {2}</value>
+  </data>
+  <data name="NoWindowsIdentity" xml:space="preserve">
+    <value>Cannot retrieve Windows identity for current user. Connections that use  IntegratedSecurity cannot be  pooled. Use either 'ConnectionReset=true' or  'Pooling=false' in the connection string to fix.</value>
+  </data>
+  <data name="RoutineRequiresReturnParameter" xml:space="preserve">
+    <value>Attempt to call stored function '{0}' without specifying a return parameter</value>
+  </data>
+  <data name="CanNotDeriveParametersForTextCommands" xml:space="preserve">
+    <value>Parameters can only be derived for commands using the StoredProcedure command type.</value>
+  </data>
+  <data name="ReplicatedConnectionsAllowOnlyReadonlyStatements" xml:space="preserve">
+    <value>Replicated connections allow only readonly statements.</value>
+  </data>
+  <data name="FileBasedCertificateNotSupported" xml:space="preserve">
+    <value>File based certificates are only supported when connecting to Xugu Server 5.1 or greater.</value>
+  </data>
+  <data name="SnapshotNotSupported" xml:space="preserve">
+    <value>Snapshot isolation level is not supported.</value>
+  </data>
+  <data name="TypeIsNotExceptionInterceptor" xml:space="preserve">
+    <value>Type '{0}' is not derived from BaseExceptionInterceptor</value>
+  </data>
+  <data name="TypeIsNotCommandInterceptor" xml:space="preserve">
+    <value>Type '{0}' is not derived from BaseCommandInterceptor</value>
+  </data>
+  <data name="UnknownAuthenticationMethod" xml:space="preserve">
+    <value>Unknown authentication method '{0}' was requested.</value>
+  </data>
+  <data name="AuthenticationFailed" xml:space="preserve">
+    <value>Authentication to host '{0}' for user '{1}' using method '{2}' failed with message: {3}</value>
+  </data>
+  <data name="WinAuthNotSupportOnPlatform" xml:space="preserve">
+    <value>Windows authentication connections are not supported on {0}</value>
+  </data>
+  <data name="AuthenticationMethodNotSupported" xml:space="preserve">
+    <value>Authentication method '{0}' not supported by any of the available plugins.</value>
+  </data>
+  <data name="UnableToCreateAuthPlugin" xml:space="preserve">
+    <value>Unable to create plugin for authentication method '{0}'. Please see inner exception for details.</value>
+  </data>
+  <data name="MixedParameterNamingNotAllowed" xml:space="preserve">
+    <value>Mixing named and unnamed parameters is not allowed.</value>
+  </data>
+  <data name="ParameterIndexNotFound" xml:space="preserve">
+    <value>Parameter index was not found in Parameter Collection.</value>
+  </data>
+  <data name="OldPasswordsNotSupported" xml:space="preserve">
+    <value>Authentication with old password no longer supported, use 4.1 style passwords.</value>
+  </data>
+  <data name="InvalidMicrosecondValue" xml:space="preserve">
+    <value>Microsecond must be a value between 0 and 999999.</value>
+  </data>
+  <data name="InvalidMillisecondValue" xml:space="preserve">
+    <value>Millisecond must be a value between 0 and 999. For more precision use Microsecond.</value>
+  </data>
+  <data name="Replication_NoAvailableServer" xml:space="preserve">
+    <value>No available server found.</value>
+  </data>
+  <data name="Replication_ConnectionAttemptFailed" xml:space="preserve">
+    <value>Attempt to connect to '{0}' server failed.</value>
+  </data>
+  <data name="UnknownConnectionProtocol" xml:space="preserve">
+    <value>Unknown connection protocol</value>
+  </data>
+  <data name="NoUnixSocketsOnWindows" xml:space="preserve">
+    <value>Unix sockets are not supported on Windows.</value>
+  </data>
+  <data name="ReplicationServerNotFound" xml:space="preserve">
+    <value>Replicated server not found: '{0}'</value>
+  </data>
+  <data name="ReplicationGroupNotFound" xml:space="preserve">
+    <value>Replication group '{0}' not found.</value>
+  </data>
+  <data name="NewValueShouldBeXuguParameter" xml:space="preserve">
+    <value>The new value must be a XuguParameter object.</value>
+  </data>
+  <data name="ValueNotCorrectType" xml:space="preserve">
+    <value>Value '{0}' is not of the correct type.</value>
+  </data>
+  <data name="CompressionNotSupported" xml:space="preserve">
+    <value>Compression is not supported.</value>
+  </data>
+  <data name="SslConnectionError" xml:space="preserve">
+    <value>SSL Connection error.</value>
+  </data>
+  <data name="OptionNotCurrentlySupported" xml:space="preserve">
+    <value>The option '{0}' is not currently supported.</value>
+  </data>
+  <data name="ParameterNullOrEmpty" xml:space="preserve">
+    <value>Parameter can't be null or empty.</value>
+  </data>
+  <data name="UnableToReadRSAKey" xml:space="preserve">
+    <value>Error encountered reading the RSA public key.</value>
+  </data>
+  <data name="RSAPublicKeyRetrievalNotEnabled" xml:space="preserve">
+    <value>Retrieval of the RSA public key is not enabled for insecure connections.</value>
+  </data>
+  <data name="StringEmpty" xml:space="preserve">
+    <value>String can't be empty.</value>
+  </data>
+  <data name="InvalidSslMode" xml:space="preserve">
+    <value>Value '{0}' is not of the correct type.</value>
+  </data>
+  <data name="ParameterCannotBeNullOrEmpty" xml:space="preserve">
+    <value>Parameter '{0}' can't be null or empty.</value>
+  </data>
+  <data name="EncodingError" xml:space="preserve">
+    <value>Encoding error during validation.</value>
+  </data>
+  <data name="FileIsNotACertificate" xml:space="preserve">
+    <value>The specified file cannot be converted to a certificate.</value>
+  </data>
+  <data name="FileIsNotAKey" xml:space="preserve">
+    <value>The specified file cannot be converted to a key.</value>
+  </data>
+  <data name="FileNotFound" xml:space="preserve">
+    <value>Failed to read file at the specified location.</value>
+  </data>
+  <data name="FilePathNotSet" xml:space="preserve">
+    <value>No file path has been provided for the connection option {0}.</value>
+  </data>
+  <data name="InvalidCertificateKey" xml:space="preserve">
+    <value>The provided key is invalid.</value>
+  </data>
+  <data name="InvalidSslCertificate" xml:space="preserve">
+    <value>The certificate is invalid.</value>
+  </data>
+  <data name="InvalidSslCertificateSignature" xml:space="preserve">
+    <value>Unable to validate the signature.</value>
+  </data>
+  <data name="InvalidSslCertificateSignatureGeneral" xml:space="preserve">
+    <value>Unable to verify the signature.</value>
+  </data>
+  <data name="SslCertificateCAMismatch" xml:space="preserve">
+    <value>The certificate authority (CA) does not match.</value>
+  </data>
+  <data name="SslCertificateHostNameMismatch" xml:space="preserve">
+    <value>The host name does not match the name on the certificate.</value>
+  </data>
+  <data name="SslCertificateIsNotCA" xml:space="preserve">
+    <value>The certificate is not a certificate authority (CA).</value>
+  </data>
+  <data name="LocalInfileDisabled" xml:space="preserve">
+    <value>Server asked for stream in response to LOAD DATA LOCAL INFILE, but the functionality is disabled by the client setting 'allowlocalinfile' to 'false'.</value>
+  </data>
+  <data name="InvalidHostNameOrAddress" xml:space="preserve">
+    <value>The host name or IP address is invalid.</value>
+  </data>
+  <data name="TimeOutMultipleHost" xml:space="preserve">
+    <value>All server connection attempts were aborted. Timeout of {0} seconds was exceeded for each selected server.</value>
+  </data>
+  <data name="DnsSrvInvalidConnOptionMultihost" xml:space="preserve">
+    <value>Specifying multiple host names with DNS SRV lookup is not permitted.</value>
+  </data>
+  <data name="DnsSrvInvalidConnOptionPort" xml:space="preserve">
+    <value>Specifying a port number with DNS SRV lookup is not permitted.</value>
+  </data>
+  <data name="DnsSrvInvalidConnOptionUnixSocket" xml:space="preserve">
+    <value>Using Unix domain sockets with DNS SRV lookup is not permitted.</value>
+  </data>
+  <data name="DnsSrvNoHostsAvailable" xml:space="preserve">
+    <value>Unable to locate any hosts for {0}.</value>
+  </data>
+  <data name="TlsNonValidProtocols" xml:space="preserve">
+    <value>Specified list of TLS versions only contains non valid TLS protocols. Accepted values are TLSv1.2 and TLSv1.3</value>
+  </data>
+  <data name="Tlsv13NotSupported" xml:space="preserve">
+    <value>TLSv1.3 is not supported by this framework.</value>
+  </data>
+  <data name="TlsVersionsEmpty" xml:space="preserve">
+    <value>Specified list of TLS versions is empty. Accepted values are TLSv1.2 and TLSv1.3</value>
+  </data>
+  <data name="ExecuteProcedureUnauthorized" xml:space="preserve">
+    <value>Verify that user '{0}'@'{1}' has enough privileges to execute.</value>
+  </data>
+  <data name="ClearPasswordNotSupported" xml:space="preserve">
+    <value>Clear-password authentication is not supported over insecure channels.</value>
+  </data>
+  <data name="UnsafePathForLoadLocalInfile" xml:space="preserve">
+    <value>Trying to upload a file from outside the path set on 'allowloadlocalinfileinpath' is invalid.</value>
+  </data>
+  <data name="InvalidPathForLoadLocalInfile" xml:space="preserve">
+    <value>Either provide a valid path for 'allowloadlocalinfileinpath' or enable 'allowloadlocalinfile'.</value>
+  </data>
+  <data name="InvalidCertificateThumbprint" xml:space="preserve">
+    <value>Certificate with Thumbprint '{0}' not found.</value>
+  </data>
+  <data name="QueryAttributesNotSupported" xml:space="preserve">
+    <value>Xugu Server {0} dos not support query attributes.</value>
+  </data>
+  <data name="QueryAttributesNotSupportedByCnet" xml:space="preserve">
+    <value>Xugu Connector/NET does not support query attributes with prepared statements for this version of Xugu Server.</value>
+  </data>
+  <data name="SslNotAllowedForConnectionProtocol" xml:space="preserve">
+    <value>Connection protocol '{0}' does not support SSL connections.</value>
+  </data>
+  <data name="AuthenticationPluginNotSupported" xml:space="preserve">
+    <value>Authentication plugin '{0}' is currently not supported.</value>
+  </data>
+  <data name="UnmatchedWinUserAndXuguUser" xml:space="preserve">
+    <value>Xugu user '{0}' does not equal the logged-in Windows user '{1}'.</value>
+  </data>
+  <data name="OciSDKNotFound" xml:space="preserve">
+    <value>The OCI SDK cannot be found or is not installed.</value>
+  </data>
+  <data name="OciConfigFileNotFound" xml:space="preserve">
+    <value>OCI configuration file could not be read.</value>
+  </data>
+  <data name="OciEntryNotFound" xml:space="preserve">
+    <value>OCI configuration file does not contain a 'fingerprint' or 'key_file' entry.</value>
+  </data>
+  <data name="OciInvalidKeyFile" xml:space="preserve">
+    <value>OCI configuration entry 'key_file' does not reference a valid key file.</value>
+  </data>
+  <data name="OciKeyFileDoesNotExists" xml:space="preserve">
+    <value>Private key could not be found at location given by OCI configuration entry 'key_file'.</value>
+  </data>
+  <data name="TlsUnsupportedVersions" xml:space="preserve">
+    <value>TLS protocols TLSv1 and TLSv1.1 are no longer supported. Accepted values are TLSv1.2 and TLSv1.3</value>
+  </data>
+  <data name="OciSecurityTokenFileExceeds10KB" xml:space="preserve">
+    <value>The size of the OCI security token file exceeds the maximum value of 10KB allowed.</value>
+  </data>
+  <data name="OciConfigProfileNotFound" xml:space="preserve">
+    <value>OCI configuration profile not found.</value>
+  </data>
+  <data name="OciSecurityTokenDoesNotExists" xml:space="preserve">
+    <value>Secutiry token file could not be found at location given by OCI configuration entry 'security_token_file'.</value>
+  </data>
+</root>

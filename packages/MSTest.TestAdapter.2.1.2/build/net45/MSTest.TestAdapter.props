@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <TestAdapterContent Include="$(MSBuildThisFileDirectory)..\_common\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll">
+      <Link>Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </TestAdapterContent>
+    <TestAdapterContent Include="$(MSBuildThisFileDirectory)..\_common\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll">
+      <Link>Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </TestAdapterContent>
+    <TestAdapterContent Include="$(MSBuildThisFileDirectory)..\_common\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll">
+      <Link>Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </TestAdapterContent>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Including `@(TestAdapterContent)` in the `None` ItemGroup to get the `CopyToOutputDirectory`
+         behavior be default, package consumers can opt-out of this behavior
+         by removing `@(TestAdapterContent)` from the `None` ItemGroup
+         i.e. `<None Remove="@(TestAdapterContent)" />` -->
+    <None Include="@(TestAdapterContent)" />
+  </ItemGroup>
+</Project>

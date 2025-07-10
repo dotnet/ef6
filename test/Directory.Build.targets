@@ -1,8 +1,0 @@
-<Project>
-  <Import Project="..\Directory.Build.targets" />
-
-  <ItemGroup>
-    <!-- Remove xunit.analyzers due to noise -->
-    <PackageReference Remove="xunit.analyzers" />
-  </ItemGroup>
-</Project>

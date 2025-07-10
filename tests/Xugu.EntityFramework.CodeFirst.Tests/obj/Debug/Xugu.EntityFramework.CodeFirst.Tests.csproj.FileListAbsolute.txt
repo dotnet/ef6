@@ -1,0 +1,152 @@
+D:\Projects\EntityFramework6\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\NUnit3.TestAdapter.dll
+D:\Projects\EntityFramework6\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\NUnit3.TestAdapter.pdb
+D:\Projects\EntityFramework6\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\nunit.engine.dll
+D:\Projects\EntityFramework6\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\nunit.engine.api.dll
+D:\Projects\EntityFramework6\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\nunit.engine.core.dll
+D:\Projects\EntityFramework6\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\testcentric.engine.metadata.dll
+D:\Projects\EntityFramework6\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll
+D:\Projects\EntityFramework6\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
+D:\Projects\EntityFramework6\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll
+D:\Projects\EntityFramework6\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\zh-Hans\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.resources.dll
+D:\Projects\EntityFramework6\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\zh-Hans\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.resources.dll
+D:\Projects\EntityFramework6\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\zh-Hans\Microsoft.VisualStudio.TestPlatform.TestFramework.resources.dll
+D:\Projects\EntityFramework6\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Xugu.EntityFramework.CodeFirst.Tests.dll.config
+D:\Projects\EntityFramework6\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Xugu.EntityFramework.CodeFirst.Tests.dll
+D:\Projects\EntityFramework6\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Xugu.EntityFramework.CodeFirst.Tests.pdb
+D:\Projects\EntityFramework6\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\EntityFramework.dll
+D:\Projects\EntityFramework6\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.dll
+D:\Projects\EntityFramework6\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll
+D:\Projects\EntityFramework6\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\nunit.framework.dll
+D:\Projects\EntityFramework6\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Xugu.Data.EntityFramework.dll
+D:\Projects\EntityFramework6\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Xugu.EntityFramework.Basic.Tests.dll
+D:\Projects\EntityFramework6\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\XuguClient.dll
+D:\Projects\EntityFramework6\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Xugu.Data.EntityFramework.pdb
+D:\Projects\EntityFramework6\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Xugu.Data.EntityFramework.dll.config
+D:\Projects\EntityFramework6\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Xugu.EntityFramework.Basic.Tests.pdb
+D:\Projects\EntityFramework6\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Xugu.EntityFramework.Basic.Tests.dll.config
+D:\Projects\EntityFramework6\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\EntityFramework.xml
+D:\Projects\EntityFramework6\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.xml
+D:\Projects\EntityFramework6\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.xml
+D:\Projects\EntityFramework6\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\nunit.framework.xml
+D:\Projects\EntityFramework6\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\XuguClient.pdb
+D:\Projects\EntityFramework6\tests\Xugu.EntityFramework.CodeFirst.Tests\obj\Debug\Xugu.EntityFramework.CodeFirst.Tests.Properties.SQLSyntax.resources
+D:\Projects\EntityFramework6\tests\Xugu.EntityFramework.CodeFirst.Tests\obj\Debug\Xugu.EntityFramework.CodeFirst.Tests.csproj.GenerateResource.cache
+D:\Projects\EntityFramework6\tests\Xugu.EntityFramework.CodeFirst.Tests\obj\Debug\Xugu.EntityFramework.CodeFirst.Tests.csproj.CoreCompileInputs.cache
+D:\Projects\EntityFramework6\tests\Xugu.EntityFramework.CodeFirst.Tests\obj\Debug\Xugu.EntityFramework.CodeFirst.Tests.csproj.CopyComplete
+D:\Projects\EntityFramework6\tests\Xugu.EntityFramework.CodeFirst.Tests\obj\Debug\Xugu.EntityFramework.CodeFirst.Tests.dll
+D:\Projects\EntityFramework6\tests\Xugu.EntityFramework.CodeFirst.Tests\obj\Debug\Xugu.EntityFramework.CodeFirst.Tests.pdb
+D:\Projects\EntityFramework6\tests\Xugu.EntityFramework.CodeFirst.Tests\obj\Debug\Xugu.EntityFramework.CodeFirst.Tests.csproj.AssemblyReference.cache
+D:\Projects\EntityFramework6 - 副本 (2)\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\NUnit3.TestAdapter.dll
+D:\Projects\EntityFramework6 - 副本 (2)\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\NUnit3.TestAdapter.pdb
+D:\Projects\EntityFramework6 - 副本 (2)\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\nunit.engine.dll
+D:\Projects\EntityFramework6 - 副本 (2)\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\nunit.engine.api.dll
+D:\Projects\EntityFramework6 - 副本 (2)\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\nunit.engine.core.dll
+D:\Projects\EntityFramework6 - 副本 (2)\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\testcentric.engine.metadata.dll
+D:\Projects\EntityFramework6 - 副本 (2)\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll
+D:\Projects\EntityFramework6 - 副本 (2)\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
+D:\Projects\EntityFramework6 - 副本 (2)\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll
+D:\Projects\EntityFramework6 - 副本 (2)\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\zh-Hans\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.resources.dll
+D:\Projects\EntityFramework6 - 副本 (2)\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\zh-Hans\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.resources.dll
+D:\Projects\EntityFramework6 - 副本 (2)\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\zh-Hans\Microsoft.VisualStudio.TestPlatform.TestFramework.resources.dll
+D:\Projects\EntityFramework6 - 副本 (2)\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Xugu.EntityFramework.CodeFirst.Tests.dll.config
+D:\Projects\EntityFramework6 - 副本 (2)\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Xugu.EntityFramework.CodeFirst.Tests.dll
+D:\Projects\EntityFramework6 - 副本 (2)\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Xugu.EntityFramework.CodeFirst.Tests.pdb
+D:\Projects\EntityFramework6 - 副本 (2)\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\EntityFramework.dll
+D:\Projects\EntityFramework6 - 副本 (2)\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.dll
+D:\Projects\EntityFramework6 - 副本 (2)\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll
+D:\Projects\EntityFramework6 - 副本 (2)\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\nunit.framework.dll
+D:\Projects\EntityFramework6 - 副本 (2)\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Xugu.Data.EntityFramework.dll
+D:\Projects\EntityFramework6 - 副本 (2)\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Xugu.EntityFramework.Basic.Tests.dll
+D:\Projects\EntityFramework6 - 副本 (2)\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\XuguClient.dll
+D:\Projects\EntityFramework6 - 副本 (2)\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Xugu.Data.EntityFramework.pdb
+D:\Projects\EntityFramework6 - 副本 (2)\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Xugu.Data.EntityFramework.dll.config
+D:\Projects\EntityFramework6 - 副本 (2)\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Xugu.EntityFramework.Basic.Tests.pdb
+D:\Projects\EntityFramework6 - 副本 (2)\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Xugu.EntityFramework.Basic.Tests.dll.config
+D:\Projects\EntityFramework6 - 副本 (2)\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\EntityFramework.xml
+D:\Projects\EntityFramework6 - 副本 (2)\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.xml
+D:\Projects\EntityFramework6 - 副本 (2)\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.xml
+D:\Projects\EntityFramework6 - 副本 (2)\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\nunit.framework.xml
+D:\Projects\EntityFramework6 - 副本 (2)\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\XuguClient.pdb
+D:\Projects\EntityFramework6 - 副本 (2)\tests\Xugu.EntityFramework.CodeFirst.Tests\obj\Debug\Xugu.EntityFramework.CodeFirst.Tests.csproj.AssemblyReference.cache
+D:\Projects\EntityFramework6 - 副本 (2)\tests\Xugu.EntityFramework.CodeFirst.Tests\obj\Debug\Xugu.EntityFramework.CodeFirst.Tests.Properties.SQLSyntax.resources
+D:\Projects\EntityFramework6 - 副本 (2)\tests\Xugu.EntityFramework.CodeFirst.Tests\obj\Debug\Xugu.EntityFramework.CodeFirst.Tests.csproj.GenerateResource.cache
+D:\Projects\EntityFramework6 - 副本 (2)\tests\Xugu.EntityFramework.CodeFirst.Tests\obj\Debug\Xugu.EntityFramework.CodeFirst.Tests.csproj.CoreCompileInputs.cache
+D:\Projects\EntityFramework6 - 副本 (2)\tests\Xugu.EntityFramework.CodeFirst.Tests\obj\Debug\Xugu.EntityFramework.CodeFirst.Tests.csproj.CopyComplete
+D:\Projects\EntityFramework6 - 副本 (2)\tests\Xugu.EntityFramework.CodeFirst.Tests\obj\Debug\Xugu.EntityFramework.CodeFirst.Tests.dll
+D:\Projects\EntityFramework6 - 副本 (2)\tests\Xugu.EntityFramework.CodeFirst.Tests\obj\Debug\Xugu.EntityFramework.CodeFirst.Tests.pdb
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\NUnit3.TestAdapter.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\NUnit3.TestAdapter.pdb
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\nunit.engine.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\nunit.engine.api.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\nunit.engine.core.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\testcentric.engine.metadata.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\zh-Hans\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.resources.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\zh-Hans\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.resources.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\zh-Hans\Microsoft.VisualStudio.TestPlatform.TestFramework.resources.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Xugu.EntityFramework.CodeFirst.Tests.dll.config
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Xugu.EntityFramework.CodeFirst.Tests.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Xugu.EntityFramework.CodeFirst.Tests.pdb
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\EntityFramework.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\nunit.framework.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Xugu.Data.EntityFramework.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Xugu.EntityFramework.Basic.Tests.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\XuguClient.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Xugu.Data.EntityFramework.pdb
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Xugu.Data.EntityFramework.dll.config
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Xugu.EntityFramework.Basic.Tests.pdb
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Xugu.EntityFramework.Basic.Tests.dll.config
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\EntityFramework.xml
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.xml
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.xml
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\nunit.framework.xml
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\XuguClient.pdb
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\obj\Debug\Xugu.EntityFramework.CodeFirst.Tests.csproj.AssemblyReference.cache
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\obj\Debug\Xugu.EntityFramework.CodeFirst.Tests.Properties.SQLSyntax.resources
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\obj\Debug\Xugu.EntityFramework.CodeFirst.Tests.csproj.GenerateResource.cache
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\obj\Debug\Xugu.EntityFramework.CodeFirst.Tests.csproj.CoreCompileInputs.cache
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\obj\Debug\Xugu.EntityFramework.CodeFirst.Tests.csproj.CopyComplete
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\obj\Debug\Xugu.EntityFramework.CodeFirst.Tests.dll
+D:\Projects\EntityFramework6 - 副本 (2) - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\obj\Debug\Xugu.EntityFramework.CodeFirst.Tests.pdb
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\NUnit3.TestAdapter.dll
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\NUnit3.TestAdapter.pdb
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\nunit.engine.dll
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\nunit.engine.api.dll
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\nunit.engine.core.dll
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\testcentric.engine.metadata.dll
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\zh-Hans\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.resources.dll
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\zh-Hans\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.resources.dll
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\zh-Hans\Microsoft.VisualStudio.TestPlatform.TestFramework.resources.dll
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Xugu.EntityFramework.CodeFirst.Tests.dll.config
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Xugu.EntityFramework.CodeFirst.Tests.dll
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Xugu.EntityFramework.CodeFirst.Tests.pdb
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\EntityFramework.dll
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.dll
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\nunit.framework.dll
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Xugu.Data.EntityFramework.dll
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Xugu.EntityFramework.Basic.Tests.dll
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\XuguClient.dll
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Xugu.Data.EntityFramework.pdb
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Xugu.Data.EntityFramework.dll.config
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Xugu.EntityFramework.Basic.Tests.pdb
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Xugu.EntityFramework.Basic.Tests.dll.config
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\EntityFramework.xml
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.xml
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.xml
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\nunit.framework.xml
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\bin\Debug\XuguClient.pdb
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\obj\Debug\Xugu.EntityFramework.CodeFirst.Tests.csproj.AssemblyReference.cache
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\obj\Debug\Xugu.EntityFramework.CodeFirst.Tests.Properties.SQLSyntax.resources
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\obj\Debug\Xugu.EntityFramework.CodeFirst.Tests.csproj.GenerateResource.cache
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\obj\Debug\Xugu.EntityFramework.CodeFirst.Tests.csproj.CoreCompileInputs.cache
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\obj\Debug\Xugu.EntityFramework.CodeFirst.Tests.csproj.CopyComplete
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\obj\Debug\Xugu.EntityFramework.CodeFirst.Tests.dll
+D:\Projects\EntityFramework6 - 副本 (3) - 副本 - 副本\tests\Xugu.EntityFramework.CodeFirst.Tests\obj\Debug\Xugu.EntityFramework.CodeFirst.Tests.pdb

@@ -1,0 +1,1776 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+####################################################################################################################
+
+BE AWARE THAT THE ORDER IN WHICH TYPES ARE DESCRIBED IN THE PROVIDER MANIFEST IS RELEVANT AND HAVE IMPACT IN LOOKUP
+PROCESS
+
+#################################################################################################################### 
+-->
+<ProviderManifest Namespace="Xugu" xmlns="http://schemas.microsoft.com/ado/2006/04/edm/providermanifest">
+	<Types>
+		<Type Name ="guid" PrimitiveTypeKind ="Guid"/>
+		<Type Name="bool" PrimitiveTypeKind="Boolean"/>
+		<!-- signed types -->
+		<Type Name="tinyint" PrimitiveTypeKind="SByte"/>
+		<!-- <Type Name="tinyint" PrimitiveTypeKind="SByte"/> -->
+		<Type Name="smallint" PrimitiveTypeKind="Int16"/>
+		<Type Name="int" PrimitiveTypeKind ="Int32"/>
+		<Type Name="bigint" PrimitiveTypeKind="Int64"/>
+		<Type Name="float" PrimitiveTypeKind="Single"/>
+		<Type Name="double" PrimitiveTypeKind="Double"/>
+		<Type Name="numeric" PrimitiveTypeKind="Decimal">
+			<FacetDescriptions>
+				<Precision Minimum="1" Maximum="65" DefaultValue="10" Constant="false" />
+				<Scale Minimum="0" Maximum="30" DefaultValue="0" Constant="false" />
+			</FacetDescriptions>
+		</Type>
+		<Type Name="timestamp" PrimitiveTypeKind="DateTime">
+			<FacetDescriptions>
+				<Precision Minimum="0" Maximum="6" DefaultValue="0" Constant="false" />
+			</FacetDescriptions>
+		</Type>
+		<Type Name="date" PrimitiveTypeKind="DateTime">
+			<FacetDescriptions>
+				<Precision DefaultValue="0" Constant="true" />
+			</FacetDescriptions>
+		</Type>
+		<Type Name="time" PrimitiveTypeKind="Time">
+			<FacetDescriptions>
+				<MaxLength DefaultValue="8" Constant="true" />
+				<FixedLength DefaultValue="true" Constant="true" />
+				<Precision  Minimum="0" Maximum="6" DefaultValue="0" Constant="false" />
+			</FacetDescriptions>
+		</Type>
+		<Type Name="datetime" PrimitiveTypeKind="DateTime">
+			<FacetDescriptions>
+				<Precision Minimum="0" Maximum="6" DefaultValue="0" Constant="false" />
+			</FacetDescriptions>
+		</Type>
+		<Type Name="varchar" PrimitiveTypeKind="String">
+			<FacetDescriptions>
+				<MaxLength Minimum="1" Maximum="65535" DefaultValue="1000" Constant="false" />
+				<Unicode DefaultValue="false" Constant="true" />
+				<FixedLength DefaultValue="false" Constant="true" />
+			</FacetDescriptions>
+		</Type>
+		<Type Name="char" PrimitiveTypeKind="String">
+			<FacetDescriptions>
+				<MaxLength Minimum="1" Maximum="255" DefaultValue="255" Constant="false" />
+				<Unicode DefaultValue="false" Constant="true" />
+				<FixedLength DefaultValue="true" Constant="true" />
+			</FacetDescriptions>
+		</Type>
+		<Type Name="TIME WITH TIME ZONE" PrimitiveTypeKind="String">
+			<FacetDescriptions>
+				<MaxLength Minimum="1" Maximum="255" DefaultValue="255" Constant="false" />
+				<Unicode DefaultValue="false" Constant="true" />
+				<FixedLength DefaultValue="true" Constant="true" />
+			</FacetDescriptions>
+		</Type>
+		<Type Name="DATETIME WITH TIME ZONE" PrimitiveTypeKind="String">
+			<FacetDescriptions>
+				<MaxLength Minimum="1" Maximum="255" DefaultValue="255" Constant="false" />
+				<Unicode DefaultValue="false" Constant="true" />
+				<FixedLength DefaultValue="true" Constant="true" />
+			</FacetDescriptions>
+		</Type>
+		<Type Name="INTERVAL YEAR" PrimitiveTypeKind="String">
+			<FacetDescriptions>
+				<MaxLength Minimum="1" Maximum="4" DefaultValue="4" Constant="false" />
+				<Unicode DefaultValue="false" Constant="true" />
+				<FixedLength DefaultValue="true" Constant="true" />
+			</FacetDescriptions>
+		</Type>
+		<Type Name="INTERVAL MONTH" PrimitiveTypeKind="String">
+			<FacetDescriptions>
+				<MaxLength Minimum="1" Maximum="4" DefaultValue="4" Constant="false" />
+				<Unicode DefaultValue="false" Constant="true" />
+				<FixedLength DefaultValue="true" Constant="true" />
+			</FacetDescriptions>
+		</Type>
+		<Type Name="INTERVAL DAY" PrimitiveTypeKind="String">
+			<FacetDescriptions>
+				<MaxLength Minimum="1" Maximum="4" DefaultValue="4" Constant="false" />
+				<Unicode DefaultValue="false" Constant="true" />
+				<FixedLength DefaultValue="true" Constant="true" />
+			</FacetDescriptions>
+		</Type>
+		<Type Name="INTERVAL HOUR" PrimitiveTypeKind="String">
+			<FacetDescriptions>
+				<MaxLength Minimum="1" Maximum="4" DefaultValue="4" Constant="false" />
+				<Unicode DefaultValue="false" Constant="true" />
+				<FixedLength DefaultValue="true" Constant="true" />
+			</FacetDescriptions>
+		</Type>
+		<Type Name="INTERVAL MINUTE" PrimitiveTypeKind="String">
+			<FacetDescriptions>
+				<MaxLength Minimum="1" Maximum="4" DefaultValue="4" Constant="false" />
+				<Unicode DefaultValue="false" Constant="true" />
+				<FixedLength DefaultValue="true" Constant="true" />
+			</FacetDescriptions>
+		</Type>
+		<Type Name="INTERVAL SECOND" PrimitiveTypeKind="String">
+			<FacetDescriptions>
+				<MaxLength Minimum="1" Maximum="8" DefaultValue="8" Constant="false" />
+				<Unicode DefaultValue="false" Constant="true" />
+				<FixedLength DefaultValue="true" Constant="true" />
+			</FacetDescriptions>
+		</Type>
+		<Type Name="INTERVAL YEAR TO MONTH" PrimitiveTypeKind="String">
+			<FacetDescriptions>
+				<MaxLength Minimum="1" Maximum="4" DefaultValue="4" Constant="false" />
+				<Unicode DefaultValue="false" Constant="true" />
+				<FixedLength DefaultValue="true" Constant="true" />
+			</FacetDescriptions>
+		</Type>
+		<Type Name="INTERVAL DAY TO HOUR" PrimitiveTypeKind="String">
+			<FacetDescriptions>
+				<MaxLength Minimum="1" Maximum="4" DefaultValue="4" Constant="false" />
+				<Unicode DefaultValue="false" Constant="true" />
+				<FixedLength DefaultValue="true" Constant="true" />
+			</FacetDescriptions>
+		</Type>
+		<Type Name="INTERVAL DAY TO MINUTE" PrimitiveTypeKind="String">
+			<FacetDescriptions>
+				<MaxLength Minimum="1" Maximum="4" DefaultValue="4" Constant="false" />
+				<Unicode DefaultValue="false" Constant="true" />
+				<FixedLength DefaultValue="true" Constant="true" />
+			</FacetDescriptions>
+		</Type>
+		<Type Name="INTERVAL DAY TO SECOND" PrimitiveTypeKind="String">
+			<FacetDescriptions>
+				<MaxLength Minimum="1" Maximum="8" DefaultValue="8" Constant="false" />
+				<Unicode DefaultValue="false" Constant="true" />
+				<FixedLength DefaultValue="true" Constant="true" />
+			</FacetDescriptions>
+		</Type>
+		<Type Name="INTERVAL HOUR TO MINUTE" PrimitiveTypeKind="String">
+			<FacetDescriptions>
+				<MaxLength Minimum="1" Maximum="4" DefaultValue="4" Constant="false" />
+				<Unicode DefaultValue="false" Constant="true" />
+				<FixedLength DefaultValue="true" Constant="true" />
+			</FacetDescriptions>
+		</Type>
+		<Type Name="INTERVAL HOUR TO SECOND" PrimitiveTypeKind="String">
+			<FacetDescriptions>
+				<MaxLength Minimum="1" Maximum="8" DefaultValue="8" Constant="false" />
+				<Unicode DefaultValue="false" Constant="true" />
+				<FixedLength DefaultValue="true" Constant="true" />
+			</FacetDescriptions>
+		</Type>
+		<Type Name="INTERVAL MINUTE TO SECOND" PrimitiveTypeKind="String">
+			<FacetDescriptions>
+				<MaxLength Minimum="1" Maximum="8" DefaultValue="8" Constant="false" />
+				<Unicode DefaultValue="false" Constant="true" />
+				<FixedLength DefaultValue="true" Constant="true" />
+			</FacetDescriptions>
+		</Type>
+		<Type Name="binary" PrimitiveTypeKind="Binary">
+			<FacetDescriptions>
+				<MaxLength Minimum="1" Maximum="255" Constant="false" />
+				<FixedLength DefaultValue="true" Constant="true" />
+			</FacetDescriptions>
+		</Type>
+		<Type Name="bit" PrimitiveTypeKind="Boolean"/>
+		<Type Name="blob" PrimitiveTypeKind="Binary" >
+			<FacetDescriptions>
+				<MaxLength DefaultValue="65535" Constant="true" />
+				<FixedLength DefaultValue="false" Constant="true" />
+			</FacetDescriptions>
+		</Type>
+
+		<Type Name="clob" PrimitiveTypeKind="String" >
+			<FacetDescriptions>
+				<MaxLength DefaultValue="1073741823" Constant="true" />
+				<Unicode DefaultValue="false" Constant="true" />
+				<FixedLength DefaultValue="false" Constant="true" />
+			</FacetDescriptions>
+		</Type>
+	</Types>
+	<Functions>
+		<!-- ### AGGREGAfTES ### -->
+
+		<!-- AVG -->
+		<Function Name="AVG" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="arg" Type="Collection(Int32)" Mode="In" />
+		</Function>
+		<Function Name="AVG" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="Int64" />
+			<Parameter Name="arg" Type="Collection(Int64)" Mode="In" />
+		</Function>
+		<Function Name="AVG" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="Decimal" />
+			<Parameter Name="arg" Type="Collection(Decimal)" Mode="In" />
+		</Function>
+		<Function Name="AVG" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="Double" />
+			<Parameter Name="arg" Type="Collection(Double)" Mode="In" />
+		</Function>
+
+		<!-- COUNT -->
+		<Function Name="COUNT" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="Int64" />
+			<Parameter Name="arg" Type="Collection(Byte)" Mode="In"/>
+		</Function>
+		<Function Name="COUNT" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="Int64" />
+			<Parameter Name="arg" Type="Collection(Int16)" Mode="In"/>
+		</Function>
+		<Function Name="COUNT" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="Int64" />
+			<Parameter Name="arg" Type="Collection(Int32)" Mode="In"/>
+		</Function>
+		<Function Name="COUNT" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="Int64" />
+			<Parameter Name="arg" Type="Collection(Int64)" Mode="In"/>
+		</Function>
+		<Function Name="COUNT" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="Int64" />
+			<Parameter Name="arg" Type="Collection(Double)" Mode="In" />
+		</Function>
+		<Function Name="COUNT" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="Int64" />
+			<Parameter Name="arg" Type="Collection(Decimal)" Mode="In" />
+		</Function>
+		<Function Name="COUNT" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="Int64" />
+			<Parameter Name="arg" Type="Collection(DateTime)" Mode="In" />
+		</Function>
+		<Function Name="COUNT" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="Int64" />
+			<Parameter Name="arg" Type="Collection(String)" Mode="In" />
+		</Function>
+		<Function Name="COUNT" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="Int64" />
+			<Parameter Name="arg" Type="Collection(Binary)" Mode="In" />
+		</Function>
+
+		<!-- MAX -->
+		<Function Name="MAX" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="Byte" />
+			<Parameter Name="arg" Type="Collection(Byte)" Mode="In" />
+		</Function>
+		<Function Name="MAX" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="Int16" />
+			<Parameter Name="arg" Type="Collection(Int16)" Mode="In" />
+		</Function>
+		<Function Name="MAX" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="arg" Type="Collection(Int32)" Mode="In" />
+		</Function>
+		<Function Name="MAX" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="Int64" />
+			<Parameter Name="arg" Type="Collection(Int64)" Mode="In" />
+		</Function>
+		<Function Name="MAX" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="Decimal" />
+			<Parameter Name="arg" Type="Collection(Decimal)" Mode="In" />
+		</Function>
+		<Function Name="MAX" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="Double" />
+			<Parameter Name="arg" Type="Collection(Double)" Mode="In" />
+		</Function>
+		<Function Name="MAX" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="Single" />
+			<Parameter Name="arg" Type="Collection(Single)" Mode="In" />
+		</Function>
+		<Function Name="MAX" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="DateTime" />
+			<Parameter Name="arg" Type="Collection(DateTime)" Mode="In" />
+		</Function>
+		<Function Name="MAX" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="arg" Type="Collection(String)" Mode="In" />
+		</Function>
+		<Function Name="MAX" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="Binary" />
+			<Parameter Name="arg" Type="Collection(Binary)" Mode="In" />
+		</Function>
+
+		<!-- MIN -->
+		<Function Name="MIN" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="Byte" />
+			<Parameter Name="arg" Type="Collection(Byte)" Mode="In" />
+		</Function>
+		<Function Name="MIN" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="Int16" />
+			<Parameter Name="arg" Type="Collection(Int16)" Mode="In" />
+		</Function>
+		<Function Name="MIN" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="arg" Type="Collection(Int32)" Mode="In" />
+		</Function>
+		<Function Name="MIN" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="Int64" />
+			<Parameter Name="arg" Type="Collection(Int64)" Mode="In" />
+		</Function>
+		<Function Name="MIN" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="Decimal" />
+			<Parameter Name="arg" Type="Collection(Decimal)" Mode="In" />
+		</Function>
+		<Function Name="MIN" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="Double" />
+			<Parameter Name="arg" Type="Collection(Double)" Mode="In" />
+		</Function>
+		<Function Name="MIN" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="Single" />
+			<Parameter Name="arg" Type="Collection(Single)" Mode="In" />
+		</Function>
+		<Function Name="MIN" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="DateTime" />
+			<Parameter Name="arg" Type="Collection(DateTime)" Mode="In" />
+		</Function>
+		<Function Name="MIN" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="arg" Type="Collection(String)" Mode="In" />
+		</Function>
+		<Function Name="MIN" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="Binary" />
+			<Parameter Name="arg" Type="Collection(Binary)" Mode="In" />
+		</Function>
+
+		<!-- SUM -->
+		<Function Name="SUM" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="arg" Type="Collection(Int32)" Mode="In" />
+		</Function>
+		<Function Name="SUM" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="Int64" />
+			<Parameter Name="arg" Type="Collection(Int64)" Mode="In" />
+		</Function>
+		<Function Name="SUM" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="Decimal" />
+			<Parameter Name="arg" Type="Collection(Decimal)" Mode="In" />
+		</Function>
+		<Function Name="SUM" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="Double" />
+			<Parameter Name="arg" Type="Collection(Double)" Mode="In" />
+		</Function>
+
+		<!-- STDEV AGGREGATES -->
+		<Function Name="STDDEV" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="Double" />
+			<Parameter Name="arg" Type="Collection(Double)" Mode="In" />
+		</Function>
+
+		<!-- 5.0.3 -->
+		<Function Name="STDDEV_SAMP" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="Double" />
+			<Parameter Name="arg" Type="Collection(Double)" Mode="In"/>
+		</Function>
+
+		<Function Name="STDDEV_POP" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="Double" />
+			<Parameter Name="arg" Type="Collection(Double)" Mode="In"/>
+		</Function>
+
+		<Function Name="VAR_SAMP" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="Double" />
+			<Parameter Name="arg" Type="Collection(Double)" Mode="In"/>
+		</Function>
+
+		<Function Name="VAR_POP" Aggregate="true" BuiltIn="true">
+			<ReturnType Type="Double" />
+			<Parameter Name="arg" Type="Collection(Double)" Mode="In"/>
+		</Function>
+		<!-- end 5.0.3 -->
+
+		<!-- ### BIT FUNCTIONS ### -->
+
+		<!-- Bit_Count -->
+		<Function Name="BIT_COUNT" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="n" Type="Int64" Mode="In"/>
+		</Function>
+
+		<!-- ### STRING FUNCTIONS ### -->
+
+		<!-- Ascii -->
+		<Function Name="ASCII" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="arg" Type="String" Mode="In" />
+		</Function>
+
+		<Function Name="BIN" BuiltIn="true">
+			<ReturnType Type="String"/>
+			<Parameter Name="arg" Type="Int64" Mode="In"/>
+		</Function>
+
+		<Function Name="BIT_LENGTH" BuiltIn="true">
+			<ReturnType Type="Int64"/>
+			<Parameter Name="arg" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="CHAR_LENGTH" BuiltIn="true">
+			<ReturnType Type="Int64"/>
+			<Parameter Name="arg" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="CHARACTER_LENGTH" BuiltIn="true">
+			<ReturnType Type="Int64"/>
+			<Parameter Name="arg" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="CONCAT" BuiltIn="true">
+			<ReturnType Type="String"/>
+			<Parameter Name="arg0" Type="String" Mode="In"/>
+			<Parameter Name="arg1" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="CONV" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="N" Type="String" Mode="In"/>
+			<Parameter Name="from_base" Type="Int32" Mode="In"/>
+			<Parameter Name="to_base" Type="Int32" Mode="In"/>
+		</Function>
+
+		<!-- todo check longer versions of concat -->
+		<!-- todo implement concat_ws -->
+		<!-- todo implement elt -->
+		<!-- todo implement export_set -->
+		<!-- todo implement field -->
+
+		<Function Name="FIND_IN_SET" BuiltIn="true">
+			<ReturnType Type="Int64"/>
+			<Parameter Name="str_to_find" Type="String" Mode="In"/>
+			<Parameter Name="string_list" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="FORMAT" BuiltIn="true">
+			<ReturnType Type="String"/>
+			<Parameter Name="value" Type="Double" Mode="In"/>
+			<Parameter Name="dec_places" Type="Int32" Mode="In"/>
+		</Function>
+
+		<Function Name="HEX" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="n_or_s" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="INSERT" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="original_string" Type="String" Mode="In"/>
+			<Parameter Name="position" Type="Int64" Mode="In"/>
+			<Parameter Name="length" Type="Int64" Mode="In"/>
+			<Parameter Name="new_string" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="INSTR" BuiltIn="true">
+			<ReturnType Type="Int64" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+			<Parameter Name="substr" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="LEFT" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+			<Parameter Name="len" Type="Int64" Mode="In"/>
+		</Function>
+
+		<Function Name="LENGTH" BuiltIn="true">
+			<ReturnType Type="Int64" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="LOAD_FILE" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="file_name" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="LOCATE" BuiltIn="true">
+			<ReturnType Type="Int64" />
+			<Parameter Name="substr" Type="String" Mode="In"/>
+			<Parameter Name="str" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="LOCATE" BuiltIn="true">
+			<ReturnType Type="Int64" />
+			<Parameter Name="substr" Type="String" Mode="In"/>
+			<Parameter Name="str" Type="String" Mode="In"/>
+			<Parameter Name="pos" Type="Int32" Mode="In"/>
+		</Function>
+
+		<Function Name="LOWER" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- LCASE is a synonym for LOWER -->
+		<Function Name="LCASE" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="LPAD" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+			<Parameter Name="len" Type="Int32" Mode="In"/>
+			<Parameter Name="padstr" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="LTRIM" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- implement MAKE_SET -->
+
+		<Function Name="MID" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+			<Parameter Name="pos" Type="Int32" Mode="In"/>
+			<Parameter Name="len" Type="Int32" Mode="In"/>
+		</Function>
+
+		<Function Name="OCT" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="N" Type="Int64" Mode="In"/>
+		</Function>
+
+		<Function Name="OCTET_LENGTH" BuiltIn="true">
+			<ReturnType Type="Int64" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="ORD" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="QUOTE" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="REPEAT" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+			<Parameter Name="count" Type="Int32" Mode="In"/>
+		</Function>
+
+		<Function Name="REPLACE" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+			<Parameter Name="from_str" Type="String" Mode="In"/>
+			<Parameter Name="to_str" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="REVERSE" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="RIGHT" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+			<Parameter Name="len" Type="Int32" Mode="In"/>
+		</Function>
+
+		<Function Name="RPAD" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+			<Parameter Name="len" Type="Int32" Mode="In"/>
+			<Parameter Name="padstr" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="RTRIM" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="SOUNDEX" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="SPACE" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="N" Type="Int32" Mode="In"/>
+		</Function>
+
+		<Function Name="SUBSTR" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+			<Parameter Name="pos" Type="Int32" Mode="In"/>
+		</Function>
+
+		<Function Name="SUBSTR" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+			<Parameter Name="pos" Type="Int32" Mode="In"/>
+			<Parameter Name="len" Type="Int32" Mode="In"/>
+		</Function>
+
+		<Function Name="SUBSTRING" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+			<Parameter Name="pos" Type="Int32" Mode="In"/>
+		</Function>
+
+		<Function Name="SUBSTRING" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+			<Parameter Name="pos" Type="Int32" Mode="In"/>
+			<Parameter Name="len" Type="Int32" Mode="In"/>
+		</Function>
+
+		<Function Name="SUBSTRING_INDEX" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+			<Parameter Name="delim" Type="String" Mode="In"/>
+			<Parameter Name="count" Type="Int32" Mode="In"/>
+		</Function>
+
+		<!-- implement TRIM -->
+
+		<Function Name="UCASE" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="UNHEX" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="UPPER" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- ### MATH FUNCTIONS ### -->
+
+		<!-- Abs -->
+		<Function Name="ABS" BuiltIn="true">
+			<ReturnType Type="Int64" />
+			<Parameter Name="x" Type="Int64" Mode="In"/>
+		</Function>
+
+		<!-- Acos -->
+		<Function Name="ACOS" BuiltIn="true">
+			<ReturnType Type="Double" />
+			<Parameter Name="x" Type="Double" Mode="In"/>
+		</Function>
+
+		<!-- Asin -->
+		<Function Name="ASIN" BuiltIn="true">
+			<ReturnType Type="Double" />
+			<Parameter Name="x" Type="Double" Mode="In"/>
+		</Function>
+
+		<!-- Atan -->
+		<Function Name="ATAN" BuiltIn="true">
+			<ReturnType Type="Double" />
+			<Parameter Name="x" Type="Double" Mode="In"/>
+		</Function>
+
+		<Function Name="ATAN" BuiltIn="true">
+			<ReturnType Type="Double" />
+			<Parameter Name="y" Type="Double" Mode="In"/>
+			<Parameter Name="x" Type="Double" Mode="In"/>
+		</Function>
+
+		<!-- Atan2 -->
+		<Function Name="ATAN2" BuiltIn="true">
+			<ReturnType Type="Double" />
+			<Parameter Name="y" Type="Double" Mode="In"/>
+			<Parameter Name="x" Type="Double" Mode="In"/>
+		</Function>
+
+		<!-- Ceil -->
+		<Function Name="CEIL" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="x" Type="Double" Mode="In"/>
+		</Function>
+
+		<!-- Ceiling -->
+		<Function Name="CEILING" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="x" Type="Double" Mode="In"/>
+		</Function>
+
+		<!-- Cos -->
+		<Function Name="COS" BuiltIn="true">
+			<ReturnType Type="Double" />
+			<Parameter Name="x" Type="Double" Mode="In"/>
+		</Function>
+
+		<!-- Cot -->
+		<Function Name="COT" BuiltIn="true">
+			<ReturnType Type="Double" />
+			<Parameter Name="x" Type="Double" Mode="In"/>
+		</Function>
+
+		<!-- Crc32 -->
+		<Function Name="CRC32" BuiltIn="true">
+			<ReturnType Type="Int64" />
+			<Parameter Name="expr" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- Degrees -->
+		<Function Name="DEGREES" BuiltIn="true">
+			<ReturnType Type="Double" />
+			<Parameter Name="x" Type="Double" Mode="In"/>
+		</Function>
+
+		<!-- Exp -->
+		<Function Name="EXP" BuiltIn="true">
+			<ReturnType Type="Double" />
+			<Parameter Name="x" Type="Double" Mode="In"/>
+		</Function>
+
+		<!-- Floor -->
+		<Function Name="FLOOR" BuiltIn="true">
+			<ReturnType Type="Int64" />
+			<Parameter Name="x" Type="Double" Mode="In"/>
+		</Function>
+
+		<!-- Ln -->
+		<Function Name="LN" BuiltIn="true">
+			<ReturnType Type="Double" />
+			<Parameter Name="x" Type="Double" Mode="In"/>
+		</Function>
+
+		<!-- Log-->
+		<Function Name="LOG" BuiltIn="true">
+			<ReturnType Type="Double" />
+			<Parameter Name="x" Type="Double" Mode="In"/>
+		</Function>
+
+		<Function Name="LOG" BuiltIn="true">
+			<ReturnType Type="Double" />
+			<Parameter Name="b" Type="Double" Mode="In"/>
+			<Parameter Name="x" Type="Double" Mode="In"/>
+		</Function>
+
+		<!-- Log2 -->
+		<Function Name="LOG2" BuiltIn="true">
+			<ReturnType Type="Double" />
+			<Parameter Name="x" Type="Double" Mode="In"/>
+		</Function>
+
+		<!-- Log10 -->
+		<Function Name="LOG10" BuiltIn="true">
+			<ReturnType Type="Double" />
+			<Parameter Name="x" Type="Double" Mode="In"/>
+		</Function>
+
+		<!-- Mod -->
+		<Function Name="MOD" BuiltIn="true">
+			<ReturnType Type="Double" />
+			<Parameter Name="n" Type="Double" Mode="In"/>
+			<Parameter Name="m" Type="Double" Mode="In"/>
+		</Function>
+
+		<!-- pi -->
+		<Function Name="PI" BuiltIn="true">
+			<ReturnType Type="Double" />
+		</Function>
+
+		<!-- Pow -->
+		<Function Name="POW" BuiltIn="true">
+			<ReturnType Type="Double" />
+			<Parameter Name="x" Type="Double" Mode="In"/>
+			<Parameter Name="y" Type="Double" Mode="In"/>
+		</Function>
+
+		<!-- Power -->
+		<Function Name="POWER" BuiltIn="true">
+			<ReturnType Type="Double" />
+			<Parameter Name="x" Type="Double" Mode="In"/>
+			<Parameter Name="y" Type="Double" Mode="In"/>
+		</Function>
+
+		<!-- Radians -->
+		<Function Name="RADIANS" BuiltIn="true">
+			<ReturnType Type="Double" />
+			<Parameter Name="x" Type="Double" Mode="In"/>
+		</Function>
+
+		<!-- Rand -->
+		<Function Name="RAND" BuiltIn="true">
+			<ReturnType Type="Double" />
+		</Function>
+
+		<Function Name="RAND" BuiltIn="true">
+			<ReturnType Type="Double" />
+			<Parameter Name="n" Type="Double" Mode="In"/>
+		</Function>
+
+		<!-- Round -->
+		<Function Name="ROUND" BuiltIn="true">
+			<ReturnType Type="Double" />
+			<Parameter Name="x" Type="Double" Mode="In"/>
+		</Function>
+
+		<Function Name="ROUND" BuiltIn="true">
+			<ReturnType Type="Double" />
+			<Parameter Name="x" Type="Double" Mode="In"/>
+			<Parameter Name="d" Type="Int32" Mode="In"/>
+		</Function>
+
+		<!-- Sign -->
+		<Function Name="SIGN" BuiltIn="true">
+			<ReturnType Type="Int64" />
+			<Parameter Name="x" Type="Double" Mode="In"/>
+		</Function>
+
+		<!-- Sin -->
+		<Function Name="SIN" BuiltIn="true">
+			<ReturnType Type="Double" />
+			<Parameter Name="x" Type="Double" Mode="In"/>
+		</Function>
+
+		<!-- Sqrt -->
+		<Function Name="SQRT" BuiltIn="true">
+			<ReturnType Type="Double" />
+			<Parameter Name="x" Type="Double" Mode="In"/>
+		</Function>
+
+		<!-- Tan -->
+		<Function Name="TAN" BuiltIn="true">
+			<ReturnType Type="Double" />
+			<Parameter Name="x" Type="Double" Mode="In"/>
+		</Function>
+
+		<!-- Truncate -->
+		<Function Name="TRUNCATE" BuiltIn="true">
+			<ReturnType Type="Double" />
+			<Parameter Name="x" Type="Double" Mode="In"/>
+			<Parameter Name="d" Type="Int32" Mode="In"/>
+		</Function>
+
+		<!-- ### DATE FUNCTIONS ### -->
+
+		<!-- AddDate -->
+		<Function Name="ADDDATE" BuiltIn="true">
+			<ReturnType Type="DateTime" />
+			<Parameter Name="expr" Type="DateTime" Mode="In"/>
+			<Parameter Name="days" Type="Int32" Mode="In"/>
+		</Function>
+
+		<Function Name="ADDDATE" BuiltIn="true">
+			<ReturnType Type="DateTime" />
+			<Parameter Name="expr" Type="String" Mode="In"/>
+			<Parameter Name="days" Type="Int32" Mode="In"/>
+		</Function>
+
+		<!-- AddTime -->
+		<Function Name="ADDTIME" BuiltIn="true">
+			<ReturnType Type="Time" />
+			<Parameter Name="expr1" Type="String" Mode="In"/>
+			<Parameter Name="expr2" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="ADDTIME" BuiltIn="true">
+			<ReturnType Type="Time" />
+			<Parameter Name="expr1" Type="DateTime" Mode="In"/>
+			<Parameter Name="expr2" Type="Time" Mode="In"/>
+		</Function>
+
+		<Function Name="ADDTIME" BuiltIn="true">
+			<ReturnType Type="Time" />
+			<Parameter Name="expr1" Type="Time" Mode="In"/>
+			<Parameter Name="expr2" Type="Time" Mode="In"/>
+		</Function>
+
+		<Function Name="ADDTIME" BuiltIn="true">
+			<ReturnType Type="Time" />
+			<Parameter Name="expr1" Type="String" Mode="In"/>
+			<Parameter Name="expr2" Type="Time" Mode="In"/>
+		</Function>
+
+		<Function Name="ADDTIME" BuiltIn="true">
+			<ReturnType Type="Time" />
+			<Parameter Name="expr1" Type="Time" Mode="In"/>
+			<Parameter Name="expr2" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="ADDTIME" BuiltIn="true">
+			<ReturnType Type="Time" />
+			<Parameter Name="expr1" Type="DateTime" Mode="In"/>
+			<Parameter Name="expr2" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- Convert_Tz -->
+		<Function Name="CONVERT_TZ" BuiltIn="true">
+			<ReturnType Type="DateTime" />
+			<Parameter Name="dt" Type="String" Mode="In"/>
+			<Parameter Name="from_tz" Type="String" Mode="In"/>
+			<Parameter Name="to_tz" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="CONVERT_TZ" BuiltIn="true">
+			<ReturnType Type="DateTime" />
+			<Parameter Name="dt" Type="DateTime" Mode="In"/>
+			<Parameter Name="from_tz" Type="String" Mode="In"/>
+			<Parameter Name="to_tz" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- CurDate -->
+		<Function Name="CURDATE" BuiltIn="true">
+			<ReturnType Type="DateTime" />
+		</Function>
+		<Function Name="CURRENT_DATE" BuiltIn="true">
+			<ReturnType Type="DateTime"/>
+		</Function>
+
+		<!-- CurTime -->
+		<Function Name="CURTIME" BuiltIn="true">
+			<ReturnType Type="Time" />
+		</Function>
+		<Function Name="CURRENT_TIME" BuiltIn="true">
+			<ReturnType Type="Time" />
+		</Function>
+
+		<!-- Current_TimeStamp -->
+		<Function Name="CURRENT_TIMESTAMP" BuiltIn="true">
+			<ReturnType Type="DateTime" />
+		</Function>
+
+		<!--Date -->
+		<Function Name="DATE" BuiltIn="true">
+			<ReturnType Type="DateTime" />
+			<Parameter Name="expr" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="DATE" BuiltIn="true">
+			<ReturnType Type="DateTime" />
+			<Parameter Name="expr" Type="DateTime" Mode="In"/>
+		</Function>
+
+		<!-- DateDiff -->
+		<Function Name="DATEDIFF" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="expr1" Type="DateTime" Mode="In"/>
+			<Parameter Name="expr2" Type="DateTime" Mode="In"/>
+		</Function>
+
+		<Function Name="DATEDIFF" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="expr1" Type="String" Mode="In"/>
+			<Parameter Name="expr2" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="DATEDIFF" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="expr1" Type="DateTime" Mode="In"/>
+			<Parameter Name="expr2" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="DATEDIFF" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="expr1" Type="String" Mode="In"/>
+			<Parameter Name="expr2" Type="DateTime" Mode="In"/>
+		</Function>
+
+		<!-- Date_Add (todo) -->
+
+		<!-- Date_Format -->
+		<Function Name="DATE_FORMAT" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="date" Type="DateTime" Mode="In"/>
+			<Parameter Name="format" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="DATE_FORMAT" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="date" Type="String" Mode="In"/>
+			<Parameter Name="format" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- Day -->
+		<Function Name="DAY" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="date" Type="DateTime" Mode="In"/>
+		</Function>
+
+		<Function Name="DAY" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="date" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- DayName -->
+		<Function Name="DAYNAME" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="date" Type="DateTime" Mode="In"/>
+		</Function>
+
+		<Function Name="DAYNAME" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="date" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- DayOfMonth -->
+		<Function Name="DAYOFMONTH" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="date" Type="DateTime" Mode="In"/>
+		</Function>
+
+		<Function Name="DAYOFMONTH" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="date" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- DayOfWeek-->
+		<Function Name="DAYOFWEEK" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="date" Type="DateTime" Mode="In"/>
+		</Function>
+
+		<Function Name="DAYOFWEEK" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="date" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- DayOfYear-->
+		<Function Name="DAYOFYEAR" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="date" Type="DateTime" Mode="In"/>
+		</Function>
+
+		<Function Name="DAYOFYEAR" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="date" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- Extract (todo) -->
+
+		<!-- From_Days -->
+		<Function Name="FROM_DAYS" BuiltIn="true">
+			<ReturnType Type="DateTime" />
+			<Parameter Name="n" Type="Int32" Mode="In"/>
+		</Function>
+
+		<!-- From_UnixTime -->
+		<Function Name="FROM_UNIXTIME" BuiltIn="true">
+			<ReturnType Type="DateTime" />
+			<Parameter Name="unix_timestamp" Type="Int32" Mode="In"/>
+		</Function>
+
+		<Function Name="FROM_UNIXTIME" BuiltIn="true">
+			<ReturnType Type="DateTime" />
+			<Parameter Name="unix_timestamp" Type="Int32" Mode="In"/>
+			<Parameter Name="format" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- Get_Format (todo) -->
+
+		<!-- Hour -->
+		<Function Name="HOUR" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="time" Type="DateTime" Mode="In"/>
+		</Function>
+
+		<Function Name="HOUR" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="time" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- Last_Day -->
+		<Function Name="LAST_DAY" BuiltIn="true">
+			<ReturnType Type="DateTime" />
+			<Parameter Name="date" Type="DateTime" Mode="In"/>
+		</Function>
+
+		<Function Name="LAST_DAY" BuiltIn="true">
+			<ReturnType Type="DateTime" />
+			<Parameter Name="date" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- LocalTime -->
+		<Function Name="LOCALTIME" BuiltIn="true">
+			<ReturnType Type="DateTime" />
+		</Function>
+
+		<!-- LocalTimeStamp -->
+		<Function Name="LOCALTIMESTAMP" BuiltIn="true">
+			<ReturnType Type="DateTime" />
+		</Function>
+
+		<!-- MakeDate -->
+		<Function Name="MAKEDATE" BuiltIn="true">
+			<ReturnType Type="DateTime" />
+			<Parameter Name="year" Type="Int32" Mode="In"/>
+			<Parameter Name="dayOfYear" Type="Int32" Mode="In"/>
+		</Function>
+
+		<!-- MakeTime -->
+		<Function Name="MAKETIME" BuiltIn="true">
+			<ReturnType Type="Time" />
+			<Parameter Name="hour" Type="Int32" Mode="In"/>
+			<Parameter Name="minute" Type="Int32" Mode="In"/>
+			<Parameter Name="second" Type="Int32" Mode="In"/>
+		</Function>
+
+		<!-- MicroSecond -->
+		<Function Name="MICROSECOND" BuiltIn="true">
+			<ReturnType Type="Int64" />
+			<Parameter Name="expr" Type="DateTime" Mode="In"/>
+		</Function>
+
+		<Function Name="MICROSECOND" BuiltIn="true">
+			<ReturnType Type="Int64" />
+			<Parameter Name="expr" Type="Time" Mode="In"/>
+		</Function>
+
+		<Function Name="MICROSECOND" BuiltIn="true">
+			<ReturnType Type="Int64" />
+			<Parameter Name="expr" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- Minute -->
+		<Function Name="MINUTE" BuiltIn="true">
+			<ReturnType Type="Int64" />
+			<Parameter Name="time" Type="DateTime" Mode="In"/>
+		</Function>
+
+		<Function Name="MINUTE" BuiltIn="true">
+			<ReturnType Type="Int64" />
+			<Parameter Name="time" Type="Time" Mode="In"/>
+		</Function>
+
+		<Function Name="MINUTE" BuiltIn="true">
+			<ReturnType Type="Int64" />
+			<Parameter Name="time" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- Month -->
+		<Function Name="MONTH" BuiltIn="true">
+			<ReturnType Type="Int64" />
+			<Parameter Name="date" Type="DateTime" Mode="In"/>
+		</Function>
+
+		<Function Name="MONTH" BuiltIn="true">
+			<ReturnType Type="Int64" />
+			<Parameter Name="date" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- MonthName -->
+		<Function Name="MONTHNAME" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="date" Type="DateTime" Mode="In"/>
+		</Function>
+
+		<Function Name="MONTHNAME" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="date" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- Now -->
+		<Function Name="NOW" BuiltIn="true">
+			<ReturnType Type="DateTime" />
+		</Function>
+
+		<!-- Period_Add -->
+		<Function Name="PERIOD_ADD" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="p" Type="Int32" Mode="In"/>
+			<Parameter Name="n" Type="Int32" Mode="In"/>
+		</Function>
+
+		<!-- Period_Diff -->
+		<Function Name="PERIOD_DIFF" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="p1" Type="Int32" Mode="In"/>
+			<Parameter Name="p2" Type="Int32" Mode="In"/>
+		</Function>
+
+		<!-- Quarter -->
+		<Function Name="QUARTER" BuiltIn="true">
+			<ReturnType Type="Int64" />
+			<Parameter Name="date" Type="DateTime" Mode="In"/>
+		</Function>
+
+		<Function Name="QUARTER" BuiltIn="true">
+			<ReturnType Type="Int64" />
+			<Parameter Name="date" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- Second -->
+		<Function Name="SECOND" BuiltIn="true">
+			<ReturnType Type="Int64" />
+			<Parameter Name="time" Type="DateTime" Mode="In"/>
+		</Function>
+
+		<Function Name="SECOND" BuiltIn="true">
+			<ReturnType Type="Int64" />
+			<Parameter Name="time" Type="Time" Mode="In"/>
+		</Function>
+
+		<Function Name="SECOND" BuiltIn="true">
+			<ReturnType Type="Int64" />
+			<Parameter Name="time" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- Sec_To_Time -->
+		<Function Name="SEC_TO_TIME" BuiltIn="true">
+			<ReturnType Type="Time" />
+			<Parameter Name="seconds" Type="Int32" Mode="In"/>
+		</Function>
+
+		<!-- Str_To_Date -->
+		<Function Name="STR_TO_DATE" BuiltIn="true">
+			<ReturnType Type="DateTime" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+			<Parameter Name="format" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- SubDate -->
+		<Function Name="SUBDATE" BuiltIn="true">
+			<ReturnType Type="DateTime" />
+			<Parameter Name="expr" Type="DateTime" Mode="In"/>
+			<Parameter Name="days" Type="Int32" Mode="In"/>
+		</Function>
+
+		<Function Name="SUBDATE" BuiltIn="true">
+			<ReturnType Type="DateTime" />
+			<Parameter Name="expr" Type="String" Mode="In"/>
+			<Parameter Name="days" Type="Int32" Mode="In"/>
+		</Function>
+
+		<!-- SubTime -->
+		<Function Name="SUBTIME" BuiltIn="true">
+			<ReturnType Type="DateTime" />
+			<Parameter Name="expr1" Type="DateTime" Mode="In"/>
+			<Parameter Name="expr2" Type="Time" Mode="In"/>
+		</Function>
+
+		<Function Name="SUBTIME" BuiltIn="true">
+			<ReturnType Type="DateTime" />
+			<Parameter Name="expr1" Type="DateTime" Mode="In"/>
+			<Parameter Name="expr2" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="SUBTIME" BuiltIn="true">
+			<ReturnType Type="DateTime" />
+			<Parameter Name="expr1" Type="Time" Mode="In"/>
+			<Parameter Name="expr2" Type="Time" Mode="In"/>
+		</Function>
+
+		<Function Name="SUBTIME" BuiltIn="true">
+			<ReturnType Type="DateTime" />
+			<Parameter Name="expr1" Type="Time" Mode="In"/>
+			<Parameter Name="expr2" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="SUBTIME" BuiltIn="true">
+			<ReturnType Type="DateTime" />
+			<Parameter Name="expr1" Type="String" Mode="In"/>
+			<Parameter Name="expr2" Type="Time" Mode="In"/>
+		</Function>
+
+		<Function Name="SUBTIME" BuiltIn="true">
+			<ReturnType Type="DateTime" />
+			<Parameter Name="expr1" Type="String" Mode="In"/>
+			<Parameter Name="expr2" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- SysDate -->
+		<Function Name="SYSDATE" BuiltIn="true">
+			<ReturnType Type="DateTime" />
+		</Function>
+
+		<!-- Time -->
+		<Function Name="TIME" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="expr" Type="DateTime" Mode="In"/>
+		</Function>
+
+		<Function Name="TIME" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="expr" Type="Time" Mode="In"/>
+		</Function>
+
+		<Function Name="TIME" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="expr" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- TimeDiff -->
+		<Function Name="TIMEDIFF" BuiltIn="true">
+			<ReturnType Type="Time" />
+			<Parameter Name="expr1" Type="DateTime" Mode="In"/>
+			<Parameter Name="expr2" Type="DateTime" Mode="In"/>
+		</Function>
+
+		<Function Name="TIMEDIFF" BuiltIn="true">
+			<ReturnType Type="Time" />
+			<Parameter Name="expr1" Type="Time" Mode="In"/>
+			<Parameter Name="expr2" Type="Time" Mode="In"/>
+		</Function>
+
+		<Function Name="TIMEDIFF" BuiltIn="true">
+			<ReturnType Type="Time" />
+			<Parameter Name="expr1" Type="String" Mode="In"/>
+			<Parameter Name="expr2" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- TimeStamp -->
+		<Function Name="TIMESTAMP" BuiltIn="true">
+			<ReturnType Type="DateTime" />
+			<Parameter Name="expr" Type="DateTime" Mode="In"/>
+		</Function>
+
+		<Function Name="TIMESTAMP" BuiltIn="true">
+			<ReturnType Type="DateTime" />
+			<Parameter Name="expr" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="TIMESTAMP" BuiltIn="true">
+			<ReturnType Type="DateTime" />
+			<Parameter Name="expr1" Type="DateTime" Mode="In"/>
+			<Parameter Name="expr2" Type="Time" Mode="In"/>
+		</Function>
+
+		<Function Name="TIMESTAMP" BuiltIn="true">
+			<ReturnType Type="DateTime" />
+			<Parameter Name="expr1" Type="DateTime" Mode="In"/>
+			<Parameter Name="expr2" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="TIMESTAMP" BuiltIn="true">
+			<ReturnType Type="DateTime" />
+			<Parameter Name="expr1" Type="String" Mode="In"/>
+			<Parameter Name="expr2" Type="Time" Mode="In"/>
+		</Function>
+
+		<Function Name="TIMESTAMP" BuiltIn="true">
+			<ReturnType Type="DateTime" />
+			<Parameter Name="expr1" Type="String" Mode="In"/>
+			<Parameter Name="expr2" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- TimeStampAdd (todo) -->
+		<!-- TimeStampDiff (todo) -->
+
+		<!-- Time_Format -->
+		<Function Name="TIME_FORMAT" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="time" Type="DateTime" Mode="In"/>
+			<Parameter Name="format" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="TIME_FORMAT" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="time" Type="Time" Mode="In"/>
+			<Parameter Name="format" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="TIME_FORMAT" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="time" Type="String" Mode="In"/>
+			<Parameter Name="format" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- Time_To_Sec -->
+		<Function Name="TIME_TO_SEC" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="time" Type="DateTime" Mode="In"/>
+		</Function>
+
+		<Function Name="TIME_TO_SEC" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="time" Type="Time" Mode="In"/>
+		</Function>
+
+		<Function Name="TIME_TO_SEC" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="time" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- To_Days -->
+		<Function Name="TO_DAYS" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="date" Type="DateTime" Mode="In"/>
+		</Function>
+
+		<Function Name="TO_DAYS" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="date" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="TO_DAYS" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="date" Type="Int32" Mode="In"/>
+		</Function>
+
+		<!-- Unix_TimeStamp -->
+		<Function Name="UNIX_TIMESTAMP" BuiltIn="true">
+			<ReturnType Type="Int64" />
+		</Function>
+
+		<Function Name="UNIX_TIMESTAMP" BuiltIn="true">
+			<ReturnType Type="Int64" />
+			<Parameter Name="date" Type="DateTime" Mode="In"/>
+		</Function>
+
+		<Function Name="UNIX_TIMESTAMP" BuiltIn="true">
+			<ReturnType Type="Int64" />
+			<Parameter Name="date" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- Utc_Date -->
+		<Function Name="UTC_DATE" BuiltIn="true">
+			<ReturnType Type="DateTime" />
+		</Function>
+
+		<!-- Utc_Time -->
+		<Function Name="UTC_TIME" BuiltIn="true">
+			<ReturnType Type="Time" />
+		</Function>
+
+		<!-- Utc_TimeStamp -->
+		<Function Name="UTC_TIMESTAMP" BuiltIn="true">
+			<ReturnType Type="DateTime" />
+		</Function>
+
+		<!-- Week -->
+		<Function Name="WEEK" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="date" Type="DateTime" Mode="In"/>
+		</Function>
+
+		<Function Name="WEEK" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="date" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="WEEK" BuiltIn="true">
+			<ReturnType Type="Int32"/>
+			<Parameter Name="date" Type="DateTime" Mode="In"/>
+			<Parameter Name="mode" Type="Int32" Mode="In"/>
+		</Function>
+
+		<Function Name="WEEK" BuiltIn="true">
+			<ReturnType Type="Int32"/>
+			<Parameter Name="date" Type="String" Mode="In"/>
+			<Parameter Name="mode" Type="Int32" Mode="In"/>
+		</Function>
+
+		<!-- WeekDay -->
+		<Function Name="WEEKDAY" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="date" Type="DateTime" Mode="In"/>
+		</Function>
+
+		<Function Name="WEEKDAY" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="date" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- WeekOfYear-->
+		<Function Name="WEEKOFYEAR" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="date" Type="DateTime" Mode="In"/>
+		</Function>
+
+		<Function Name="WEEKOFYEAR" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="date" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- Year -->
+		<Function Name="YEAR" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="date" Type="DateTime" Mode="In"/>
+		</Function>
+
+		<Function Name="YEAR" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="date" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- YearWeek -->
+		<Function Name="YEARWEEK" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="date" Type="DateTime" Mode="In"/>
+		</Function>
+
+		<Function Name="YEARWEEK" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="date" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="YEARWEEK" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="date" Type="DateTime" Mode="In"/>
+			<Parameter Name="mode" Type="Int32" Mode="In"/>
+		</Function>
+
+		<Function Name="YEARWEEK" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="date" Type="String" Mode="In"/>
+			<Parameter Name="mode" Type="Int32" Mode="In"/>
+		</Function>
+
+		<!-- ### ENCRYPTION AND COMPRESSION FUNCTIONS ### -->
+
+		<!-- Aes_Decrypt -->
+		<Function Name="AES_DECRYPT" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="crypt_str" Type="String" Mode="In"/>
+			<Parameter Name="key_str" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- Aes_Encrypt -->
+		<Function Name="AES_ENCRYPT" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+			<Parameter Name="key_str" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- Compress -->
+		<Function Name="COMPRESS" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="string_to_compress" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- Decode -->
+		<Function Name="DECODE" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="crypt_str" Type="String" Mode="In"/>
+			<Parameter Name="pass_str" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- Encode -->
+		<Function Name="ENCODE" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+			<Parameter Name="pass_str" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- Des_Decrypt -->
+		<Function Name="DES_DECRYPT" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="crypt_str" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="DES_DECRYPT" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="crypt_str" Type="String" Mode="In"/>
+			<Parameter Name="key_str" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- Des_Encrypt -->
+		<Function Name="DES_ENCRYPT" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="DES_ENCRYPT" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+			<Parameter Name="key_num" Type="Int32" Mode="In"/>
+		</Function>
+
+		<Function Name="DES_ENCRYPT" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+			<Parameter Name="key_str" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- Encrypt -->
+		<Function Name="ENCRYPT" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+		</Function>
+
+		<Function Name="ENCRYPT" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+			<Parameter Name="salt" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- Md5 -->
+		<Function Name="MD5" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- Old_Password -->
+		<Function Name="OLD_PASSWORD" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- Password -->
+		<Function Name="PASSWORD" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- Sha -->
+		<Function Name="SHA" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- Sha1 -->
+		<Function Name="SHA1" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- Uncompress -->
+		<Function Name="UNCOMPRESS" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- Uncompressed_Length -->
+		<Function Name="UNCOMPRESSED_LENGTH" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- ### INFORMATION FUNCTIONS ### -->
+
+		<!-- Benchmark (todo) -->
+
+		<!-- CharSet -->
+		<Function Name="charset" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- Coercibility -->
+		<Function Name="COERCIBILITY" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- Collation -->
+		<Function Name="COLLATION" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- Connection_Id -->
+		<Function Name="CONNECTION_ID" BuiltIn="true">
+			<ReturnType Type="Int32" />
+		</Function>
+
+		<!-- Current_User -->
+		<Function Name="CURRENT_USER" BuiltIn="true">
+			<ReturnType Type="String" />
+		</Function>
+
+		<!-- Database -->
+		<Function Name="DATABASE" BuiltIn="true">
+			<ReturnType Type="String" />
+		</Function>
+
+		<!-- Found_Rows -->
+		<Function Name="FOUND_ROWS" BuiltIn="true">
+			<ReturnType Type="Int32" />
+		</Function>
+
+		<!-- Last_Insert_id -->
+		<Function Name="LAST_INSERT_ID" BuiltIn="true">
+			<ReturnType Type="Int64" />
+		</Function>
+
+		<!-- Row_Count -->
+		<Function Name="ROW_COUNT" BuiltIn="true">
+			<ReturnType Type="Int64" />
+		</Function>
+
+		<!-- User -->
+		<Function Name="USER" BuiltIn="true">
+			<ReturnType Type="String" />
+		</Function>
+
+		<!-- Session_User -->
+		<Function Name="SESSION_USER" BuiltIn="true">
+			<ReturnType Type="String" />
+		</Function>
+
+		<!-- System_user -->
+		<Function Name="SYSTEM_USER" BuiltIn="true">
+			<ReturnType Type="String" />
+		</Function>
+
+		<!-- Schema -->
+		<Function Name="SCHEMA" BuiltIn="true">
+			<ReturnType Type="String" />
+		</Function>
+
+		<!-- Version -->
+		<Function Name="VERSION" BuiltIn="true">
+			<ReturnType Type="String" />
+		</Function>
+
+		<!-- ### OTHER FUNCTIONS ### -->
+
+		<!-- Default (??) -->
+
+		<!-- Get_Lock-->
+		<Function Name="GET_LOCK" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+			<Parameter Name="timeout" Type="Int32" Mode="In"/>
+		</Function>
+
+		<!-- Inet_Aton -->
+		<Function Name="INET_ATON" BuiltIn="true">
+			<ReturnType Type="Int64" />
+			<Parameter Name="expr" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- Inet_Ntoa -->
+		<Function Name="INET_NTOA" BuiltIn="true">
+			<ReturnType Type="String" />
+			<Parameter Name="expr" Type="Int64" Mode="In"/>
+		</Function>
+
+		<!-- Is_Free_Lock -->
+		<Function Name="IS_FREE_LOCK" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- Is_Used_Lock -->
+		<Function Name="IS_USED_LOCK" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- Source_Pos_Wait -->
+		<Function Name="SOURCE_POS_WAIT" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="log_name" Type="String" Mode="In"/>
+			<Parameter Name="log_pos" Type="Int32" Mode="In"/>
+		</Function>
+
+		<Function Name="SOURCE_POS_WAIT" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="log_name" Type="String" Mode="In"/>
+			<Parameter Name="log_pos" Type="Int32" Mode="In"/>
+			<Parameter Name="timeout" Type="Int32" Mode="In"/>
+		</Function>
+
+		<!-- Name_Const (??) -->
+
+		<!-- Release_Lock -->
+		<Function Name="RELEASE_LOCK" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="str" Type="String" Mode="In"/>
+		</Function>
+
+		<!-- Sleep -->
+		<Function Name="SLEEP" BuiltIn="true">
+			<ReturnType Type="Int32" />
+			<Parameter Name="duration" Type="Double" Mode="In"/>
+		</Function>
+
+		<!-- Uuid -->
+		<Function Name="UUID" BuiltIn="true">
+			<ReturnType Type="String" />
+		</Function>
+
+		<!-- Values (???) -->
+	</Functions>
+</ProviderManifest>
