@@ -62,7 +62,7 @@ extends:
           - job: Windows
             pool:
               name: $(DncEngInternalBuildPool)
-              demands: ImageOverride -equals 1es-windows-2019
+              demands: ImageOverride -equals 1es-windows-2022
               os: windows
             timeoutInMinutes: 240
             variables:
