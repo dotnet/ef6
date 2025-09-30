@@ -110,34 +110,24 @@ namespace System.Data.Entity.Migrations
         public override void ResetDatabase()
         {
             ExecuteNonQuery(
-                @"DECLARE @sql NVARCHAR(1024);
+                @"DECLARE @sql NVARCHAR(MAX);
+                  DECLARE fk_cursor CURSOR FOR
+                  SELECT 'ALTER TABLE ' + QUOTENAME(OBJECT_SCHEMA_NAME(parent_object_id)) + '.' + QUOTENAME(OBJECT_NAME(parent_object_id)) + ' DROP CONSTRAINT ' + QUOTENAME(name)
+                  FROM sys.foreign_keys;
 
-                  DECLARE @constraint_name NVARCHAR(256),
-                          @table_schema NVARCHAR(100),
-                          @table_name NVARCHAR(100);
-                 
-                  DECLARE constraint_cursor CURSOR FOR
-                  SELECT constraint_name, table_schema, table_name
-                  FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS 
-                  WHERE constraint_catalog = '" + _name + @"'
-                  AND constraint_type = 'FOREIGN KEY'
-                 
-                  OPEN constraint_cursor;
-                  FETCH NEXT FROM constraint_cursor INTO @constraint_name, @table_schema, @table_name;
+                  OPEN fk_cursor;
+                  FETCH NEXT FROM fk_cursor INTO @sql;
                   WHILE @@FETCH_STATUS = 0
                   BEGIN
-                      SELECT @sql = 'ALTER TABLE [' + REPLACE(@table_schema, ']', ']]') + '].[' + REPLACE(@table_name, ']', ']]') + '] 
-                                     DROP CONSTRAINT [' + REPLACE(@constraint_name, ']', ']]') + ']';
-                      EXEC sp_executesql @sql; 
-                      FETCH NEXT FROM constraint_cursor INTO @constraint_name, @table_schema, @table_name;
+                      EXEC sp_executesql @sql;
+                      FETCH NEXT FROM fk_cursor INTO @sql;
                   END
-                  CLOSE constraint_cursor;
-                  DEALLOCATE constraint_cursor;
+                  CLOSE fk_cursor;
+                  DEALLOCATE fk_cursor;
 
                   DECLARE table_cursor CURSOR FOR
-                  SELECT 'DROP TABLE [' + REPLACE(SCHEMA_NAME(schema_id), ']', ']]') + '].[' + REPLACE(object_name(object_id), ']', ']]') + '];'
-                  FROM sys.objects
-                  WHERE TYPE = 'U'
+                  SELECT 'DROP TABLE ' + QUOTENAME(SCHEMA_NAME(schema_id)) + '.' + QUOTENAME(name)
+                  FROM sys.tables;
                   
                   OPEN table_cursor;
                   FETCH NEXT FROM table_cursor INTO @sql;
@@ -150,9 +140,8 @@ namespace System.Data.Entity.Migrations
                   DEALLOCATE table_cursor;
 
                   DECLARE sproc_cursor CURSOR FOR
-                  SELECT 'DROP PROCEDURE [' + REPLACE(SCHEMA_NAME(schema_id), ']', ']]') + '].[' + REPLACE(object_name(object_id), ']', ']]') + '];'
-                  FROM sys.objects
-                  WHERE TYPE = 'P'
+                  SELECT 'DROP PROCEDURE ' + QUOTENAME(SCHEMA_NAME(schema_id)) + '.' + QUOTENAME(name)
+                  FROM sys.procedures;
                   
                   OPEN sproc_cursor;
                   FETCH NEXT FROM sproc_cursor INTO @sql;

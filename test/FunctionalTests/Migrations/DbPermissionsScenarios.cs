@@ -49,10 +49,11 @@ namespace System.Data.Entity.Migrations
 
         private void CreateNotPermissionedConfig(DbMigrator migrator)
         {
+            var placeholder = "PLACEHOLDERPass$$w0rd";
             TestDatabase.ExecuteNonQuery(
-                @"IF NOT EXISTS (SELECT * FROM sys.server_principals WHERE name = N'EFDDLAdminOnly')
+                $@"IF NOT EXISTS (SELECT * FROM sys.server_principals WHERE name = N'EFDDLAdminOnly')
 BEGIN
-    CREATE LOGIN [EFDDLAdminOnly] WITH PASSWORD=N'PLACEHOLDERa1', DEFAULT_DATABASE=[MigrationsTest]
+    CREATE LOGIN [EFDDLAdminOnly] WITH PASSWORD=N'{placeholder}', DEFAULT_DATABASE=[MigrationsTest]
 END
 
 USE [MigrationsTest]
@@ -69,7 +70,7 @@ END
                 {
                     IntegratedSecurity = false,
                     UserID = "EFDDLAdminOnly",
-                    Password = "PLACEHOLDERa1"
+                    Password = placeholder
                 };
 
             migrator.Configuration.TargetDatabase
