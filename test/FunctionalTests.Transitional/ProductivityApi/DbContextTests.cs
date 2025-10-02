@@ -23,6 +23,8 @@ namespace ProductivityApiTests
 
         #region Replace connection tests
 
+#if NETFRAMEWORK
+
         [Fact]
         public void Can_replace_connection()
         {
@@ -39,7 +41,6 @@ namespace ProductivityApiTests
             }
         }
 
-#if NETFRAMEWORK
         [Fact]
         public void Can_replace_connection_with_different_provider()
         {

@@ -12414,7 +12414,7 @@ namespace ProductivityApiTests
                 int[] ids = { 1, 2, 3, 4 };
 
                 return await (from product in context.Set<Product>()
-                              where ids.Contains(product.Id)
+                              where ((IEnumerable<int>)ids).Contains(product.Id)
                                  && queryOption == SampleEnumGitHub20.Value1
                               from category in context.Set<Category>()
                               select category).ToListAsync();
@@ -12443,7 +12443,7 @@ namespace ProductivityApiTests
                 var queryOption = SampleEnumGitHub20.Value1;
                 int[] ids = { 1, 2, 3, 4 };
                 return await (from product in Set<Product>()
-                              where ids.Contains(product.Id)
+                              where ((IEnumerable<int>)ids).Contains(product.Id)
                                  && queryOption == SampleEnumGitHub20.Value1
                               from category in Set<Category>()
                               select category).ToListAsync();

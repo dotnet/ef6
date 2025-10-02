@@ -3,10 +3,10 @@
   <PropertyGroup>
     <RootNamespace>System.Data.Entity</RootNamespace>
     <AssemblyName>EntityFramework.FunctionalTests.Transitional</AssemblyName>
-    <TargetFrameworks>net462;$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+    <TargetFrameworks>$(NetFrameworkToolCurrent);$(DefaultNetCoreTargetFramework)</TargetFrameworks>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
+  <ItemGroup Condition="'$(TargetFramework)' == '$(NetFrameworkToolCurrent)'">
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="PresentationCore" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -20,7 +20,7 @@
     <PackageReference Include="Moq" Version="$(MoqVersion)" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
+  <ItemGroup Condition="'$(TargetFramework)' == '$(NetFrameworkToolCurrent)'">
     <PackageReference Include="Microsoft.SqlServer.Compact" Version="$(MicrosoftSqlServerCompactVersion)" />
     <PackageReference Include="Microsoft.SqlServer.Types" Version="$(MicrosoftSqlServerTypesVersion)" />
   </ItemGroup>
@@ -29,17 +29,17 @@
     <ProjectReference Include="..\..\src\EntityFramework.SqlServer\EntityFramework.SqlServer.InternalsVisibleTo.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
+  <ItemGroup Condition="'$(TargetFramework)' == '$(NetFrameworkToolCurrent)'">
     <ProjectReference Include="..\..\src\EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.InternalsVisibleTo.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
+  <ItemGroup Condition="'$(TargetFramework)' == '$(NetFrameworkToolCurrent)'">
     <Compile Include="$(NuGetPackageRoot)microsoft.sqlserver.types\$(MicrosoftSqlServerTypesVersion)\content\SqlServerTypes\Loader.cs">
       <Link>SqlServerTypes\Loader.cs</Link>
     </Compile>
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
+  <ItemGroup Condition="'$(TargetFramework)' == '$(NetFrameworkToolCurrent)'">
     <Content Include="$(NuGetPackageRoot)microsoft.sqlserver.types\$(MicrosoftSqlServerTypesVersion)\content\readme.htm">
       <Link>SqlServerTypes\readme.htm</Link>
     </Content>
@@ -80,7 +80,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <PostBuildEvent Condition="'$(OS)' == 'Windows_NT' And '$(TargetFramework)' == 'net462'">
+    <PostBuildEvent Condition="'$(OS)' == 'Windows_NT' And '$(TargetFramework)' == '$(NetFrameworkToolCurrent)'">
       if not exist "$(TargetDir)x86" md "$(TargetDir)x86"
       xcopy /s /y "$(NuGetPackageRoot)Microsoft.SqlServer.Compact\$(MicrosoftSqlServerCompactVersion)\NativeBinaries\x86\*.*" "$(TargetDir)x86"
       if not exist "$(TargetDir)amd64" md "$(TargetDir)amd64"

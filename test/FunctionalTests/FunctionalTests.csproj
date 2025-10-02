@@ -3,12 +3,12 @@
   <PropertyGroup>
     <RootNamespace>System.Data.Entity</RootNamespace>
     <AssemblyName>EntityFramework.FunctionalTests</AssemblyName>
-    <TargetFrameworks>net462;$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+    <TargetFrameworks>$(NetFrameworkToolCurrent);$(DefaultNetCoreTargetFramework)</TargetFrameworks>
     <DefineConstants>$(DefineConstants);EF_FUNCTIONALS</DefineConstants>
     <NoWarn>$(NoWarn);CS0169</NoWarn>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
+  <ItemGroup Condition="'$(TargetFramework)' == '$(NetFrameworkToolCurrent)'">
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
@@ -16,7 +16,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
+  <ItemGroup Condition="'$(TargetFramework)' == '$(NetFrameworkToolCurrent)'">
     <ProjectReference Include="..\..\src\EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.InternalsVisibleTo.csproj" />
   </ItemGroup>
 
@@ -24,7 +24,7 @@
     <ProjectReference Include="..\..\src\EntityFramework.SqlServer\EntityFramework.SqlServer.InternalsVisibleTo.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
+  <ItemGroup Condition="'$(TargetFramework)' == '$(NetFrameworkToolCurrent)'">
     <Content Include="$(NuGetPackageRoot)microsoft.sqlserver.types\$(MicrosoftSqlServerTypesVersion)\content\readme.htm">
       <Link>SqlServerTypes\readme.htm</Link>
     </Content>
@@ -344,7 +344,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <PostBuildEvent Condition="'$(OS)' == 'Windows_NT' And '$(TargetFramework)' == 'net462'">
+    <PostBuildEvent Condition="'$(OS)' == 'Windows_NT' And '$(TargetFramework)' == '$(NetFrameworkToolCurrent)'">
       if not exist "$(TargetDir)x86" md "$(TargetDir)x86"
       xcopy /s /y "$(NuGetPackageRoot)Microsoft.SqlServer.Compact\$(MicrosoftSqlServerCompactVersion)\NativeBinaries\x86\*.*" "$(TargetDir)x86"
       if not exist "$(TargetDir)amd64" md "$(TargetDir)amd64"
