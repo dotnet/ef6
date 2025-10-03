@@ -3,7 +3,7 @@
   <PropertyGroup>
     <RootNamespace>System.Data.Entity</RootNamespace>
     <AssemblyName>EntityFramework.UnitTests</AssemblyName>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>$(NetFrameworkToolCurrent)</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>

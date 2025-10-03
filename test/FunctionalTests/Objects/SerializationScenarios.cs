@@ -126,7 +126,6 @@ namespace System.Data.Entity.Objects
                 Assert.Equal(88, deserialized.MeComplexTypeS.Number);
             }
         }
-#endif
 
         [Fact]
         public void Change_tracking_proxy_can_be_data_contract_deserialized_with_resolver_when_running_under_full_trust()
@@ -194,7 +193,6 @@ namespace System.Data.Entity.Objects
             }
         }
 
-#if NETFRAMEWORK
         [Fact]
         public void Simple_entities_can_be_binary_serialized_when_running_under_full_trust()
         {
@@ -304,9 +302,6 @@ namespace System.Data.Entity.Objects
                 Assert.Equal(88, deserialized.MeComplexTypeS.Number);
             }
         }
-#endif
-
-
         
         [Fact]
         public void Stored_change_tracking_proxy_can_be_data_contract_deserialized_with_resolver_when_running_under_full_trust()
@@ -377,7 +372,6 @@ namespace System.Data.Entity.Objects
             }
         }
 
-#if NETFRAMEWORK
         [Fact]
         public void Graph_serialization_preserves_related_entities_deserialized_with_binary_deserializer()
         {
