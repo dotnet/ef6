@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
 
@@ -124,6 +125,32 @@ namespace System.Data.Entity.Core.Objects.ELinq
                    ((ConstantExpression)expression).Value.Equals(0);
         }
 
+#if NETSTANDARD2_1
+        // <summary>
+        // Attempts to unwrap an implicit Span or ReadOnlySpan cast expression to get the underlying array or collection.
+        // This is used to rewrite MemoryExtensions methods that operate on Span/ReadOnlySpan back to Enumerable methods.
+        // </summary>
+        private static bool TryUnwrapSpanImplicitCast(Expression expression, out Expression result)
+        {
+            if (expression is MethodCallExpression methodCallExpr
+                && methodCallExpr.Method.Name == "op_Implicit"
+                && methodCallExpr.Method.DeclaringType != null
+                && methodCallExpr.Method.DeclaringType.IsGenericType
+                && methodCallExpr.Arguments.Count == 1)
+            {
+                var genericTypeDefinition = methodCallExpr.Method.DeclaringType.GetGenericTypeDefinition();
+                if (genericTypeDefinition == typeof(Span<>) || genericTypeDefinition == typeof(ReadOnlySpan<>))
+                {
+                    result = methodCallExpr.Arguments[0];
+                    return true;
+                }
+            }
+
+            result = null;
+            return false;
+        }
+#endif
+
         // <summary>
         // Handles MethodCall patterns:
         // - Operator overloads
@@ -132,6 +159,51 @@ namespace System.Data.Entity.Core.Objects.ELinq
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         internal override Expression VisitMethodCall(MethodCallExpression m)
         {
+#if NETSTANDARD2_1
+            // .NET 10 made changes to overload resolution to prefer Span-based overloads when those exist ("first-class spans").
+            // Unfortunately, the LINQ interpreter does not support ref structs, so we rewrite e.g. MemoryExtensions.Contains to
+            // Enumerable.Contains here.
+            // See:
+            //   https://github.com/dotnet/ef6/issues/2322
+            //   https://github.com/dotnet/runtime/issues/109757
+            //   https://github.com/dotnet/efcore/pull/35339
+            // Note: This check must occur before base.VisitMethodCall() to detect op_Implicit before it's normalized to Convert.
+            if (m.Method.DeclaringType == typeof(MemoryExtensions))
+            {
+                switch (m.Method.Name)
+                {
+                    // Note that MemoryExtensions.Contains has an optional 3rd ComparisonType parameter; we only match when
+                    // it's null.
+                    case nameof(MemoryExtensions.Contains)
+                        when m.Arguments.Count >= 2
+                        && (m.Arguments.Count == 2
+                            || m.Arguments.Count == 3 && m.Arguments[2] is ConstantExpression constantExpr && constantExpr.Value == null)
+                        && TryUnwrapSpanImplicitCast(m.Arguments[0], out var unwrappedSpanArg):
+                    {
+                        var containsMethod = typeof(System.Linq.Enumerable).GetMethods()
+                            .Where(method => method.Name == nameof(Enumerable.Contains) && method.GetParameters().Length == 2)
+                            .Single()
+                            .MakeGenericMethod(m.Method.GetGenericArguments()[0]);
+
+                        return Visit(Expression.Call(containsMethod, unwrappedSpanArg, m.Arguments[1]));
+                    }
+
+                    case nameof(MemoryExtensions.SequenceEqual)
+                        when m.Arguments.Count == 2
+                        && TryUnwrapSpanImplicitCast(m.Arguments[0], out var unwrappedSpanArg1)
+                        && TryUnwrapSpanImplicitCast(m.Arguments[1], out var unwrappedSpanArg2):
+                    {
+                        var sequenceEqualMethod = typeof(System.Linq.Enumerable).GetMethods()
+                            .Where(method => method.Name == nameof(Enumerable.SequenceEqual) && method.GetParameters().Length == 2)
+                            .Single()
+                            .MakeGenericMethod(m.Method.GetGenericArguments()[0]);
+
+                        return Visit(Expression.Call(sequenceEqualMethod, unwrappedSpanArg1, unwrappedSpanArg2));
+                    }
+                }
+            }
+#endif
+
             m = (MethodCallExpression)base.VisitMethodCall(m);
 
             if (m.Method.IsStatic)
