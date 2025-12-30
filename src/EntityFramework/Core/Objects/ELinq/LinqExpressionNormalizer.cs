@@ -161,8 +161,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
         {
 #if NETSTANDARD2_1
             // .NET 10 made changes to overload resolution to prefer Span-based overloads when those exist ("first-class spans").
-            // Unfortunately, the LINQ interpreter does not support ref structs, so we rewrite e.g. MemoryExtensions.Contains to
-            // Enumerable.Contains here.
+            // Unfortunately, EF6's query translator does not recognize MemoryExtensions methods, so we rewrite e.g.
+            // MemoryExtensions.Contains to Enumerable.Contains here.
             // See:
             //   https://github.com/dotnet/ef6/issues/2322
             //   https://github.com/dotnet/runtime/issues/109757
