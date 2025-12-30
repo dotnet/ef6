@@ -63,6 +63,10 @@
     <!-- Tests using System.Diagnostics.EventLog or AppDomain (incompatible with .NET Core) -->
     <Compile Remove="Infrastructure\DbExecutionStrategyTests.cs" />
     <Compile Remove="Infrastructure\Design\ForwardingProxyTests.cs" />
+
+    <!-- Tests using obsolete APIs that cause build errors in Release mode -->
+    <Compile Remove="Infrastructure\Design\ExecutorTests.cs" />
+    <Compile Remove="Migrations\Utilities\ConfigurationFileUpdaterTests.cs" />
   </ItemGroup>
 
   <ItemGroup>
