@@ -39,6 +39,20 @@ namespace System.Data.Entity.Core.Objects.ELinq
         // </summary>
         private readonly Dictionary<Expression, Pattern> _patterns = new Dictionary<Expression, Pattern>();
 
+#if NETSTANDARD2_1
+        // Cache for Enumerable.Contains method lookup to avoid repeated reflection
+        private static readonly Lazy<MethodInfo> _enumerableContainsMethod = new Lazy<MethodInfo>(() =>
+            typeof(System.Linq.Enumerable).GetMethods()
+                .Where(method => method.Name == nameof(Enumerable.Contains) && method.GetParameters().Length == 2)
+                .Single());
+
+        // Cache for Enumerable.SequenceEqual method lookup to avoid repeated reflection
+        private static readonly Lazy<MethodInfo> _enumerableSequenceEqualMethod = new Lazy<MethodInfo>(() =>
+            typeof(System.Linq.Enumerable).GetMethods()
+                .Where(method => method.Name == nameof(Enumerable.SequenceEqual) && method.GetParameters().Length == 2)
+                .Single());
+#endif
+
         // <summary>
         // Handle binary patterns:
         // - VB 'Is' operator
@@ -180,10 +194,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                             || m.Arguments.Count == 3 && m.Arguments[2] is ConstantExpression constantExpr && constantExpr.Value == null)
                         && TryUnwrapSpanImplicitCast(m.Arguments[0], out var unwrappedSpanArg):
                     {
-                        var containsMethod = typeof(System.Linq.Enumerable).GetMethods()
-                            .Where(method => method.Name == nameof(Enumerable.Contains) && method.GetParameters().Length == 2)
-                            .Single()
-                            .MakeGenericMethod(m.Method.GetGenericArguments()[0]);
+                        var containsMethod = _enumerableContainsMethod.Value.MakeGenericMethod(m.Method.GetGenericArguments()[0]);
 
                         return Visit(Expression.Call(containsMethod, unwrappedSpanArg, m.Arguments[1]));
                     }
@@ -193,10 +204,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                         && TryUnwrapSpanImplicitCast(m.Arguments[0], out var unwrappedSpanArg1)
                         && TryUnwrapSpanImplicitCast(m.Arguments[1], out var unwrappedSpanArg2):
                     {
-                        var sequenceEqualMethod = typeof(System.Linq.Enumerable).GetMethods()
-                            .Where(method => method.Name == nameof(Enumerable.SequenceEqual) && method.GetParameters().Length == 2)
-                            .Single()
-                            .MakeGenericMethod(m.Method.GetGenericArguments()[0]);
+                        var sequenceEqualMethod = _enumerableSequenceEqualMethod.Value.MakeGenericMethod(m.Method.GetGenericArguments()[0]);
 
                         return Visit(Expression.Call(sequenceEqualMethod, unwrappedSpanArg1, unwrappedSpanArg2));
                     }
