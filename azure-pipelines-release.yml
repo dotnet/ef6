@@ -1,0 +1,63 @@
+trigger: none
+name: $(Date:yyyyMMdd).$(Rev:r)
+resources:
+  pipelines:
+  - pipeline: 'drops'
+    project: 'internal'
+    source: 'dotnet\ef6\ef6-ci-official'
+  repositories:
+  - repository: 1ESPipelineTemplates
+    type: git
+    name: 1ESPipelineTemplates/1ESPipelineTemplates
+    ref: refs/tags/release
+extends:
+  template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
+  parameters:
+    pool:
+      name: $(DncEngInternalBuildPool)
+      image: 1es-windows-2022
+      os: windows
+    featureFlags:
+      sdlNugetPathOptimization: true
+    stages:
+    - stage: Nuget
+      displayName: Push to Nuget.org
+      jobs:
+      - job: PreDeploymentApprovalJob
+        displayName: Pre-Deployment Approval
+        condition: succeeded()
+        timeoutInMinutes: 43200
+        pool: server
+        steps:
+        - task: ManualValidation@1
+          inputs:
+            notifyUsers: |-
+              [TEAM FOUNDATION]\.NET AppFx Engineering Managers,
+              [TEAM FOUNDATION]\.NET Entity Framework and Data Build Team
+            approvers: |-
+              [TEAM FOUNDATION]\.NET AppFx Engineering Managers,
+              [TEAM FOUNDATION]\.NET Entity Framework and Data Build Team
+      - job: Deploy
+        dependsOn: PreDeploymentApprovalJob
+        condition: succeeded()
+        templateContext:
+          type: releaseJob
+          isProduction: true
+          inputs:
+          - input: pipelineArtifact
+            pipeline: 'ef6-ci-official'
+            artifactName: 'build_Windows_SBOM'
+            targetPath: '$(Pipeline.Workspace)/build_Windows_SBOM'
+        steps:
+        - task: NuGetToolInstaller@1
+          displayName: Use NuGet 7.x
+          inputs:
+            versionSpec: 7.x
+            checkLatest: true
+        - task: 1ES.PublishNuGet@1
+          displayName: 'NuGet push'
+          inputs:
+            packageParentPath: '$(Build.ArtifactStagingDirectory)'
+            packagesToPush: $(System.DefaultWorkingDirectory)/drops/PackageArtifacts/**/*.nupkg;!$(System.DefaultWorkingDirectory)/drops/**/*.symbols.nupkg
+            nuGetFeedType: external
+            publishFeedCredentials: nuget.org (efcore client owner)
