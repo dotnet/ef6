@@ -44,7 +44,7 @@ extends:
       binskim:
         scanOutputDirectoryOnly: true
         preReleaseVersion: '4.3.1'
-        analyzeTargetGlob: '+:f|artifacts/bin/**/*.dll;+:f|artifacts/bin/**/*.exe;'
+        analyzeTargetGlob: +:f|artifacts/bin/**/*.dll;+:f|artifacts/bin/**/*.exe;
       env:
         GDN_EXTRACT_TOOLS: "binskim"
         GDN_EXTRACT_TARGETS: true
