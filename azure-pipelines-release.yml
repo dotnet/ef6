@@ -2,7 +2,7 @@ trigger: none
 name: $(Date:yyyyMMdd).$(Rev:r)
 resources:
   pipelines:
-  - pipeline: 'drops'
+  - pipeline: 'ef6-ci-official'
     project: 'internal'
     source: 'dotnet\ef6\ef6-ci-official'
   repositories:
@@ -46,8 +46,8 @@ extends:
           inputs:
           - input: pipelineArtifact
             pipeline: 'ef6-ci-official'
-            artifactName: 'build_Windows_SBOM'
-            targetPath: '$(Pipeline.Workspace)/build_Windows_SBOM'
+            artifactName: 'PackageArtifacts'
+            targetPath: '$(Pipeline.Workspace)/PackageArtifacts'
         steps:
         - task: NuGetToolInstaller@1
           displayName: Use NuGet 7.x
@@ -57,7 +57,7 @@ extends:
         - task: 1ES.PublishNuGet@1
           displayName: 'NuGet push'
           inputs:
-            packageParentPath: '$(Build.ArtifactStagingDirectory)'
-            packagesToPush: $(System.DefaultWorkingDirectory)/drops/PackageArtifacts/**/*.nupkg;!$(System.DefaultWorkingDirectory)/drops/**/*.symbols.nupkg
+            packageParentPath: '$(Pipeline.Workspace)/PackageArtifacts'
+            packagesToPush: '**/*.nupkg;!**/*.symbols.nupkg'
             nuGetFeedType: external
             publishFeedCredentials: nuget.org (efcore client owner)
