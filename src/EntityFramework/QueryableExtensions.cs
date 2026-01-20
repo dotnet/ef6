@@ -599,7 +599,7 @@ namespace System.Data.Entity
         /// Returns a new query where the entities returned will not be cached in the <see cref="DbContext" />
         /// or <see cref="ObjectContext" />.  This method works by calling the AsNoTracking method of the
         /// underlying query object.  If the underlying query object does not have an AsNoTracking method,
-        /// then calling this method will have no affect.
+        /// then calling this method will have no effect.
         /// </summary>
         /// <typeparam name="T"> The element type. </typeparam>
         /// <param name="source"> The source query. </param>
@@ -616,7 +616,7 @@ namespace System.Data.Entity
         /// Returns a new query where the entities returned will not be cached in the <see cref="DbContext" />
         /// or <see cref="ObjectContext" />.  This method works by calling the AsNoTracking method of the
         /// underlying query object.  If the underlying query object does not have an AsNoTracking method,
-        /// then calling this method will have no affect.
+        /// then calling this method will have no effect.
         /// </summary>
         /// <param name="source"> The source query. </param>
         /// <returns> A new query with NoTracking applied, or the source query if NoTracking is not supported. </returns>
