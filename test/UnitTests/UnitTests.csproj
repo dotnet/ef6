@@ -1,12 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <RootNamespace>System.Data.Entity</RootNamespace>
     <AssemblyName>EntityFramework.UnitTests</AssemblyName>
-    <TargetFramework>$(NetFrameworkToolCurrent)</TargetFramework>
+    <TargetFrameworks>$(NetFrameworkToolCurrent);$(DefaultNetCoreTargetFramework)</TargetFrameworks>
   </PropertyGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -14,6 +14,17 @@
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+
+  <!--
+    For .NET 10+ builds, only include Span-related tests. The vast majority of the UnitTests project
+    depends on .NET Framework-specific infrastructure (SqlServerCe, Remoting, BinaryFormatter, etc.)
+    and was not designed for cross-platform use. Rather than exclude hundreds of tests, we include
+    only the tests relevant for .NET 10+ scenarios.
+  -->
+  <ItemGroup Condition="'$(TargetFramework)' == '$(DefaultNetCoreTargetFramework)'">
+    <Compile Remove="**\*.cs" />
+    <Compile Include="**\LinqExpressionNormalizerTests.cs" />
   </ItemGroup>
 
   <ItemGroup>

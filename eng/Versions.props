@@ -12,7 +12,7 @@
     -->
     <StabilizePackageVersion Condition="'$(StabilizePackageVersion)' == ''">false</StabilizePackageVersion>
     <DotNetFinalVersionKind Condition="'$(StabilizePackageVersion)' == 'true'">release</DotNetFinalVersionKind>
-    <DefaultNetCoreTargetFramework>net9.0</DefaultNetCoreTargetFramework>
+    <DefaultNetCoreTargetFramework>net10.0</DefaultNetCoreTargetFramework>
   </PropertyGroup>
   <PropertyGroup Label="Dependencies from nuget.org">
     <MicrosoftBuildFrameworkVersion>16.0.461</MicrosoftBuildFrameworkVersion>
