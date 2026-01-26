@@ -1,13 +1,13 @@
 {
   "tools": {
-    "dotnet": "11.0.100-alpha.1.26060.102"
+    "dotnet": "11.0.100-alpha.1.26064.118"
   },
   "sdk": {
-    "version": "11.0.100-alpha.1.26060.102",
+    "version": "11.0.100-alpha.1.26064.118",
     "allowPrerelease": true,
     "rollForward": "latestMajor"
   },
   "msbuild-sdks": {
-    "Microsoft.DotNet.Arcade.Sdk": "11.0.0-beta.26067.2"
+    "Microsoft.DotNet.Arcade.Sdk": "11.0.0-beta.26073.1"
   }
 }
