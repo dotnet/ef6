@@ -53,6 +53,8 @@ extends:
         enabled: true
       tsa:
         enabled: true
+      settings:
+        networkIsolationPolicy: Permissive,CFSClean,CFSClean2
     customBuildTags:
     - ES365AIMigrationTooling
     stages:
