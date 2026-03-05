@@ -32,7 +32,9 @@ extends:
   parameters:
     featureFlags:
       autoBaseline: false
+      usePrefastVersion3: true
     sdl:
+      createAdoIssuesForJustificationsForDisablement: false
       sourceAnalysisPool:
         name: $(DncEngInternalBuildPool)
         image: 1es-windows-2022
@@ -41,10 +43,18 @@ extends:
         baselineFile: $(Build.SourcesDirectory)\.config\guardian\.gdnbaselines
       binskim:
         scanOutputDirectoryOnly: true
+        preReleaseVersion: '4.3.1'
+        analyzeTargetGlob: +:f|artifacts/bin/**/*.dll;+:f|artifacts/bin/**/*.exe;
+      env:
+        GDN_EXTRACT_TOOLS: "binskim"
+        GDN_EXTRACT_TARGETS: true
+        GDN_EXTRACT_FILTER: "f|**\\*.zip;f|**\\*.nupkg;f|**\\*.vsix;f|**\\*.cspkg;f|**\\*.sfpkg;f|**\\*.package"
       policheck:
         enabled: true
       tsa:
         enabled: true
+      settings:
+        networkIsolationPolicy: Permissive,CFSClean,CFSClean2
     customBuildTags:
     - ES365AIMigrationTooling
     stages:
@@ -60,11 +70,15 @@ extends:
           enablePublishUsingPipelines: ${{ variables._PublishUsingPipelines }}
           enableTelemetry: true
           helixRepo: dotnet/ef6
+          # WORKAROUND: BinSkim requires the folder to exist prior to scanning.
+          preSteps:
+          - powershell: New-Item -ItemType Directory -Path $(Build.SourcesDirectory)/artifacts/bin -Force
+            displayName: Create artifacts/bin directory
           jobs:
           - job: Windows
             pool:
               name: $(DncEngInternalBuildPool)
-              demands: ImageOverride -equals 1es-windows-2019
+              demands: ImageOverride -equals 1es-windows-2022
               os: windows
             timeoutInMinutes: 240
             variables:
@@ -72,6 +86,7 @@ extends:
               - _InternalBuildArgs: ''
               - ${{ if notin(variables['Build.Reason'], 'PullRequest') }}:
                 - _SignType: real
+                - _Sign: true
                 - _InternalBuildArgs: /p:DotNetSignType=$(_SignType) /p:TeamName=$(_TeamName) /p:OfficialBuildId=$(BUILD.BUILDNUMBER) /p:DotNetPublishUsingPipelines=$(_PublishUsingPipelines) /p:DotNetArtifactsCategory=$(_DotNetArtifactsCategory)
               # Ignore test and infrastructure code.
               - Codeql.SourceRoot: src
@@ -80,8 +95,6 @@ extends:
               # Default expects tsaoptions.json under SourceRoot.
               - Codeql.TSAOptionsPath: '$(Build.SourcesDirectory)/.config/tsaoptions.json'
             steps:
-              - checkout: self
-                clean: true
               - powershell: >
                   Get-ChildItem -ErrorAction SilentlyContinue -Recurse 'C:\Program Files\Microsoft SQL Server\sqlcmd.exe' | Sort-Object -Property @{Expression={$_.FullName.Length}; Descending=$true},@{Expression={$_.FullName}; Descending=$true} | Select-Object -First 1 | Foreach-Object {Write-Host "##vso[task.prependpath]$($_.DirectoryName)"}
                 displayName: Add SqlCmd to path
@@ -108,6 +121,14 @@ extends:
                 displayName: Upload TestResults
                 condition: always()
                 path: artifacts/TestResults/$(_BuildConfig)/
-                artifact: $(Agent.Os)_$(Agent.JobName) TestResults
+                artifact: $(Agent.Os)_$(Agent.JobName)$(System.JobAttempt) TestResults
     - ${{ if notin(variables['Build.Reason'], 'PullRequest') }}:
       - template: /eng/common/templates-official/post-build/post-build.yml@self
+        parameters:
+          publishingInfraVersion: 3
+          enableSigningValidation: false
+          enableNugetValidation: false
+          enableSourceLinkValidation: false
+          publishAssetsImmediately: true
+          SDLValidationParameters:
+            enable: false
