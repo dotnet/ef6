@@ -15,6 +15,12 @@ namespace System.Data.Entity.Migrations
         private DatabaseProvider _provider;
         private ProgrammingLanguage _language;
 
+        [Obsolete]
+        public MigrationsTestCase()
+        {
+            // Parameterless constructor for deserialization
+        }
+
         public MigrationsTestCase(IMessageSink diagnosticMessageSink, TestMethodDisplay defaultMethodDisplay, TestMethodDisplayOptions defaultMethodDisplayOptions, ITestMethod testMethod, DatabaseProvider provider, ProgrammingLanguage language)
             : base(diagnosticMessageSink, defaultMethodDisplay, defaultMethodDisplayOptions, testMethod)
         {
