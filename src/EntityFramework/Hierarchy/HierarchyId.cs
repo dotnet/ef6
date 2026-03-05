@@ -18,7 +18,7 @@ namespace System.Data.Entity.Hierarchy
     public class HierarchyId : IComparable
     {
         private readonly string _hierarchyId;
-        private readonly int[][] _nodes;
+        private readonly long[][] _nodes;
 
         /// <summary>
         /// The Path separator character
@@ -62,16 +62,16 @@ namespace System.Data.Entity.Hierarchy
                         string.Format(CultureInfo.InvariantCulture, InvalidHierarchyIdExceptionMessage, hierarchyId), "hierarchyId");
                 }
                 int nodesCount = nodesStr.Length - 2;
-                var nodes = new int[nodesCount][];
+                var nodes = new long[nodesCount][];
                 for (int i = 0; i < nodesCount; i++)
                 {
                     string node = nodesStr[i + 1];
                     var intsStr = node.Split('.');
-                    var ints = new int[intsStr.Length];
+                    var ints = new long[intsStr.Length];
                     for (int j = 0; j < intsStr.Length; j++)
                     {
-                        int num;
-                        if (!int.TryParse(intsStr[j], out num))
+                        long num;
+                        if (!long.TryParse(intsStr[j], out num))
                         {
                             throw new ArgumentException(
                                 string.Format(CultureInfo.InvariantCulture, InvalidHierarchyIdExceptionMessage, hierarchyId), "hierarchyId");
@@ -195,7 +195,7 @@ namespace System.Data.Entity.Hierarchy
             }
             else
             {
-                child1LastNode = child1LastNode.Concat(new[] { 1 }).ToArray();
+                child1LastNode = child1LastNode.Concat(new[] { 1L }).ToArray();
             }
             hierarchyStr = PathSeparator +
                            string.Join(PathSeparator, _nodes.Select(IntArrayToStirng))
@@ -300,18 +300,18 @@ namespace System.Data.Entity.Hierarchy
             return new HierarchyId(input);
         }
 
-        private static string IntArrayToStirng(IEnumerable<int> array)
+        private static string IntArrayToStirng(IEnumerable<long> array)
         {
             return string.Join(".", array);
         }
 
-        private static int CompareIntArrays(int[] array1, int[] array2)
+        private static int CompareIntArrays(long[] array1, long[] array2)
         {
             int count = Math.Min(array1.Length, array2.Length);
             for (int i = 0; i < count; i++)
             {
-                int item1 = array1[i];
-                int item2 = array2[i];
+                long item1 = array1[i];
+                long item2 = array2[i];
                 if (item1 < item2)
                 {
                     return -1;
