@@ -72,8 +72,8 @@ extends:
           helixRepo: dotnet/ef6
           # WORKAROUND: BinSkim requires the folder to exist prior to scanning.
           preSteps:
-          - powershell: New-Item -ItemType Directory -Path $(Build.SourcesDirectory)/artifacts/bin -Force
-            displayName: Create artifacts/bin directory
+            - powershell: New-Item -ItemType Directory -Path $(Build.SourcesDirectory)/artifacts/bin -Force
+              displayName: Create artifacts/bin directory
           jobs:
           - job: Windows
             pool:
