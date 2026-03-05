@@ -7,6 +7,7 @@
     <Description>Allows SQL Server Compact 4.0 to be used with Entity Framework.</Description>
     <AssemblyVersion>6.0.0.0</AssemblyVersion>
     <DefineConstants>$(DefineConstants);SQLSERVERCOMPACT;INTERNALS_INVISIBLE</DefineConstants>
+    <IncludeSymbols>true</IncludeSymbols>
     <IsPackable>True</IsPackable>
     <PackageTags>$(PackageTags);SQL Compact;CE</PackageTags>
     <NuspecFile>$(MSBuildThisFileDirectory)$(MSBuildProjectName).nuspec</NuspecFile>
