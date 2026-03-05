@@ -102,7 +102,7 @@ namespace System.Data.Entity.Hierarchy
                 return new HierarchyId(PathSeparator);
             }
             string hierarchyStr = PathSeparator +
-                                  string.Join(PathSeparator, _nodes.Take(GetLevel() - n).Select(IntArrayToStirng))
+                                  string.Join(PathSeparator, _nodes.Take(GetLevel() - n).Select(LongArrayToString))
                                   + PathSeparator;
             return new HierarchyId(hierarchyStr);
         }
@@ -156,7 +156,7 @@ namespace System.Data.Entity.Hierarchy
                 //decrease the last part of the last node of the 1nd child
                 lastNode[lastNode.Length - 1]--;
                 hierarchyStr = PathSeparator +
-                               string.Join(PathSeparator, result._nodes.Select(IntArrayToStirng))
+                               string.Join(PathSeparator, result._nodes.Select(LongArrayToString))
                                + PathSeparator;
                 return new HierarchyId(hierarchyStr);
             }
@@ -167,13 +167,13 @@ namespace System.Data.Entity.Hierarchy
                 //increase the last part of the last node of the 2nd child
                 lastNode[lastNode.Length - 1]++;
                 hierarchyStr = PathSeparator +
-                               string.Join(PathSeparator, result._nodes.Select(IntArrayToStirng))
+                               string.Join(PathSeparator, result._nodes.Select(LongArrayToString))
                                + PathSeparator;
                 return new HierarchyId(hierarchyStr);
             }
             var child1LastNode = child1._nodes.Last();
             var child2LastNode = child2._nodes.Last();
-            var cmp = CompareIntArrays(child1LastNode, child2LastNode);
+            var cmp = CompareLongArrays(child1LastNode, child2LastNode);
             if (cmp >= 0)
             {
                 throw new ArgumentException(
@@ -198,9 +198,9 @@ namespace System.Data.Entity.Hierarchy
                 child1LastNode = child1LastNode.Concat(new[] { 1L }).ToArray();
             }
             hierarchyStr = PathSeparator +
-                           string.Join(PathSeparator, _nodes.Select(IntArrayToStirng))
+                           string.Join(PathSeparator, _nodes.Select(LongArrayToString))
                            + PathSeparator
-                           + IntArrayToStirng(child1LastNode)
+                           + LongArrayToString(child1LastNode)
                            + PathSeparator;
             return new HierarchyId(hierarchyStr);
         }
@@ -247,7 +247,7 @@ namespace System.Data.Entity.Hierarchy
             }
             for (int i = 0; i < parent.GetLevel(); i++)
             {
-                int cmp = CompareIntArrays(_nodes[i], parent._nodes[i]);
+                int cmp = CompareLongArrays(_nodes[i], parent._nodes[i]);
                 if (cmp != 0)
                 {
                     return false;
@@ -279,12 +279,12 @@ namespace System.Data.Entity.Hierarchy
             sb.Append(PathSeparator);
             foreach (var node in newRoot._nodes)
             {
-                sb.Append(IntArrayToStirng(node));
+                sb.Append(LongArrayToString(node));
                 sb.Append(PathSeparator);
             }
             foreach (var node in _nodes.Skip(oldRoot.GetLevel()))
             {
-                sb.Append(IntArrayToStirng(node));
+                sb.Append(LongArrayToString(node));
                 sb.Append(PathSeparator);
             }
             return new HierarchyId(sb.ToString());
@@ -300,12 +300,12 @@ namespace System.Data.Entity.Hierarchy
             return new HierarchyId(input);
         }
 
-        private static string IntArrayToStirng(IEnumerable<long> array)
+        private static string LongArrayToString(IEnumerable<long> array)
         {
             return string.Join(".", array);
         }
 
-        private static int CompareIntArrays(long[] array1, long[] array2)
+        private static int CompareLongArrays(long[] array1, long[] array2)
         {
             int count = Math.Min(array1.Length, array2.Length);
             for (int i = 0; i < count; i++)
@@ -365,7 +365,7 @@ namespace System.Data.Entity.Hierarchy
             {
                 var node1 = nodes1[i];
                 var node2 = nodes2[i];
-                int cmp = CompareIntArrays(node1, node2);
+                int cmp = CompareLongArrays(node1, node2);
                 if (cmp != 0)
                 {
                     return cmp;
