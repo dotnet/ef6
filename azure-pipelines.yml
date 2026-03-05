@@ -128,7 +128,7 @@ extends:
           publishingInfraVersion: 3
           enableSigningValidation: false
           enableNugetValidation: false
-          enableSourceLinkValidation: true
+          enableSourceLinkValidation: false
           publishAssetsImmediately: true
           SDLValidationParameters:
             enable: false

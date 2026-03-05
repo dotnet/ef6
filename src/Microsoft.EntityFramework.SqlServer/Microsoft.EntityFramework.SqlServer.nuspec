@@ -19,10 +19,8 @@
   <files>
     $CommonFileElements$
     <file src="../../artifacts/bin/Microsoft.EntityFramework.SqlServer/$Configuration$/net462/Microsoft.EntityFramework.SqlServer.dll" target="lib/net462/" />
-    <file src="../../artifacts/bin/Microsoft.EntityFramework.SqlServer/$Configuration$/net462/Microsoft.EntityFramework.SqlServer.pdb" target="lib/net462/" />
     <file src="../../artifacts/bin/Microsoft.EntityFramework.SqlServer/$Configuration$/net462/Microsoft.EntityFramework.SqlServer.xml" target="lib/net462/" />
     <file src="../../artifacts/bin/Microsoft.EntityFramework.SqlServer/$Configuration$/netstandard2.1/Microsoft.EntityFramework.SqlServer.dll" target="lib/netstandard2.1/" />
-    <file src="../../artifacts/bin/Microsoft.EntityFramework.SqlServer/$Configuration$/netstandard2.1/Microsoft.EntityFramework.SqlServer.pdb" target="lib/netstandard2.1/" />
     <file src="../../artifacts/bin/Microsoft.EntityFramework.SqlServer/$Configuration$/netstandard2.1/Microsoft.EntityFramework.SqlServer.xml" target="lib/netstandard2.1/" />
     <file src="../../artifacts/bin/Microsoft.EntityFramework.SqlServer/$Configuration$/net462/readme.md" target="/" />  
   </files>
