@@ -9,6 +9,26 @@ namespace System.Data.Entity.Spatial
     public class HierarchyIdUnitTests
     {
         [Fact]
+        public void Parse_hierarchyid_with_numbers_outside_Int32_range()
+        {
+            var hid = HierarchyId.Parse("/239196746533516.54209197962074.2160059995/");
+            Assert.NotNull(hid);
+            Assert.Equal("/239196746533516.54209197962074.2160059995/", hid.ToString());
+            Assert.Equal(1, hid.GetLevel());
+        }
+
+        [Fact]
+        public void Compare_hierarchyids_with_large_numbers()
+        {
+            var hid1 = new HierarchyId("/239196746533516/");
+            var hid2 = new HierarchyId("/239196746533517/");
+            Assert.True(hid1 < hid2);
+            Assert.True(hid2 > hid1);
+            Assert.True(hid1 != hid2);
+            Assert.Equal(hid1, new HierarchyId("/239196746533516/"));
+        }
+
+        [Fact]
         public void Check_hierarchyid_functions()
         {
 // ReSharper disable ConditionIsAlwaysTrueOrFalse
