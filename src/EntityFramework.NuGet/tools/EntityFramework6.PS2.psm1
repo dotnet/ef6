@@ -475,7 +475,7 @@ function Get-Migrations(
     $ConnectionString,
     $ConnectionProviderName,
     $AppDomainBaseDirectory)
-
+{
     WarnIfOtherEFs 'Get-Migrations'
     throw $UpdatePowerShell
 }
