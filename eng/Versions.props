@@ -30,4 +30,9 @@
     <SystemDataSqlClientVersion>4.8.6</SystemDataSqlClientVersion>
     <MicrosoftDataSqlClientVersion>5.1.6</MicrosoftDataSqlClientVersion>
   </PropertyGroup>
+  
+  <PropertyGroup Label="XUnit version overrides for net462" Condition="'$(TargetFramework)' == 'net462'">
+    <XUnitVersion>2.9.3</XUnitVersion>
+    <XUnitRunnerVisualstudioVersion>2.8.2</XUnitRunnerVisualstudioVersion>
+  </PropertyGroup>
 </Project>
