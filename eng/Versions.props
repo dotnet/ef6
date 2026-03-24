@@ -11,7 +11,7 @@
         When StabilizePackageVersion is set to 'true', this branch will produce stable outputs for 'Shipping' packages
     -->
     <StabilizePackageVersion Condition="'$(StabilizePackageVersion)' == ''">true</StabilizePackageVersion>
-    <DotNetFinalVersionKind Condition="'$(StabilizePackageVersion)' == 'true'">release</DotNetFinalVersionKind>
+    <DotNetFinalVersionKind Condition="'$(StabilizePackageVersion)' == 'true'">prerelease</DotNetFinalVersionKind>
   </PropertyGroup>
   <PropertyGroup Label="Dependencies from nuget.org">
     <MicrosoftBuildFrameworkVersion>16.0.461</MicrosoftBuildFrameworkVersion>
