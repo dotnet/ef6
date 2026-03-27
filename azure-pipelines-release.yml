@@ -32,11 +32,12 @@ extends:
             - task: ManualValidation@1
               inputs:
                 notifyUsers: |-
-                  [TEAM FOUNDATION]\.NET AppFx Engineering Managers,
-                  [TEAM FOUNDATION]\.NET Entity Framework and Data Build Team
+                  dotnetlib_managers@microsoft.com,
+                  efdatabuildteam@microsoft.com
                 approvers: |-
-                  [TEAM FOUNDATION]\.NET AppFx Engineering Managers,
-                  [TEAM FOUNDATION]\.NET Entity Framework and Data Build Team
+                  dotnetlib_managers@microsoft.com,
+                  efdatabuildteam@microsoft.com,
+                  sampatel@microsoft.com
         - job: Deploy
           dependsOn: PreDeploymentApprovalJob
           condition: succeeded()
