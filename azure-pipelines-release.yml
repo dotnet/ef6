@@ -1,5 +1,6 @@
 trigger: none
 name: $(Date:yyyyMMdd).$(Rev:r)
+appendCommitMessageToRunName: false
 resources:
   pipelines:
     - pipeline: 'ef6-ci-official'
@@ -31,13 +32,16 @@ extends:
           steps:
             - task: ManualValidation@1
               inputs:
+                instructions: 'Approve publishing the packages from the EF6 build $(resources.pipeline.ef6-ci-official.runID) from branch $(resources.pipeline.ef6-ci-official.sourceBranch) to NuGet.org'
+                allowApproversToApproveTheirOwnRuns: false
                 notifyUsers: |-
-                  dotnetlib_managers@microsoft.com,
-                  efdatabuildteam@microsoft.com
+                  ansvyryd@microsoft.com,
+                  sampatel@microsoft.com,
+                  artl@microsoft.com
                 approvers: |-
-                  dotnetlib_managers@microsoft.com,
-                  efdatabuildteam@microsoft.com,
-                  sampatel@microsoft.com
+                  ansvyryd@microsoft.com,
+                  sampatel@microsoft.com,
+                  artl@microsoft.com
         - job: Deploy
           dependsOn: PreDeploymentApprovalJob
           condition: succeeded()
