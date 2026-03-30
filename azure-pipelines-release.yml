@@ -1,6 +1,8 @@
 trigger: none
 name: $(Date:yyyyMMdd).$(Rev:r)
 appendCommitMessageToRunName: false
+variables:
+  - template: /eng/common/templates-official/variables/pool-providers.yml@self
 resources:
   pipelines:
     - pipeline: 'ef6-ci-official'
