@@ -141,5 +141,3 @@ extends:
           enableNugetValidation: false
           enableSourceLinkValidation: false
           publishAssetsImmediately: true
-          SDLValidationParameters:
-            enable: false
