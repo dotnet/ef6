@@ -1,5 +1,8 @@
 trigger: none
 name: $(Date:yyyyMMdd).$(Rev:r)
+appendCommitMessageToRunName: false
+variables:
+  - template: /eng/common/templates-official/variables/pool-providers.yml@self
 resources:
   pipelines:
     - pipeline: 'ef6-ci-official'
@@ -31,12 +34,16 @@ extends:
           steps:
             - task: ManualValidation@1
               inputs:
+                instructions: 'Approve publishing the packages from the EF6 build $(resources.pipeline.ef6-ci-official.runID) from branch $(resources.pipeline.ef6-ci-official.sourceBranch) to NuGet.org'
+                allowApproversToApproveTheirOwnRuns: false
                 notifyUsers: |-
-                  [TEAM FOUNDATION]\.NET AppFx Engineering Managers,
-                  [TEAM FOUNDATION]\.NET Entity Framework and Data Build Team
+                  ansvyryd@microsoft.com,
+                  sampatel@microsoft.com,
+                  artl@microsoft.com
                 approvers: |-
-                  [TEAM FOUNDATION]\.NET AppFx Engineering Managers,
-                  [TEAM FOUNDATION]\.NET Entity Framework and Data Build Team
+                  ansvyryd@microsoft.com,
+                  sampatel@microsoft.com,
+                  artl@microsoft.com
         - job: Deploy
           dependsOn: PreDeploymentApprovalJob
           condition: succeeded()

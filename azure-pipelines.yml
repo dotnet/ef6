@@ -1,4 +1,11 @@
+parameters:
+  - name: IsFinalBuild
+    type: boolean
+    default: false
+
 variables:
+  - name: IsFinalBuild
+    value: ${{ parameters.IsFinalBuild }}
   - name: _BuildConfig
     value: Release
   - name: _TeamName
@@ -88,6 +95,8 @@ extends:
                 - _SignType: real
                 - _Sign: true
                 - _InternalBuildArgs: /p:DotNetSignType=$(_SignType) /p:TeamName=$(_TeamName) /p:OfficialBuildId=$(BUILD.BUILDNUMBER) /p:DotNetPublishUsingPipelines=$(_PublishUsingPipelines) /p:DotNetArtifactsCategory=$(_DotNetArtifactsCategory)
+                - ${{ if eq(parameters.IsFinalBuild, true) }}:
+                  - _AdditionalBuildArgs: /p:StabilizePackageVersion=true
               # Ignore test and infrastructure code.
               - Codeql.SourceRoot: src
               # CodeQL3000 needs this plumbed along as a variable to enable TSA.
@@ -115,6 +124,8 @@ extends:
                   Token: $(dn-bot-dnceng-artifact-feeds-rw)
               - script: eng\common\cibuild.cmd -configuration $(_BuildConfig) -prepareMachine $(_InternalBuildArgs) $(_InternalRuntimeDownloadArgs) $(_AdditionalBuildArgs)
                 name: Build
+              - script: "echo ##vso[build.addbuildtag]release-candidate"
+                condition: and(succeeded(), notin(variables['Build.Reason'], 'PullRequest'), eq(variables['IsFinalBuild'], 'true'))
             templateContext:
               outputs:
               - output: pipelineArtifact
@@ -122,6 +133,11 @@ extends:
                 condition: always()
                 path: artifacts/TestResults/$(_BuildConfig)/
                 artifact: $(Agent.Os)_$(Agent.JobName)$(System.JobAttempt) TestResults
+              - output: pipelineArtifact
+                displayName: Upload PackageArtifacts
+                condition: and(succeeded(), notin(variables['Build.Reason'], 'PullRequest'))
+                path: artifacts/packages/Shipping
+                artifact: PackageArtifacts
     - ${{ if notin(variables['Build.Reason'], 'PullRequest') }}:
       - template: /eng/common/templates-official/post-build/post-build.yml@self
         parameters:
@@ -130,5 +146,3 @@ extends:
           enableNugetValidation: false
           enableSourceLinkValidation: false
           publishAssetsImmediately: true
-          SDLValidationParameters:
-            enable: false
