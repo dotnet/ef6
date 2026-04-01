@@ -137,7 +137,7 @@ extends:
                 displayName: Upload PackageArtifacts
                 condition: and(succeeded(), notin(variables['Build.Reason'], 'PullRequest'))
                 path: artifacts/packages/$(_BuildConfig)/Shipping
-                artifact: PackageArtifacts
+                artifact: PackageArtifactsSbom
     - ${{ if notin(variables['Build.Reason'], 'PullRequest') }}:
       - template: /eng/common/templates-official/post-build/post-build.yml@self
         parameters:
