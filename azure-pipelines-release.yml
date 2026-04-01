@@ -54,7 +54,7 @@ extends:
             - input: pipelineArtifact
               pipeline: 'ef6-ci-official'
               artifactName: 'PackageArtifacts'
-              targetPath: '$(Pipeline.Workspace)/PackageArtifacts'
+              targetPath: '$(Pipeline.Workspace)/PackageArtifactsSbom'
           steps:
             - task: NuGetToolInstaller@1
               displayName: Use NuGet 7.x
@@ -64,7 +64,7 @@ extends:
             - task: 1ES.PublishNuGet@1
               displayName: 'NuGet push'
               inputs:
-                packageParentPath: '$(Pipeline.Workspace)/PackageArtifacts'
+                packageParentPath: '$(Pipeline.Workspace)/PackageArtifactsSbom'
                 packagesToPush: '**/*.nupkg;!**/*.symbols.nupkg'
                 nuGetFeedType: external
                 publishFeedCredentials: nuget.org (efcore client owner)
