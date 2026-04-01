@@ -54,18 +54,8 @@ extends:
             - input: pipelineArtifact
               pipeline: 'ef6-ci-official'
               artifactName: 'PackageArtifacts'
-              targetPath: '$(Pipeline.Workspace)/PackageArtifacts'
-            - input: pipelineArtifact
-              pipeline: 'ef6-ci-official'
-              artifactName: 'build_Windows_SBOM'
-              targetPath: '$(Pipeline.Workspace)/build_Windows_SBOM'
+              targetPath: '$(Pipeline.Workspace)/PackageArtifactsSbom'
           steps:
-            - task: CopyFiles@2
-              displayName: Copy SBOM manifest to PackageArtifacts
-              inputs:
-                SourceFolder: '$(Pipeline.Workspace)/build_Windows_SBOM/build_Windows_SBOM'
-                Contents: '**'
-                TargetFolder: '$(Pipeline.Workspace)/PackageArtifacts'
             - task: NuGetToolInstaller@1
               displayName: Use NuGet 7.x
               inputs:
@@ -74,7 +64,7 @@ extends:
             - task: 1ES.PublishNuGet@1
               displayName: 'NuGet push'
               inputs:
-                packageParentPath: '$(Pipeline.Workspace)/PackageArtifacts'
+                packageParentPath: '$(Pipeline.Workspace)/PackageArtifactsSbom'
                 packagesToPush: '**/*.nupkg;!**/*.symbols.nupkg'
                 nuGetFeedType: external
                 publishFeedCredentials: nuget.org (efcore client owner)
