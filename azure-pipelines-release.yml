@@ -53,7 +53,7 @@ extends:
             inputs:
             - input: pipelineArtifact
               pipeline: 'ef6-ci-official'
-              artifactName: 'PackageArtifacts'
+              artifactName: 'PackageArtifactsSbom'
               targetPath: '$(Pipeline.Workspace)/PackageArtifactsSbom'
           steps:
             - task: NuGetToolInstaller@1
