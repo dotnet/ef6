@@ -20,6 +20,9 @@ extends:
       name: $(DncEngInternalBuildPool)
       image: 1es-windows-2022
       os: windows
+    # Note: 'Permissive,CFSClean' blocks NuGet.org - must use just 'Permissive'
+    settings:
+      networkIsolationPolicy: Permissive
     featureFlags:
       sdlNugetPathOptimization: true
     stages:
