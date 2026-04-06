@@ -64,9 +64,56 @@ extends:
               inputs:
                 versionSpec: 7.x
                 checkLatest: true
+            - powershell: |
+                $packagesPath = "$(Pipeline.Workspace)/PackageArtifactsSbom"
+                Write-Host "=== Verifying Package Signatures ==="
+
+                $packages = Get-ChildItem -Path $packagesPath -Filter "*.nupkg" -Recurse |
+                  Where-Object { $_.Name -notlike "*.symbols.nupkg" }
+
+                if ($packages.Count -eq 0) {
+                  Write-Error "No packages found in $packagesPath"
+                  exit 1
+                }
+
+                $failedVerification = @()
+
+                foreach ($package in $packages) {
+                  Write-Host "Verifying: $($package.Name)"
+
+                  $originalErrorActionPreference = $ErrorActionPreference
+                  $ErrorActionPreference = 'Continue'
+                  $result = & nuget verify -Signatures $package.FullName 2>&1
+                  $verifyExitCode = $LASTEXITCODE
+                  $ErrorActionPreference = $originalErrorActionPreference
+
+                  if ($verifyExitCode -ne 0) {
+                    Write-Host "  ❌ Signature verification FAILED"
+                    Write-Host $result
+                    $failedVerification += $package.Name
+                  }
+                  else {
+                    Write-Host "  ✓ Signature valid"
+                  }
+                }
+
+                if ($failedVerification.Count -gt 0) {
+                  Write-Host ""
+                  Write-Host "=== SIGNATURE VERIFICATION FAILED ==="
+                  foreach ($pkg in $failedVerification) {
+                    Write-Host "  - $pkg"
+                  }
+                  Write-Error "Package signature verification failed. Aborting release."
+                  exit 1
+                }
+
+                Write-Host ""
+                Write-Host "✓ All $($packages.Count) packages passed signature verification"
+              displayName: Verify Package Signatures
             - task: 1ES.PublishNuGet@1
               displayName: 'NuGet push'
               inputs:
+                useDotNetTask: false
                 packageParentPath: '$(Pipeline.Workspace)/PackageArtifactsSbom'
                 packagesToPush: '$(Pipeline.Workspace)/PackageArtifactsSbom/**/*.nupkg;!$(Pipeline.Workspace)/PackageArtifactsSbom/**/*.symbols.nupkg'
                 nuGetFeedType: external
