@@ -51,11 +51,11 @@ extends:
       binskim:
         scanOutputDirectoryOnly: true
         preReleaseVersion: '4.3.1'
-        analyzeTargetGlob: +:f|artifacts/bin/**/*.dll;+:f|artifacts/bin/**/*.exe;
+        analyzeTargetGlob: +:f|**/artifacts/bin/**/*.dll;+:f|**/artifacts/bin/**/*.exe
       env:
-        GDN_EXTRACT_TOOLS: "binskim"
+        GDN_EXTRACT_TOOLS: 'binskim'
         GDN_EXTRACT_TARGETS: true
-        GDN_EXTRACT_FILTER: "f|**\\*.zip;f|**\\*.nupkg;f|**\\*.vsix;f|**\\*.cspkg;f|**\\*.sfpkg;f|**\\*.package"
+        GDN_EXTRACT_FILTER: 'f|**/*.zip;f|**/*.nupkg;f|**/*.vsix;f|**/*.cspkg;f|**/*.sfpkg;f|**/*.package'
       policheck:
         enabled: true
       tsa:
@@ -79,7 +79,7 @@ extends:
           helixRepo: dotnet/ef6
           # WORKAROUND: BinSkim requires the folder to exist prior to scanning.
           preSteps:
-            - powershell: New-Item -ItemType Directory -Path $(Build.SourcesDirectory)/artifacts/bin -Force
+            - powershell: New-Item -ItemType Directory -Path $(Build.SourcesDirectory)/artifacts/bin/$(_BuildConfig) -Force | Out-Null
               displayName: Create artifacts/bin directory
           jobs:
           - job: Windows
