@@ -80,7 +80,7 @@ extends:
           # WORKAROUND: BinSkim requires the folder to exist prior to scanning.
           preSteps:
             - powershell: New-Item -ItemType Directory -Path $(Build.SourcesDirectory)/artifacts/bin/$(_BuildConfig) -Force | Out-Null
-              displayName: Create artifacts/bin directory
+              displayName: Create artifacts/bin/$(_BuildConfig) directory
           jobs:
           - job: Windows
             pool:
