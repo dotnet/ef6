@@ -14,7 +14,6 @@
     <PackageProjectUrl>http://go.microsoft.com/fwlink/?LinkID=263480</PackageProjectUrl>
     <Deterministic>true</Deterministic>
     <DebugType>portable</DebugType>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbeddedResourceUseDependentUponConvention>false</EmbeddedResourceUseDependentUponConvention>
     <DefaultNetCoreTargetFramework>$(NetCurrent)</DefaultNetCoreTargetFramework>
   </PropertyGroup>
