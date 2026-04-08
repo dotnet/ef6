@@ -12,8 +12,6 @@ variables:
     value: AspNetCore
   - name: DOTNET_SKIP_FIRST_TIME_EXPERIENCE
     value: true
-  - name: _PublishUsingPipelines
-    value: true
   - name: _DotNetArtifactsCategory
     value: ASPNETENTITYFRAMEWORK6
   - group: DotNet-MSRC-Storage
@@ -72,9 +70,9 @@ extends:
         parameters:
           enableMicrobuild: true
           enablePublishBuildArtifacts: true
+          publishingVersion: 4
           enablePublishBuildAssets: true
           enablePublishTestResults: true
-          enablePublishUsingPipelines: ${{ variables._PublishUsingPipelines }}
           enableTelemetry: true
           helixRepo: dotnet/ef6
           # WORKAROUND: BinSkim requires the folder to exist prior to scanning.
@@ -83,6 +81,8 @@ extends:
               displayName: Create artifacts/bin/$(_BuildConfig) directory
           jobs:
           - job: Windows
+            ${{ if notin(variables['Build.Reason'], 'PullRequest') }}:
+              enablePublishing: true
             pool:
               name: $(DncEngInternalBuildPool)
               demands: ImageOverride -equals 1es-windows-2022
@@ -94,7 +94,7 @@ extends:
               - ${{ if notin(variables['Build.Reason'], 'PullRequest') }}:
                 - _SignType: real
                 - _Sign: true
-                - _InternalBuildArgs: /p:DotNetSignType=$(_SignType) /p:TeamName=$(_TeamName) /p:OfficialBuildId=$(BUILD.BUILDNUMBER) /p:DotNetPublishUsingPipelines=$(_PublishUsingPipelines) /p:DotNetArtifactsCategory=$(_DotNetArtifactsCategory)
+                - _InternalBuildArgs: /p:DotNetSignType=$(_SignType) /p:TeamName=$(_TeamName) /p:OfficialBuildId=$(BUILD.BUILDNUMBER) /p:DotNetArtifactsCategory=$(_DotNetArtifactsCategory)
                 - ${{ if eq(parameters.IsFinalBuild, true) }}:
                   - _AdditionalBuildArgs: /p:StabilizePackageVersion=true
               # Ignore test and infrastructure code.
@@ -141,7 +141,7 @@ extends:
     - ${{ if notin(variables['Build.Reason'], 'PullRequest') }}:
       - template: /eng/common/templates-official/post-build/post-build.yml@self
         parameters:
-          publishingInfraVersion: 3
+          publishingInfraVersion: 4
           enableSigningValidation: false
           enableNugetValidation: false
           enableSourceLinkValidation: false
