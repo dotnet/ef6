@@ -115,6 +115,6 @@ extends:
               inputs:
                 useDotNetTask: false
                 packageParentPath: '$(Pipeline.Workspace)/PackageArtifactsSbom'
-                packagesToPush: '$(Pipeline.Workspace)/PackageArtifactsSbom/**/*.nupkg;!$(Pipeline.Workspace)/PackageArtifactsSbom/**/*.symbols.nupkg'
+                packagesToPush: '$(Pipeline.Workspace)/PackageArtifactsSbom/**/*.nupkg'
                 nuGetFeedType: external
                 publishFeedCredentials: nuget.org (efcore client owner)
