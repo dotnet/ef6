@@ -1,5 +1,8 @@
 trigger: none
 name: $(Date:yyyyMMdd).$(Rev:r)
+appendCommitMessageToRunName: false
+variables:
+  - template: /eng/common/templates-official/variables/pool-providers.yml@self
 resources:
   pipelines:
     - pipeline: 'ef6-ci-official'
@@ -17,6 +20,9 @@ extends:
       name: $(DncEngInternalBuildPool)
       image: 1es-windows-2022
       os: windows
+    # Note: 'Permissive,CFSClean' blocks NuGet.org - must use just 'Permissive'
+    settings:
+      networkIsolationPolicy: Permissive
     featureFlags:
       sdlNugetPathOptimization: true
     stages:
@@ -31,12 +37,16 @@ extends:
           steps:
             - task: ManualValidation@1
               inputs:
+                instructions: 'Approve publishing the packages from the EF6 build $(resources.pipeline.ef6-ci-official.runID) from branch $(resources.pipeline.ef6-ci-official.sourceBranch) to NuGet.org'
+                allowApproversToApproveTheirOwnRuns: false
                 notifyUsers: |-
-                  [TEAM FOUNDATION]\.NET AppFx Engineering Managers,
-                  [TEAM FOUNDATION]\.NET Entity Framework and Data Build Team
+                  ansvyryd@microsoft.com,
+                  sampatel@microsoft.com,
+                  artl@microsoft.com
                 approvers: |-
-                  [TEAM FOUNDATION]\.NET AppFx Engineering Managers,
-                  [TEAM FOUNDATION]\.NET Entity Framework and Data Build Team
+                  ansvyryd@microsoft.com,
+                  sampatel@microsoft.com,
+                  artl@microsoft.com
         - job: Deploy
           dependsOn: PreDeploymentApprovalJob
           condition: succeeded()
@@ -46,18 +56,65 @@ extends:
             inputs:
             - input: pipelineArtifact
               pipeline: 'ef6-ci-official'
-              artifactName: 'PackageArtifacts'
-              targetPath: '$(Pipeline.Workspace)/PackageArtifacts'
+              artifactName: 'PackageArtifactsSbom'
+              targetPath: '$(Pipeline.Workspace)/PackageArtifactsSbom'
           steps:
             - task: NuGetToolInstaller@1
               displayName: Use NuGet 7.x
               inputs:
                 versionSpec: 7.x
                 checkLatest: true
+            - powershell: |
+                $packagesPath = "$(Pipeline.Workspace)/PackageArtifactsSbom"
+                Write-Host "=== Verifying Package Signatures ==="
+
+                $packages = Get-ChildItem -Path $packagesPath -Filter "*.nupkg" -Recurse |
+                  Where-Object { $_.Name -notlike "*.symbols.nupkg" }
+
+                if ($packages.Count -eq 0) {
+                  Write-Error "No packages found in $packagesPath"
+                  exit 1
+                }
+
+                $failedVerification = @()
+
+                foreach ($package in $packages) {
+                  Write-Host "Verifying: $($package.Name)"
+
+                  $originalErrorActionPreference = $ErrorActionPreference
+                  $ErrorActionPreference = 'Continue'
+                  $result = & nuget verify -Signatures $package.FullName 2>&1
+                  $verifyExitCode = $LASTEXITCODE
+                  $ErrorActionPreference = $originalErrorActionPreference
+
+                  if ($verifyExitCode -ne 0) {
+                    Write-Host "  ❌ Signature verification FAILED"
+                    Write-Host $result
+                    $failedVerification += $package.Name
+                  }
+                  else {
+                    Write-Host "  ✓ Signature valid"
+                  }
+                }
+
+                if ($failedVerification.Count -gt 0) {
+                  Write-Host ""
+                  Write-Host "=== SIGNATURE VERIFICATION FAILED ==="
+                  foreach ($pkg in $failedVerification) {
+                    Write-Host "  - $pkg"
+                  }
+                  Write-Error "Package signature verification failed. Aborting release."
+                  exit 1
+                }
+
+                Write-Host ""
+                Write-Host "✓ All $($packages.Count) packages passed signature verification"
+              displayName: Verify Package Signatures
             - task: 1ES.PublishNuGet@1
               displayName: 'NuGet push'
               inputs:
-                packageParentPath: '$(Pipeline.Workspace)/PackageArtifacts'
-                packagesToPush: '**/*.nupkg;!**/*.symbols.nupkg'
+                useDotNetTask: false
+                packageParentPath: '$(Pipeline.Workspace)/PackageArtifactsSbom'
+                packagesToPush: $(Pipeline.Workspace)/PackageArtifactsSbom/**/*.nupkg
                 nuGetFeedType: external
                 publishFeedCredentials: nuget.org (efcore client owner)

@@ -9,14 +9,8 @@ variables:
     value: true
   - name: _DotNetArtifactsCategory
     value: ASPNETENTITYFRAMEWORK6
-  - ${{ if ne(variables['System.TeamProject'], 'public') }}:
-    - group: DotNet-MSRC-Storage
-    - name: _InternalRuntimeDownloadArgs
-      value: /p:DotNetRuntimeSourceFeed=https://dotnetclimsrc.blob.core.windows.net/dotnet
-             /p:DotNetRuntimeSourceFeedKey=$(dotnetclimsrc-read-sas-token-base64)
-  - ${{ if eq(variables['System.TeamProject'], 'public') }}:
-    - name: _InternalRuntimeDownloadArgs
-      value: ''
+  - name: _InternalRuntimeDownloadArgs
+    value: ''
   - template: /eng/common/templates/variables/pool-providers.yml
 
 trigger:
@@ -45,23 +39,12 @@ stages:
         jobs:
           - job: Windows
             pool:
-              ${{ if eq(variables['System.TeamProject'], 'public') }}:
-                name: $(DncEngPublicBuildPool)
-                demands: ImageOverride -equals 1es-windows-2022-open
-              ${{ if ne(variables['System.TeamProject'], 'public') }}:
-                name: $(DncEngInternalBuildPool)
-                demands: ImageOverride -equals 1es-windows-2022
+              name: $(DncEngPublicBuildPool)
+              demands: ImageOverride -equals 1es-windows-2022-open
             timeoutInMinutes: 180
             variables:
               - _AdditionalBuildArgs: ''
               - _InternalBuildArgs: ''
-              - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
-                - _SignType: real
-                - _InternalBuildArgs: /p:DotNetSignType=$(_SignType)
-                                      /p:TeamName=$(_TeamName)
-                                      /p:OfficialBuildId=$(BUILD.BUILDNUMBER)
-                                      /p:DotNetPublishUsingPipelines=$(_PublishUsingPipelines)
-                                      /p:DotNetArtifactsCategory=$(_DotNetArtifactsCategory)
             steps:
               - checkout: self
                 clean: true
@@ -79,14 +62,6 @@ stages:
                 inputs:
                   command: custom
                   arguments: 'locals all -clear'
-              - ${{ if ne(variables['System.TeamProject'], 'public') }}:
-                - task: PowerShell@2
-                  displayName: Setup Private Feeds Credentials
-                  inputs:
-                    filePath: $(Build.SourcesDirectory)/eng/common/SetupNugetSources.ps1
-                    arguments: -ConfigFile $(Build.SourcesDirectory)/NuGet.config -Password $Env:Token
-                  env:
-                    Token: $(dn-bot-dnceng-artifact-feeds-rw)
               - script: eng\common\cibuild.cmd -configuration $(_BuildConfig) -prepareMachine $(_InternalBuildArgs)
                   $(_InternalRuntimeDownloadArgs) $(_AdditionalBuildArgs)
                 name: Build
@@ -107,10 +82,3 @@ stages:
                   artifactName: packages
                   artifactType: Container
                   parallel: true
-
-- ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
-  - template: eng\common\templates\post-build\post-build.yml
-    parameters:
-      # Symbol validation isn't being very reliable lately. This should be enabled back
-      # once this issue is resolved: https://github.com/dotnet/arcade/issues/2871
-      enableSymbolValidation: false
