@@ -103,6 +103,9 @@ ipch/
 *.VC.db
 *.VC.VC.opendb
 
+# VS Code cache files
+*.lscache
+
 # Visual Studio profiler
 *.psess
 *.vsp

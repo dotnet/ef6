@@ -18,7 +18,7 @@ variables:
     value: ASPNETENTITYFRAMEWORK6
   - group: DotNet-MSRC-Storage
   - name: _InternalRuntimeDownloadArgs
-    value: /p:DotNetRuntimeSourceFeed=https://dotnetclimsrc.blob.core.windows.net/dotnet /p:DotNetRuntimeSourceFeedKey=$(dotnetclimsrc-read-sas-token-base64)
+    value: /p:DotNetRuntimeSourceFeed=https://dotnetclimsrc.blob.core.windows.net/dotnet
   - template: /eng/common/templates-official/variables/pool-providers.yml@self
 trigger:
   batch: true
@@ -123,7 +123,24 @@ extends:
                 env:
                   Token: $(dn-bot-dnceng-artifact-feeds-rw)
               - script: eng\common\cibuild.cmd -configuration $(_BuildConfig) -prepareMachine $(_InternalBuildArgs) $(_InternalRuntimeDownloadArgs) $(_AdditionalBuildArgs)
-                name: Build
+                displayName: Build
+                env:
+                  DotNetRuntimeSourceFeedKey: $(dotnetclimsrc-read-sas-token-base64)
+                  ${{ if notin(variables['Build.Reason'], 'PullRequest') }}:
+                    DotNetSymbolServerTokenMsdl: $(microsoft-symbol-server-pat)
+                    DotNetSymbolServerTokenSymWeb: $(symweb-symbol-server-pat)
+              - task: PublishSymbols@2
+                displayName: Publish Symbols to MSDL and SymWeb
+                condition: and(succeeded(), notin(variables['Build.Reason'], 'PullRequest'))
+                inputs:
+                  SymbolsFolder: '$(Build.SourcesDirectory)/artifacts/bin'
+                  SearchPattern: '**/*.pdb'
+                  IndexSources: false
+                  PublishSymbols: true
+                  SymbolServerType: TeamServices
+                  SymbolsArtifactName: 'Symbols_$(Build.BuildNumber)'
+                  microsoftSymbolServerPAT: $(microsoft-symbol-server-pat)
+                  symwebServerPAT: $(symweb-symbol-server-pat)
               - script: "echo ##vso[build.addbuildtag]release-candidate"
                 condition: and(succeeded(), notin(variables['Build.Reason'], 'PullRequest'), eq(variables['IsFinalBuild'], 'true'))
             templateContext:
