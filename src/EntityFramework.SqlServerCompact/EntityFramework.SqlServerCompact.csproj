@@ -8,6 +8,8 @@
     <AssemblyVersion>6.0.0.0</AssemblyVersion>
     <DefineConstants>$(DefineConstants);SQLSERVERCOMPACT;INTERNALS_INVISIBLE</DefineConstants>
     <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <SuppressSymbolPackageFormatValidation>true</SuppressSymbolPackageFormatValidation>
     <IsPackable>True</IsPackable>
     <PackageTags>$(PackageTags);SQL Compact;CE</PackageTags>
     <NuspecFile>$(MSBuildThisFileDirectory)$(MSBuildProjectName).nuspec</NuspecFile>
