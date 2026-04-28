@@ -15,7 +15,6 @@
     <Deterministic>true</Deterministic>
     <DebugType>portable</DebugType>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <EmbeddedResourceUseDependentUponConvention>false</EmbeddedResourceUseDependentUponConvention>
     <DefaultNetCoreTargetFramework>$(NetCurrent)</DefaultNetCoreTargetFramework>
   </PropertyGroup>
