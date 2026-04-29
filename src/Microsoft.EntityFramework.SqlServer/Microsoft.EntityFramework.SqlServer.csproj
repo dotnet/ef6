@@ -8,6 +8,8 @@
     <AssemblyVersion>6.0.0.0</AssemblyVersion>
     <DefineConstants>$(DefineConstants);SQLSERVER;INTERNALS_INVISIBLE;USES_MICROSOFT_DATA_SQLCLIENT</DefineConstants>
     <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <SuppressSymbolPackageFormatValidation>true</SuppressSymbolPackageFormatValidation>
     <IsPackable>true</IsPackable>
     <NuspecFile>$(MSBuildThisFileDirectory)$(MSBuildProjectName).nuspec</NuspecFile>
   </PropertyGroup>
