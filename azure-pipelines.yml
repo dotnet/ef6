@@ -56,8 +56,6 @@ extends:
         GDN_EXTRACT_FILTER: 'f|**/*.zip;f|**/*.nupkg;f|**/*.vsix;f|**/*.cspkg;f|**/*.sfpkg;f|**/*.package'
       policheck:
         enabled: true
-      tsa:
-        enabled: true
       settings:
         networkIsolationPolicy: Permissive,CFSClean,CFSClean2
     customBuildTags:
@@ -99,10 +97,6 @@ extends:
                   - _AdditionalBuildArgs: /p:StabilizePackageVersion=true
               # Ignore test and infrastructure code.
               - Codeql.SourceRoot: src
-              # CodeQL3000 needs this plumbed along as a variable to enable TSA.
-              - Codeql.TSAEnabled: true
-              # Default expects tsaoptions.json under SourceRoot.
-              - Codeql.TSAOptionsPath: '$(Build.SourcesDirectory)/.config/tsaoptions.json'
             steps:
               - powershell: >
                   Get-ChildItem -ErrorAction SilentlyContinue -Recurse 'C:\Program Files\Microsoft SQL Server\sqlcmd.exe' | Sort-Object -Property @{Expression={$_.FullName.Length}; Descending=$true},@{Expression={$_.FullName}; Descending=$true} | Select-Object -First 1 | Foreach-Object {Write-Host "##vso[task.prependpath]$($_.DirectoryName)"}
