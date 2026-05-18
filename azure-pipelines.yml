@@ -49,7 +49,7 @@ extends:
       binskim:
         scanOutputDirectoryOnly: true
         preReleaseVersion: '4.3.1'
-        analyzeTargetGlob: +:f|**/artifacts/bin/**/*.dll;+:f|**/artifacts/bin/**/*.exe
+        analyzeTargetGlob: '+:f|**\artifacts\bin\**\*.dll;+:f|**\artifacts\bin\**\*.exe;-:f|**\SqlServerSpatial160.dll;-:f|**\sqlceer40EN.dll;-:f|**\sqlcese40.dll;-:f|**\sqlcecompact40.dll;-:f|**\msvcr90.dll;-:f|**\sqlceme40.dll;-:f|**\sqlceca40.dll;-:f|**\sqlceqp40.dll'
       env:
         GDN_EXTRACT_TOOLS: 'binskim'
         GDN_EXTRACT_TARGETS: true
