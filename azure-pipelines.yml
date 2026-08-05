@@ -14,7 +14,6 @@ variables:
     value: true
   - name: _DotNetArtifactsCategory
     value: ASPNETENTITYFRAMEWORK6
-  - group: DotNet-MSRC-Storage
   - name: _InternalRuntimeDownloadArgs
     value: /p:DotNetRuntimeSourceFeed=https://dotnetclimsrc.blob.core.windows.net/dotnet /p:DotNetRuntimeSourceFeedKey=$(dotnetclimsrc-read-sas-token-base64)
   - template: /eng/common/templates-official/variables/pool-providers.yml@self
