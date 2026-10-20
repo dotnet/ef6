@@ -17,6 +17,7 @@
   <ItemGroup>
     <NuspecProperty Include="Configuration=$(Configuration)" />
     <NuSpecProperty Include="MicrosoftDataSqlClientVersion=$(MicrosoftDataSqlClientVersion)" />
+    <NuSpecProperty Include="SystemSecurityCryptographyPkcsVersion=$(SystemSecurityCryptographyPkcsVersion)" />
     <NuspecProperty Include="NeutralLanguage=$(NeutralLanguage)" />
     <NuspecProperty Include="MicrosoftSqlServerTypesXplatVersion=$(MicrosoftSqlServerTypesXplatVersion)" />
   </ItemGroup>
