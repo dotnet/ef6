@@ -114,6 +114,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.SqlClient" Version="$(MicrosoftDataSqlClientVersion)" />
+    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="$(SystemSecurityCryptographyPkcsVersion)" />
   </ItemGroup>
 
   <ItemGroup>
