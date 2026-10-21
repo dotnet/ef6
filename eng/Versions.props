@@ -26,6 +26,8 @@
     <SystemComponentModelAnnotationsVersion>5.0.0</SystemComponentModelAnnotationsVersion>
     <SystemConfigurationConfigurationManagerVersion>6.0.1</SystemConfigurationConfigurationManagerVersion>
     <SystemDataSqlClientVersion>4.8.6</SystemDataSqlClientVersion>
+    <!-- Transitive dependency of Microsoft.Data.SqlClient. -->
+    <SystemSecurityCryptographyPkcsVersion>9.0.21</SystemSecurityCryptographyPkcsVersion>
     <MicrosoftDataSqlClientVersion>6.1.4</MicrosoftDataSqlClientVersion>
   </PropertyGroup>
 </Project>
