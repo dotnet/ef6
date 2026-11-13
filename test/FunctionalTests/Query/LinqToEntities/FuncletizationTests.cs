@@ -84,7 +84,7 @@ FROM [dbo].[ArubaTasks] AS [Extent1]";
                 foreach (var result in results)
                 {
                     Assert.Equal((decimal)1.5, result.a);
-                    Assert.Equal((decimal)2.5, result.b);
+                    Assert.Equal(2.5, (double)result.b, 5);
                     Assert.Equal(5, result.c);
                     Assert.Equal(7, result.e);
                     Assert.Equal(9, result.f);

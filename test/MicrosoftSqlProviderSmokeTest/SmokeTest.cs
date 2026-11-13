@@ -78,15 +78,34 @@ namespace MicrsoftSqlProviderSmokeTest
         [Fact]
         public void CanLoadResourceString()
         {
-            var connectionString = "Data Source=(localdb)\\mssqllocaldb;Initial Catalog=School;Integrated Security=True;Encrypt=false";
-
-            using (var ctx = new SchoolContext(new SqlConnection(connectionString)))
+            var databaseName = "CanLoadResourceString" + Guid.NewGuid().ToString("N");
+            var connectionString = new SqlConnectionStringBuilder
             {
-                string sql = "RAISERROR(49918, 16, 1, 'Cannot process request. Not enough resources to process request.');";
+                DataSource = "(localdb)\\mssqllocaldb",
+                InitialCatalog = databaseName,
+                IntegratedSecurity = true,
+                Encrypt = false
+            }.ConnectionString;
 
-                var ex = Assert.Throws<EntityException>(() => ctx.Database.ExecuteSqlCommand(sql));
+            try
+            {
+                using (var ctx = new SchoolContext(connectionString))
+                {
+                    ctx.Database.Initialize(force: false);
 
-                Assert.True(ex.InnerException is SqlException);
+                    string sql = "RAISERROR(49918, 16, 1, 'Cannot process request. Not enough resources to process request.');";
+
+                    var ex = Assert.Throws<EntityException>(() => ctx.Database.ExecuteSqlCommand(sql));
+
+                    Assert.True(ex.InnerException is SqlException);
+                }
+            }
+            finally
+            {
+                using (var ctx = new SchoolContext(connectionString))
+                {
+                    ctx.Database.Delete();
+                }
             }
         }
     }
