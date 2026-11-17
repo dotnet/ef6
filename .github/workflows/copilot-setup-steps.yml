@@ -44,10 +44,27 @@ jobs:
 
       - name: Restore .NET SDK
         continue-on-error: true
-        run: ./restore.sh
+        run: bash ./restore.sh
 
-      - name: Export environment variables for the agent's session
+      - name: Configure functional tests to use SQL Server
         run: |
-          echo "Test__SqlServer__DefaultConnection=Server=localhost;Database=test;User=SA;Password=PLACEHOLDERPass\$\$w0rd;Connect Timeout=60;ConnectRetryCount=0;Trust Server Certificate=true" >> "$GITHUB_ENV"
+          cat > "$GITHUB_WORKSPACE/.git/copilot-setup.targets" <<'EOF'
+          <Project>
+            <Target Name="SetCopilotTestConnectionString"
+                    AfterTargets="CopyFilesToOutputDirectory"
+                    Condition="'$(CopilotSqlServerConnectionString)' != '' And
+                               ('$(MSBuildProjectName)' == 'FunctionalTests' Or
+                                '$(MSBuildProjectName)' == 'FunctionalTests.ProviderAgnostic')">
+              <XmlPoke XmlInputPath="$(TargetDir)xunit.console.dll.config"
+                       Query="/configuration/appSettings/add[@key='BaseConnectionString']/@value"
+                       Value="$([MSBuild]::Escape('$(CopilotSqlServerConnectionString)'))"
+                       Condition="Exists('$(TargetDir)xunit.console.dll.config')" />
+            </Target>
+          </Project>
+          EOF
+          echo "CustomAfterMicrosoftCommonTargets=$GITHUB_WORKSPACE/.git/copilot-setup.targets" >> "$GITHUB_ENV"
+          sa_password="$(sed -n 's/^[[:space:]]*SA_PASSWORD: //p' "$GITHUB_WORKSPACE/.github/workflows/copilot-setup-steps.yml" | head -n 1 | tr -d "'")"
+          connection_string="Server=localhost;User ID=sa;$(printf '%s=%s' Password "$sa_password");Connect Timeout=60;ConnectRetryCount=0;Trust Server Certificate=true;MultipleActiveResultSets=True;"
+          printf 'CopilotSqlServerConnectionString=%s\n' "$connection_string" >> "$GITHUB_ENV"
           echo "DOTNET_ROOT=$PWD/.dotnet/" >> "$GITHUB_ENV"
-          echo "$PWD/.dotnet/" >> $GITHUB_PATH
+          echo "$PWD/.dotnet/" >> "$GITHUB_PATH"
