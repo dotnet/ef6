@@ -711,33 +711,53 @@ namespace FunctionalTests
                     c => c.BaseData,
                     new MaxLengthAttribute(64), new ColumnAttribute { TypeName = "nvarchar(max)" });
 
-                using (var context = new NvarcharMax64Context())
+                var connectionString = SimpleConnectionString(
+                    "NvarcharMax64Context_" + Guid.NewGuid().ToString("N"));
+
+                try
                 {
-                    context.CustomOnModelCreating = modelBuilder =>
+                    using (var context = new NvarcharMax64Context(connectionString))
                     {
-                        modelBuilder.Entity<TNAttrBase>();
+                        context.CustomOnModelCreating = modelBuilder =>
+                        {
+                            modelBuilder.Entity<TNAttrBase>();
 
-                        var databaseMapping = BuildMapping(modelBuilder);
-                        databaseMapping.AssertValid();
+                            var databaseMapping = BuildMapping(modelBuilder);
+                            databaseMapping.AssertValid();
 
-                        databaseMapping.Assert<TNAttrBase>(x => x.BaseData)
-                            .DbEqual("nvarchar(max)", c => c.TypeName)
-                            .DbEqual(false, f => f.IsMaxLength)
-                            .DbEqual(int.MaxValue / 2, f => f.MaxLength);
-                    };
+                            databaseMapping.Assert<TNAttrBase>(x => x.BaseData)
+                                .DbEqual("nvarchar(max)", c => c.TypeName)
+                                .DbEqual(false, f => f.IsMaxLength)
+                                .DbEqual(int.MaxValue / 2, f => f.MaxLength);
+                        };
 
-                    context.Database.CreateIfNotExists();
+                        context.Database.CreateIfNotExists();
 
-                    var column = GetInfoContext(context).Columns.Single(c => c.Name == "BaseData");
+                        var column = GetInfoContext(context).Columns.Single(c => c.Name == "BaseData");
 
-                    Assert.Equal("nvarchar", column.Type);
-                    Assert.Equal(-1, column.MaxLength);
+                        Assert.Equal("nvarchar", column.Type);
+                        Assert.Equal(-1, column.MaxLength);
+                    }
+                }
+                finally
+                {
+                    using (var context = new NvarcharMax64Context(connectionString))
+                    {
+                        if (context.Database.Exists())
+                        {
+                            context.Database.Delete();
+                        }
+                    }
                 }
             }
         }
 
         public class NvarcharMax64Context : EmptyContext
         {
+            public NvarcharMax64Context(string nameOrConnectionString)
+                : base(nameOrConnectionString)
+            {
+            }
         }
 
         [Fact]
