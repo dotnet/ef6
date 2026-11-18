@@ -89,7 +89,7 @@ FROM [dbo].[ArubaTasks] AS [Extent1]";
                     Assert.Equal(7, result.e);
                     Assert.Equal(9, result.f);
                     Assert.Equal(11, result.g);
-                    Assert.Equal((decimal)0.0013, result.h);
+                    Assert.Equal(0.0013m, result.h);
                 }
             }
         }
