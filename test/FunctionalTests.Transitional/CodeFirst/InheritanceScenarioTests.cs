@@ -2643,6 +2643,8 @@ namespace FunctionalTests
 
     public sealed class Issue2616Test : FunctionalTestBase
     {
+        private readonly string _databaseName = "Bug2616Test_" + Guid.NewGuid().ToString("N");
+
         [Fact]
         public void Can_hide_navigation_property_and_new_property_is_used()
         {
@@ -2933,7 +2935,9 @@ namespace FunctionalTests
 
         private DbContext CreateContext(DbModelBuilder modelBuilder)
         {
-            return new DbContext("Bug2616Test", modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo).Compile());
+            return new DbContext(
+                SimpleConnectionString(_databaseName),
+                modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo).Compile());
         }
 
         public abstract class Domain
