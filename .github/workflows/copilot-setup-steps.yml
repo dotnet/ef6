@@ -1,0 +1,70 @@
+name: "Copilot Setup Steps"
+
+# See https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/customize-the-agent-environment
+
+# Automatically run the setup steps when they are changed to allow for easy validation, and
+# allow manual testing through the repository's "Actions" tab
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+  pull_request:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+
+jobs:
+  # The job MUST be called `copilot-setup-steps` or it will not be picked up by Copilot.
+  copilot-setup-steps:
+    permissions:
+      contents: read # Read permission is required to check out the repository's code.
+
+    runs-on: ubuntu-24.04
+
+    # Install SQL Server via a docker container.
+    # It's better to do this rather than e.g. use a testcontainer, because then the agent can reuse the same container
+    # and instance of SQL Server rather than have to start it up each time it needs to iterate and run a test.
+    services:
+      mssql:
+        image: mcr.microsoft.com/mssql/server:2025-latest
+        env:
+          ACCEPT_EULA: Y
+          SA_PASSWORD: 'PLACEHOLDERPass$$w0rd'
+        ports:
+          - 1433:1433
+        options: >-
+          --health-cmd="/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P $SA_PASSWORD -Q 'SELECT 1' -C"
+          --health-start-period=20s
+          --health-interval=2s
+          --health-retries=30
+          --health-timeout=5s
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Restore .NET SDK
+        continue-on-error: true
+        run: bash ./restore.sh
+
+      - name: Configure functional tests to use SQL Server
+        run: |
+          cat > "$GITHUB_WORKSPACE/.git/copilot-setup.targets" <<'EOF'
+          <Project>
+            <Target Name="SetCopilotTestConnectionString"
+                    AfterTargets="CopyFilesToOutputDirectory"
+                    Condition="'$(CopilotSqlServerConnectionString)' != '' And
+                               ('$(MSBuildProjectName)' == 'FunctionalTests' Or
+                                '$(MSBuildProjectName)' == 'FunctionalTests.ProviderAgnostic')">
+              <XmlPoke XmlInputPath="$(TargetDir)xunit.console.dll.config"
+                       Query="/configuration/appSettings/add[@key='BaseConnectionString']/@value"
+                       Value="$([MSBuild]::Escape('$(CopilotSqlServerConnectionString)'))"
+                       Condition="Exists('$(TargetDir)xunit.console.dll.config')" />
+            </Target>
+          </Project>
+          EOF
+          echo "CustomAfterMicrosoftCommonTargets=$GITHUB_WORKSPACE/.git/copilot-setup.targets" >> "$GITHUB_ENV"
+          sa_password="$(sed -n 's/^[[:space:]]*SA_PASSWORD: //p' "$GITHUB_WORKSPACE/.github/workflows/copilot-setup-steps.yml" | head -n 1 | tr -d "'")"
+          connection_string="Server=localhost;User ID=sa;$(printf '%s=%s' Password "$sa_password");Connect Timeout=60;ConnectRetryCount=0;Trust Server Certificate=true;MultipleActiveResultSets=True;"
+          printf 'CopilotSqlServerConnectionString=%s\n' "$connection_string" >> "$GITHUB_ENV"
+          echo "DOTNET_ROOT=$PWD/.dotnet/" >> "$GITHUB_ENV"
+          echo "$PWD/.dotnet/" >> "$GITHUB_PATH"
